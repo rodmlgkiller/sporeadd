@@ -152,23 +152,23 @@ public class BiomassCoreItem extends Item {
             case "pickaxe":
                 moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "combat_pickaxe")));
                 if (plvl > 0) {
-                    if (!isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
-                    addEnch(moldedItem, Enchantments.BLOCK_EFFICIENCY, Math.min(plvl, 5));
+                    if (!isLevel9) addEnch(level, moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
+                    addEnch(level, moldedItem, Enchantments.EFFICIENCY, Math.min(plvl, 5));
                 }
                 break;
 
             case "shovel":
                 moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "combat_shovel")));
                 if (plvl > 0) {
-                    if (!isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
-                    addEnch(moldedItem, Enchantments.BLOCK_EFFICIENCY, Math.min(plvl, 5));
+                    if (!isLevel9) addEnch(level, moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
+                    addEnch(level, moldedItem, Enchantments.EFFICIENCY, Math.min(plvl, 5));
                 }
                 break;
 
             case "shield":
                 moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "shield")));
                 if (plvl > 0 && !isLevel9) {
-                    addEnch(moldedItem, Enchantments.UNBREAKING, plvl);
+                    addEnch(level, moldedItem, Enchantments.UNBREAKING, plvl);
                 }
                 break;
 
@@ -176,15 +176,15 @@ public class BiomassCoreItem extends Item {
                 boolean isBow = RAND.nextBoolean();
                 if (isBow) {
                     moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "infected_bow")));
-                    if (plvl > 0 && !isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
+                    if (plvl > 0 && !isLevel9) addEnch(level, moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
 
-                    if (plvl >= 5) addEnch(moldedItem, Enchantments.INFINITY_ARROWS, 1);
-                    if (plvl > 4) addEnch(moldedItem, Enchantments.POWER_ARROWS, plvl - 4);
+                    if (plvl >= 5) addEnch(level, moldedItem, Enchantments.INFINITY, 1);
+                    if (plvl > 4) addEnch(level, moldedItem, Enchantments.POWER, plvl - 4);
                 } else {
                     moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "infected_crossbow")));
-                    if (plvl > 0 && !isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
-                    if (plvl > 0) addEnch(moldedItem, Enchantments.QUICK_CHARGE, Math.min(plvl, 4));
-                    if (plvl >= 5) addEnch(moldedItem, Enchantments.MULTISHOT, 1);
+                    if (plvl > 0 && !isLevel9) addEnch(level, moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
+                    if (plvl > 0) addEnch(level, moldedItem, Enchantments.QUICK_CHARGE, Math.min(plvl, 4));
+                    if (plvl >= 5) addEnch(level, moldedItem, Enchantments.MULTISHOT, 1);
                 }
                 break;
 
@@ -193,8 +193,8 @@ public class BiomassCoreItem extends Item {
                 if (plvl <= 4) {
                     moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "knife")));
                     if (plvl > 0) {
-                        addEnch(moldedItem, Enchantments.UNBREAKING, plvl);
-                        addEnch(moldedItem, Enchantments.SHARPNESS, plvl);
+                        addEnch(level, moldedItem, Enchantments.UNBREAKING, plvl);
+                        addEnch(level, moldedItem, Enchantments.SHARPNESS, plvl);
                     }
                 } else {
                     ResourceLocation weaponRL = WEAPON_POOL.get(RAND.nextInt(WEAPON_POOL.size()));
@@ -203,8 +203,8 @@ public class BiomassCoreItem extends Item {
                     int enchLvl = plvl - 4;
 
                     if (enchLvl > 0) {
-                        addEnch(moldedItem, Enchantments.SHARPNESS, enchLvl);
-                        if (!isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, enchLvl);
+                        addEnch(level, moldedItem, Enchantments.SHARPNESS, enchLvl);
+                        if (!isLevel9) addEnch(level, moldedItem, Enchantments.UNBREAKING, enchLvl);
                     }
                 }
                 break;
@@ -220,11 +220,10 @@ public class BiomassCoreItem extends Item {
         }
 
         if (isLevel9) {
-            CompoundTag nbt = ItemNbt.getOrCreateTag(moldedItem);
-            nbt.putBoolean("Unbreakable", true);
+            moldedItem.set(net.minecraft.core.component.DataComponents.UNBREAKABLE, new net.minecraft.world.item.component.Unbreakable(true));
         }
 
-        addEnch(moldedItem, Enchantments.VANISHING_CURSE, 1);
+        addEnch(level, moldedItem, Enchantments.VANISHING_CURSE, 1);
 
         ResourceLocation soundLoc = ResourceLocation.fromNamespaceAndPath("spore", "hyper_damage");
         level.playSound(null, player.getX(), player.getY(), player.getZ(),

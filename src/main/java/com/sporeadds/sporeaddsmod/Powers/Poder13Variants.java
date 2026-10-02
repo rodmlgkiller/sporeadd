@@ -72,13 +72,10 @@ public class Poder13Variants {
         level.setWeatherParameters(0, ABYSSAL_DURATION, true, true);
 
         ItemStack trident = new ItemStack(Items.TRIDENT);
-        Enchantment riptide = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", "riptide"));
-        Enchantment vanishing = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", "vanishing_curse"));
+        com.sporeadds.sporeaddsmod.util.EnchantUtil.add(trident, level.registryAccess(), net.minecraft.world.item.enchantment.Enchantments.RIPTIDE, 5);
+        com.sporeadds.sporeaddsmod.util.EnchantUtil.add(trident, level.registryAccess(), net.minecraft.world.item.enchantment.Enchantments.VANISHING_CURSE, 1);
 
-        if (riptide != null) trident.enchant(riptide, 5);
-        if (vanishing != null) trident.enchant(vanishing, 1);
-
-        ItemNbt.getOrCreateTag(trident).putBoolean("Unbreakable", true);
+        trident.set(net.minecraft.core.component.DataComponents.UNBREAKABLE, new net.minecraft.world.item.component.Unbreakable(true));
         ItemNbt.getOrCreateTag(trident).putBoolean("AbyssalTempTrident", true);
 
         LockedItemHandler.giveTemporaryLockedItem(player, trident, ABYSSAL_DURATION);

@@ -214,7 +214,7 @@ public class ClassCommand {
 
         if (gasMaskItem != null) {
             ItemStack gasMask = new ItemStack(gasMaskItem);
-            ItemNbt.setTag(gasMask, buildGasMaskNbt());
+            com.sporeadds.sporeaddsmod.util.GasMaskFactory.decorate(gasMask, player.level().registryAccess(), SporeAddsConfig.MEDIC_GAS_MASK_CURSE_OF_BINDING.get());
             player.setItemSlot(EquipmentSlot.HEAD, gasMask);
         }
     }
@@ -228,27 +228,24 @@ public class ClassCommand {
      * {@link SporeAddsConfig#MEDIC_GAS_MASK_CURSE_OF_BINDING}, sin tocar el resto de su NBT
      * (nombre, lore, Vanishing Curse, modificadores de atributo, Unbreakable...).
      */
-    public static void syncGasMaskCurseOfBinding(ItemStack gasMask) {
+    public static void syncGasMaskCurseOfBinding(ItemStack gasMask, net.minecraft.core.HolderLookup.Provider access) {
         if (!isGasMask(gasMask)) return;
 
         boolean shouldHaveCurse = SporeAddsConfig.MEDIC_GAS_MASK_CURSE_OF_BINDING.get();
-        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(gasMask);
-        boolean hasCurse = enchantments.containsKey(Enchantments.BINDING_CURSE);
+        boolean hasCurse = com.sporeadds.sporeaddsmod.util.EnchantUtil.level(gasMask, access, Enchantments.BINDING_CURSE) > 0;
 
         if (shouldHaveCurse == hasCurse) return;
 
         if (shouldHaveCurse) {
-            enchantments.put(Enchantments.BINDING_CURSE, 1);
+            com.sporeadds.sporeaddsmod.util.EnchantUtil.add(gasMask, access, Enchantments.BINDING_CURSE, 1);
         } else {
-            enchantments.remove(Enchantments.BINDING_CURSE);
+            com.sporeadds.sporeaddsmod.util.EnchantUtil.remove(gasMask, access, Enchantments.BINDING_CURSE);
         }
-
-        EnchantmentHelper.setEnchantments(enchantments, gasMask);
     }
 
     /** Igual, pero sobre lo que el jugador lleve puesto en la cabeza (si es una máscara de gas). */
     public static void syncGasMaskCurseOfBinding(ServerPlayer player) {
-        syncGasMaskCurseOfBinding(player.getItemBySlot(EquipmentSlot.HEAD));
+        syncGasMaskCurseOfBinding(player.getItemBySlot(EquipmentSlot.HEAD), player.level().registryAccess());
     }
 
     private static void removeMedicItems(ServerPlayer player) {
@@ -264,59 +261,5 @@ public class ClassCommand {
                 stack.getItem() == ModItems.INJECTOR.get() || stack.getItem() == ModItems.THROWABLE_BANDAGES.get());
     }
 
-    private static CompoundTag buildGasMaskNbt() {
-        CompoundTag root = new CompoundTag();
-
-        CompoundTag display = new CompoundTag();
-        display.putString("Name", "[\"\",{\"text\":\"Insanity mask\",\"italic\":false,\"color\":\"dark_red\"}]");
-
-        ListTag lore = new ListTag();
-        lore.add(StringTag.valueOf("[\"\",{\"text\":\"After seeing the effects of the infection in others you never want to experience it for yourself (You cannot remove your gas mask)\",\"color\":\"red\"}]"));
-        display.put("Lore", lore);
-
-        root.put("display", display);
-
-        ListTag enchantments = new ListTag();
-
-        if (SporeAddsConfig.MEDIC_GAS_MASK_CURSE_OF_BINDING.get()) {
-            CompoundTag bindingCurse = new CompoundTag();
-            bindingCurse.putInt("lvl", 1);
-            bindingCurse.putString("id", "minecraft:binding_curse");
-            enchantments.add(bindingCurse);
-        }
-
-        CompoundTag vanishingCurse = new CompoundTag();
-        vanishingCurse.putInt("lvl", 1);
-        vanishingCurse.putString("id", "minecraft:vanishing_curse");
-        enchantments.add(vanishingCurse);
-
-        root.put("Enchantments", enchantments);
-        root.putBoolean("Unbreakable", true);
-
-        ListTag attributeModifiers = new ListTag();
-
-        CompoundTag armorModifier = new CompoundTag();
-        armorModifier.putString("AttributeName", "minecraft:generic.armor");
-        armorModifier.putString("Name", "generic.armor");
-        armorModifier.putString("Slot", "head");
-        armorModifier.putDouble("Amount", 4.0D);
-        armorModifier.putInt("Operation", 0);
-        armorModifier.put("UUID", new net.minecraft.nbt.IntArrayTag(new int[] {154321, 245632, 356743, 467854}));
-
-        attributeModifiers.add(armorModifier);
-
-        CompoundTag toughnessModifier = new CompoundTag();
-        toughnessModifier.putString("AttributeName", "minecraft:generic.armor_toughness");
-        toughnessModifier.putString("Name", "generic.armor_toughness");
-        toughnessModifier.putString("Slot", "head");
-        toughnessModifier.putDouble("Amount", 3.0D);
-        toughnessModifier.putInt("Operation", 0);
-        toughnessModifier.put("UUID", new net.minecraft.nbt.IntArrayTag(new int[] {564321, 675432, 786543, 897654}));
-
-        attributeModifiers.add(toughnessModifier);
-
-        root.put("AttributeModifiers", attributeModifiers);
-
-        return root;
-    }
+    
 }

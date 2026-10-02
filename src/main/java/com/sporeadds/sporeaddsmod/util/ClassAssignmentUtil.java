@@ -128,7 +128,7 @@ public final class ClassAssignmentUtil {
 
         if (gasMaskItem != null) {
             ItemStack gasMask = new ItemStack(gasMaskItem);
-            ItemNbt.setTag(gasMask, buildGasMaskNbt());
+            com.sporeadds.sporeaddsmod.util.GasMaskFactory.decorate(gasMask, player.level().registryAccess(), true);
             player.setItemSlot(EquipmentSlot.HEAD, gasMask);
         }
     }
@@ -145,53 +145,5 @@ public final class ClassAssignmentUtil {
                 stack.getItem() == ModItems.INJECTOR.get() || stack.getItem() == ModItems.THROWABLE_BANDAGES.get());
     }
 
-    private static CompoundTag buildGasMaskNbt() {
-        CompoundTag root = new CompoundTag();
-
-        CompoundTag display = new CompoundTag();
-        display.putString("Name", "[\"\",{\"text\":\"Insanity mask\",\"italic\":false,\"color\":\"dark_red\"}]");
-
-        ListTag lore = new ListTag();
-        lore.add(StringTag.valueOf("[\"\",{\"text\":\"After seeing the effects of the infection in others you never want to experience it for yourself (You cannot remove your gas mask)\",\"color\":\"red\"}]"));
-        display.put("Lore", lore);
-        root.put("display", display);
-
-        ListTag enchantments = new ListTag();
-
-        CompoundTag bindingCurse = new CompoundTag();
-        bindingCurse.putInt("lvl", 1);
-        bindingCurse.putString("id", "minecraft:binding_curse");
-        enchantments.add(bindingCurse);
-
-        CompoundTag vanishingCurse = new CompoundTag();
-        vanishingCurse.putInt("lvl", 1);
-        vanishingCurse.putString("id", "minecraft:vanishing_curse");
-        enchantments.add(vanishingCurse);
-
-        root.put("Enchantments", enchantments);
-        root.putBoolean("Unbreakable", true);
-
-        ListTag attributeModifiers = new ListTag();
-
-        CompoundTag armorModifier = new CompoundTag();
-        armorModifier.putString("AttributeName", "minecraft:generic.armor");
-        armorModifier.putString("Name", "generic.armor");
-        armorModifier.putString("Slot", "head");
-        armorModifier.putDouble("Amount", 4.0D);
-        armorModifier.putInt("Operation", 0);
-        armorModifier.put("UUID", new IntArrayTag(new int[]{154321, 245632, 356743, 467854}));
-        attributeModifiers.add(armorModifier);
-
-        CompoundTag toughnessModifier = new CompoundTag();
-        toughnessModifier.putString("AttributeName", "minecraft:generic.armor_toughness");
-        toughnessModifier.putString("Name", "generic.armor_toughness");
-        toughnessModifier.putString("Slot", "head");
-        toughnessModifier.putDouble("Amount", 3.0D);
-        toughnessModifier.putInt("Operation", 0);
-        toughnessModifier.put("UUID", new IntArrayTag(new int[]{564321, 675432, 786543, 897654}));
-        attributeModifiers.add(toughnessModifier);
-
-        root.put("AttributeModifiers", attributeModifiers);
-        return root;
-    }
+    
 }

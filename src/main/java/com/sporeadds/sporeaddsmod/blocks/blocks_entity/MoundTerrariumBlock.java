@@ -156,7 +156,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
 
         spawnVisualSplitExperience(level, Vec3.atCenterOf(pos), 25, 5);
 
-        int looting = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MOB_LOOTING, tool);
+        int looting = com.sporeadds.sporeaddsmod.util.EnchantUtil.level(tool, level.registryAccess(), Enchantments.LOOTING);
 
         Item mutatedFiber = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "mutated_fiber"));
         if (mutatedFiber != null) {

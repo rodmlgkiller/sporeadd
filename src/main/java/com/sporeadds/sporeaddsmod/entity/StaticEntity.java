@@ -254,6 +254,9 @@ public class StaticEntity extends Organoid {
     @Override
     protected void dropCustomDeathLoot(net.minecraft.server.level.ServerLevel serverLevel, net.minecraft.world.damagesource.DamageSource damageSource, boolean hitByPlayer) {
         super.dropCustomDeathLoot(serverLevel, damageSource, hitByPlayer);
+        int lootingMultiplier = damageSource.getEntity() instanceof net.minecraft.world.entity.LivingEntity killer
+                ? com.sporeadds.sporeaddsmod.util.EnchantUtil.level(killer.getMainHandItem(), serverLevel.registryAccess(), net.minecraft.world.item.enchantment.Enchantments.LOOTING)
+                : 0;
 
         // 1. Dropear de 2 a 6 Organoid Membrane
         Item membrane = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"));

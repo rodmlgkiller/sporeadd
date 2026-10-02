@@ -137,18 +137,12 @@ public class Poder12Variants {
         }
     }
 
-    public static ItemStack createArmorPiece(Item item, boolean abyssalMutation) {
+    public static ItemStack createArmorPiece(net.minecraft.core.HolderLookup.Provider registries, Item item, boolean abyssalMutation) {
         ItemStack stack = new ItemStack(item);
 
-        Enchantment binding = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", "binding_curse"));
-        if (binding != null) {
-            stack.enchant(binding, 1);
-        }
+        com.sporeadds.sporeaddsmod.util.EnchantUtil.add(stack, registries, net.minecraft.world.item.enchantment.Enchantments.BINDING_CURSE, 1);
 
-        if (!ItemNbt.hasTag(stack)) {
-            ItemNbt.setTag(stack, new CompoundTag());
-        }
-        ItemNbt.getTag(stack).putBoolean("Unbreakable", true);
+        stack.set(net.minecraft.core.component.DataComponents.UNBREAKABLE, new net.minecraft.world.item.component.Unbreakable(true));
         stack.setDamageValue(0);
 
         if (abyssalMutation && stack.getItem() instanceof SporeArmorData armorData) {
@@ -246,7 +240,7 @@ public class Poder12Variants {
         boolean abyssal = isAbyssal(player);
 
         dropCurrentHelmet(player);
-        player.setItemSlot(EquipmentSlot.HEAD, createArmorPiece(Sitems.INF_UP_HELMET.get(), abyssal));
+        player.setItemSlot(EquipmentSlot.HEAD, createArmorPiece(player.level().registryAccess(), Sitems.INF_UP_HELMET.get(), abyssal));
         player.inventoryMenu.broadcastChanges();
         player.getInventory().setChanged();
 

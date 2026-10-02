@@ -136,10 +136,10 @@ public class Poder12 {
     private static void equipPowerArmor(ServerPlayer player) {
         boolean abyssal = Poder12Variants.isAbyssal(player);
 
-        ItemStack boots = Poder12Variants.createArmorPiece(Sitems.INF_UP_BOOTS.get(), abyssal);
-        ItemStack chest = Poder12Variants.createArmorPiece(Sitems.INF_UP_CHESTPLATE.get(), abyssal);
-        ItemStack helmet = Poder12Variants.createArmorPiece(Sitems.INF_UP_HELMET.get(), abyssal);
-        ItemStack pants = Poder12Variants.createArmorPiece(Sitems.INF_UP_PANTS.get(), abyssal);
+        ItemStack boots = Poder12Variants.createArmorPiece(player.level().registryAccess(), Sitems.INF_UP_BOOTS.get(), abyssal);
+        ItemStack chest = Poder12Variants.createArmorPiece(player.level().registryAccess(), Sitems.INF_UP_CHESTPLATE.get(), abyssal);
+        ItemStack helmet = Poder12Variants.createArmorPiece(player.level().registryAccess(), Sitems.INF_UP_HELMET.get(), abyssal);
+        ItemStack pants = Poder12Variants.createArmorPiece(player.level().registryAccess(), Sitems.INF_UP_PANTS.get(), abyssal);
 
         player.setItemSlot(EquipmentSlot.FEET, boots);
         player.setItemSlot(EquipmentSlot.CHEST, chest);
