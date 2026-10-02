@@ -1,11 +1,12 @@
 package com.sporeadds.sporeaddsmod.client.hive;
 
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundSource;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -78,8 +79,8 @@ public final class HiveSoundDamper {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !active) return;
+    public static void onClientTick(ClientTickEvent.Post event) {
+        if (!active) return;
 
         tick++;
         float progress = Math.min(1.0F, tick / (float) transitionTicks);

@@ -1,23 +1,23 @@
 package com.sporeadds.sporeaddsmod.config;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class SporeAddsClientConfig {
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.IntValue SPORE_BAR_X;
-    public static final ForgeConfigSpec.IntValue SPORE_BAR_Y;
-    public static final ForgeConfigSpec.DoubleValue SPORE_BAR_OPACITY;
+    public static final ModConfigSpec.IntValue SPORE_BAR_X;
+    public static final ModConfigSpec.IntValue SPORE_BAR_Y;
+    public static final ModConfigSpec.DoubleValue SPORE_BAR_OPACITY;
 
-    public static final ForgeConfigSpec.IntValue ARMOR_BAR_X;
-    public static final ForgeConfigSpec.IntValue ARMOR_BAR_Y;
-    public static final ForgeConfigSpec.DoubleValue ARMOR_BAR_OPACITY;
+    public static final ModConfigSpec.IntValue ARMOR_BAR_X;
+    public static final ModConfigSpec.IntValue ARMOR_BAR_Y;
+    public static final ModConfigSpec.DoubleValue ARMOR_BAR_OPACITY;
 
-    public static final ForgeConfigSpec.IntValue ABILITY_CHARGE_BAR_X;
-    public static final ForgeConfigSpec.IntValue ABILITY_CHARGE_BAR_Y;
+    public static final ModConfigSpec.IntValue ABILITY_CHARGE_BAR_X;
+    public static final ModConfigSpec.IntValue ABILITY_CHARGE_BAR_Y;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         builder.push("hud");
 

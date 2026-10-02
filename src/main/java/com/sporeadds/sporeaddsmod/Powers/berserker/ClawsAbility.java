@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.client.BerserkerCooldownClientState;
@@ -23,7 +25,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
@@ -35,7 +36,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -354,8 +355,7 @@ public final class ClawsAbility {
     // ------------------------------------------------------------------ tick
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         if (server == null) return;
 

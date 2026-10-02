@@ -12,7 +12,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.List;
 import java.util.UUID;

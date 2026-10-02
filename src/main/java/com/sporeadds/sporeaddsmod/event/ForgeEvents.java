@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -40,7 +44,6 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
@@ -48,7 +51,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.List;
 import java.util.UUID;
@@ -401,8 +404,7 @@ public class ForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onServerTick(ServerTickEvent.Post event) {
 
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
             player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> SyncSporePacket.syncManaToClient(player));
@@ -534,10 +536,9 @@ public class ForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerTickDelay(net.neoforged.neoforge.event.TickEvent.PlayerTickEvent event) {
-        if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
-        if (event.player.level().isClientSide()) return;
-        if (!(event.player instanceof ServerPlayer player)) return;
+    public static void onPlayerTickDelay(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().isClientSide()) return;
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         java.util.UUID uuid = player.getUUID();
 

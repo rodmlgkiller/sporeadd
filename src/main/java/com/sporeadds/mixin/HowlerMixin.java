@@ -4,8 +4,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.Harbinger.Spore.Sentities.EvolvedInfected.Howler;
-import com.Harbinger.Spore.Core.SConfig;
-import com.Harbinger.Spore.Core.Ssounds;
+import com.Harbinger.Spore.core.SConfig;
+import com.Harbinger.Spore.core.Ssounds;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.Difficulty;

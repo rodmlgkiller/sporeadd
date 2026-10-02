@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.capabilities.PlayerImplantsCapability;
@@ -9,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -19,8 +20,8 @@ import net.neoforged.fml.common.Mod;
 public class ImplantBuffEvents {
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer player))
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player))
             return;
 
         player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {

@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.Powers.*;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;

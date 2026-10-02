@@ -8,9 +8,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.DistExecutor;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.util.DistExecutor;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;

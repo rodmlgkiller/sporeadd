@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.bile;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -199,7 +200,7 @@ public class gluttonousAbilityHandler {
 
     private static void clearBar(ServerPlayer player) {
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> player),
+                com.sporeadds.sporeaddsmod.network.PacketDistributor.PLAYER.with(() -> player),
                 new com.sporeadds.sporeaddsmod.network.SyncGluttonousFragmentsPacket("")
         );
     }
@@ -211,7 +212,7 @@ public class gluttonousAbilityHandler {
         }
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> player),
+                com.sporeadds.sporeaddsmod.network.PacketDistributor.PLAYER.with(() -> player),
                 new com.sporeadds.sporeaddsmod.network.SyncGluttonousFragmentsPacket(String.join(",", fragments))
         );
     }
@@ -309,8 +310,7 @@ public class gluttonousAbilityHandler {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
 
             if (!player.isAlive()) {
                 NeoForge.EVENT_BUS.unregister(this);

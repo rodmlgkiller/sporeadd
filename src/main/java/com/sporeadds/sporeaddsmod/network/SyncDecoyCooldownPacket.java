@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.client.DecoyCooldownClientState;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 import net.neoforged.api.distmarker.Dist;
 
 import java.util.function.Supplier;

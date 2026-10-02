@@ -3,7 +3,7 @@ package com.sporeadds.sporeaddsmod.network;
 import com.sporeadds.sporeaddsmod.research.ResearchPopupType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 import com.sporeadds.sporeaddsmod.research.ResearchPopupManager;
 import java.util.function.Supplier;
 

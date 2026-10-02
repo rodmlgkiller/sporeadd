@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.Sentities.FoliageSpread;
@@ -26,7 +28,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector3f;
 
@@ -167,8 +168,7 @@ public class Poder13 {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
             ticks++;
             if (ticks >= delay) {
                 detonate(level, nukeEntity, player, isCaustic);
@@ -201,8 +201,7 @@ public class Poder13 {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
             ticksElapsed++;
             totalTicks++;
 

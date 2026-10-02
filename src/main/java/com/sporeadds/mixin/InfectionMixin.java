@@ -1,7 +1,7 @@
 package com.sporeadds.mixin;
 
 import com.Harbinger.Spore.Sentities.BasicInfected.InfectedPlayer;
-import com.Harbinger.Spore.sEvents.Infection;
+import com.Harbinger.Spore.Sevents.Infection;
 import com.sporeadds.sporeaddsmod.hive.HiveDownedManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;

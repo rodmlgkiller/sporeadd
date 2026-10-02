@@ -1,8 +1,10 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
-import com.Harbinger.Spore.Core.Sparticles;
+import com.Harbinger.Spore.core.Sparticles;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,7 +13,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -38,12 +39,9 @@ public class PurifierEventHandler {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
-            return;
-        }
+    public static void onLevelTick(LevelTickEvent.Post event) {
 
-        Level rawLevel = event.level;
+        Level rawLevel = event.getLevel();
         if (!(rawLevel instanceof ServerLevel level)) {
             return;
         }

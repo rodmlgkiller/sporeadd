@@ -5,8 +5,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.function.Supplier;
 

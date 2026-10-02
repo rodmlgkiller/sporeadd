@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,7 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -43,9 +44,8 @@ public class AbilityKeyHandler {
             new DustParticleOptions(new Vec3(0.45F, 0.85F, 0.12F).toVector3f(), 1.2F);
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientTick(ClientTickEvent.Post event) {
 
-        if (event.phase != TickEvent.Phase.END) return;
         if (gluttonousFireCooldown > 0) gluttonousFireCooldown--;
 
         Minecraft mc = Minecraft.getInstance();

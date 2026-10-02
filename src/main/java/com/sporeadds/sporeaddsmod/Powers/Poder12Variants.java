@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.Powers;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import com.Harbinger.Spore.Core.Sitems;
+import com.Harbinger.Spore.core.Sitems;
 import com.Harbinger.Spore.Sitems.BaseWeapons.SporeArmorData;
 import com.Harbinger.Spore.Sitems.BaseWeapons.SporeArmorMutations;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;

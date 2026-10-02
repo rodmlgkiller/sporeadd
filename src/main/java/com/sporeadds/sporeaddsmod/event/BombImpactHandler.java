@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.event;
 
 import net.neoforged.fml.common.EventBusSubscriber;
 
-import com.Harbinger.Spore.Core.Seffects;
+import com.Harbinger.Spore.core.Seffects;
 import com.Harbinger.Spore.Sentities.Projectile.FleshBomb;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;

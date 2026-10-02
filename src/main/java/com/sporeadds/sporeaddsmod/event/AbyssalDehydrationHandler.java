@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
@@ -18,7 +20,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -43,12 +44,12 @@ public class AbyssalDehydrationHandler {
     private static final int EFFECT_DURATION = 30 * 20;
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide()) {
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().isClientSide()) {
             return;
         }
 
-        Player player = event.player;
+        Player player = event.getEntity();
         UUID playerId = player.getUUID();
 
         boolean isAbyssal = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)

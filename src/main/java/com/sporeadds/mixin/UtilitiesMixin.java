@@ -51,10 +51,10 @@ public class UtilitiesMixin {
                     entity instanceof TrueCalamity) {
                 return false;
             } else if ((entity instanceof AbstractFish || entity instanceof Animal)
-                    && !com.Harbinger.Spore.Core.SConfig.SERVER.at_an.get()) {
+                    && !com.Harbinger.Spore.core.SConfig.SERVER.at_an.get()) {
                 return false;
-            } else if (!com.Harbinger.Spore.Core.SConfig.SERVER.blacklist.get().isEmpty()) {
-                for(String string : com.Harbinger.Spore.Core.SConfig.SERVER.blacklist.get()){
+            } else if (!com.Harbinger.Spore.core.SConfig.SERVER.blacklist.get().isEmpty()) {
+                for(String string : com.Harbinger.Spore.core.SConfig.SERVER.blacklist.get()){
                     if (string.endsWith(":") && entity.getEncodeId() != null){
                         String[] mod = string.split(":");
                         String[] iterations = entity.getEncodeId().split(":");
@@ -63,7 +63,7 @@ public class UtilitiesMixin {
                         }
                     }
                 }
-                return !com.Harbinger.Spore.Core.SConfig.SERVER.blacklist.get().contains(entity.getEncodeId());
+                return !com.Harbinger.Spore.core.SConfig.SERVER.blacklist.get().contains(entity.getEncodeId());
             }
             return true;
         };

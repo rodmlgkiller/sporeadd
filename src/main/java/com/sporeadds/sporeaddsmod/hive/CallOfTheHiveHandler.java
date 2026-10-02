@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -9,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -68,9 +69,8 @@ public final class CallOfTheHiveHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        if (!(event.player instanceof ServerPlayer player)) return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.tickCount % PROXIMITY_CHECK_INTERVAL != 0) return;
 
         if (player.getEffect(effects.CALL_OF_THE_HIVE.get()) == null) return;

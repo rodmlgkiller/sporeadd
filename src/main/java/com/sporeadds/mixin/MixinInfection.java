@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "com.Harbinger.Spore.sEvents.Infection", remap = false)
+@Mixin(targets = "com.Harbinger.Spore.Sevents.Infection", remap = false)
 public class MixinInfection {
 
     @Inject(

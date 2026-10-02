@@ -1,6 +1,6 @@
 package com.sporeadds.mixin;
 
-import com.Harbinger.Spore.Core.SConfig;
+import com.Harbinger.Spore.core.SConfig;
 import com.Harbinger.Spore.SBlockEntities.OvergrownSpawnerEntity;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.core.BlockPos;

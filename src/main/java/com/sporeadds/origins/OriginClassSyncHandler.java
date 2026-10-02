@@ -1,5 +1,7 @@
 package com.sporeadds.origins;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
@@ -8,7 +10,6 @@ import com.sporeadds.sporeaddsmod.util.ClassAssignmentUtil;
 import com.sporeadds.sporeaddsmod.util.OriginSyncUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -40,9 +41,8 @@ public final class OriginClassSyncHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        if (!(event.player instanceof ServerPlayer player)) return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.tickCount % POLL_INTERVAL_TICKS != 0) return;
         syncClassFromOrigin(player);
     }

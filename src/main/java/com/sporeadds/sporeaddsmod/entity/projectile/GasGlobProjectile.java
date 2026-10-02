@@ -124,7 +124,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
         if (this.level().isClientSide) return;
         if (!(result.getEntity() instanceof LivingEntity target)) return;
 
-        DamageSource damageSource = com.Harbinger.Spore.Damage.SdamageTypes.acid(target);
+        DamageSource damageSource = com.Harbinger.Spore.core.SdamageTypes.acid(target);
 
         if (target.isDamageSourceBlocked(damageSource)) {
             damageShield(target);

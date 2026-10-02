@@ -1,10 +1,14 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import com.Harbinger.Spore.Core.Sitems;
+import com.Harbinger.Spore.core.Sitems;
 import com.Harbinger.Spore.Sentities.Utility.ScentEntity;
 import com.Harbinger.Spore.Sitems.PCI;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
@@ -32,7 +36,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.bus.api.Event;
@@ -382,9 +385,8 @@ public class Poder12 {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (!(event.player instanceof ServerPlayer serverPlayer)) return;
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer serverPlayer)) return;
 
         serverPlayer.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
             int currentHp = data.getArmorHp();
@@ -548,8 +550,7 @@ public class Poder12 {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
             if (!player.isAlive()) {
                 NeoForge.EVENT_BUS.unregister(this);
                 return;

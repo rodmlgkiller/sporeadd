@@ -4,7 +4,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import com.Harbinger.Spore.Core.SConfig;
+import com.Harbinger.Spore.core.SConfig;
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
 import com.Harbinger.Spore.Sentities.BaseEntities.EvolvedInfected;
 import com.Harbinger.Spore.Sentities.BaseEntities.Experiment;

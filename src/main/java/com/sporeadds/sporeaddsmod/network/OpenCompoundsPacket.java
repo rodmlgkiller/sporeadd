@@ -7,8 +7,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.NetworkHooks;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkHooks;
 
 import java.util.function.Supplier;
 

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousEntityLists;
@@ -33,7 +35,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ForgeMod;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -114,8 +115,7 @@ public class Poder9Variants {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
 
             if (!initialized) {
                 initialized = true;
@@ -458,8 +458,7 @@ public class Poder9Variants {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
 
             if (!player.isAlive() || !player.isInWater()) {
                 NeoForge.EVENT_BUS.unregister(this);
@@ -523,8 +522,7 @@ public class Poder9Variants {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
             if (living == null || !living.isAlive()) {
                 NeoForge.EVENT_BUS.unregister(this);
                 return;
@@ -698,7 +696,7 @@ public class Poder9Variants {
         }
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> player),
+                com.sporeadds.sporeaddsmod.network.PacketDistributor.PLAYER.with(() -> player),
                 new com.sporeadds.sporeaddsmod.network.CausticSprayModePacket()
         );
     }

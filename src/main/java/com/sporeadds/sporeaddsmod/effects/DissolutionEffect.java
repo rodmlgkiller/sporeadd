@@ -4,7 +4,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import com.Harbinger.Spore.Damage.SdamageTypes;
+import com.Harbinger.Spore.core.SdamageTypes;
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
 import com.Harbinger.Spore.Sentities.BaseEntities.Organoid;
 import com.sporeadds.sporeaddsmod.ModItems;

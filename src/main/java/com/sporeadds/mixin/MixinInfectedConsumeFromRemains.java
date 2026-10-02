@@ -1,6 +1,6 @@
 package com.sporeadds.mixin;
 
-import com.Harbinger.Spore.Core.Seffects;
+import com.Harbinger.Spore.core.Seffects;
 import com.Harbinger.Spore.Sentities.AI.InfectedConsumeFromRemains;
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.sporeadds.sporeaddsmod.effects.effects;

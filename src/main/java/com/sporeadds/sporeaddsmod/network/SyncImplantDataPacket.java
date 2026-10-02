@@ -4,7 +4,7 @@ import com.sporeadds.sporeaddsmod.capabilities.PlayerImplantsCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;

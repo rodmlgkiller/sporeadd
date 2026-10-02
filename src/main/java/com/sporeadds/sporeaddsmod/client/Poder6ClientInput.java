@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
@@ -10,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -20,8 +21,7 @@ public class Poder6ClientInput {
     private static boolean wasJumpDownLastTick = false; // Solo se usará para los terrestres
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) return;
+    public static void onClientTick(ClientTickEvent.Post event) {
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;

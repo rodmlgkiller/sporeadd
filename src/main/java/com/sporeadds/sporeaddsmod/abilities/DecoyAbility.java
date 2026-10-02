@@ -94,7 +94,7 @@ public class DecoyAbility {
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
                 new com.sporeadds.sporeaddsmod.network.SyncDecoyCooldownPacket(COOLDOWN_TICKS),
                 player.connection.connection,
-                net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT
+                com.sporeadds.sporeaddsmod.network.NetworkDirection.PLAY_TO_CLIENT
         );
 
         return true;

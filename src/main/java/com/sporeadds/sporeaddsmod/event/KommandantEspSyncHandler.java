@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,12 +19,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,10 +43,9 @@ public class KommandantEspSyncHandler {
     private static final Map<UUID, State> LAST_ENTITY_STATES = new HashMap<>();
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        if (event.player.level().isClientSide()) return;
-        if (!(event.player instanceof ServerPlayer target)) return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().isClientSide()) return;
+        if (!(event.getEntity() instanceof ServerPlayer target)) return;
 
         MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
         MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);
@@ -79,10 +81,9 @@ public class KommandantEspSyncHandler {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        if (event.level.isClientSide()) return;
-        if (!(event.level instanceof ServerLevel level)) return;
+    public static void onLevelTick(LevelTickEvent.Post event) {
+        if (event.getLevel().isClientSide()) return;
+        if (!(event.getLevel() instanceof ServerLevel level)) return;
 
         MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
         MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);

@@ -1,6 +1,6 @@
 package com.sporeadds.mixin;
 
-import com.Harbinger.Spore.sEvents.ForgeEvents;
+import com.Harbinger.Spore.Sevents.ForgeEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;

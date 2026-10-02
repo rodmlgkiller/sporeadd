@@ -6,7 +6,7 @@ import com.sporeadds.sporeaddsmod.data.ClassPopulationData;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncSporeIdentifierPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 public class SporeIdentifierUtil {
 

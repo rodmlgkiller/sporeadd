@@ -1,7 +1,7 @@
 package com.sporeadds.mixin;
 
 import com.Harbinger.Spore.Sitems.PCI;
-import com.Harbinger.Spore.sEvents.HandlerEvents;
+import com.Harbinger.Spore.Sevents.HandlerEvents;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;

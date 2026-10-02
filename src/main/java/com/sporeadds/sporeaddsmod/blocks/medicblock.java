@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.network.NetworkHooks;
+import com.sporeadds.sporeaddsmod.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class medicblock extends BaseEntityBlock {

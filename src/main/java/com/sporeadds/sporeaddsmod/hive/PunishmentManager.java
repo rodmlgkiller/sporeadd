@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,7 +30,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -160,8 +161,7 @@ public final class PunishmentManager {
     // ------------------------------------------------------------------ tick: ventanas + drenaje
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onServerTick(ServerTickEvent.Post event) {
 
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server == null) return;

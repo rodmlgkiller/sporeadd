@@ -3,8 +3,8 @@ package com.sporeadds.sporeaddsmod.network;
 import com.sporeadds.sporeaddsmod.client.network.ClientPacketHandlers;
 import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.DistExecutor;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.util.DistExecutor;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
 
 import java.util.ArrayList;

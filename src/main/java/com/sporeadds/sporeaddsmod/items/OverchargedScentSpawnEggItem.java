@@ -1,6 +1,6 @@
 package com.sporeadds.sporeaddsmod.items;
 
-import com.Harbinger.Spore.Core.Sentities;
+import com.Harbinger.Spore.core.Sentities;
 import com.Harbinger.Spore.Sentities.Utility.ScentEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

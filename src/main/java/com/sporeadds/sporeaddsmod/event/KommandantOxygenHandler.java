@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
@@ -7,7 +9,6 @@ import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -38,10 +39,9 @@ public class KommandantOxygenHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
 
-        Player player = event.player;
+        Player player = event.getEntity();
 
         if (player.level().isClientSide()) return;
 

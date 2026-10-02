@@ -1,8 +1,9 @@
 package com.sporeadds.sporeaddsmod.util;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -22,8 +23,7 @@ public final class DelayedTaskScheduler {
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onServerTick(ServerTickEvent.Post event) {
 
         List<ScheduledTask> toRun = new ArrayList<>();
         for (ScheduledTask task : TASKS) {

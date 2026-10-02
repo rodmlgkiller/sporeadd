@@ -6,9 +6,9 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.DistExecutor;
-import net.neoforged.neoforge.network.NetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.util.DistExecutor;
+import com.sporeadds.sporeaddsmod.network.NetworkDirection;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

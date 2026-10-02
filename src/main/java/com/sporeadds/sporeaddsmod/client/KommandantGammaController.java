@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
@@ -11,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LightLayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -37,8 +38,7 @@ public class KommandantGammaController {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onClientTick(ClientTickEvent.Post event) {
 
         Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.player == null || mc.level == null) {

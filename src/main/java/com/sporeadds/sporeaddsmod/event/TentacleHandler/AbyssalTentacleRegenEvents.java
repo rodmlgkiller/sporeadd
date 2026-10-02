@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event.TentacleHandler;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.network.AbyssalTentaclePacket;
@@ -10,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -30,12 +31,9 @@ public class AbyssalTentacleRegenEvents {
     private static final ResourceLocation UMARMER_AMBIENT_RL = ResourceLocation.fromNamespaceAndPath("spore", "umarmer_ambient");
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
-            return;
-        }
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
 
-        if (!(event.player instanceof ServerPlayer player)) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
 

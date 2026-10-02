@@ -529,7 +529,7 @@ public class Poder11 extends PowerBase {
         }
 
         NetworkHandle.INSTANCE.send(
-                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> kommandant),
+                com.sporeadds.sporeaddsmod.network.PacketDistributor.PLAYER.with(() -> kommandant),
                 new VigilRadarPacket(reportLines)
         );
     }

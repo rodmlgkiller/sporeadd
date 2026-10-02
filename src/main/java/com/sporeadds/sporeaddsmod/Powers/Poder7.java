@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
@@ -20,7 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent.PlayerTickEvent;
+import PlayerTickEvent.Post;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -115,7 +117,7 @@ public class Poder7 {
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent event) {
-        Player player = event.player;
+        Player player = event.getEntity();
 
         if (player.getVehicle() instanceof LivingEntity riddenMob &&
                 (riddenMob instanceof Infected || riddenMob instanceof Calamity || riddenMob instanceof UtilityEntity)) {

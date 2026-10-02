@@ -1,6 +1,6 @@
 package com.sporeadds.mixin;
 
-import com.Harbinger.Spore.Core.Seffects;
+import com.Harbinger.Spore.core.Seffects;
 import com.Harbinger.Spore.Sentities.Projectile.ThrownTumor;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.world.effect.MobEffect;

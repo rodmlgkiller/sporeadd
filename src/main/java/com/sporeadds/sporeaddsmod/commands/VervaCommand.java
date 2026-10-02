@@ -7,7 +7,7 @@ import com.sporeadds.sporeaddsmod.network.SyncVervaGuiPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkDirection;
+import com.sporeadds.sporeaddsmod.network.NetworkDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class VervaCommand {
                     List<String> bomb = new ArrayList<>(SporeAddsConfig.BOMB_SUMMONING_MENU.get());
 
                     NetworkHandle.INSTANCE.send(
-                            net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> player),
+                            com.sporeadds.sporeaddsmod.network.PacketDistributor.PLAYER.with(() -> player),
                             new SyncVervaGuiPacket(verwa, organoid, bomb)
                     );
 

@@ -15,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
-import net.neoforged.neoforge.network.NetworkDirection;
+import com.sporeadds.sporeaddsmod.network.NetworkDirection;
 
 import java.util.HashMap;
 import java.util.List;

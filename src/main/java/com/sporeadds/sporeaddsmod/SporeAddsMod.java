@@ -11,32 +11,28 @@ import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import com.sporeadds.sporeaddsmod.event.ImplantBuffEvents;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundRecipesEnabledCondition;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
-import com.sporeadds.sporeaddsmod.network.NetworkHandlerArmorHp;
 import com.sporeadds.sporeaddsmod.particles.SporeaddParticleTypes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.DistExecutor;
+import com.sporeadds.sporeaddsmod.util.DistExecutor;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod("sporeadd")
 public class SporeAddsMod {
 
-    public SporeAddsMod() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        ModLoadingContext.get().registerConfig(
+    public SporeAddsMod(IEventBus modEventBus, ModContainer container) {
+        container.registerConfig(
                 ModConfig.Type.COMMON,
                 SporeAddsConfig.SPEC,
                 "sporeadds-config.toml"
         );
-        ModLoadingContext.get().registerConfig(
+        container.registerConfig(
                 ModConfig.Type.CLIENT,
                 SporeAddsClientConfig.SPEC,
                 "sporeadds-client.toml"
@@ -52,8 +48,7 @@ public class SporeAddsMod {
         ModEntities.register(modEventBus);
         SporeaddParticleTypes.REGISTRY.register(modEventBus);
 
-        NetworkHandle.register();
-        NetworkHandlerArmorHp.register();
+        modEventBus.addListener(NetworkHandle::register);
 
         NeoForge.EVENT_BUS.register(ImplantBuffEvents.class);
 

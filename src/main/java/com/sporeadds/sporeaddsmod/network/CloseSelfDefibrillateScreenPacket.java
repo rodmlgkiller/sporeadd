@@ -1,7 +1,7 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.client.actionwheel.SelfDefibrillateClientHandler;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

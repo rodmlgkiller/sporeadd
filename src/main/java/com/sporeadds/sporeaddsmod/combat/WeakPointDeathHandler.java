@@ -25,7 +25,7 @@ public final class WeakPointDeathHandler {
         WeakPointManager.remove(id);
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+                com.sporeadds.sporeaddsmod.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
                 new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(id, false, null)
         );
     }

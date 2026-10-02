@@ -4,7 +4,7 @@ import com.sporeadds.sporeaddsmod.PlayerData.ScientistResearchData;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.ResearchPopupPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkDirection;
+import com.sporeadds.sporeaddsmod.network.NetworkDirection;
 
 public final class ResearchEventHelper {
 

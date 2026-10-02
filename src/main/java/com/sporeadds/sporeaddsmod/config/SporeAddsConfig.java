@@ -1,7 +1,7 @@
 package com.sporeadds.sporeaddsmod.config;
 
 import com.sporeadds.sporeaddsmod.Powers.Levelstats;
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.ModList;
 
 import java.util.ArrayList;
@@ -9,140 +9,140 @@ import java.util.List;
 
 public class SporeAddsConfig {
 
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.IntValue KOMMANDANT_LEVELS_LOST_ON_DEATH;
-    public static final ForgeConfigSpec.BooleanValue KOMMANDANT_PERMADEATH_NO_RESPAWN;
+    public static final ModConfigSpec.IntValue KOMMANDANT_LEVELS_LOST_ON_DEATH;
+    public static final ModConfigSpec.BooleanValue KOMMANDANT_PERMADEATH_NO_RESPAWN;
 
-    public static final ForgeConfigSpec.BooleanValue HIDE_GHOST;
-    public static final ForgeConfigSpec.BooleanValue HIDE_KOMMANDANT;
-    public static final ForgeConfigSpec.BooleanValue HIDE_MEDIC;
-    public static final ForgeConfigSpec.BooleanValue HIDE_SCIENTIST;
-    public static final ForgeConfigSpec.BooleanValue HIDE_BERSERKER;
-    public static final ForgeConfigSpec.BooleanValue SPORE_PLAYERS_CAN_PHASE_BIOMASS;
-    public static final ForgeConfigSpec.BooleanValue PHASING_APPLIES_BLINDNESS;
+    public static final ModConfigSpec.BooleanValue HIDE_GHOST;
+    public static final ModConfigSpec.BooleanValue HIDE_KOMMANDANT;
+    public static final ModConfigSpec.BooleanValue HIDE_MEDIC;
+    public static final ModConfigSpec.BooleanValue HIDE_SCIENTIST;
+    public static final ModConfigSpec.BooleanValue HIDE_BERSERKER;
+    public static final ModConfigSpec.BooleanValue SPORE_PLAYERS_CAN_PHASE_BIOMASS;
+    public static final ModConfigSpec.BooleanValue PHASING_APPLIES_BLINDNESS;
 
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_1;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_2;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_3;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_4;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_5;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_6;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_7;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_8;
-    public static final ForgeConfigSpec.ConfigValue<String> EVOLUTION_COST_9;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_1;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_2;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_3;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_4;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_5;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_6;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_7;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_8;
+    public static final ModConfigSpec.ConfigValue<String> EVOLUTION_COST_9;
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> VERWA_HORDE_POOL;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> VERWA_HORDE_POOL;
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> VERWA_SUMMONING_MENU;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ORGANOID_SUMMONING_MENU;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> BOMB_SUMMONING_MENU;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> VERWA_SUMMONING_MENU;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> ORGANOID_SUMMONING_MENU;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> BOMB_SUMMONING_MENU;
 
-    public static final ForgeConfigSpec.IntValue ORGANOID_MENU_UNLOCK_LEVEL;
-    public static final ForgeConfigSpec.IntValue BOMB_MENU_UNLOCK_LEVEL;
+    public static final ModConfigSpec.IntValue ORGANOID_MENU_UNLOCK_LEVEL;
+    public static final ModConfigSpec.IntValue BOMB_MENU_UNLOCK_LEVEL;
 
-    public static final ForgeConfigSpec.BooleanValue UNIFIED_MOUNDS_LIST;
+    public static final ModConfigSpec.BooleanValue UNIFIED_MOUNDS_LIST;
 
-    public static final ForgeConfigSpec.IntValue TERMINA_DURATION_MIN;
-    public static final ForgeConfigSpec.IntValue TERMINA_DURATION_MAX;
-    public static final ForgeConfigSpec.IntValue NUKE_LEVEL_PENALTY;
-    public static final ForgeConfigSpec.IntValue NUKE_EXPOSED_LEVEL;
-    public static final ForgeConfigSpec.IntValue NUKE_MYCELIUM_LEVEL;
-    public static final ForgeConfigSpec.IntValue NUKE_TERMINA_LEVEL;
+    public static final ModConfigSpec.IntValue TERMINA_DURATION_MIN;
+    public static final ModConfigSpec.IntValue TERMINA_DURATION_MAX;
+    public static final ModConfigSpec.IntValue NUKE_LEVEL_PENALTY;
+    public static final ModConfigSpec.IntValue NUKE_EXPOSED_LEVEL;
+    public static final ModConfigSpec.IntValue NUKE_MYCELIUM_LEVEL;
+    public static final ModConfigSpec.IntValue NUKE_TERMINA_LEVEL;
 
-    public static final ForgeConfigSpec.BooleanValue VACCINE_CURES_TERMINA;
-    public static final ForgeConfigSpec.BooleanValue BIOMASS_CORE_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue VACCINE_CURES_TERMINA;
+    public static final ModConfigSpec.BooleanValue BIOMASS_CORE_REQUIRES_ORIGIN;
 
-    public static final ForgeConfigSpec.BooleanValue CORE_MOUND_LOCATOR_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue BUCKET_OF_REMAINS_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue IMPROVISED_LOCATOR_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue INJECTOR_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue NANO_INJECTOR_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue THROWABLE_BANDAGES_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue PROTO_LOCATOR_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue SURGICAL_IMPLANTATOR_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue VACCINE_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue SYRINGE_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue SCALPEL_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue REINFORCED_COMBAT_CHAINS_REQUIRES_ORIGIN;
-    public static final ForgeConfigSpec.BooleanValue MEDIC_GAS_MASK_CURSE_OF_BINDING;
+    public static final ModConfigSpec.BooleanValue CORE_MOUND_LOCATOR_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue BUCKET_OF_REMAINS_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue IMPROVISED_LOCATOR_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue INJECTOR_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue NANO_INJECTOR_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue THROWABLE_BANDAGES_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue PROTO_LOCATOR_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue SURGICAL_IMPLANTATOR_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue VACCINE_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue SYRINGE_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue SCALPEL_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue REINFORCED_COMBAT_CHAINS_REQUIRES_ORIGIN;
+    public static final ModConfigSpec.BooleanValue MEDIC_GAS_MASK_CURSE_OF_BINDING;
 
-    public static final ForgeConfigSpec.ConfigValue<Boolean> SPORE_FACTION_ENABLED;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> EXTRA_NEUTRAL_MOBS;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> EXTRA_HOSTILE_MOBS;
+    public static final ModConfigSpec.ConfigValue<Boolean> SPORE_FACTION_ENABLED;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> EXTRA_NEUTRAL_MOBS;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> EXTRA_HOSTILE_MOBS;
 
-    public static final ForgeConfigSpec.BooleanValue KOMMANDANT_DIET_RESTRICTION;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_EDIBLE_ITEMS;
+    public static final ModConfigSpec.BooleanValue KOMMANDANT_DIET_RESTRICTION;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_EDIBLE_ITEMS;
 
-    public static final ForgeConfigSpec.BooleanValue ARMOR_BOSSBAR_ENABLED;
-    public static final ForgeConfigSpec.DoubleValue ARMOR_BOSSBAR_RANGE;
+    public static final ModConfigSpec.BooleanValue ARMOR_BOSSBAR_ENABLED;
+    public static final ModConfigSpec.DoubleValue ARMOR_BOSSBAR_RANGE;
 
-    public static final ForgeConfigSpec.ConfigValue<String> IMPLANT_DEATH_BEHAVIOR;
+    public static final ModConfigSpec.ConfigValue<String> IMPLANT_DEATH_BEHAVIOR;
 
-    public static final ForgeConfigSpec.BooleanValue FROZEN_TUMOR_NERF;
+    public static final ModConfigSpec.BooleanValue FROZEN_TUMOR_NERF;
 
-    public static final ForgeConfigSpec.BooleanValue KOMMANDANT_BLOMFUNG_EFFECTS;
-    public static final ForgeConfigSpec.BooleanValue KOMMANDANT_PELLET_EFFECTS;
+    public static final ModConfigSpec.BooleanValue KOMMANDANT_BLOMFUNG_EFFECTS;
+    public static final ModConfigSpec.BooleanValue KOMMANDANT_PELLET_EFFECTS;
 
-    public static final ForgeConfigSpec.BooleanValue DISSOLUTION_DAMAGE_SPORE_TEAM_ALWAYS;
+    public static final ModConfigSpec.BooleanValue DISSOLUTION_DAMAGE_SPORE_TEAM_ALWAYS;
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_DEFAULT;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_CAUSTIC;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_ABYSSAL;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_GLUTTONOUS;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_DEFAULT;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_CAUSTIC;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_ABYSSAL;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_LEVEL_STATS_GLUTTONOUS;
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_ESP_ENTITIES;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> KOMMANDANT_ESP_ENTITIES;
 
-    public static final ForgeConfigSpec.BooleanValue ORGANITE_MARKER_FOR_BLACKLIST;
+    public static final ModConfigSpec.BooleanValue ORGANITE_MARKER_FOR_BLACKLIST;
 
-    public static final ForgeConfigSpec.DoubleValue KOMMANDANT_MUTAGENIC_COMPOUND_DROP_CHANCE;
+    public static final ModConfigSpec.DoubleValue KOMMANDANT_MUTAGENIC_COMPOUND_DROP_CHANCE;
 
-    public static final ForgeConfigSpec.BooleanValue ENABLE_MUTAGENIC_COMPOUND_RECIPES;
+    public static final ModConfigSpec.BooleanValue ENABLE_MUTAGENIC_COMPOUND_RECIPES;
 
-    public static final ForgeConfigSpec.IntValue KOMMANDANT_VARIANT_CHANGE_LEVEL_PENALTY;
+    public static final ModConfigSpec.IntValue KOMMANDANT_VARIANT_CHANGE_LEVEL_PENALTY;
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> TRAINING_BOOK_ENABLED_CLASSES;
-    public static final ForgeConfigSpec.IntValue TRAINING_BOOK_MAX_USES;
-    public static final ForgeConfigSpec.BooleanValue TRAINING_BOOK_READONLY_WITH_ORIGINS;
-    public static final ForgeConfigSpec.BooleanValue TRAINING_BOOK_GIVE_ON_FIRST_JOIN;
-    public static final ForgeConfigSpec.BooleanValue TRAINING_BOOK_KOMMANDANT_LOCKED;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> TRAINING_BOOK_ENABLED_CLASSES;
+    public static final ModConfigSpec.IntValue TRAINING_BOOK_MAX_USES;
+    public static final ModConfigSpec.BooleanValue TRAINING_BOOK_READONLY_WITH_ORIGINS;
+    public static final ModConfigSpec.BooleanValue TRAINING_BOOK_GIVE_ON_FIRST_JOIN;
+    public static final ModConfigSpec.BooleanValue TRAINING_BOOK_KOMMANDANT_LOCKED;
 
-    public static final ForgeConfigSpec.IntValue TRAINING_BOOK_SLOTS_KOMMANDANT;
-    public static final ForgeConfigSpec.IntValue TRAINING_BOOK_SLOTS_GHOST;
-    public static final ForgeConfigSpec.IntValue TRAINING_BOOK_SLOTS_MEDIC;
-    public static final ForgeConfigSpec.IntValue TRAINING_BOOK_SLOTS_SCIENTIST;
-    public static final ForgeConfigSpec.IntValue TRAINING_BOOK_SLOTS_BERSERKER;
+    public static final ModConfigSpec.IntValue TRAINING_BOOK_SLOTS_KOMMANDANT;
+    public static final ModConfigSpec.IntValue TRAINING_BOOK_SLOTS_GHOST;
+    public static final ModConfigSpec.IntValue TRAINING_BOOK_SLOTS_MEDIC;
+    public static final ModConfigSpec.IntValue TRAINING_BOOK_SLOTS_SCIENTIST;
+    public static final ModConfigSpec.IntValue TRAINING_BOOK_SLOTS_BERSERKER;
 
-    public static final ForgeConfigSpec.DoubleValue CALL_OF_THE_HIVE_CHANCE;
-    public static final ForgeConfigSpec.IntValue HIVE_KOMMANDANT_PLAYER_LEVEL;
-    public static final ForgeConfigSpec.IntValue HIVE_KOMMANDANT_KNOWLEDGE_LEVEL;
-    public static final ForgeConfigSpec.BooleanValue HIVE_FORCE_SURRENDER;
-    public static final ForgeConfigSpec.BooleanValue CALL_OF_THE_HIVE_PERSISTS_WITHOUT_PROTO;
-    public static final ForgeConfigSpec.BooleanValue CALL_OF_THE_HIVE_APPLIES_WITHOUT_PROTO;
+    public static final ModConfigSpec.DoubleValue CALL_OF_THE_HIVE_CHANCE;
+    public static final ModConfigSpec.IntValue HIVE_KOMMANDANT_PLAYER_LEVEL;
+    public static final ModConfigSpec.IntValue HIVE_KOMMANDANT_KNOWLEDGE_LEVEL;
+    public static final ModConfigSpec.BooleanValue HIVE_FORCE_SURRENDER;
+    public static final ModConfigSpec.BooleanValue CALL_OF_THE_HIVE_PERSISTS_WITHOUT_PROTO;
+    public static final ModConfigSpec.BooleanValue CALL_OF_THE_HIVE_APPLIES_WITHOUT_PROTO;
 
-    public static final ForgeConfigSpec.BooleanValue PROTO_FETCH_HUMANS;
-    public static final ForgeConfigSpec.IntValue PROTO_FETCH_HUMANS_COOLDOWN;
-    public static final ForgeConfigSpec.IntValue PROTO_ENGAGEMENT_RADIUS;
+    public static final ModConfigSpec.BooleanValue PROTO_FETCH_HUMANS;
+    public static final ModConfigSpec.IntValue PROTO_FETCH_HUMANS_COOLDOWN;
+    public static final ModConfigSpec.IntValue PROTO_ENGAGEMENT_RADIUS;
 
-    public static final ForgeConfigSpec.BooleanValue PUNISHMENT_EVENT_ENABLED;
-    public static final ForgeConfigSpec.IntValue PUNISHMENT_HIT_COOLDOWN;
-    public static final ForgeConfigSpec.IntValue PUNISHMENT_SHIELD_CHECK_RADIUS;
-    public static final ForgeConfigSpec.IntValue PUNISHMENT_DECAY_INTERVAL_TICKS;
-    public static final ForgeConfigSpec.IntValue PUNISHMENT_RETURN_WINDOW;
-    public static final ForgeConfigSpec.IntValue PUNISHMENT_MAX_CALLED_KOMMANDANTS;
-    public static final ForgeConfigSpec.IntValue PUNISHMENT_MAX_CALLED_KOMMANDANTS_MULTI;
-    public static final ForgeConfigSpec.IntValue PUNISHMENT_SECOND_STRIKE_FLOOR_HEARTS;
-    public static final ForgeConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_LETHAL;
-    public static final ForgeConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_NO_RESPAWN;
+    public static final ModConfigSpec.BooleanValue PUNISHMENT_EVENT_ENABLED;
+    public static final ModConfigSpec.IntValue PUNISHMENT_HIT_COOLDOWN;
+    public static final ModConfigSpec.IntValue PUNISHMENT_SHIELD_CHECK_RADIUS;
+    public static final ModConfigSpec.IntValue PUNISHMENT_DECAY_INTERVAL_TICKS;
+    public static final ModConfigSpec.IntValue PUNISHMENT_RETURN_WINDOW;
+    public static final ModConfigSpec.IntValue PUNISHMENT_MAX_CALLED_KOMMANDANTS;
+    public static final ModConfigSpec.IntValue PUNISHMENT_MAX_CALLED_KOMMANDANTS_MULTI;
+    public static final ModConfigSpec.IntValue PUNISHMENT_SECOND_STRIKE_FLOOR_HEARTS;
+    public static final ModConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_LETHAL;
+    public static final ModConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_NO_RESPAWN;
 
-    public static final ForgeConfigSpec.BooleanValue DEVOTION_EVENT_ENABLED;
-    public static final ForgeConfigSpec.DoubleValue DEVOTION_REWARD_RADIUS;
-    public static final ForgeConfigSpec.IntValue DEVOTION_DURATION_TICKS;
-    public static final ForgeConfigSpec.IntValue DEVOTION_ARMOR_THRESHOLD;
+    public static final ModConfigSpec.BooleanValue DEVOTION_EVENT_ENABLED;
+    public static final ModConfigSpec.DoubleValue DEVOTION_REWARD_RADIUS;
+    public static final ModConfigSpec.IntValue DEVOTION_DURATION_TICKS;
+    public static final ModConfigSpec.IntValue DEVOTION_ARMOR_THRESHOLD;
 
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         builder.push("kommandant");
 

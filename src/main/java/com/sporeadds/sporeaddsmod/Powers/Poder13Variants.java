@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
@@ -36,9 +38,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
 
@@ -128,8 +129,7 @@ public class Poder13Variants {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
 
             if (!player.isAlive() || player.level() != level) {
                 applyPenalty();
@@ -533,8 +533,7 @@ public class Poder13Variants {
         }
 
         @SubscribeEvent
-        public void onServerTick(TickEvent.ServerTickEvent event) {
-            if (event.phase != TickEvent.Phase.END) return;
+        public void onServerTick(ServerTickEvent.Post event) {
 
             if (mound.isAlive() && mound.level() == level) {
                 lastX = mound.getX();

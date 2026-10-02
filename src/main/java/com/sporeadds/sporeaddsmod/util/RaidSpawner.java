@@ -1,6 +1,6 @@
 package com.sporeadds.sporeaddsmod.util;
 
-import com.Harbinger.Spore.Core.Sentities;
+import com.Harbinger.Spore.core.Sentities;
 import com.Harbinger.Spore.Sentities.Utility.ArenaEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

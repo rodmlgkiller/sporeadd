@@ -5,7 +5,7 @@ import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

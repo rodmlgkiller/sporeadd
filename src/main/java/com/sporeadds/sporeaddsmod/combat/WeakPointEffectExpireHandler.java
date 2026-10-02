@@ -1,10 +1,11 @@
 package com.sporeadds.sporeaddsmod.combat;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -18,10 +19,7 @@ public final class WeakPointEffectExpireHandler {
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
-            return;
-        }
+    public static void onServerTick(ServerTickEvent.Post event) {
 
         Set<Integer> trackedIds = new HashSet<>(WeakPointManager.getTrackedIds());
         if (trackedIds.isEmpty()) {
@@ -39,7 +37,7 @@ public final class WeakPointEffectExpireHandler {
                 WeakPointManager.remove(id);
 
                 com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                        net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+                        com.sporeadds.sporeaddsmod.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
                         new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(id, false, null)
                 );
             }

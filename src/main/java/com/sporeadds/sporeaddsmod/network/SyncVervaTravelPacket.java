@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.commands.VervaTransportTask;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;

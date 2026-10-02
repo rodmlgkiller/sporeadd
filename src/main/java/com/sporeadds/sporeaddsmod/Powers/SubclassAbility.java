@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.Powers;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import com.Harbinger.Spore.Core.Sentities;
+import com.Harbinger.Spore.core.Sentities;
 import com.Harbinger.Spore.Sentities.Projectile.GunProjectiles.AssassinBullet;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import com.sporeadds.sporeaddsmod.entity.projectile.GasGlobProjectile;
@@ -131,7 +131,7 @@ public class SubclassAbility {
 
         float extraScale = 1.0F + 0.5F * (chargeLevels / 25.0F);
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> bullet),
+                com.sporeadds.sporeaddsmod.network.PacketDistributor.TRACKING_ENTITY.with(() -> bullet),
                 new com.sporeadds.sporeaddsmod.network.CausticShotScalePacket(bullet.getId(), extraScale)
         );
 

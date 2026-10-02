@@ -60,7 +60,7 @@
 
         private static void syncMarker(LivingEntity target) {
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                    net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
+                    com.sporeadds.sporeaddsmod.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
                     new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(
                             target.getId(), true, WeakPointManager.getOffset(target.getId())
                     )
@@ -69,7 +69,7 @@
 
         private static void syncRemoval(LivingEntity target) {
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                    net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
+                    com.sporeadds.sporeaddsmod.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
                     new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(target.getId(), false, null)
             );
         }

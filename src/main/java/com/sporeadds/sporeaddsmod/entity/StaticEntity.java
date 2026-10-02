@@ -4,7 +4,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import com.Harbinger.Spore.Core.Seffects;
+import com.Harbinger.Spore.core.Seffects;
 import com.Harbinger.Spore.Sentities.BaseEntities.Organoid;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;

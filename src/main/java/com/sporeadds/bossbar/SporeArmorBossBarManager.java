@@ -1,12 +1,13 @@
 package com.sporeadds.bossbar;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.Powers.Poder12Variants;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -24,8 +25,8 @@ public class SporeArmorBossBarManager {
     private static final Map<UUID, SporeArmorBossBar> ACTIVE_BARS = new HashMap<>();
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide) {
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (event.getEntity().level().isClientSide) {
             return;
         }
 
@@ -43,7 +44,7 @@ public class SporeArmorBossBarManager {
             return;
         }
 
-        ServerPlayer player = (ServerPlayer) event.player;
+        ServerPlayer player = (ServerPlayer) event.getEntity();
         UUID playerId = player.getUUID();
 
         AtomicInteger currentArmorHp = new AtomicInteger(0);

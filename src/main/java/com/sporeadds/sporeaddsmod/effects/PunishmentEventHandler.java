@@ -1,12 +1,13 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
@@ -68,10 +69,9 @@ public final class PunishmentEventHandler {
      * evento de salto para que el cambio "pegue" en el jugador local.
      */
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
 
-        Player player = event.player;
+        Player player = event.getEntity();
         if (player.getEffect(effects.PUNISHMENT.get()) == null) return;
         if (player.isPassenger() || player.isInWater() || player.onClimbable()
                 || player.isFallFlying() || player.getAbilities().flying) {

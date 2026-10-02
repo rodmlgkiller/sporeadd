@@ -2,8 +2,8 @@ package com.sporeadds.sporeaddsmod.Powers;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
-import com.Harbinger.Spore.Core.Sentities;
-import com.Harbinger.Spore.Core.Ssounds;
+import com.Harbinger.Spore.core.Sentities;
+import com.Harbinger.Spore.core.Ssounds;
 import com.Harbinger.Spore.Sentities.Organoids.Proto;
 import com.Harbinger.Spore.Sentities.Organoids.Verwa;
 import com.Harbinger.Spore.Sentities.Variants.NaiadVariants;

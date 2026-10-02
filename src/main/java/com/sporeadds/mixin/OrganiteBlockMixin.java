@@ -1,7 +1,7 @@
 package com.sporeadds.mixin;
 
-import com.Harbinger.Spore.Core.SConfig;
-import com.Harbinger.Spore.Core.Seffects;
+import com.Harbinger.Spore.core.SConfig;
+import com.Harbinger.Spore.core.Seffects;
 import com.Harbinger.Spore.ExtremelySusThings.Utilities;
 import com.Harbinger.Spore.Sblocks.OrganiteBlock;
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;

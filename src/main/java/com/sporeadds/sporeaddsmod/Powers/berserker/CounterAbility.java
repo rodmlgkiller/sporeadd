@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
@@ -21,13 +23,12 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -143,8 +144,8 @@ public final class CounterAbility {
     // ------------------------------------------------------------------ window expiry
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || WINDOW_UNTIL.isEmpty()) return;
+    public static void onServerTick(ServerTickEvent.Post event) {
+        if (WINDOW_UNTIL.isEmpty()) return;
         if (event.getServer() == null) return;
 
         Iterator<Map.Entry<UUID, Long>> it = WINDOW_UNTIL.entrySet().iterator();

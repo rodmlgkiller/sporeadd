@@ -7,8 +7,8 @@ import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.NetworkHandlerArmorHp;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkDirection;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.NetworkDirection;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 public class PlayerData {
 

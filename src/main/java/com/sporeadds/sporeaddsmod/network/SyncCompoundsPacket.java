@@ -3,7 +3,7 @@ package com.sporeadds.sporeaddsmod.network;
 import com.sporeadds.sporeaddsmod.client.CompoundsClientState;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

@@ -1,12 +1,13 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -74,8 +75,8 @@ public class ClientRadarHUD {
 
     // Reducir el tiempo en cada tick del cliente
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
+    public static void onClientTick(ClientTickEvent.Post event) {
+        {
             if (displayTimer > 0) {
                 displayTimer--;
             }

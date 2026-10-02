@@ -1,6 +1,6 @@
 package com.sporeadds.sporeaddsmod.client.renderer;
 
-import com.Harbinger.Spore.Client.Renderers.OrganoidMobRenderer;
+import com.Harbinger.Spore.Client.Special.OrganoidMobRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sporeadds.sporeaddsmod.client.model.Cocon;
 import com.sporeadds.sporeaddsmod.client.model.animations.CoconAnimation;

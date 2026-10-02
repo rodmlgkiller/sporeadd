@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.Harbinger.Spore.Sentities.Organoids.Proto;
@@ -20,7 +22,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -138,8 +139,8 @@ public final class ProtoDetectionEvents {
      * reiniciado.
      */
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || WATCHED.isEmpty()) return;
+    public static void onServerTick(ServerTickEvent.Post event) {
+        if (WATCHED.isEmpty()) return;
 
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server == null) return;

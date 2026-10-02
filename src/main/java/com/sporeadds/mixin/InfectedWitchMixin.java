@@ -1,6 +1,6 @@
 package com.sporeadds.mixin;
 
-import com.Harbinger.Spore.Core.SConfig;
+import com.Harbinger.Spore.core.SConfig;
 import com.Harbinger.Spore.Sentities.BasicInfected.InfectedWitch;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;

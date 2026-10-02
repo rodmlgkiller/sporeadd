@@ -4,8 +4,8 @@ import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.sporeadds.sporeaddsmod.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.UUID;
 import java.util.function.Supplier;

@@ -1,6 +1,6 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
-import com.Harbinger.Spore.Core.Sparticles;
+import com.Harbinger.Spore.core.Sparticles;
 import com.Harbinger.Spore.Sentities.Organoids.Proto;
 import com.Harbinger.Spore.Sentities.Utility.ArenaEntity;
 import com.sporeadds.sporeaddsmod.ModItems;

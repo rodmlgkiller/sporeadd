@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.neoforged.neoforge.network.NetworkDirection;
+import com.sporeadds.sporeaddsmod.network.NetworkDirection;
 
 import java.util.HashMap;
 import java.util.HashSet;
