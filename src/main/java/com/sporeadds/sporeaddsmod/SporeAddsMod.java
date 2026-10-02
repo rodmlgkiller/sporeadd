@@ -14,7 +14,6 @@ import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.particles.SporeaddParticleTypes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.bus.api.IEventBus;
 import com.sporeadds.sporeaddsmod.util.DistExecutor;
 import net.neoforged.fml.ModList;
@@ -48,6 +47,7 @@ public class SporeAddsMod {
         com.sporeadds.sporeaddsmod.capabilities.CompoundsCapability.PLAYER_COMPOUNDS.getClass();
         com.sporeadds.sporeaddsmod.capabilities.Capability.ATTACHMENTS.register(modEventBus);
 
+        MutagenicCompoundRecipesEnabledCondition.CONDITION_CODECS.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         effects.MOB_EFFECTS.register(modEventBus);
@@ -69,8 +69,6 @@ public class SporeAddsMod {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            CraftingHelper.register(MutagenicCompoundRecipesEnabledCondition.Serializer.INSTANCE);
-
             // Sincronización inversa origin -> clase. Solo si Origins está presente, para que la
             // clase handler (con imports de Origins) no se cargue cuando sea dependencia opcional ausente.
             if (ModList.get().isLoaded("origins")) {

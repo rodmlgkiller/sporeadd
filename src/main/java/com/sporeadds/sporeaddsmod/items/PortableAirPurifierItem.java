@@ -93,7 +93,7 @@ public class PortableAirPurifierItem extends Item {
             }
 
             if (absorbedAny) {
-                stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+                stack.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(hand));
                 player.getCooldowns().addCooldown(this, 300);
                 level.playSound(
                         null,

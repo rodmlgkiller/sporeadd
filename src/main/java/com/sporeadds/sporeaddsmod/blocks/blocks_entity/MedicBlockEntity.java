@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.state.BlockState;
 import com.sporeadds.sporeaddsmod.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -45,8 +44,6 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 5000;
-
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public MedicBlockEntity(BlockPos pPos, BlockState pState) {
         super(modblocksentity.MEDIC_BLOCK_ENTITY.get(), pPos, pState);
@@ -78,23 +75,8 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
     public boolean isCrafting() {return progress > 0;}
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return lazyItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
     public void onLoad() {
         super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
     }
 
     public void drops() {
@@ -215,7 +197,7 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
             // Asigna el nombre custom si tiene "BloodSubject"
             if (tag.contains("BloodSubject")) {
                 String subject = tag.getString("BloodSubject");
-                result.setHoverName(Component.literal(subject + "'s vaccine"));
+                result.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal(subject + "'s vaccine"));
             }
         }
 
@@ -224,8 +206,8 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
         } else if (output.getItem() == ModItems.VACCINE.get() && output.getCount() < output.getMaxStackSize()) {
             output.grow(1);
             ItemNbt.setTag(output, ItemNbt.getTag(result));
-            if (result.hasCustomHoverName()) {
-                output.setHoverName(result.getHoverName());
+            if (result.has(net.minecraft.core.component.DataComponents.CUSTOM_NAME)) {
+                output.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, result.getHoverName());
             }
             this.itemHandler.setStackInSlot(OUTPUT_SLOT, output);
         }
@@ -237,5 +219,9 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
 
     public Direction getFacing() {
         return this.getBlockState().getValue(medicblock.FACING);
+    }
+
+    public net.neoforged.neoforge.items.IItemHandler getItemHandler() {
+        return itemHandler;
     }
 }

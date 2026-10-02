@@ -69,8 +69,7 @@ public class gluttonousDamageHandler {
         if (durabilityDamage <= 0) return;
 
         InteractionHand hand = player.getUsedItemHand();
-        shield.hurtAndBreak(durabilityDamage, player, brokenPlayer ->
-                brokenPlayer.broadcastBreakEvent(hand));
+        shield.hurtAndBreak(durabilityDamage, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(hand));
     }
 
     private static void clearDamageCooldown(LivingEntity target) {

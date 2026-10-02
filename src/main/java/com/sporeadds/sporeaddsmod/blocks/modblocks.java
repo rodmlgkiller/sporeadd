@@ -23,37 +23,37 @@ public class modblocks {
             DeferredRegister.create(BuiltInRegistries.BLOCK, "sporeadd");
 
     public static final DeferredHolder<Block, Block> MEDIC_BLOCK = registerBlock("medic_block",
-            () -> new medicblock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new medicblock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .noOcclusion()
                     .requiresCorrectToolForDrops()));
 
     public static final DeferredHolder<Block, Block> MEDIC_CONTRUCTOR_BLOCK = registerBlock("medic_constructor_block",
-            () -> new MedicBlockCrafter(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new MedicBlockCrafter(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .noOcclusion()
                     .requiresCorrectToolForDrops()));
 
     public static final DeferredHolder<Block, Block> SCIENTIST_BLOCK = registerBlock("scientist_block",
-            () -> new scientistblock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new scientistblock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .noOcclusion()
                     .requiresCorrectToolForDrops()));
 
     public static final DeferredHolder<Block, Block> CRYO_BLOCK = registerBlock("cryo_block",
-            () -> new cryoblock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new cryoblock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .requiresCorrectToolForDrops()));
 
     public static final DeferredHolder<Block, Block> FREEZER_BLOCK = BLOCKS.register("freezer_block",
-            () -> new FreezerBlock(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN)
+            () -> new FreezerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops()));
 
     public static final DeferredHolder<Block, Block> PELLET_BLOCK = registerBlock("pellet_block",
-            () -> new PelletBlock(BlockBehaviour.Properties.copy(Blocks.GLASS)
+            () -> new PelletBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
                     .mapColor(MapColor.NONE)
                     .strength(0.2f)
                     .noOcclusion()));
 
     public static final DeferredHolder<Block, Block> MOUND_TERRARIUM = registerBlock("mound_terrarium",
-            () -> new MoundTerrariumBlock(BlockBehaviour.Properties.copy(Blocks.GLASS)
+            () -> new MoundTerrariumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
                     .mapColor(MapColor.PLANT)
                     .strength(0.4f)
                     .sound(SoundType.GLASS)

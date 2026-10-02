@@ -24,6 +24,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MedicBlockCrafter extends BaseEntityBlock {
+
+    public static final com.mojang.serialization.MapCodec<MedicBlockCrafter> CODEC = simpleCodec(MedicBlockCrafter::new);
+
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
     public static final VoxelShape SHAPE = Block.box(0,0,0,16,16,16);
 
     public MedicBlockCrafter(Properties properties) {

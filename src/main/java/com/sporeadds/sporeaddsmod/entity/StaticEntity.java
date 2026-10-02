@@ -252,8 +252,8 @@ public class StaticEntity extends Organoid {
      * Evita usar LootTables en JSON garantizando los drops exactos.
      */
     @Override
-    protected void dropCustomDeathLoot(DamageSource damageSource, int lootingMultiplier, boolean hitByPlayer) {
-        super.dropCustomDeathLoot(damageSource, lootingMultiplier, hitByPlayer);
+    protected void dropCustomDeathLoot(net.minecraft.server.level.ServerLevel serverLevel, net.minecraft.world.damagesource.DamageSource damageSource, boolean hitByPlayer) {
+        super.dropCustomDeathLoot(serverLevel, damageSource, hitByPlayer);
 
         // 1. Dropear de 2 a 6 Organoid Membrane
         Item membrane = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"));

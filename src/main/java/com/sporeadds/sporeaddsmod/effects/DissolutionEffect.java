@@ -74,14 +74,7 @@ public class DissolutionEffect extends MobEffect {
                 ItemStack stack = player.getInventory().getItem(i);
 
                 if (!stack.isEmpty() && stack.isDamageableItem()) {
-                    stack.hurtAndBreak(damagePerSecond, player, p -> {
-                        EquipmentSlot slot = getEquipmentSlot(player, stack);
-                        if (slot != null) {
-                            p.broadcastBreakEvent(slot);
-                        } else {
-                            p.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-                        }
-                    });
+                    stack.hurtAndBreak(damagePerSecond, player, EquipmentSlot.MAINHAND);
                 }
             }
         }
@@ -237,9 +230,7 @@ public class DissolutionEffect extends MobEffect {
                 int maxDurability = weapon.getMaxDamage();
                 int damageToApply = Math.max(1, (int) Math.ceil(maxDurability * 0.01D));
 
-                weapon.hurtAndBreak(damageToApply, livingAttacker, breaker ->
-                        breaker.broadcastBreakEvent(EquipmentSlot.MAINHAND)
-                );
+                weapon.hurtAndBreak(damageToApply, livingAttacker, EquipmentSlot.MAINHAND);
             }
         }
 

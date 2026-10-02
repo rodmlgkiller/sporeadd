@@ -157,9 +157,8 @@ public class GasGlobProjectile extends ThrowableProjectile {
         if (shield.isEmpty() || !shield.isDamageableItem()) return;
 
         int amount = Math.max(1, Math.round(shield.getMaxDamage() * SHIELD_MAX_DURABILITY_PERCENT_DAMAGE));
-        shield.hurtAndBreak(amount, target, entity -> entity.broadcastBreakEvent(
-                entity.getUsedItemHand() == net.minecraft.world.InteractionHand.MAIN_HAND
-                        ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND));
+        shield.hurtAndBreak(amount, target, target.getUsedItemHand() == net.minecraft.world.InteractionHand.MAIN_HAND
+                        ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
     }
 
     private void applyStackingDissolution(LivingEntity target) {
@@ -191,7 +190,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);
             if (!stack.isEmpty() && stack.isDamageableItem()) {
-                stack.hurtAndBreak(INVENTORY_DURABILITY_DAMAGE, player, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                stack.hurtAndBreak(INVENTORY_DURABILITY_DAMAGE, player, EquipmentSlot.MAINHAND);
             }
         }
     }

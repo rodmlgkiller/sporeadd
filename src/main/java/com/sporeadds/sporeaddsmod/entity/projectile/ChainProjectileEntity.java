@@ -362,7 +362,10 @@ public class ChainProjectileEntity extends ThrowableProjectile {
             }
         }
 
-        chainStack.hurtAndBreak(chainsAttached, ownerPlayer, player -> this.triggerMassiveBreak(ownerPlayer, target, false));
+        chainStack.hurtAndBreak(chainsAttached, ownerPlayer, net.minecraft.world.entity.EquipmentSlot.MAINHAND);
+        if (chainStack.isEmpty()) {
+            this.triggerMassiveBreak(ownerPlayer, target, false);
+        }
 
         if (this.isAlive()) {
             float damageRatio = (float) chainStack.getDamageValue() / (float) chainStack.getMaxDamage();

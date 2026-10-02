@@ -399,7 +399,7 @@ public class Poder13Variants {
         mound.moveTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getYRot(), player.getXRot());
 
         var difficulty = level.getCurrentDifficultyAt(spawnPos);
-        mound.finalizeSpawn(level, difficulty, MobSpawnType.MOB_SUMMONED, null, null);
+        mound.finalizeSpawn(level, difficulty, MobSpawnType.MOB_SUMMONED, null);
 
         java.util.UUID ownerUUID = player.getUUID();
         java.util.UUID moundUUID = mound.getUUID();

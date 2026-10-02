@@ -163,7 +163,7 @@ public class Poder11 extends PowerBase {
                 Entity spawnedEntity = vigilType.create(level);
                 if (spawnedEntity instanceof Mob vigil) {
                     vigil.setPos(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D);
-                    vigil.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, null, null);
+                    vigil.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, null);
 
                     CompoundTag nbt = new CompoundTag();
                     nbt.putInt("Variant", variant);
@@ -652,9 +652,7 @@ public class Poder11 extends PowerBase {
                 level,
                 level.getCurrentDifficultyAt(spawnPos),
                 MobSpawnType.MOB_SUMMONED,
-                null,
-                null
-        );
+                null);
 
         mound.setPersistenceRequired();
         mound.setCustomName(Component.translatable("entity.sporeadd.jamming_mound"));

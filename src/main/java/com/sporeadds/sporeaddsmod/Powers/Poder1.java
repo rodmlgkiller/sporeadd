@@ -304,9 +304,7 @@ public class Poder1 extends PowerBase {
                             serverLevel,
                             serverLevel.getCurrentDifficultyAt(mob.blockPosition()),
                             MobSpawnType.EVENT,
-                            null,
-                            null
-                    );
+                            null);
                 }
 
                 if (moundEntity instanceof LivingEntity livingCocoon) {
@@ -380,9 +378,7 @@ public class Poder1 extends PowerBase {
                     serverLevel,
                     serverLevel.getCurrentDifficultyAt(mob.blockPosition()),
                     MobSpawnType.EVENT,
-                    null,
-                    null
-            );
+                    null);
         }
 
         if (moundEntity instanceof LivingEntity livingCocoon) {

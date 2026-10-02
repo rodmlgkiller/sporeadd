@@ -1,19 +1,22 @@
 package com.sporeadds.sporeaddsmod.items;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.crafting.conditions.ICondition;
-import net.neoforged.neoforge.common.crafting.conditions.IConditionSerializer;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-public class MutagenicCompoundRecipesEnabledCondition implements ICondition {
+/** Recipe condition ("sporeadd:mutagenic_compound_recipes_enabled") backed by the common config toggle. */
+public record MutagenicCompoundRecipesEnabledCondition() implements ICondition {
 
-    public static final ResourceLocation ID =
-            ResourceLocation.fromNamespaceAndPath("sporeadd", "mutagenic_compound_recipes_enabled");
+    public static final MapCodec<MutagenicCompoundRecipesEnabledCondition> CODEC =
+            MapCodec.unit(new MutagenicCompoundRecipesEnabledCondition());
 
-    @Override
-    public ResourceLocation getID() {
-        return ID;
+    public static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS =
+            DeferredRegister.create(NeoForgeRegistries.Keys.CONDITION_CODECS, "sporeadd");
+
+    static {
+        CONDITION_CODECS.register("mutagenic_compound_recipes_enabled", () -> CODEC);
     }
 
     @Override
@@ -21,22 +24,8 @@ public class MutagenicCompoundRecipesEnabledCondition implements ICondition {
         return SporeAddsConfig.ENABLE_MUTAGENIC_COMPOUND_RECIPES.get();
     }
 
-    public static class Serializer implements IConditionSerializer<MutagenicCompoundRecipesEnabledCondition> {
-
-        public static final Serializer INSTANCE = new Serializer();
-
-        @Override
-        public void write(JsonObject json, MutagenicCompoundRecipesEnabledCondition value) {
-        }
-
-        @Override
-        public MutagenicCompoundRecipesEnabledCondition read(JsonObject json) {
-            return new MutagenicCompoundRecipesEnabledCondition();
-        }
-
-        @Override
-        public ResourceLocation getID() {
-            return ID;
-        }
+    @Override
+    public MapCodec<? extends ICondition> codec() {
+        return CODEC;
     }
 }

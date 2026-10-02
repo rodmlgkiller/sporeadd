@@ -384,8 +384,8 @@ public class Tentacle extends Organoid {
     }
 
     @Override
-    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHit) {
-        super.dropCustomDeathLoot(source, looting, recentlyHit);
+    protected void dropCustomDeathLoot(net.minecraft.server.level.ServerLevel serverLevel, net.minecraft.world.damagesource.DamageSource source, boolean recentlyHit) {
+        super.dropCustomDeathLoot(serverLevel, source, recentlyHit);
 
         Item membrane = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"));
         Item tendons = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "tendons"));

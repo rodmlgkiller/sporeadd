@@ -24,6 +24,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class FreezerBlock extends BaseEntityBlock {
+
+    public static final com.mojang.serialization.MapCodec<FreezerBlock> CODEC = simpleCodec(FreezerBlock::new);
+
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
     public static final BooleanProperty MAIN = BooleanProperty.create("main");
     public static final IntegerProperty CUBE_INDEX = IntegerProperty.create("cube_index", 0, 7);
     public static final VoxelShape SHAPE = Shapes.block();

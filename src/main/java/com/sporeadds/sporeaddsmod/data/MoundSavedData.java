@@ -37,8 +37,7 @@ public class MoundSavedData extends SavedData {
 
     public static MoundSavedData get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(
-                MoundSavedData::load,
-                MoundSavedData::new,
+                new SavedData.Factory<>(MoundSavedData::new, (tag, registries) -> MoundSavedData.load(tag), null),
                 DATA_NAME
         );
     }
@@ -190,7 +189,7 @@ public class MoundSavedData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         ListTag players = new ListTag();
 
         for (Map.Entry<UUID, LinkedList<MoundEntry>> entry : playerMounds.entrySet()) {

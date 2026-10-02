@@ -50,11 +50,17 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import com.sporeadds.sporeaddsmod.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class MoundTerrariumBlock extends BaseEntityBlock {
+
+    public static final com.mojang.serialization.MapCodec<MoundTerrariumBlock> CODEC = simpleCodec(MoundTerrariumBlock::new);
+
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
 
     public static final BooleanProperty HAS_MOUND = BooleanProperty.create("has_mound");
     public static final BooleanProperty LINKED = BooleanProperty.create("linked");
@@ -194,7 +200,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
         terrarium.setHp(0);
         terrarium.setStomach(0);
         player.awardStat(Stats.ITEM_USED.get(tool.getItem()));
-        tool.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
+        tool.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(player.getUsedItemHand()));
     }
 
     private void spawnVisualSplitExperience(ServerLevel level, Vec3 center, int totalXp, int orbCount) {
@@ -279,7 +285,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
 
         terrarium.setHp(Mth.clamp(terrarium.getHp() - 1, 0, 15));
         player.awardStat(Stats.ITEM_USED.get(tool.getItem()));
-        tool.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
+        tool.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(player.getUsedItemHand()));
     }
 
     @Override
@@ -337,7 +343,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
             BlockEntity blockEntity = level.getBlockEntity(pos);
 
             if (blockEntity instanceof MoundTerrariumBlockEntity terrarium) {
-                ForgeCapabilities.ITEM_HANDLER.get(terrarium).ifPresent(handler -> {
+                java.util.Optional.of(terrarium.getItemHandler()).ifPresent(handler -> {
                     for (int i = 0; i < handler.getSlots(); i++) {
                         ItemStack stack = handler.getStackInSlot(i);
                         if (!stack.isEmpty()) {

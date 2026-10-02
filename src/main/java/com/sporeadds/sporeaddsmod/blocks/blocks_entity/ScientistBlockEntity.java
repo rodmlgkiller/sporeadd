@@ -22,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import com.sporeadds.sporeaddsmod.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -53,8 +52,6 @@ public class ScientistBlockEntity extends BlockEntity implements MenuProvider {
         }
 
     };
-
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     // Variables para la biomasa
     private int storedBiomass = 0;
@@ -91,23 +88,8 @@ public class ScientistBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return lazyItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
     public void onLoad() {
         super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
     }
 
     public void drops() {
@@ -201,5 +183,9 @@ public class ScientistBlockEntity extends BlockEntity implements MenuProvider {
 
     public int getProcessingProgress() {
         return processingProgress;
+    }
+
+    public net.neoforged.neoforge.items.IItemHandler getItemHandler() {
+        return itemHandler;
     }
 }

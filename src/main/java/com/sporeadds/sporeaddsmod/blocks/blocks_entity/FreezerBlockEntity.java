@@ -66,11 +66,11 @@ public class FreezerBlockEntity extends BlockEntity {
     );
 
     public static final TagKey<Block> REMOVABLE_FOLIAGE = TagKey.create(
-            BuiltInRegistries.BLOCK.getRegistryKey(),
+            BuiltInRegistries.BLOCK.key(),
             ResourceLocation.fromNamespaceAndPath("spore", "removable_foliage")
     );
     public static final TagKey<Block> INFECTED_BIOMASS = TagKey.create(
-            BuiltInRegistries.BLOCK.getRegistryKey(),
+            BuiltInRegistries.BLOCK.key(),
             ResourceLocation.fromNamespaceAndPath("sporeadd", "infected_biomass")
     );
 

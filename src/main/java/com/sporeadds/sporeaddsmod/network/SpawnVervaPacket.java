@@ -344,7 +344,7 @@ public class SpawnVervaPacket {
 
                     if (rawEntity instanceof Mob mob) {
                         DifficultyInstance difficulty = level.getCurrentDifficultyAt(spawnPos);
-                        mob.finalizeSpawn(level, difficulty, MobSpawnType.COMMAND, null, null);
+                        mob.finalizeSpawn(level, difficulty, MobSpawnType.COMMAND, null);
                     }
 
                     if (msg.variant >= 0 && rawEntity instanceof VariantKeeper keeper) {

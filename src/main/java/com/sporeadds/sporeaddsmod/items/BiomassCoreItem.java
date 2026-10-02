@@ -132,7 +132,7 @@ public class BiomassCoreItem extends Item {
             );
 
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK.get(),
+                    net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK,
                     net.minecraft.sounds.SoundSource.PLAYERS, 0.5F, 1.0F);
 
             return InteractionResultHolder.success(coreStack);

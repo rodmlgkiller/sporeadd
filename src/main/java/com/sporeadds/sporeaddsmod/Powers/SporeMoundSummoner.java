@@ -82,7 +82,7 @@ public class SporeMoundSummoner {
                 mound.position();
 
                 var difficulty = level.getCurrentDifficultyAt(spawnPos);
-                mound.finalizeSpawn(level, difficulty, MobSpawnType.MOB_SUMMONED, null, null);
+                mound.finalizeSpawn(level, difficulty, MobSpawnType.MOB_SUMMONED, null);
 
                 // Configuración de datos persistentes
                 mound.getPersistentData().putInt("max_age", 4);

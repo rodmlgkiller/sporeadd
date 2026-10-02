@@ -127,7 +127,7 @@ public class SyringeItem extends Item {
             tag.putString("BloodCode", code);
             tag.putString("BloodSubject", other.getGameProfile().getName());
             tag.putString("BloodUUID", other.getUUID().toString());
-            stack.setHoverName(
+            stack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, 
                     Component.translatable("item.sporeadds.syringe.filled_name", other.getName())
                             .withStyle(ChatFormatting.DARK_RED)
             );
@@ -192,7 +192,7 @@ public class SyringeItem extends Item {
                 tag.putString("BloodCode", code);
                 tag.putString("BloodSubject", player.getGameProfile().getName());
                 tag.putString("BloodUUID", player.getUUID().toString());
-                stack.setHoverName(
+                stack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, 
                         Component.translatable("item.sporeadds.syringe.filled_name", player.getName())
                                 .withStyle(ChatFormatting.DARK_RED)
                 );

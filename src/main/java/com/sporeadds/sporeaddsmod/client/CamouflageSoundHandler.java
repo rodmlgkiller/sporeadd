@@ -35,7 +35,7 @@ public final class CamouflageSoundHandler {
         if (mc.level == null) return;
 
         BlockParticleOption grassParticle =
-                new BlockParticleOption(ParticleTypes.BLOCK, Blocks.GRASS.defaultBlockState());
+                new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SHORT_GRASS.defaultBlockState());
 
         for (var entity : mc.level.entitiesForRendering()) {
             if (!(entity instanceof AbstractClientPlayer player)) continue;

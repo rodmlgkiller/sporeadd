@@ -18,8 +18,7 @@ public class ClassPopulationData extends SavedData {
 
     public static ClassPopulationData get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(
-                ClassPopulationData::load,
-                ClassPopulationData::new,
+                new SavedData.Factory<>(ClassPopulationData::new, (tag, registries) -> ClassPopulationData.load(tag), null),
                 DATA_NAME
         );
     }
@@ -64,7 +63,7 @@ public class ClassPopulationData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         ListTag entries = new ListTag();
 
         for (Map.Entry<UUID, String> entry : playerClasses.entrySet()) {

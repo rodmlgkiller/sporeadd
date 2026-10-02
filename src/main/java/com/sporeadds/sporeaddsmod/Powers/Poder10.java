@@ -245,9 +245,7 @@ public class Poder10 extends PowerBase {
                 level,
                 level.getCurrentDifficultyAt(spawnPos),
                 MobSpawnType.MOB_SUMMONED,
-                null,
-                null
-        );
+                null);
 
         int variant = VALID_VIGIL_VARIANTS[level.random.nextInt(VALID_VIGIL_VARIANTS.length)];
         vigil.getPersistentData().putInt("Variant", variant);

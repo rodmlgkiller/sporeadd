@@ -118,8 +118,7 @@ public class ScalpelItem extends Item {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.hurtAndBreak(1, attacker, (entity) ->
-                entity.broadcastBreakEvent(net.minecraft.world.entity.EquipmentSlot.MAINHAND));
+        stack.hurtAndBreak(1, attacker, net.minecraft.world.entity.EquipmentSlot.MAINHAND);
 
         if (!(attacker instanceof Player player) || !isScientist(player) || target.level().isClientSide) {
             return true;

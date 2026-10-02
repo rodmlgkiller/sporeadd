@@ -209,8 +209,8 @@ public class MeatAbomination extends Organoid {
     }
 
     @Override
-    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHit) {
-        super.dropCustomDeathLoot(source, looting, recentlyHit);
+    protected void dropCustomDeathLoot(net.minecraft.server.level.ServerLevel serverLevel, net.minecraft.world.damagesource.DamageSource source, boolean recentlyHit) {
+        super.dropCustomDeathLoot(serverLevel, source, recentlyHit);
 
         int biomassInt = Math.max(0, (int) this.getBiomass());
         if (biomassInt <= 0) return;

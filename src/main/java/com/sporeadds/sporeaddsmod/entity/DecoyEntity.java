@@ -93,7 +93,7 @@ public class DecoyEntity extends ArmorStand {
         );
 
         serverLevel.sendParticles(
-                new BlockParticleOption(ParticleTypes.BLOCK, Blocks.GRASS.defaultBlockState()),
+                new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SHORT_GRASS.defaultBlockState()),
                 this.getX(), this.getY() + 0.5, this.getZ(),
                 15, 0.4, 0.4, 0.4, 0.05
         );

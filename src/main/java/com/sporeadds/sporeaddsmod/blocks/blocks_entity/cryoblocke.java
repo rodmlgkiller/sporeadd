@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import com.sporeadds.sporeaddsmod.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -38,8 +37,6 @@ public class cryoblocke extends BlockEntity implements MenuProvider {
             }
         }
     };
-
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public ItemStackHandler getInventory() {
         return this.itemHandler;
@@ -88,23 +85,8 @@ public class cryoblocke extends BlockEntity implements MenuProvider {
 
     // 3. Soporte para Tolvas (Hoppers) y Menú
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return lazyItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
     public void onLoad() {
         super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
     }
 
     // 4. Guardado de datos (NBT)
@@ -143,4 +125,8 @@ public class cryoblocke extends BlockEntity implements MenuProvider {
         return saveWithoutMetadata(registries);
     }
 
+
+    public net.neoforged.neoforge.items.IItemHandler getItemHandler() {
+        return itemHandler;
+    }
 }

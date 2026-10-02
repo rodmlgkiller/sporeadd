@@ -72,7 +72,7 @@ public class Poder3 extends PowerBase {
                     );
 
                     var difficulty = level.getCurrentDifficultyAt(spawnPos);
-                    mound.finalizeSpawn(level, difficulty, MobSpawnType.MOB_SUMMONED, null, null);
+                    mound.finalizeSpawn(level, difficulty, MobSpawnType.MOB_SUMMONED, null);
 
                     UUID ownerUUID = player.getUUID();
                     UUID moundUUID = mound.getUUID();

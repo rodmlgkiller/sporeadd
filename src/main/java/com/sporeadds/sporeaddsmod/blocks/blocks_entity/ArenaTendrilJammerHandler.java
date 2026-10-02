@@ -335,7 +335,7 @@ public class ArenaTendrilJammerHandler {
         }
 
         mound.moveTo(spawnX, spawnPos.getY(), spawnZ, 0.0F, 0.0F);
-        mound.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, null, null);
+        mound.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, null);
         mound.setPersistenceRequired();
         mound.setCustomName(Component.translatable("entity.sporeadd.jamming_mound"));
         mound.setCustomNameVisible(false);

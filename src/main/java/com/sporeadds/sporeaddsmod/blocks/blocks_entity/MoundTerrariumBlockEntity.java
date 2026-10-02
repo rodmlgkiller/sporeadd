@@ -26,7 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import com.sporeadds.sporeaddsmod.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -51,8 +50,6 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
             setChanged();
         }
     };
-
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     protected final ContainerData data = new ContainerData() {
         @Override
@@ -269,23 +266,8 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return lazyItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
     public void onLoad() {
         super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
     }
 
     @Override
@@ -330,5 +312,9 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    public net.neoforged.neoforge.items.IItemHandler getItemHandler() {
+        return itemHandler;
     }
 }

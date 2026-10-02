@@ -21,6 +21,13 @@ import com.sporeadds.sporeaddsmod.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class cryoblock extends BaseEntityBlock {
+
+    public static final com.mojang.serialization.MapCodec<cryoblock> CODEC = simpleCodec(cryoblock::new);
+
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
     protected cryoblock(Properties p) {
         super(p);
     }
