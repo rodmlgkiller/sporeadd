@@ -33,13 +33,7 @@ public class ResearchPopupPacket {
 
     public static void handle(ResearchPopupPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> {
-            if (Minecraft.getInstance().level != null) {
-                com.sporeadds.sporeaddsmod.research.ResearchPopupManager.push(
-                        packet.type, packet.entityId, packet.amount
-                );
-            }
-        });
+        context.enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.researchPopup(packet.type, packet.entityId, packet.amount)));
         context.setPacketHandled(true);
     }
 }

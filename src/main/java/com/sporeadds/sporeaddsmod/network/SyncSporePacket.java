@@ -28,16 +28,7 @@ public class SyncSporePacket {
     }
 
     public static void handle(SyncSporePacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                LocalPlayer player = Minecraft.getInstance().player;
-                if (player != null) {
-                    PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(cap -> {
-                        cap.setSpore(msg.spore);
-                    });
-                }
-            });
-        });
+        ctx.get().enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.syncSpore(msg.spore)));
         ctx.get().setPacketHandled(true);
     }
 

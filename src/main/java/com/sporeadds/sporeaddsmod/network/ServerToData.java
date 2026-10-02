@@ -25,12 +25,7 @@ public class ServerToData {
     }
 
     public static void handle(ServerToData msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                PlayerDataProvider.PLAYER_DATA.get(Minecraft.getInstance().player)
-                        .ifPresent(cap -> cap.setSwitch(msg.value));
-            });
-        });
+        ctx.get().enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.serverToData(msg.value)));
         ctx.get().setPacketHandled(true);
     }
 }

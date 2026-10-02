@@ -115,7 +115,7 @@ public class Poder7 {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent event) {
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
 
         if (player.getVehicle() instanceof LivingEntity riddenMob &&

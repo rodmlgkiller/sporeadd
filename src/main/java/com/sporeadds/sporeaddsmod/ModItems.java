@@ -15,7 +15,6 @@ import net.neoforged.fml.common.Mod;
 import com.sporeadds.sporeaddsmod.blocks.modblocks;
 
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS =

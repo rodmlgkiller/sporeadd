@@ -25,11 +25,7 @@ public class SyncDelayedDefibrillationCooldownPacket {
 
     public static void handle(SyncDelayedDefibrillationCooldownPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> {
-            if (Minecraft.getInstance().level != null) {
-                DelayedDefibrillationCooldownClientState.setCooldown(packet.cooldownTicks);
-            }
-        });
+        context.enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.defibrillationCooldown(packet.cooldownTicks)));
         context.setPacketHandled(true);
     }
 }

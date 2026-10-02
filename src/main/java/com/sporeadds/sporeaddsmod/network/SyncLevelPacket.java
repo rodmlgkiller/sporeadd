@@ -31,17 +31,7 @@ public class SyncLevelPacket {
     }
 
     public static void handle(SyncLevelPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                LocalPlayer player = Minecraft.getInstance().player;
-                if (player != null) {
-                    PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(cap -> {
-                        cap.setLevel(msg.level);
-                        cap.setKnowledgeLevel(msg.knowledgeLevel);
-                    });
-                }
-            });
-        });
+        ctx.get().enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.syncLevel(msg.level, msg.knowledgeLevel)));
         ctx.get().setPacketHandled(true);
     }
 

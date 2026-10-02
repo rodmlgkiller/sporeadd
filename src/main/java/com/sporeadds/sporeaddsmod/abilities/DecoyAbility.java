@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = "sporeadd")
 public class DecoyAbility {
 
     public static final int COOLDOWN_TICKS = 20 * 50;

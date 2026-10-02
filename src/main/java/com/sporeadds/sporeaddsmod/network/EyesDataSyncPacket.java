@@ -45,17 +45,7 @@ public class EyesDataSyncPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
 
-        context.enqueueWork(() -> {
-            if (Minecraft.getInstance().level == null) return;
-
-            Entity entity = Minecraft.getInstance().level.getEntity(playerId);
-            if (!(entity instanceof Player player)) return;
-
-            PlayerData data = PlayerDataProvider.get(player);
-            data.setEyeBaseType(eyeBaseType);
-            data.setEyeGlowType(eyeGlowType);
-            data.setGlowOffset(glowOffsetX, glowOffsetY);
-        });
+        context.enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.eyesData(playerId, eyeBaseType, eyeGlowType, glowOffsetX, glowOffsetY)));
 
         context.setPacketHandled(true);
         return true;

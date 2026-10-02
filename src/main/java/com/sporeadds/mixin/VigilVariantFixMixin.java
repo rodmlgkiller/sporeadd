@@ -33,17 +33,15 @@ public abstract class VigilVariantFixMixin {
 
     @Inject(method = "finalizeSpawn", at = @At("HEAD"), remap = false)
     private void sporeadds$captureVariant(ServerLevelAccessor level, DifficultyInstance difficulty,
-                                          MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag spawnNbt,
+                                          MobSpawnType spawnType, SpawnGroupData groupData,
                                           CallbackInfoReturnable<SpawnGroupData> cir) {
         Vigil self = (Vigil) (Object) this;
-        sporeadds$intendedVariant = (spawnNbt != null && spawnNbt.contains("Variant"))
-                ? spawnNbt.getInt("Variant")
-                : self.getTypeVariant();
+        sporeadds$intendedVariant = self.getTypeVariant();
     }
 
     @Inject(method = "finalizeSpawn", at = @At("RETURN"), remap = false)
     private void sporeadds$restoreVariant(ServerLevelAccessor level, DifficultyInstance difficulty,
-                                          MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag spawnNbt,
+                                          MobSpawnType spawnType, SpawnGroupData groupData,
                                           CallbackInfoReturnable<SpawnGroupData> cir) {
         if (sporeadds$intendedVariant != 0) {
             ((Vigil) (Object) this).setVariant(sporeadds$intendedVariant);

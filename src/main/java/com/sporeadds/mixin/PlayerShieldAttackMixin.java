@@ -22,16 +22,16 @@ public abstract class PlayerShieldAttackMixin {
             method = "blockUsingShield(Lnet/minecraft/world/entity/LivingEntity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/ItemStack;canDisableShield(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/LivingEntity;)Z"
+                    target = "Lnet/minecraft/world/entity/LivingEntity;canDisableShield()Z"
             )
     )
-    private boolean sporeadd$preventFaminedShieldDisable(ItemStack weaponStack, ItemStack shieldStack, LivingEntity defender, LivingEntity attacker) {
+    private boolean sporeadd$preventFaminedShieldDisable(LivingEntity attacker) {
         Holder<MobEffect> famined = BuiltInRegistries.MOB_EFFECT.getHolder(FAMINED_ID).orElse(null);
 
         if (famined != null && attacker instanceof Player player && player.hasEffect(famined)) {
             return false;
         }
 
-        return weaponStack.canDisableShield(shieldStack, defender, attacker);
+        return attacker.canDisableShield();
     }
 }

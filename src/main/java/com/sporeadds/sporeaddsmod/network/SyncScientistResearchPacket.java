@@ -54,45 +54,8 @@ public class SyncScientistResearchPacket {
 
     public static void handle(SyncScientistResearchPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> onClient(packet.kills, packet.data));
+        context.enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.scientistResearch(packet.kills, packet.data)));
         context.setPacketHandled(true);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void onClient(Map<String, Integer> kills, Map<String, Integer> data) {
-        playFirstKillSoundsIfApplicable(kills);
-
-        FieldResearchClientData.setKills(kills);
-        FieldResearchClientData.setDataAmounts(data);
-        FieldResearchClientData.openBookWhenReady();
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private static void playFirstKillSoundsIfApplicable(Map<String, Integer> newKills) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.level == null) {
-            return;
-        }
-
-        boolean isScientist = com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(mc.player).map(d -> "scientist".equalsIgnoreCase(d.getIdentifier())).orElse(false);
-
-        if (!isScientist) {
-            return;
-        }
-
-        for (Map.Entry<String, Integer> entry : newKills.entrySet()) {
-            String entityId = entry.getKey();
-            int newCount = entry.getValue();
-            int oldCount = FieldResearchClientData.getKillCount(entityId);
-
-            if (oldCount == 0 && newCount > 0) {
-                mc.level.playLocalSound(
-                        mc.player.getX(), mc.player.getY(), mc.player.getZ(),
-                        SoundEvents.BOOK_PUT,
-                        SoundSource.PLAYERS,
-                        1.0F, 1.0F, false
-                );
-            }
-        }
-    }
 }

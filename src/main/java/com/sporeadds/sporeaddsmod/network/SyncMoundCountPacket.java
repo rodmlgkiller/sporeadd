@@ -25,14 +25,7 @@ public class SyncMoundCountPacket {
     }
 
     public static void handle(SyncMoundCountPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            Minecraft mc = Minecraft.getInstance();
-            if (mc.player != null) {
-                PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(cap -> {
-                    cap.loadNBTData(msg.nbt);
-                });
-            }
-        });
+        ctx.get().enqueueWork(() -> com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.syncMoundCount(msg.nbt)));
         ctx.get().setPacketHandled(true);
     }
 }

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class gluttonousAbilityHandler {
 
     public static final String FRAGMENTS_TAG = "sporeadd_gluttonous_fragments";

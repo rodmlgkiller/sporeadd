@@ -37,14 +37,8 @@ public class SyncImplantPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
         ctx.enqueueWork(() -> {
-            // En el cliente
             if (ctx.getDirection().getReceptionSide().isClient()) {
-                Player player = Minecraft.getInstance().level.getPlayerByUUID(playerUUID);
-                if (player != null) {
-                    PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
-                        implants.deserializeNBT(player.level().registryAccess(), implantData);
-                    });
-                }
+                com.sporeadds.sporeaddsmod.util.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT, () -> () -> com.sporeadds.sporeaddsmod.client.ClientPacketHooks.implantSync(playerUUID, implantData));
             }
         });
         return true;
