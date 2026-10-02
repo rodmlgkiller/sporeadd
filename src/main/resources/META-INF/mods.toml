@@ -9,7 +9,7 @@ displayName="Spore Add"
 description="""
 Spore additions pretty self explanatory.
 """
-authors="TuNombre"
+authors="rodmlgkiller"
 mixins = "sporeadd.mixins.json"
 
 [[dependencies.sporeadd]]
