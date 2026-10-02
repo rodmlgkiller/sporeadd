@@ -64,7 +64,7 @@ public class SporeAddsMod {
 
         modEventBus.addListener(this::commonSetup);
 
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientInit::registerClientEvents);
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> ClientInit.registerClientEvents(modEventBus));
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -78,8 +78,7 @@ public class SporeAddsMod {
     }
 
     public static class ClientInit {
-        public static void registerClientEvents() {
-            IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        public static void registerClientEvents(IEventBus modEventBus) {
             modEventBus.addListener(SporeKeyMapping::register);
         }
     }

@@ -5,7 +5,7 @@
     import net.minecraft.sounds.SoundEvent;
     import net.minecraft.sounds.SoundSource;
     import net.minecraft.world.entity.LivingEntity;
-    import net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Pre;
+    import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
     import net.neoforged.bus.api.SubscribeEvent;
     import net.neoforged.fml.common.Mod;
 

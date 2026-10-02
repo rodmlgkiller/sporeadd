@@ -509,11 +509,11 @@ public class Poder9Variants {
 
     private static class RemoveSwimSpeedModifierTask {
         private final LivingEntity living;
-        private final UUID modifierId;
+        private final ResourceLocation modifierId;
         private final ServerLevel level;
         private int ticksRemaining;
 
-        public RemoveSwimSpeedModifierTask(LivingEntity living, ServerLevel level, UUID modifierId, int ticksRemaining) {
+        public RemoveSwimSpeedModifierTask(LivingEntity living, ServerLevel level, ResourceLocation modifierId, int ticksRemaining) {
             this.living = living;
             this.level = level;
             this.modifierId = modifierId;

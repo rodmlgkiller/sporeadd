@@ -44,7 +44,7 @@ public class Levelstats {
     }
 
     private static AttributeInstance getSwimSpeedAttribute(ServerPlayer player) {
-        return player.getAttribute(BuiltInRegistries.ATTRIBUTE.get(SWIM_SPEED_ID));
+        return BuiltInRegistries.ATTRIBUTE.getHolder(SWIM_SPEED_ID).map(player::getAttribute).orElse(null);
     }
 
     @SubscribeEvent

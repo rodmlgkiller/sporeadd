@@ -3,7 +3,9 @@
 use strict; use warnings;
 my %imp = (
   ResourceLocation => 'net.minecraft.resources.ResourceLocation',
-  Holder => 'net.minecraft.core.Holder',
+  Holder => "net.minecraft.core.Holder",
+  BuiltInRegistries => "net.minecraft.core.registries.BuiltInRegistries",
+  SubscribeEvent => "net.neoforged.bus.api.SubscribeEvent",
 );
 for my $f (@ARGV) {
   open(my $fh, '<:encoding(UTF-8)', $f) or die; local $/; my $src = <$fh>; close $fh;

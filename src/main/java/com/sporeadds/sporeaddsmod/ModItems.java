@@ -102,7 +102,7 @@ public class ModItems {
     );
     public static final DeferredHolder<Item, Item> COCOON_SPAWN_EGG = ITEMS.register(
             "cocoon_spawn_egg",
-            () -> new net.neoforged.neoforge.common.ForgeSpawnEggItem(
+            () -> new net.neoforged.neoforge.common.DeferredSpawnEggItem(
                     () -> ModEntities.COCOON.get(),
                     0x8B4513, // Color base (marrón/púrpura)
                     0x654321, // Color spots (más oscuro)

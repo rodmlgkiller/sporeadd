@@ -126,7 +126,7 @@ public class ThrowableBandagesItem extends Item {
             return;
         }
 
-        int useTicks = this.getUseDuration(stack) - remainingUseDuration;
+        int useTicks = this.getUseDuration(stack, entity) - remainingUseDuration;
 
         if (!player.isCrouching()) {
             APPLIED_THIS_USE.remove(player.getUUID());
