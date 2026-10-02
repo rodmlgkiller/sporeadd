@@ -1,0 +1,26 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "minecraft:bone_block"
+    },
+    "C" : {
+      "item" : "spore:compound_plate"
+    },
+    "R" : {
+      "item" : "sporeadd:research_50"
+    },
+    "S" : {
+      "item" : "spore:reinforced_syringe"
+    }
+  },
+  "pattern" : [
+    "RCC",
+    "BSC",
+    "BSC"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:rightleg_implant"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

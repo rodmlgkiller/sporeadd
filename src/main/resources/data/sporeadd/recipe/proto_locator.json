@@ -1,0 +1,26 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "spore:brain_remnants"
+    },
+    "C" : {
+      "item" : "spore:compound_plate"
+    },
+    "I" : {
+      "item" : "minecraft:lightning_rod"
+    },
+    "R" : {
+      "item" : "sporeadd:research_100"
+    }
+  },
+  "pattern" : [
+    "RI ",
+    "CBC",
+    "CIC"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:proto_locator"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

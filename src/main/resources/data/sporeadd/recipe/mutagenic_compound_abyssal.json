@@ -1,0 +1,30 @@
+{
+  "key" : {
+    "M" : {
+      "item" : "sporeadd:mutation_essence"
+    },
+    "T" : {
+      "item" : "minecraft:tropical_fish"
+    }
+  },
+  "neoforge:conditions" : [
+    {
+      "type" : "sporeadd:mutagenic_compound_recipes_enabled"
+    }
+  ],
+  "pattern" : [
+    "MMM",
+    "MTM",
+    "MMM"
+  ],
+  "result" : {
+    "components" : {
+      "minecraft:custom_data" : {
+        "CompoundVariant" : "abyssal"
+      },
+      "minecraft:custom_model_data" : 2
+    },
+    "id" : "sporeadd:mutagenic_compound"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

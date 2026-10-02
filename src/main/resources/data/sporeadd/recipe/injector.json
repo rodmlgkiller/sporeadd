@@ -1,0 +1,35 @@
+{
+  "key" : {
+    "1" : {
+      "item" : "spore:bezerk_syringe"
+    },
+    "2" : {
+      "item" : "spore:charred_syringe"
+    },
+    "3" : {
+      "item" : "spore:toxic_syringe"
+    },
+    "4" : {
+      "item" : "spore:vampiric_syringe"
+    },
+    "5" : {
+      "item" : "sporeadd:syringe"
+    },
+    "6" : {
+      "item" : "spore:reinforced_syringe"
+    },
+    "I" : {
+      "item" : "minecraft:iron_ingot"
+    }
+  },
+  "pattern" : [
+    "123",
+    "546",
+    "III"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:injector"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

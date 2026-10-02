@@ -1,0 +1,29 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "minecraft:brown_mushroom"
+    },
+    "I" : {
+      "item" : "spore:biomass"
+    },
+    "P" : {
+      "item" : "sporeadd:individualist_mind"
+    },
+    "R" : {
+      "item" : "minecraft:red_mushroom"
+    },
+    "T" : {
+      "item" : "spore:tumor"
+    }
+  },
+  "pattern" : [
+    "BPR",
+    "ITI",
+    "III"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:mycelial_network_cultive"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

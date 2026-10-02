@@ -1,0 +1,26 @@
+{
+  "key" : {
+    "C" : {
+      "item" : "minecraft:packed_ice"
+    },
+    "O" : {
+      "item" : "minecraft:iron_block"
+    },
+    "R" : {
+      "item" : "sporeadd:research_150"
+    },
+    "U" : {
+      "item" : "spore:cdu"
+    }
+  },
+  "pattern" : [
+    "RUR",
+    "UCU",
+    "OOO"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:freezer_block"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

@@ -13,7 +13,7 @@ public class JeiCompat {
         CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putBoolean("HasMound", true);
         tag.putBoolean("Linked", false);
-        tag.putInt("CustomModelData", 1);
+        ItemNbt.setCustomModelData(stack, 1);
         return stack;
     }
 }

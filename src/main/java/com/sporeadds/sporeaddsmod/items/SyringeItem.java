@@ -132,7 +132,7 @@ public class SyringeItem extends Item {
                             .withStyle(ChatFormatting.DARK_RED)
             );
             tag.putBoolean("Filled", true);
-            tag.putInt("CustomModelData", 1);
+            ItemNbt.setCustomModelData(stack, 1);
 
             sp.displayClientMessage(
                     Component.translatable("message.sporeadds.syringe.extracted_other", other.getName())
@@ -197,7 +197,7 @@ public class SyringeItem extends Item {
                                 .withStyle(ChatFormatting.DARK_RED)
                 );
                 tag.putBoolean("Filled", true);
-                tag.putInt("CustomModelData", 1);
+                ItemNbt.setCustomModelData(stack, 1);
 
                 sp.displayClientMessage(
                         Component.translatable("message.sporeadds.syringe.extracted_self").withStyle(ChatFormatting.GREEN),

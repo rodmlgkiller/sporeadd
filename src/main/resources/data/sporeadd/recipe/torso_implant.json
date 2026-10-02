@@ -1,0 +1,26 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "minecraft:bone_block"
+    },
+    "C" : {
+      "item" : "spore:compound_plate"
+    },
+    "R" : {
+      "item" : "sporeadd:research_50"
+    },
+    "S" : {
+      "item" : "spore:skeletal_syringe"
+    }
+  },
+  "pattern" : [
+    "RSC",
+    "SBS",
+    "CSC"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:torso_implant"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

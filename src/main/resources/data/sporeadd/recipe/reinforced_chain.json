@@ -1,0 +1,23 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "minecraft:coal"
+    },
+    "C" : {
+      "item" : "minecraft:chain"
+    },
+    "I" : {
+      "item" : "minecraft:iron_ingot"
+    }
+  },
+  "pattern" : [
+    "BBB",
+    "CCC",
+    "III"
+  ],
+  "result" : {
+    "count" : 3,
+    "id" : "sporeadd:reinforced_chain"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

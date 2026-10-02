@@ -1,0 +1,20 @@
+{
+  "key" : {
+    "I" : {
+      "item" : "minecraft:iron_nugget"
+    },
+    "S" : {
+      "item" : "spore:syringe"
+    }
+  },
+  "pattern" : [
+    "III",
+    "ISI",
+    "III"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:syringe"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

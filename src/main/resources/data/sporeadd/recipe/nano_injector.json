@@ -1,0 +1,29 @@
+{
+  "key" : {
+    "C" : {
+      "item" : "spore:compound_plate"
+    },
+    "E" : {
+      "item" : "spore:ice_canister"
+    },
+    "I" : {
+      "item" : "spore:circuit_board"
+    },
+    "R" : {
+      "item" : "sporeadd:research_100"
+    },
+    "S" : {
+      "item" : "sporeadd:syringe"
+    }
+  },
+  "pattern" : [
+    "RCC",
+    "SEI",
+    "   "
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:nano_injector"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

@@ -1,0 +1,23 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "minecraft:podzol"
+    },
+    "F" : {
+      "item" : "spore:fungal_bonemeal"
+    },
+    "G" : {
+      "item" : "minecraft:glass_pane"
+    }
+  },
+  "pattern" : [
+    "GGG",
+    "G G",
+    "FBF"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:mound_terrarium"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

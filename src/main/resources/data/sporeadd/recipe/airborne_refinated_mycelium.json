@@ -1,0 +1,27 @@
+{
+  "key" : {
+    "M" : {
+      "item" : "sporeadd:mutation_essence"
+    },
+    "P" : {
+      "components" : {
+        "minecraft:potion_contents" : {
+          "potion" : "spore:mycelium_potion"
+        }
+      },
+      "items" : "minecraft:potion",
+      "strict" : false,
+      "type" : "neoforge:components"
+    }
+  },
+  "pattern" : [
+    "MMM",
+    "MPM",
+    "MMM"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:airborne_refinated_mycelium"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

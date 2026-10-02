@@ -1,0 +1,23 @@
+{
+  "key" : {
+    "E" : {
+      "item" : "sporeadd:weakened_ender_eye"
+    },
+    "O" : {
+      "item" : "spore:organoid_membrane"
+    },
+    "R" : {
+      "item" : "spore:hive_spawn"
+    }
+  },
+  "pattern" : [
+    "ORO",
+    "RER",
+    "ORO"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:hive_eye"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

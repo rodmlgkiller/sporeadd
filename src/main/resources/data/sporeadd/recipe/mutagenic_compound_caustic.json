@@ -1,0 +1,30 @@
+{
+  "key" : {
+    "C" : {
+      "item" : "spore:corrosive_sack"
+    },
+    "M" : {
+      "item" : "sporeadd:mutation_essence"
+    }
+  },
+  "neoforge:conditions" : [
+    {
+      "type" : "sporeadd:mutagenic_compound_recipes_enabled"
+    }
+  ],
+  "pattern" : [
+    "MMM",
+    "MCM",
+    "MMM"
+  ],
+  "result" : {
+    "components" : {
+      "minecraft:custom_data" : {
+        "CompoundVariant" : "caustic"
+      },
+      "minecraft:custom_model_data" : 1
+    },
+    "id" : "sporeadd:mutagenic_compound"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

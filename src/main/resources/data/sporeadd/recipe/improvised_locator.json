@@ -1,0 +1,26 @@
+{
+  "key" : {
+    "C" : {
+      "item" : "spore:circuit_board"
+    },
+    "G" : {
+      "item" : "minecraft:glass"
+    },
+    "I" : {
+      "item" : "minecraft:iron_ingot"
+    },
+    "R" : {
+      "item" : "minecraft:redstone_torch"
+    }
+  },
+  "pattern" : [
+    "R R",
+    "IGI",
+    "ICI"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:improvised_locator"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

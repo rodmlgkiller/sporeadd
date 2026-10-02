@@ -1,0 +1,23 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "spore:mutated_heart"
+    },
+    "C" : {
+      "item" : "spore:nerves"
+    },
+    "F" : {
+      "item" : "spore:tumor"
+    }
+  },
+  "pattern" : [
+    "CFC",
+    "FBF",
+    "CFC"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:potency_bait_i"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

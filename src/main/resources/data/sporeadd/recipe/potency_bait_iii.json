@@ -1,0 +1,23 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "spore:organoid_membrane"
+    },
+    "C" : {
+      "item" : "spore:cerebrum"
+    },
+    "V" : {
+      "item" : "spore:vigil_eye"
+    }
+  },
+  "pattern" : [
+    "CBC",
+    "BVB",
+    "CBC"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:potency_bait_iii"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

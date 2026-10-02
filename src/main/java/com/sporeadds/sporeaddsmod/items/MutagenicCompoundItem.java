@@ -44,7 +44,7 @@ public class MutagenicCompoundItem extends Item {
     public static void setVariant(ItemStack stack, MutagenicCompoundVariant variant) {
         CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putString(TAG_VARIANT, variant.getId());
-        tag.putInt("CustomModelData", variant.getCustomModelData());
+        ItemNbt.setCustomModelData(stack, variant.getCustomModelData());
     }
 
     @Override
@@ -56,12 +56,12 @@ public class MutagenicCompoundItem extends Item {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
 
-        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         MutagenicCompoundVariant variant = getVariant(stack);
         int expected = variant.getCustomModelData();
 
-        if (!tag.contains("CustomModelData") || tag.getInt("CustomModelData") != expected) {
-            tag.putInt("CustomModelData", expected);
+        net.minecraft.world.item.component.CustomModelData current = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA);
+        if (current == null || current.value() != expected) {
+            ItemNbt.setCustomModelData(stack, expected);
         }
     }
 

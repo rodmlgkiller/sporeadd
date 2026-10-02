@@ -82,7 +82,7 @@ public class ModCreativeTabs {
                         CompoundTag fullTag = ItemNbt.getOrCreateTag(fullTerrarium);
                         fullTag.putBoolean("HasMound", true);
                         fullTag.putBoolean("Linked", false);
-                        fullTag.putInt("CustomModelData", 1);
+                        ItemNbt.setCustomModelData(fullTerrarium, 1);
                         output.accept(fullTerrarium);
 
                         output.accept(ModItems.MUTATED_UNDEAD.get());

@@ -1,0 +1,12 @@
+{
+  "ingredients" : [
+    {
+      "item" : "minecraft:sponge"
+    }
+  ],
+  "result" : {
+    "count" : 9,
+    "id" : "sporeadd:small_sponge"
+  },
+  "type" : "minecraft:crafting_shapeless"
+}

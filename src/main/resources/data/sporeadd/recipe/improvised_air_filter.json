@@ -1,0 +1,23 @@
+{
+  "key" : {
+    "P" : {
+      "item" : "minecraft:paper"
+    },
+    "S" : {
+      "item" : "minecraft:string"
+    },
+    "W" : {
+      "item" : "minecraft:white_wool"
+    }
+  },
+  "pattern" : [
+    "PSP",
+    "SWS",
+    "PSP"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:improvised_air_filter"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

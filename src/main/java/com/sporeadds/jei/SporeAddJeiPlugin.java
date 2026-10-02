@@ -100,7 +100,7 @@ public class SporeAddJeiPlugin implements IModPlugin {
 
         ItemStack syringeFilled = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "syringe")));
         CompoundTag syringeTag = ItemNbt.getOrCreateTag(syringeFilled);
-        syringeTag.putInt("CustomModelData", 1);
+        ItemNbt.setCustomModelData(syringeFilled, 1);
 
         ItemStack vaccineOut = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "vaccine")));
 
@@ -116,7 +116,7 @@ public class SporeAddJeiPlugin implements IModPlugin {
         CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putBoolean("HasMound", true);
         tag.putBoolean("Linked", false);
-        tag.putInt("CustomModelData", 1);
+        ItemNbt.setCustomModelData(stack, 1);
         return stack;
     }
 

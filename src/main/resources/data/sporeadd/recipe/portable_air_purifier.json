@@ -1,0 +1,23 @@
+{
+  "key" : {
+    "C" : {
+      "tag" : "sporeadd:air_filter_core"
+    },
+    "I" : {
+      "item" : "minecraft:iron_ingot"
+    },
+    "R" : {
+      "item" : "minecraft:redstone"
+    }
+  },
+  "pattern" : [
+    "III",
+    "RCR",
+    "III"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:portable_air_purifier"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

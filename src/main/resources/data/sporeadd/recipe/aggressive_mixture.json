@@ -1,0 +1,27 @@
+{
+  "key" : {
+    "O" : {
+      "item" : "sporeadd:intact_wither_marrow"
+    },
+    "P" : {
+      "components" : {
+        "minecraft:potion_contents" : {
+          "potion" : "spore:mycelium_potion"
+        }
+      },
+      "items" : "minecraft:potion",
+      "strict" : false,
+      "type" : "neoforge:components"
+    }
+  },
+  "pattern" : [
+    "POP",
+    "OPO",
+    "POP"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:aggressive_mixture"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

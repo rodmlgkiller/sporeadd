@@ -1,0 +1,27 @@
+{
+  "key" : {
+    "M" : {
+      "item" : "sporeadd:mutation_essence"
+    }
+  },
+  "neoforge:conditions" : [
+    {
+      "type" : "sporeadd:mutagenic_compound_recipes_enabled"
+    }
+  ],
+  "pattern" : [
+    "MMM",
+    "MMM",
+    "MMM"
+  ],
+  "result" : {
+    "components" : {
+      "minecraft:custom_data" : {
+        "CompoundVariant" : "none"
+      },
+      "minecraft:custom_model_data" : 0
+    },
+    "id" : "sporeadd:mutagenic_compound"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

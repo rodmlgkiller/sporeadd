@@ -1,0 +1,20 @@
+{
+  "key" : {
+    "I" : {
+      "item" : "spore:organoid_membrane"
+    },
+    "R" : {
+      "item" : "spore:armor_fragment"
+    }
+  },
+  "pattern" : [
+    "RIR",
+    "IRI",
+    "RIR"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:reinforced_organoid_tissue"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

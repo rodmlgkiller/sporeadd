@@ -1,0 +1,16 @@
+{
+  "key" : {
+    "I" : {
+      "item" : "minecraft:iron_ingot"
+    }
+  },
+  "pattern" : [
+    " I",
+    " I"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:scalpel"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

@@ -1,0 +1,26 @@
+{
+  "key" : {
+    "C" : {
+      "item" : "spore:container"
+    },
+    "I" : {
+      "item" : "minecraft:iron_ingot"
+    },
+    "N" : {
+      "item" : "spore:incubator"
+    },
+    "S" : {
+      "item" : "spore:scanner"
+    }
+  },
+  "pattern" : [
+    "III",
+    "NCS",
+    "III"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:scientist_block"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

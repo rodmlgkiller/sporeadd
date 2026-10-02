@@ -1,0 +1,30 @@
+{
+  "key" : {
+    "M" : {
+      "item" : "sporeadd:mutation_essence"
+    },
+    "S" : {
+      "item" : "spore:skull_soup"
+    }
+  },
+  "neoforge:conditions" : [
+    {
+      "type" : "sporeadd:mutagenic_compound_recipes_enabled"
+    }
+  ],
+  "pattern" : [
+    "MMM",
+    "MSM",
+    "MMM"
+  ],
+  "result" : {
+    "components" : {
+      "minecraft:custom_data" : {
+        "CompoundVariant" : "gluttonous"
+      },
+      "minecraft:custom_model_data" : 3
+    },
+    "id" : "sporeadd:mutagenic_compound"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

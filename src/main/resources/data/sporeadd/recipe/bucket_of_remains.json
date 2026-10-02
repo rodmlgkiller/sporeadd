@@ -1,0 +1,36 @@
+{
+  "ingredients" : [
+    {
+      "item" : "spore:innards"
+    },
+    {
+      "item" : "spore:innards"
+    },
+    {
+      "item" : "spore:innards"
+    },
+    {
+      "item" : "spore:innards"
+    },
+    {
+      "item" : "spore:altered_spleen"
+    },
+    {
+      "item" : "spore:altered_spleen"
+    },
+    {
+      "item" : "spore:organoid_membrane"
+    },
+    {
+      "item" : "spore:organoid_membrane"
+    },
+    {
+      "item" : "minecraft:bucket"
+    }
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:bucket_of_remains"
+  },
+  "type" : "minecraft:crafting_shapeless"
+}

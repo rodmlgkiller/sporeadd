@@ -1,0 +1,28 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "spore:fungal_bonemeal"
+    },
+    "C" : {
+      "item" : "spore:cerebrum"
+    },
+    "F" : {
+      "components" : {
+        "minecraft:custom_model_data" : 1
+      },
+      "items" : "sporeadd:mound_terrarium",
+      "strict" : false,
+      "type" : "neoforge:components"
+    }
+  },
+  "pattern" : [
+    "CBC",
+    "BFB",
+    "CBC"
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:potency_bait_ii"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

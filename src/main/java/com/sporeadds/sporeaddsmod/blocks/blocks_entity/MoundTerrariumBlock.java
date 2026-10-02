@@ -299,7 +299,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
         tag.putBoolean("HasMound", hasMound);
         tag.putBoolean("Linked", linked);
         if (hasMound) {
-            tag.putInt("CustomModelData", 1);
+            ItemNbt.setCustomModelData(stack, 1);
         }
 
         return stack;

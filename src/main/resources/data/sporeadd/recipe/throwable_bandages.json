@@ -1,0 +1,12 @@
+{
+  "ingredients" : [
+    {
+      "tag" : "minecraft:wool"
+    }
+  ],
+  "result" : {
+    "count" : 2,
+    "id" : "sporeadd:throwable_bandages"
+  },
+  "type" : "minecraft:crafting_shapeless"
+}

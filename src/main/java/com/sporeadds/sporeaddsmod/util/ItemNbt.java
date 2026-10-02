@@ -32,6 +32,11 @@ public final class ItemNbt {
         return fresh.getUnsafe();
     }
 
+    /** Item model overrides now key off the custom_model_data component rather than the CustomModelData tag. */
+    public static void setCustomModelData(ItemStack stack, int value) {
+        stack.set(DataComponents.CUSTOM_MODEL_DATA, new net.minecraft.world.item.component.CustomModelData(value));
+    }
+
     public static void setTag(ItemStack stack, CompoundTag tag) {
         if (tag == null) {
             stack.remove(DataComponents.CUSTOM_DATA);

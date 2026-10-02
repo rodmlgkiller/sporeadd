@@ -90,7 +90,7 @@ public class MoundTerrariumItem extends BlockItem {
 
             stackTag.putBoolean("HasMound", true);
             stackTag.putBoolean("Linked", entityTag.getBoolean("linked"));
-            stackTag.putInt("CustomModelData", 1);
+            ItemNbt.setCustomModelData(stack, 1);
 
             level.playSound(
                     null,

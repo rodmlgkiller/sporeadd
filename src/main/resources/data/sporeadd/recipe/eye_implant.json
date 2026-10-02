@@ -1,0 +1,29 @@
+{
+  "key" : {
+    "B" : {
+      "item" : "spore:scanner"
+    },
+    "C" : {
+      "item" : "spore:compound_plate"
+    },
+    "I" : {
+      "item" : "spore:circuit_board"
+    },
+    "R" : {
+      "item" : "sporeadd:research_50"
+    },
+    "V" : {
+      "item" : "spore:vigil_eye"
+    }
+  },
+  "pattern" : [
+    "R C",
+    "VBI",
+    "   "
+  ],
+  "result" : {
+    "count" : 1,
+    "id" : "sporeadd:eye_implant"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

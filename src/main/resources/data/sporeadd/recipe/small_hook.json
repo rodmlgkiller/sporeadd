@@ -1,0 +1,15 @@
+{
+  "key" : {
+    "I" : {
+      "item" : "minecraft:iron_ingot"
+    }
+  },
+  "pattern" : [
+    "II",
+    " I"
+  ],
+  "result" : {
+    "id" : "sporeadd:small_hook"
+  },
+  "type" : "minecraft:crafting_shaped"
+}

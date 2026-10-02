@@ -1,0 +1,18 @@
+{
+  "key" : {
+    "A" : {
+      "item" : "spore:scent_spawnegg"
+    },
+    "I" : {
+      "item" : "spore:nerves"
+    }
+  },
+  "pattern" : [
+    "AI",
+    "IA"
+  ],
+  "result" : {
+    "id" : "sporeadd:overcharged_scent_spawn_egg"
+  },
+  "type" : "minecraft:crafting_shaped"
+}
