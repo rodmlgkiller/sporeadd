@@ -1,17 +1,19 @@
 package com.sporeadds.sporeaddsmod.particles;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.client.particle.ElectricityParticle;
 import com.sporeadds.sporeaddsmod.client.particle.GasParticle;
 import com.sporeadds.sporeaddsmod.client.particle.GasSmallParticle;
 import com.sporeadds.sporeaddsmod.client.particle.RainParticle;
 import com.sporeadds.sporeaddsmod.client.particle.RainSplashParticle;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.api.distmarker.Dist;
 
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class SporeaddParticles {
 
     @SubscribeEvent

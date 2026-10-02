@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 public class ChainArmLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
     private static final ResourceLocation MOD_CHAIN_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/chain2.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/chain2.png");
 
     public ChainArmLayer(RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> parent) {
         super(parent);

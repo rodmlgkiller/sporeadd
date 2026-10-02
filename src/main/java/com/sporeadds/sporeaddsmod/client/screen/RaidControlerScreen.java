@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class RaidControlerScreen extends AbstractContainerScreen<RaidControlerMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/raid_controler.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/raid_controler.png");
 
     private static final int BUTTON_X1 = 115;
     private static final int BUTTON_Y1 = 39;

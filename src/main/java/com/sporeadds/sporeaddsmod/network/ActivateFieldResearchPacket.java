@@ -3,7 +3,7 @@ package com.sporeadds.sporeaddsmod.network;
 import com.sporeadds.sporeaddsmod.abilities.FieldResearchAbility;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

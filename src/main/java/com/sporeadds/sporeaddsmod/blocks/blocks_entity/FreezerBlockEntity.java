@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.modblocksentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +24,6 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,41 +52,41 @@ public class FreezerBlockEntity extends BlockEntity {
     // LISTAS DE VARIEDAD DE FOLIAGE (Techo y Paredes)
     // ==========================================================
     private static final List<ResourceLocation> ROOF_FOLIAGE_OPTIONS = Arrays.asList(
-            new ResourceLocation("spore", "growths_big"),
-            new ResourceLocation("spore", "growths_small"),
-            new ResourceLocation("spore", "rotten_bush"),
-            new ResourceLocation("spore", "bloomfung")
+            ResourceLocation.fromNamespaceAndPath("spore", "growths_big"),
+            ResourceLocation.fromNamespaceAndPath("spore", "growths_small"),
+            ResourceLocation.fromNamespaceAndPath("spore", "rotten_bush"),
+            ResourceLocation.fromNamespaceAndPath("spore", "bloomfung")
     );
 
     private static final List<ResourceLocation> WALL_FOLIAGE_OPTIONS = Arrays.asList(
-            new ResourceLocation("spore", "wall_growths"),
-            new ResourceLocation("spore", "wall_growths_fleshy")
+            ResourceLocation.fromNamespaceAndPath("spore", "wall_growths"),
+            ResourceLocation.fromNamespaceAndPath("spore", "wall_growths_fleshy")
     );
 
     public static final TagKey<Block> REMOVABLE_FOLIAGE = TagKey.create(
-            ForgeRegistries.BLOCKS.getRegistryKey(),
-            new ResourceLocation("spore", "removable_foliage")
+            BuiltInRegistries.BLOCK.getRegistryKey(),
+            ResourceLocation.fromNamespaceAndPath("spore", "removable_foliage")
     );
     public static final TagKey<Block> INFECTED_BIOMASS = TagKey.create(
-            ForgeRegistries.BLOCKS.getRegistryKey(),
-            new ResourceLocation("sporeadd", "infected_biomass")
+            BuiltInRegistries.BLOCK.getRegistryKey(),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "infected_biomass")
     );
 
     private static final List<ResourceLocation> BIOMASS_BLOCKS = Arrays.asList(
-            new ResourceLocation("sporeadd", "biomass_block"),
-            new ResourceLocation("sporeadd", "sicken_biomass_block"),
-            new ResourceLocation("sporeadd", "calcified_biomass_block"),
-            new ResourceLocation("sporeadd", "membrane_block"),
-            new ResourceLocation("sporeadd", "rooted_biomass"),
-            new ResourceLocation("sporeadd", "gastric_biomass_block"),
-            new ResourceLocation("sporeadd", "rooted_mycelium"),
-            new ResourceLocation("spore", "biomass_block"),
-            new ResourceLocation("spore", "sicken_biomass_block"),
-            new ResourceLocation("spore", "calcified_biomass_block"),
-            new ResourceLocation("spore", "membrane_block"),
-            new ResourceLocation("spore", "rooted_biomass"),
-            new ResourceLocation("spore", "gastric_biomass_block"),
-            new ResourceLocation("spore", "rooted_mycelium")
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "sicken_biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "calcified_biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "membrane_block"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "rooted_biomass"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "gastric_biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "rooted_mycelium"),
+            ResourceLocation.fromNamespaceAndPath("spore", "biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("spore", "sicken_biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("spore", "calcified_biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("spore", "membrane_block"),
+            ResourceLocation.fromNamespaceAndPath("spore", "rooted_biomass"),
+            ResourceLocation.fromNamespaceAndPath("spore", "gastric_biomass_block"),
+            ResourceLocation.fromNamespaceAndPath("spore", "rooted_mycelium")
     );
 
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
@@ -126,7 +127,7 @@ public class FreezerBlockEntity extends BlockEntity {
     }
 
     private static boolean isBiomass(BlockState state) {
-        ResourceLocation key = ForgeRegistries.BLOCKS.getKey(state.getBlock());
+        ResourceLocation key = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         return key != null && BIOMASS_BLOCKS.contains(key);
     }
 
@@ -171,7 +172,7 @@ public class FreezerBlockEntity extends BlockEntity {
                     BlockPos abovePos = currentPos.above();
                     if (level.isEmptyBlock(abovePos) && Block.canSupportRigidBlock(level, currentPos) && level.getRandom().nextFloat() < 0.6F) {
                         ResourceLocation randomRoofLoc = ROOF_FOLIAGE_OPTIONS.get(level.getRandom().nextInt(ROOF_FOLIAGE_OPTIONS.size()));
-                        Block roofFoliage = ForgeRegistries.BLOCKS.getValue(randomRoofLoc);
+                        Block roofFoliage = BuiltInRegistries.BLOCK.get(randomRoofLoc);
                         if (roofFoliage != null) {
                             level.setBlock(abovePos, roofFoliage.defaultBlockState(), 3);
                         }
@@ -202,7 +203,7 @@ public class FreezerBlockEntity extends BlockEntity {
 
                         if (!hasNearbyFoliage && level.getRandom().nextFloat() < 0.6F) {
                             ResourceLocation randomWallLoc = WALL_FOLIAGE_OPTIONS.get(level.getRandom().nextInt(WALL_FOLIAGE_OPTIONS.size()));
-                            Block wallFoliage = ForgeRegistries.BLOCKS.getValue(randomWallLoc);
+                            Block wallFoliage = BuiltInRegistries.BLOCK.get(randomWallLoc);
                             if (wallFoliage != null) {
                                 BlockState wallState = wallFoliage.defaultBlockState();
                                 Property<?> property = wallState.getBlock().getStateDefinition().getProperty("facing");
@@ -216,7 +217,7 @@ public class FreezerBlockEntity extends BlockEntity {
                 }
             }
         }
-        level.playSound(null, pos, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "inf_damage")), SoundSource.BLOCKS, 1.0F, 1.0F);
+        level.playSound(null, pos, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "inf_damage")), SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, FreezerBlockEntity be) {
@@ -324,7 +325,7 @@ public class FreezerBlockEntity extends BlockEntity {
             Collections.shuffle(potentialJamSpots, be.random);
 
             BlockState snowState = Blocks.SNOW_BLOCK.defaultBlockState();
-            Block snowLayerBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("minecraft", "snow"));
+            Block snowLayerBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("minecraft", "snow"));
 
             int placedSolid = 0;
             int placedLayers = 0;
@@ -361,7 +362,7 @@ public class FreezerBlockEntity extends BlockEntity {
                 }
             }
 
-            level.playSound(null, pos, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("minecraft", "block.snow.place")), SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, pos, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "block.snow.place")), SoundSource.BLOCKS, 1.0F, 1.0F);
             return;
         }
 
@@ -380,7 +381,7 @@ public class FreezerBlockEntity extends BlockEntity {
         if (be.tickCount % 40 == 0) {
             level.playSound(
                     null, pos,
-                    ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "cdu_ambient")),
+                    BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "cdu_ambient")),
                     SoundSource.BLOCKS, 7.0F, 0.5F
             );
         }
@@ -393,7 +394,7 @@ public class FreezerBlockEntity extends BlockEntity {
 
             Vec3 centerPos = Vec3.atCenterOf(pos);
 
-            MobEffect frostbite = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "frostbite"));
+            MobEffect frostbite = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "frostbite"));
 
             if (frostbite != null) {
                 for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, fullArea)) {
@@ -432,9 +433,9 @@ public class FreezerBlockEntity extends BlockEntity {
                 level.removeBlock(bp, false);
             }
 
-            ResourceLocation remainsKey = ForgeRegistries.BLOCKS.getKey(bs.getBlock());
+            ResourceLocation remainsKey = BuiltInRegistries.BLOCK.getKey(bs.getBlock());
             if (remainsKey != null && remainsKey.getPath().equals("remains")) {
-                Block frozenRemains = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(remainsKey.getNamespace(), "frozen_remains"));
+                Block frozenRemains = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(remainsKey.getNamespace(), "frozen_remains"));
                 if (frozenRemains != null) {
                     level.setBlock(bp, frozenRemains.defaultBlockState(), 3);
                 }
@@ -445,23 +446,23 @@ public class FreezerBlockEntity extends BlockEntity {
             }
 
             if (isBiomass(bs) && level.getRandom().nextFloat() < 0.1F) {
-                Block freezeBurned = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "freeze_burned_biomass"));
+                Block freezeBurned = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "freeze_burned_biomass"));
                 if (freezeBurned != null) {
                     level.setBlock(bp, freezeBurned.defaultBlockState(), 3);
                 }
             }
 
-            ResourceLocation bileKey = ForgeRegistries.BLOCKS.getKey(bs.getBlock());
+            ResourceLocation bileKey = BuiltInRegistries.BLOCK.getKey(bs.getBlock());
             if (bileKey != null && bileKey.getPath().equals("bile") && level.getRandom().nextFloat() < 0.1F) {
-                Block crustedBile = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(bileKey.getNamespace(), "crusted_bile"));
+                Block crustedBile = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(bileKey.getNamespace(), "crusted_bile"));
                 if (crustedBile != null) {
                     level.setBlock(bp, crustedBile.defaultBlockState(), 3);
                 }
             }
 
-            ResourceLocation myceliumKey = ForgeRegistries.BLOCKS.getKey(bs.getBlock());
-            if (myceliumKey != null && myceliumKey.equals(new ResourceLocation("minecraft", "mycelium")) && level.getRandom().nextFloat() < 0.15F) {
-                Block dirt = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("minecraft", "dirt"));
+            ResourceLocation myceliumKey = BuiltInRegistries.BLOCK.getKey(bs.getBlock());
+            if (myceliumKey != null && myceliumKey.equals(ResourceLocation.fromNamespaceAndPath("minecraft", "mycelium")) && level.getRandom().nextFloat() < 0.15F) {
+                Block dirt = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("minecraft", "dirt"));
                 if (dirt != null) {
                     level.setBlock(bp, dirt.defaultBlockState(), 3);
                 }
@@ -471,7 +472,7 @@ public class FreezerBlockEntity extends BlockEntity {
                 BlockState above = level.getBlockState(bp.above());
                 if (bs.isSolidRender(level, bp) && above.isAir()) {
                     int layers = 1 + level.getRandom().nextInt(3);
-                    Block snow = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("minecraft", "snow"));
+                    Block snow = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("minecraft", "snow"));
                     if (snow != null) {
                         var layersProp = snow.getStateDefinition().getProperty("layers");
                         if (layersProp instanceof net.minecraft.world.level.block.state.properties.IntegerProperty intProp) {

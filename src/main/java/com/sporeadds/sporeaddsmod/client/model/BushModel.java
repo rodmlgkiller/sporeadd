@@ -14,7 +14,7 @@ import net.minecraft.world.entity.Entity;
 public class BushModel extends HierarchicalModel<Entity> {
 
     public static final ResourceLocation LOCATION =
-            new ResourceLocation("sporeadd", "textures/entity/bush_texture.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/bush_texture.png");
 
     private final ModelPart root;
 

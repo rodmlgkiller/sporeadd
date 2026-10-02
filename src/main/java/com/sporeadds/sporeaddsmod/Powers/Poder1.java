@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.entity.StaticEntity;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundItem;
@@ -22,10 +26,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
@@ -35,7 +38,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class Poder1 extends PowerBase {
 
     public static final Map<UUID, Integer> timers = new HashMap<>();
@@ -211,15 +214,15 @@ public class Poder1 extends PowerBase {
                 }
 
                 ResourceLocation itemId = ResourceLocation.tryParse(itemIdStr);
-                if (itemId == null || !ForgeRegistries.ITEMS.containsKey(itemId)) {
+                if (itemId == null || !BuiltInRegistries.ITEM.containsKey(itemId)) {
                     continue;
                 }
 
                 int countInInventory = 0;
                 for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                     ItemStack stack = player.getInventory().getItem(i);
-                    if (!stack.isEmpty() && ForgeRegistries.ITEMS.getKey(stack.getItem()) != null
-                            && ForgeRegistries.ITEMS.getKey(stack.getItem()).equals(itemId)) {
+                    if (!stack.isEmpty() && BuiltInRegistries.ITEM.getKey(stack.getItem()) != null
+                            && BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(itemId)) {
                         countInInventory += stack.getCount();
                     }
                 }
@@ -232,8 +235,8 @@ public class Poder1 extends PowerBase {
 
                         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                             ItemStack stack = player.getInventory().getItem(i);
-                            if (!stack.isEmpty() && ForgeRegistries.ITEMS.getKey(stack.getItem()) != null
-                                    && ForgeRegistries.ITEMS.getKey(stack.getItem()).equals(itemId)) {
+                            if (!stack.isEmpty() && BuiltInRegistries.ITEM.getKey(stack.getItem()) != null
+                                    && BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(itemId)) {
                                 int shrink = Math.min(stack.getCount(), remainingToConsume);
                                 stack.shrink(shrink);
                                 remainingToConsume -= shrink;
@@ -267,7 +270,7 @@ public class Poder1 extends PowerBase {
     private static void playSoundForAllPlayers(ServerLevel sourceLevel, ResourceLocation soundId, SoundSource source, float volume, float pitch) {
         if (sourceLevel.getServer() == null) return;
 
-        SoundEvent soundEvent = ForgeRegistries.SOUND_EVENTS.getValue(soundId);
+        SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.get(soundId);
         if (soundEvent == null) return;
 
         for (ServerPlayer target : sourceLevel.getServer().getPlayerList().getPlayers()) {
@@ -289,7 +292,7 @@ public class Poder1 extends PowerBase {
 
         boolean maxLevelNoVariant = curLevel >= 9 && !pendingVariantMap.containsKey(player.getUUID());
 
-        EntityType<?> moundType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("sporeadd", "cocoon"));
+        EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "cocoon"));
         if (moundType != null) {
             Entity moundEntity = moundType.create(serverLevel);
             if (moundEntity != null) {
@@ -343,7 +346,7 @@ public class Poder1 extends PowerBase {
 
                     playSoundForAllPlayers(
                             serverLevel,
-                            new ResourceLocation("spore", "calamity_incoming"),
+                            ResourceLocation.fromNamespaceAndPath("spore", "calamity_incoming"),
                             SoundSource.MASTER,
                             1.0F,
                             1.7F
@@ -363,7 +366,7 @@ public class Poder1 extends PowerBase {
         if (player.isPassenger()) player.stopRiding();
         if (!(player.level() instanceof ServerLevel serverLevel)) return;
 
-        EntityType<?> moundType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("sporeadd", "cocoon"));
+        EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "cocoon"));
         if (moundType == null) return;
 
         Entity moundEntity = moundType.create(serverLevel);
@@ -450,7 +453,7 @@ public class Poder1 extends PowerBase {
                 lvl.playSound(
                         null,
                         player.getX(), player.getY(), player.getZ(),
-                        ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "womb_ambient")),
+                        BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "womb_ambient")),
                         SoundSource.MASTER,
                         3.15F, 1.0F
                 );
@@ -479,21 +482,21 @@ public class Poder1 extends PowerBase {
                     lvl.playSound(
                             null,
                             player.getX(), player.getY(), player.getZ(),
-                            ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "evolve_hurt")),
+                            BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "evolve_hurt")),
                             SoundSource.MASTER,
                             1.0F, 0.7F
                     );
                     lvl.playSound(
                             null,
                             player.getX(), player.getY(), player.getZ(),
-                            ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "fungal_boom")),
+                            BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "fungal_boom")),
                             SoundSource.MASTER,
                             3.15F, 1.0F
                     );
                     lvl.playSound(
                             null,
                             player.getX(), player.getY(), player.getZ(),
-                            ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "broken_screams")),
+                            BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "broken_screams")),
                             SoundSource.MASTER,
                             3.15F, 0.5F
                     );
@@ -536,7 +539,7 @@ public class Poder1 extends PowerBase {
                         lvl.playSound(
                                 null,
                                 player.getX(), player.getY(), player.getZ(),
-                                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "organoid_damage")),
+                                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_damage")),
                                 SoundSource.MASTER,
                                 3.15F, 1.0F
                         );
@@ -571,7 +574,7 @@ public class Poder1 extends PowerBase {
                                 lvl.playSound(
                                         null,
                                         player.getX(), player.getY(), player.getZ(),
-                                        ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "calamity_incoming")),
+                                        BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "calamity_incoming")),
                                         SoundSource.MASTER,
                                         3.0F, 0.5F
                                 );
@@ -610,7 +613,7 @@ public class Poder1 extends PowerBase {
                     lvl.playSound(
                             null,
                             player.getX(), player.getY(), player.getZ(),
-                            ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "organoid_damage")),
+                            BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_damage")),
                             SoundSource.MASTER,
                             3.15F, 1.0F
                     );

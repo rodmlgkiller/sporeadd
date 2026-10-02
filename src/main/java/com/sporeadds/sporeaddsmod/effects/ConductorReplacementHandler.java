@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -10,12 +14,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class ConductorReplacementHandler {
 
     private static final int CONDUCTOR_DEFIBRILLATION_DURATION_TICKS = 20 * 60;
@@ -26,7 +29,7 @@ public final class ConductorReplacementHandler {
     }
 
     @SubscribeEvent(
-            priority = net.minecraftforge.eventbus.api.EventPriority.HIGHEST,
+            priority = net.neoforged.bus.api.EventPriority.HIGHEST,
             receiveCanceled = true
     )
     public static void onLivingDeath(LivingDeathEvent event) {
@@ -56,8 +59,8 @@ public final class ConductorReplacementHandler {
     }
 
     private static void spawnConductor(ServerLevel level, ServerPlayer player) {
-        ResourceLocation conductorId = new ResourceLocation("spore", "conductor");
-        EntityType<?> conductorType = ForgeRegistries.ENTITY_TYPES.getValue(conductorId);
+        ResourceLocation conductorId = ResourceLocation.fromNamespaceAndPath("spore", "conductor");
+        EntityType<?> conductorType = BuiltInRegistries.ENTITY_TYPE.get(conductorId);
 
         if (conductorType == null) {
             return;

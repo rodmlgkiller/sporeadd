@@ -1,15 +1,17 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.entity.DecoyEntity;
 import com.sporeadds.sporeaddsmod.entity.MeatAbomination;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import com.sporeadds.sporeaddsmod.entity.StaticEntity;
 import com.sporeadds.sporeaddsmod.entity.Tentacle;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.MOD)
 public class EntityAttributeEvents {
 
     @SubscribeEvent

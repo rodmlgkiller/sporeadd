@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.Harbinger.Spore.Sentities.EvolvedInfected.Howler;
 import com.Harbinger.Spore.Core.SConfig;
@@ -14,7 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -75,7 +76,7 @@ public abstract class HowlerMixin {
         if (buffs.isEmpty()) return;
 
         String randomBuff = buffs.get(origin.level().random.nextInt(buffs.size()));
-        MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(randomBuff));
+        MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(randomBuff));
 
         if (effect != null) {
             for (Entity ally : allies) {

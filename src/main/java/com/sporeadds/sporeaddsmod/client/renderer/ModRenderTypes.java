@@ -14,7 +14,7 @@ public final class ModRenderTypes extends RenderType {
     }
 
     private static final ResourceLocation WEAK_POINT_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/particle/weak_point.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point.png");
 
     public static final RenderType WEAK_POINT_LINES = RenderType.create(
             "sporeadd_weak_point_lines",

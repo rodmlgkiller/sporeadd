@@ -25,8 +25,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LevelRenderer.class)
 public class AbyssalRainMixin {
 
-    private static final ResourceLocation VANILLA_RAIN_STREAK = new ResourceLocation("textures/environment/rain.png");
-    private static final ResourceLocation CUSTOM_RAIN_STREAK = new ResourceLocation("sporeadd", "textures/particle/rain.png");
+    private static final ResourceLocation VANILLA_RAIN_STREAK = ResourceLocation.parse("textures/environment/rain.png");
+    private static final ResourceLocation CUSTOM_RAIN_STREAK = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/rain.png");
 
     @Redirect(
             method = "renderSnowAndRain(Lnet/minecraft/client/renderer/LightTexture;FDDD)V",

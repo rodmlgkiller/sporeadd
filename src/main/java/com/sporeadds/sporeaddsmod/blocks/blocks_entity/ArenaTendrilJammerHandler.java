@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.SBlockEntities.CDUBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,13 +22,12 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.EventBusSubscriber.Bus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +45,8 @@ public class ArenaTendrilJammerHandler {
     private static final double MOUND_MAX_HEALTH = 30.0D;
     private static final double MOUND_BASE_ARMOR = 30.0D;
 
-    private static final ResourceLocation CDU_BLOCK_ID = new ResourceLocation("spore", "cdu");
-    private static final ResourceLocation FREEZER_BLOCK_ID = new ResourceLocation("sporeadd", "freezer_block");
+    private static final ResourceLocation CDU_BLOCK_ID = ResourceLocation.fromNamespaceAndPath("spore", "cdu");
+    private static final ResourceLocation FREEZER_BLOCK_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "freezer_block");
 
     private static final String JAMMER_TAG = "SporeAdds_IsJammer";
     private static final String JAMMER_TIMER_TAG = "JammingTimer";
@@ -238,8 +239,8 @@ public class ArenaTendrilJammerHandler {
     }
 
     private static void tryJamNearbyActiveMachine(ServerLevel level, BlockPos center) {
-        Block cduBlock = ForgeRegistries.BLOCKS.getValue(CDU_BLOCK_ID);
-        Block freezerBlock = ForgeRegistries.BLOCKS.getValue(FREEZER_BLOCK_ID);
+        Block cduBlock = BuiltInRegistries.BLOCK.get(CDU_BLOCK_ID);
+        Block freezerBlock = BuiltInRegistries.BLOCK.get(FREEZER_BLOCK_ID);
 
         double radiusSqr = SEARCH_RADIUS * SEARCH_RADIUS;
 
@@ -313,7 +314,7 @@ public class ArenaTendrilJammerHandler {
     }
 
     private static void spawnAntiReaverMound(ServerLevel level, BlockPos machinePos, boolean isFreezer) {
-        EntityType<?> moundType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "mound"));
+        EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "mound"));
         if (moundType == null) {
             return;
         }

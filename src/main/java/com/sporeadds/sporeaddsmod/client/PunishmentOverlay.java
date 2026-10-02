@@ -1,14 +1,16 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.effects.effects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * Viñeteado pulsante en los bordes de la pantalla mientras el jugador tiene el efecto
@@ -21,7 +23,7 @@ import net.minecraftforge.fml.common.Mod;
  * </ul>
  * (La velocidad de animación la aporta {@code PunishmentClientHandler.beatIntensity}.)
  */
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public final class PunishmentOverlay {
 
     private static final int ALPHA_MAX = 255;

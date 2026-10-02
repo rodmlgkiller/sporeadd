@@ -19,14 +19,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.LazyOptional;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class gluttonousCrosshairLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
     private static final ResourceLocation CROSSHAIR_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/kommandant/crosshairbile.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/crosshairbile.png");
 
     private static final int TOTAL_SPRITES = 12;
 

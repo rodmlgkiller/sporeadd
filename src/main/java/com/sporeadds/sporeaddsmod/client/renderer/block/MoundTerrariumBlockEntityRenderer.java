@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.renderer.block;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.MoundTerrariumBlock;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.MoundTerrariumBlockEntity;
@@ -11,13 +13,12 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Method;
 
 public class MoundTerrariumBlockEntityRenderer implements BlockEntityRenderer<MoundTerrariumBlockEntity> {
 
-    private static final ResourceLocation MOUND_ID = new ResourceLocation("spore", "mound");
+    private static final ResourceLocation MOUND_ID = ResourceLocation.fromNamespaceAndPath("spore", "mound");
     private Entity cachedMound;
     private Boolean lastLinkedState = null;
 
@@ -37,7 +38,7 @@ public class MoundTerrariumBlockEntityRenderer implements BlockEntityRenderer<Mo
         boolean shouldBeLinked = blockEntity.getHp() < 15;
 
         if (cachedMound == null || lastLinkedState == null || lastLinkedState != shouldBeLinked) {
-            EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(MOUND_ID);
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(MOUND_ID);
             if (type == null) return;
 
             cachedMound = type.create(Minecraft.getInstance().level);

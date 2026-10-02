@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.client.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.ChatFormatting;
@@ -9,18 +13,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class KommandantTooltipEvents {
 
-    private static final ResourceLocation BIOMASS_ID = new ResourceLocation("spore", "biomass");
+    private static final ResourceLocation BIOMASS_ID = ResourceLocation.fromNamespaceAndPath("spore", "biomass");
 
     private static boolean isKommandant(Player player) {
         if (player == null) return false;
@@ -37,7 +40,7 @@ public class KommandantTooltipEvents {
     }
 
     private static boolean isBiomass(ItemStack stack) {
-        ResourceLocation key = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return BIOMASS_ID.equals(key);
     }
 
@@ -50,7 +53,7 @@ public class KommandantTooltipEvents {
             return false;
         }
 
-        ResourceLocation key = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (key == null) return false;
 
         String itemId = key.toString();
@@ -67,7 +70,7 @@ public class KommandantTooltipEvents {
         if (stack.getItem() == Items.BONE) return true;
         if (isBiomass(stack)) return true;
 
-        ResourceLocation key = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (key == null) return false;
 
         String id = key.toString();

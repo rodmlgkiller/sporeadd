@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.Organoids.Verwa;
 import com.Harbinger.Spore.Sentities.VariantKeeper;
 import com.mojang.brigadier.CommandDispatcher;
@@ -34,18 +38,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.UUID;
@@ -54,7 +57,7 @@ import static com.sporeadds.sporeaddsmod.Powers.Poder1.mountingMap;
 import static com.sporeadds.sporeaddsmod.Powers.Poder1.timers;
 
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class ForgeEvents {
 
     private static final long MOUND_CLEANUP_INTERVAL = 200L;
@@ -86,7 +89,7 @@ public class ForgeEvents {
         if (event.getEntity().level().isClientSide()) return;
         if (!(event.getSource().getEntity() instanceof Player player)) return;
 
-        var subjugation = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "subjugation"));
+        var subjugation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation"));
         if (subjugation == null || !player.hasEffect(subjugation)) return;
 
         ItemStack mainHand = player.getMainHandItem();
@@ -172,7 +175,7 @@ public class ForgeEvents {
         if (!isScientist) return;
 
         Entity victim = event.getEntity();
-        String entityId = ForgeRegistries.ENTITY_TYPES.getKey(victim.getType()).toString();
+        String entityId = BuiltInRegistries.ENTITY_TYPE.getKey(victim.getType()).toString();
 
         if (!com.sporeadds.sporeaddsmod.research.TrackedEntities.ENTITY_IDS.contains(entityId)) return;
 
@@ -354,29 +357,29 @@ public class ForgeEvents {
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
             if (!player.getCapability(PlayerSporeProvider.PLAYER_CAP).isPresent()) {
-                event.addCapability(new ResourceLocation("sporeadd", "properties"), new PlayerSporeProvider());
+                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "properties"), new PlayerSporeProvider());
             }
             if (!player.getCapability(PlayerLevelProvider.PLAYER_LVL).isPresent()) {
-                event.addCapability(new ResourceLocation("sporeadd", "properties_level"), new PlayerLevelProvider());
+                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "properties_level"), new PlayerLevelProvider());
             }
             if (!player.getCapability(PlayerDataProvider.PLAYER_DATA).isPresent()) {
-                event.addCapability(new ResourceLocation("sporeadd", "properties_data"), new PlayerDataProvider());
+                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "properties_data"), new PlayerDataProvider());
             }
             if (!player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).isPresent()) {
-                event.addCapability(new ResourceLocation("sporeadd", "spore_identifier"), new SporeIdentifierProvider());
+                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "spore_identifier"), new SporeIdentifierProvider());
             }
             if (!player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).isPresent()) {
                 PlayerImplantsCapability provider = new PlayerImplantsCapability();
-                event.addCapability(new ResourceLocation("sporeadd", "player_implants"), provider);
+                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "player_implants"), provider);
                 event.addListener(provider::invalidate);
             }
             if (!player.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).isPresent()) {
                 CompoundsCapability provider = new CompoundsCapability();
-                event.addCapability(new ResourceLocation("sporeadd", "player_compounds"), provider);
+                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "player_compounds"), provider);
                 event.addListener(provider::invalidate);
             }
             if (!player.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).isPresent()) {
-                event.addCapability(new ResourceLocation("sporeadd", "scientist_research"), new ScientistResearchProvider());
+                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "scientist_research"), new ScientistResearchProvider());
             }
         }
     }
@@ -471,7 +474,7 @@ public class ForgeEvents {
                 });
             }
 
-            var subjugation = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "subjugation"));
+            var subjugation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation"));
             if (subjugation != null && player.hasEffect(subjugation)) {
                 final int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get() / 2;
 
@@ -486,7 +489,7 @@ public class ForgeEvents {
                 player.removeEffect(subjugation);
             }
 
-            var anticipation = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "anticipation"));
+            var anticipation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "anticipation"));
             if (anticipation != null && player.hasEffect(anticipation)) {
                 int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get();
 
@@ -510,7 +513,7 @@ public class ForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerLogOut(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
+    public static void onPlayerLogOut(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         UUID uuid = player.getUUID();
@@ -531,8 +534,8 @@ public class ForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerTickDelay(net.minecraftforge.event.TickEvent.PlayerTickEvent event) {
-        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
+    public static void onPlayerTickDelay(net.neoforged.neoforge.event.TickEvent.PlayerTickEvent event) {
+        if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
         if (event.player.level().isClientSide()) return;
         if (!(event.player instanceof ServerPlayer player)) return;
 

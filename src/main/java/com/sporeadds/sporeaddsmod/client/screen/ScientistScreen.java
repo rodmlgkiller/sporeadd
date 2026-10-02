@@ -14,11 +14,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ScientistScreen extends AbstractContainerScreen<ScientistMenu> {
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/scientist_gui.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/scientist_gui.png");
 
     public ScientistScreen(ScientistMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);

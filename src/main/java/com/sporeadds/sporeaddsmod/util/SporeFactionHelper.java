@@ -1,11 +1,12 @@
 package com.sporeadds.sporeaddsmod.util;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class SporeFactionHelper {
     public static boolean isEntityInList(Mob mob, List<? extends String> list) {
         if (list == null || list.isEmpty()) return false;
 
-        ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
+        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         return key != null && list.contains(key.toString());
     }
 }

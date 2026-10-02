@@ -13,17 +13,17 @@ import com.sporeadds.sporeaddsmod.items.MutagenicCompoundRecipesEnabledCondition
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.NetworkHandlerArmorHp;
 import com.sporeadds.sporeaddsmod.particles.SporeaddParticleTypes;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.DistExecutor;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod("sporeadd")
 public class SporeAddsMod {
@@ -55,7 +55,7 @@ public class SporeAddsMod {
         NetworkHandle.register();
         NetworkHandlerArmorHp.register();
 
-        MinecraftForge.EVENT_BUS.register(ImplantBuffEvents.class);
+        NeoForge.EVENT_BUS.register(ImplantBuffEvents.class);
 
         modEventBus.addListener(this::commonSetup);
 
@@ -69,7 +69,7 @@ public class SporeAddsMod {
             // Sincronización inversa origin -> clase. Solo si Origins está presente, para que la
             // clase handler (con imports de Origins) no se cargue cuando sea dependencia opcional ausente.
             if (ModList.get().isLoaded("origins")) {
-                MinecraftForge.EVENT_BUS.register(com.sporeadds.origins.OriginClassSyncHandler.class);
+                NeoForge.EVENT_BUS.register(com.sporeadds.origins.OriginClassSyncHandler.class);
             }
         });
     }

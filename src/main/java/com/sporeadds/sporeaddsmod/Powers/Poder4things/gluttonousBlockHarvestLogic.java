@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.Poder4things;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousPowerHelper;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -10,14 +12,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public final class gluttonousBlockHarvestLogic {
 
-    private static final ResourceLocation REMAINS_ID = new ResourceLocation("spore", "remains");
-    private static final ResourceLocation WALL_REMAINS_ID = new ResourceLocation("spore", "wall_remains");
-    private static final ResourceLocation BIOMASS_BULB_ID = new ResourceLocation("spore", "biomass_bulb");
-    private static final ResourceLocation DROWNED_LUMP_ID = new ResourceLocation("spore", "drowned_lump");
+    private static final ResourceLocation REMAINS_ID = ResourceLocation.fromNamespaceAndPath("spore", "remains");
+    private static final ResourceLocation WALL_REMAINS_ID = ResourceLocation.fromNamespaceAndPath("spore", "wall_remains");
+    private static final ResourceLocation BIOMASS_BULB_ID = ResourceLocation.fromNamespaceAndPath("spore", "biomass_bulb");
+    private static final ResourceLocation DROWNED_LUMP_ID = ResourceLocation.fromNamespaceAndPath("spore", "drowned_lump");
 
     private gluttonousBlockHarvestLogic() {
     }
@@ -27,7 +28,7 @@ public final class gluttonousBlockHarvestLogic {
         if (!gluttonousPowerHelper.isPower4Enabled(player)) return false;
 
         Block clickedBlock = player.level().getBlockState(pos).getBlock();
-        ResourceLocation blockId = ForgeRegistries.BLOCKS.getKey(clickedBlock);
+        ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(clickedBlock);
         if (blockId == null) return false;
 
         boolean isRemains = blockId.equals(REMAINS_ID) || blockId.equals(WALL_REMAINS_ID);

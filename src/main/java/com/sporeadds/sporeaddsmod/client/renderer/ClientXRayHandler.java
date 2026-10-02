@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.client.renderer;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
@@ -22,12 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -36,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class ClientXRayHandler {
 
     public static boolean isXrayEnabled = true;
@@ -51,15 +54,15 @@ public class ClientXRayHandler {
     private static VertexBuffer vertexBuffer;
     private static boolean requestedRefresh = true;
 
-    private static final ResourceLocation REMAINS_ID = new ResourceLocation("spore", "remains");
-    private static final ResourceLocation WALL_REMAINS_ID = new ResourceLocation("spore", "wall_remains");
-    private static final ResourceLocation HIVE_SPAWN_ID = new ResourceLocation("spore", "hive_spawn");
-    private static final ResourceLocation BIOMASS_LUMP_ID = new ResourceLocation("spore", "biomass_lump");
-    private static final ResourceLocation OVERGROWN_SPAWNER_ID = new ResourceLocation("spore", "overgrown_spawner");
-    private static final ResourceLocation BIOMASS_BULB_ID = new ResourceLocation("spore", "biomass_bulb");
+    private static final ResourceLocation REMAINS_ID = ResourceLocation.fromNamespaceAndPath("spore", "remains");
+    private static final ResourceLocation WALL_REMAINS_ID = ResourceLocation.fromNamespaceAndPath("spore", "wall_remains");
+    private static final ResourceLocation HIVE_SPAWN_ID = ResourceLocation.fromNamespaceAndPath("spore", "hive_spawn");
+    private static final ResourceLocation BIOMASS_LUMP_ID = ResourceLocation.fromNamespaceAndPath("spore", "biomass_lump");
+    private static final ResourceLocation OVERGROWN_SPAWNER_ID = ResourceLocation.fromNamespaceAndPath("spore", "overgrown_spawner");
+    private static final ResourceLocation BIOMASS_BULB_ID = ResourceLocation.fromNamespaceAndPath("spore", "biomass_bulb");
 
-    private static final ResourceLocation MARKER_EFFECT_ID = new ResourceLocation("spore", "marker");
-    private static final ResourceLocation UNEASY_EFFECT_ID = new ResourceLocation("spore", "uneasy");
+    private static final ResourceLocation MARKER_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "marker");
+    private static final ResourceLocation UNEASY_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "uneasy");
 
     private static final float[] ORANGE = new float[]{1.0F, 0.5F, 0.0F, 1.0F};
     private static final float[] RED = new float[]{1.0F, 0.0F, 0.0F, 1.0F};
@@ -186,7 +189,7 @@ public class ClientXRayHandler {
                     }
 
                     BlockState state = player.level().getBlockState(pos);
-                    ResourceLocation id = ForgeRegistries.BLOCKS.getKey(state.getBlock());
+                    ResourceLocation id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
 
                     if (id != null) {
                         float[] color = visibleTargets.get(id);
@@ -208,8 +211,8 @@ public class ClientXRayHandler {
             return;
         }
 
-        MobEffect markerEffect = ForgeRegistries.MOB_EFFECTS.getValue(MARKER_EFFECT_ID);
-        MobEffect uneasyEffect = ForgeRegistries.MOB_EFFECTS.getValue(UNEASY_EFFECT_ID);
+        MobEffect markerEffect = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
+        MobEffect uneasyEffect = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);
         Vec3 viewerPos = viewer.position();
 
         for (Player target : viewer.level().players()) {

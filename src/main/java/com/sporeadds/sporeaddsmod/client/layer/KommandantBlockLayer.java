@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.layer;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -13,7 +15,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -66,7 +67,7 @@ public class KommandantBlockLayer extends RenderLayer<AbstractClientPlayer, Play
         if (!SporeAddsConfig.KOMMANDANT_BLOMFUNG_EFFECTS.get()) return;
         if (!player.isAlive() || player.isInvisible() || !isKommandant(player)) return;
 
-        BlockState blockState = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "blomfung")).defaultBlockState();
+        BlockState blockState = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "blomfung")).defaultBlockState();
         if (blockState == null || blockState.isAir()) return;
 
         int packedOverlay = LivingEntityRenderer.getOverlayCoords(player, 0);
@@ -114,7 +115,7 @@ public class KommandantBlockLayer extends RenderLayer<AbstractClientPlayer, Play
         try {
             blockRenderer.renderSingleBlock(
                     blockState, stack, buffer, packedLight, packedOverlay,
-                    net.minecraftforge.client.model.data.ModelData.EMPTY, null
+                    net.neoforged.neoforge.client.model.data.ModelData.EMPTY, null
             );
         } catch (NoSuchMethodError e) {
             blockRenderer.renderSingleBlock(blockState, stack, buffer, packedLight, packedOverlay);

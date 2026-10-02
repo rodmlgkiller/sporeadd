@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -13,12 +15,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -31,14 +33,14 @@ import java.util.List;
  * sphere is impaired purely through the server-side Blindness effect - no client-side fog/render-distance
  * reduction on top of it.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class GasSphereRenderer {
 
     private static final int LAT_SEGMENTS = 12;
     private static final int LON_SEGMENTS = 16;
 
     private static final ResourceLocation GAS_BASE_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/particle/gas_base.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/gas_base.png");
 
     private static final int COLOR_R = 40;
     private static final int COLOR_G = 235;

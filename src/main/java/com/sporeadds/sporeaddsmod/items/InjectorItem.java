@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.client.actionwheel.ActionWheelOption;
 import com.sporeadds.sporeaddsmod.client.actionwheel.ActionWheelProvider;
@@ -24,11 +28,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.player.PlayerXpEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,22 +40,22 @@ import java.util.Set;
 public class InjectorItem extends Item implements ActionWheelProvider {
 
     private static final Set<ResourceLocation> NEGATIVE_EFFECTS = Set.of(
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.POISON),
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.BLINDNESS),
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.WEAKNESS),
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.WITHER),
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.UNLUCK),
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.BAD_OMEN),
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.DARKNESS),
-            ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.LEVITATION),
-            new ResourceLocation("spore", "mycelium_ef"),
-            new ResourceLocation("spore", "corrosion"),
-            new ResourceLocation("spore", "madness"),
-            new ResourceLocation("sporeadd", "exposed"),
-            new ResourceLocation("sporeadd", "dissolution")
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.POISON),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.BLINDNESS),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WEAKNESS),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WITHER),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.UNLUCK),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.BAD_OMEN),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DARKNESS),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.LEVITATION),
+            ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"),
+            ResourceLocation.fromNamespaceAndPath("spore", "corrosion"),
+            ResourceLocation.fromNamespaceAndPath("spore", "madness"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")
     );
 
-    private static final ResourceLocation MANGLED_EFFECT_ID = new ResourceLocation("sporeadd", "mangled");
+    private static final ResourceLocation MANGLED_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangled");
 
     private static final EffectOption[] EFFECTS = new EffectOption[] {
             new EffectOption(MobEffects.HEAL, 1, 20, "effect.sporeadds.injector.instant_health"),
@@ -125,7 +128,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
 
         if (eff instanceof RemoveNegativeEffectOption) {
             for (MobEffectInstance inst : new ArrayList<>(target.getActiveEffects())) {
-                ResourceLocation effId = ForgeRegistries.MOB_EFFECTS.getKey(inst.getEffect());
+                ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(inst.getEffect());
                 boolean isNegative = effId != null && (NEGATIVE_EFFECTS.contains(effId) || inst.getEffect().getCategory() == MobEffectCategory.HARMFUL);
 
                 if (!isNegative) {
@@ -153,12 +156,12 @@ public class InjectorItem extends Item implements ActionWheelProvider {
 
         stack.setDamageValue(Math.min(damage + 5, stack.getMaxDamage()));
 
-        ResourceLocation soundId = new ResourceLocation("spore", "pci_inject");
-        if (ForgeRegistries.SOUND_EVENTS.containsKey(soundId)) {
+        ResourceLocation soundId = ResourceLocation.fromNamespaceAndPath("spore", "pci_inject");
+        if (BuiltInRegistries.SOUND_EVENT.containsKey(soundId)) {
             target.level().playSound(
                     null,
                     target.getX(), target.getY(), target.getZ(),
-                    ForgeRegistries.SOUND_EVENTS.getValue(soundId),
+                    BuiltInRegistries.SOUND_EVENT.get(soundId),
                     SoundSource.PLAYERS,
                     1.0f,
                     2.0f
@@ -268,7 +271,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
         }
     }
 
-    @Mod.EventBusSubscriber
+    @EventBusSubscriber
     public static class InjectorHandlers {
 
         @SubscribeEvent

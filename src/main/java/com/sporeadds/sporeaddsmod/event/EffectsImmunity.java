@@ -1,42 +1,45 @@
 package com.sporeadds.sporeaddsmod.events;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class EffectsImmunity {
 
     // Inmunidades base de cualquier kommandant
     private static final Set<ResourceLocation> BASE_KOMMANDANT_IMMUNITIES = Set.of(
-            new ResourceLocation("spore", "mycelium_ef"),
-            new ResourceLocation("spore", "madness"),
-            new ResourceLocation("sporeadd", "exposed"),
-            new ResourceLocation("sporeadd", "termina")
+            ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"),
+            ResourceLocation.fromNamespaceAndPath("spore", "madness"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "termina")
     );
 
     // Inmunidades extra de kommandant caustic
     private static final Set<ResourceLocation> CAUSTIC_IMMUNITIES = Set.of(
-            new ResourceLocation("spore", "corrosion"),
-            new ResourceLocation("sporeadd", "dissolution")
+            ResourceLocation.fromNamespaceAndPath("spore", "corrosion"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")
     );
 
     // Inmunidades extra de kommandant abyssal
     private static final Set<ResourceLocation> ABYSSAL_IMMUNITIES = Set.of(
-            new ResourceLocation("minecraft", "dolphins_grace")
+            ResourceLocation.fromNamespaceAndPath("minecraft", "dolphins_grace")
     );
 
     private static final Set<ResourceLocation> gluttonous_IMMUNITIES = Set.of(
-            new ResourceLocation("spore", "biled")
+            ResourceLocation.fromNamespaceAndPath("spore", "biled")
     );
 
     @SubscribeEvent
@@ -61,7 +64,7 @@ public class EffectsImmunity {
             }
 
             MobEffect incomingEffect = event.getEffectInstance().getEffect();
-            ResourceLocation incomingId = ForgeRegistries.MOB_EFFECTS.getKey(incomingEffect);
+            ResourceLocation incomingId = BuiltInRegistries.MOB_EFFECT.getKey(incomingEffect);
 
             if (incomingId != null && immunities.contains(incomingId)) {
                 event.setResult(Event.Result.DENY);

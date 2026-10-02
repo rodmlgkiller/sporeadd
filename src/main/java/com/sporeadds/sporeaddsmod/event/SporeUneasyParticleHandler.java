@@ -1,17 +1,20 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class SporeUneasyParticleHandler {
 
     @SubscribeEvent
@@ -26,7 +29,7 @@ public class SporeUneasyParticleHandler {
         if (entity.tickCount % 5 != 0) return;
 
         // Verificar si la entidad tiene el efecto spore:uneasy
-        MobEffect uneasy = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "uneasy"));
+        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "uneasy"));
         if (uneasy == null || !entity.hasEffect(uneasy)) return;
 
         ServerLevel level = (ServerLevel) entity.level();

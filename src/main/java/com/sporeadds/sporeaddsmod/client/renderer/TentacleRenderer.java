@@ -19,7 +19,7 @@ import org.joml.Matrix4f;
 public class TentacleRenderer extends EntityRenderer<Tentacle> {
 
     private static final ResourceLocation BODY_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/tendril.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/tendril.png");
 
     public TentacleRenderer(EntityRendererProvider.Context context) {
         super(context);

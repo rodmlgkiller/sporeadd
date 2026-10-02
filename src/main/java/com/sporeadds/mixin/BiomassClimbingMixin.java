@@ -1,10 +1,11 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Powers.AdaptedPhysiologyPower;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,11 +24,11 @@ public abstract class BiomassClimbingMixin {
 
         BlockState state = player.level().getBlockState(player.blockPosition());
 
-        if (ForgeRegistries.BLOCKS.getKey(state.getBlock()) == null) {
+        if (BuiltInRegistries.BLOCK.getKey(state.getBlock()) == null) {
             return;
         }
 
-        String blockId = ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString();
+        String blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
 
         if (!AdaptedPhysiologyPower.isPhaseableBlock(blockId) || !AdaptedPhysiologyPower.canPhase(player)) {
             return;

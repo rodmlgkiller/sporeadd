@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.ModItems;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -8,11 +10,11 @@ import com.sporeadds.sporeaddsmod.items.MutagenicCompoundVariant;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class KommandantCompoundDropHandler {
 
     @SubscribeEvent

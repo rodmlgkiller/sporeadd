@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.entity.projectile;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -27,7 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class VariantVomitProjectile extends ThrowableProjectile {
 
@@ -167,7 +168,7 @@ public class VariantVomitProjectile extends ThrowableProjectile {
             } else if ("gore".equalsIgnoreCase(variant)) {
                 // Sangre para la variante gore
                 int count = Math.max(1, Mth.ceil(scale * 1.5F));
-                ParticleType<?> bloodType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("spore", "blood_particle"));
+                ParticleType<?> bloodType = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "blood_particle"));
 
                 if (bloodType instanceof ParticleOptions bloodOption) {
                     for (int i = 0; i < count; i++) {
@@ -218,7 +219,7 @@ public class VariantVomitProjectile extends ThrowableProjectile {
                 }
                 case "gore" -> {
                     livingTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1));
-                    SoundEvent organoidDamage = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "organoid_damage"));
+                    SoundEvent organoidDamage = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_damage"));
                     // Usamos FAR_IMPACT_VOLUME (2.0F) para que se escuche desde ~16 bloques
                     playImpactSound(organoidDamage, FAR_IMPACT_VOLUME, 0.5F);
                 }
@@ -242,7 +243,7 @@ public class VariantVomitProjectile extends ThrowableProjectile {
             case "abyssal" -> playImpactSound(SoundEvents.SCULK_BLOCK_BREAK, DEFAULT_IMPACT_VOLUME, 0.8F);
             case "bone" -> playImpactSound(SoundEvents.BONE_BLOCK_BREAK, DEFAULT_IMPACT_VOLUME, 0.5F);
             case "gore" -> {
-                SoundEvent organoidDamage = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "organoid_damage"));
+                SoundEvent organoidDamage = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_damage"));
                 playImpactSound(organoidDamage, FAR_IMPACT_VOLUME, 1.0F);
             }
             default -> playImpactSound(SoundEvents.HONEY_BLOCK_BREAK, DEFAULT_IMPACT_VOLUME, 1.0F);
@@ -273,7 +274,7 @@ public class VariantVomitProjectile extends ThrowableProjectile {
                         scaledSpeed(0.10D)
                 );
             } else if ("gore".equalsIgnoreCase(variant)) {
-                ParticleType<?> bloodType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("spore", "blood_particle"));
+                ParticleType<?> bloodType = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "blood_particle"));
                 if (bloodType instanceof ParticleOptions bloodOption) {
                     serverLevel.sendParticles(
                             bloodOption,

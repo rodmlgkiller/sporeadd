@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.ModSounds;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import net.minecraft.client.Minecraft;
@@ -9,11 +11,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * Cliente del efecto {@link com.sporeadds.sporeaddsmod.effects.PunishmentEffect}:
@@ -32,7 +34,7 @@ import net.minecraftforge.fml.common.Mod;
  * </ul>
  * El color y el tamaño del borde los decide {@link PunishmentOverlay} a partir del mismo tier.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public final class PunishmentClientHandler {
 
     /** Duración base del sonido en ticks (8 s * 20 tps) a pitch 1.0. */

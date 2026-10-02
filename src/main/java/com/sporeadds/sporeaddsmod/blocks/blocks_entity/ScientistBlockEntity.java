@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.client.screen.ScientistMenu;
 import com.sporeadds.sporeaddsmod.ModItems;
 import net.minecraft.core.BlockPos;
@@ -19,12 +21,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,8 +40,8 @@ public class ScientistBlockEntity extends BlockEntity implements MenuProvider {
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             if (slot == 0) {
                 // Slot azul acepta spore:frozen_decayed_biomass
-                ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
-                return new ResourceLocation("spore", "frozen_decayed_biomass").equals(id);
+                ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+                return ResourceLocation.fromNamespaceAndPath("spore", "frozen_decayed_biomass").equals(id);
             }
             if (slot == 1) {
                 return stack.getItem() == Items.PAPER;

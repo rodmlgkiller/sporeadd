@@ -3,8 +3,8 @@ package com.sporeadds.sporeaddsmod.network;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.List;
 import java.util.function.Supplier;

@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -8,13 +12,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderBlockScreenEffectEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 public class AdaptedPhysiologyEvents {
 
@@ -23,7 +26,7 @@ public class AdaptedPhysiologyEvents {
     private static final String FLIGHT_GRANTED_TAG = "SporeGrantedFlight";
     private static final String PHASING_BLINDNESS_TAG = "SporePhasingBlindnessApplied";
 
-    @Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
     public static class ClientEvents {
 
         @SubscribeEvent
@@ -40,11 +43,11 @@ public class AdaptedPhysiologyEvents {
             BlockPos eyePos = BlockPos.containing(player.getEyePosition());
             BlockState state = player.level().getBlockState(eyePos);
 
-            if (ForgeRegistries.BLOCKS.getKey(state.getBlock()) == null) {
+            if (BuiltInRegistries.BLOCK.getKey(state.getBlock()) == null) {
                 return;
             }
 
-            String blockId = ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString();
+            String blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
 
             if (AdaptedPhysiologyPower.isPhaseableBlock(blockId) && AdaptedPhysiologyPower.canPhase(player)) {
                 event.setCanceled(true);
@@ -52,7 +55,7 @@ public class AdaptedPhysiologyEvents {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
     public static class ServerEvents {
 
         @SubscribeEvent
@@ -161,11 +164,11 @@ public class AdaptedPhysiologyEvents {
                         BlockPos pos = new BlockPos(x, y, z);
                         BlockState state = player.level().getBlockState(pos);
 
-                        if (ForgeRegistries.BLOCKS.getKey(state.getBlock()) == null) {
+                        if (BuiltInRegistries.BLOCK.getKey(state.getBlock()) == null) {
                             continue;
                         }
 
-                        String blockId = ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString();
+                        String blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
                         if (AdaptedPhysiologyPower.isPhaseableBlock(blockId)) {
                             return true;
                         }

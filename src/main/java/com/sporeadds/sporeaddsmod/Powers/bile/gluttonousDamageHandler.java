@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers.bile;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.resources.ResourceLocation;
@@ -17,19 +21,18 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class gluttonousDamageHandler {
 
-    private static final ResourceLocation gluttonous_BULLET_ID = new ResourceLocation("spore", "bile_bullet");
-    private static final ResourceLocation VARIANT_VOMIT_ID = new ResourceLocation("sporeadd", "variant_vomit");
-    private static final ResourceLocation gluttonousD_EFFECT_ID = new ResourceLocation("spore", "gluttonousd");
-    private static final ResourceLocation SEASONED_EFFECT_ID = new ResourceLocation("sporeadd", "seasoned");
+    private static final ResourceLocation gluttonous_BULLET_ID = ResourceLocation.fromNamespaceAndPath("spore", "bile_bullet");
+    private static final ResourceLocation VARIANT_VOMIT_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "variant_vomit");
+    private static final ResourceLocation gluttonousD_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "gluttonousd");
+    private static final ResourceLocation SEASONED_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "seasoned");
     public static final String RECENT_gluttonous_HIT_TAG = "sporeadd_recent_gluttonous_hit";
     public static final String RECENT_gluttonous_BONE_HIT_TAG = "sporeadd_recent_gluttonous_bone_hit";
 
@@ -78,7 +81,7 @@ public class gluttonousDamageHandler {
         Entity direct = event.getSource().getDirectEntity();
         if (!(direct instanceof Projectile projectile)) return;
 
-        ResourceLocation projectileId = ForgeRegistries.ENTITY_TYPES.getKey(direct.getType());
+        ResourceLocation projectileId = BuiltInRegistries.ENTITY_TYPE.getKey(direct.getType());
         if (!gluttonous_BULLET_ID.equals(projectileId) && !VARIANT_VOMIT_ID.equals(projectileId)) return;
 
         LivingEntity target = event.getEntity();
@@ -135,7 +138,7 @@ public class gluttonousDamageHandler {
         }
 
         if (shouldApplygluttonousd) {
-            MobEffect gluttonousdEffect = ForgeRegistries.MOB_EFFECTS.getValue(gluttonousD_EFFECT_ID);
+            MobEffect gluttonousdEffect = BuiltInRegistries.MOB_EFFECT.get(gluttonousD_EFFECT_ID);
             if (gluttonousdEffect != null) {
                 int playerLevel = 0;
 
@@ -152,7 +155,7 @@ public class gluttonousDamageHandler {
 
         // Efecto y partículas únicas de Gore
         if (isGoreProjectile) {
-            MobEffect seasonedEffect = ForgeRegistries.MOB_EFFECTS.getValue(SEASONED_EFFECT_ID);
+            MobEffect seasonedEffect = BuiltInRegistries.MOB_EFFECT.get(SEASONED_EFFECT_ID);
             if (seasonedEffect != null) {
                 // 300 ticks = 15 segundos. Ambient = false, ShowParticles = true.
                 target.addEffect(new MobEffectInstance(seasonedEffect, 300, 0, false, true));

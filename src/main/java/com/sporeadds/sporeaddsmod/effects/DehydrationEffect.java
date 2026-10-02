@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Damage.Damagetypes2;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -25,7 +27,6 @@ import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +40,7 @@ public class DehydrationEffect extends MobEffect {
     private static final UUID HEALTH_UUID = UUID.fromString("d3bc5555-1234-4321-a1b2-c3d4e5f6a7b8");
 
     private static final ResourceLocation EXTINGUISH_SOUND_ID =
-            new ResourceLocation("minecraft", "entity.generic.extinguish_fire");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "entity.generic.extinguish_fire");
 
     private static final Set<UUID> SILENT_REMOVALS = new HashSet<>();
 
@@ -203,7 +204,7 @@ public class DehydrationEffect extends MobEffect {
     }
 
     private static void playExtinguishSound(LivingEntity entity) {
-        SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(EXTINGUISH_SOUND_ID);
+        SoundEvent sound = BuiltInRegistries.SOUND_EVENT.get(EXTINGUISH_SOUND_ID);
         if (sound != null) {
             entity.level().playSound(
                     null,

@@ -17,11 +17,11 @@ import java.util.List;
 public final class BerserkerActionWheelSource {
 
     private static final ResourceLocation COUNTER_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/counter.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/counter.png");
     private static final ResourceLocation CLAWS_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/claws_of_brutality.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/claws_of_brutality.png");
     private static final ResourceLocation COMPOUNDS_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/compounds.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/compounds.png");
 
     private BerserkerActionWheelSource() {
     }

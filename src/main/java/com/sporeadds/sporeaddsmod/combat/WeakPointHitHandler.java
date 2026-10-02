@@ -5,11 +5,11 @@
     import net.minecraft.sounds.SoundEvent;
     import net.minecraft.sounds.SoundSource;
     import net.minecraft.world.entity.LivingEntity;
-    import net.minecraftforge.event.entity.living.LivingHurtEvent;
-    import net.minecraftforge.eventbus.api.SubscribeEvent;
-    import net.minecraftforge.fml.common.Mod;
+    import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+    import net.neoforged.bus.api.SubscribeEvent;
+    import net.neoforged.fml.common.Mod;
 
-    @Mod.EventBusSubscriber(modid = "sporeadd")
+    @EventBusSubscriber(modid = "sporeadd")
     public final class WeakPointHitHandler {
 
         private WeakPointHitHandler() {
@@ -60,7 +60,7 @@
 
         private static void syncMarker(LivingEntity target) {
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                    net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
+                    net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
                     new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(
                             target.getId(), true, WeakPointManager.getOffset(target.getId())
                     )
@@ -69,7 +69,7 @@
 
         private static void syncRemoval(LivingEntity target) {
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                    net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
+                    net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
                     new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(target.getId(), false, null)
             );
         }

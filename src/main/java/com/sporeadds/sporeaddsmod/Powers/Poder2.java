@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -24,19 +28,18 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class Poder2 {
 
-    private static final ResourceLocation MYCELIUM_EFFECT_ID = new ResourceLocation("spore", "mycelium_ef");
-    private static final ResourceLocation BLOOD_PARTICLE_ID = new ResourceLocation("spore", "blood_particle");
+    private static final ResourceLocation MYCELIUM_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef");
+    private static final ResourceLocation BLOOD_PARTICLE_ID = ResourceLocation.fromNamespaceAndPath("spore", "blood_particle");
 
     @SubscribeEvent
     public static void applyMyceliumOnHit(LivingHurtEvent event) {
@@ -56,7 +59,7 @@ public class Poder2 {
                                 LivingEntity target = event.getEntity();
 
                                 if (target != null && target != player) {
-                                    var effect = ForgeRegistries.MOB_EFFECTS.getValue(MYCELIUM_EFFECT_ID);
+                                    var effect = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EFFECT_ID);
                                     if (effect != null) {
                                         target.addEffect(new MobEffectInstance(effect, durationSeconds * 20, amplifier, false, true));
                                     }
@@ -113,7 +116,7 @@ public class Poder2 {
         boolean endermanFail = isEnderman && !endermanSuccess;
 
         if (!endermanFail) {
-            SoundEvent reaveSound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "reaver_reave"));
+            SoundEvent reaveSound = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "reaver_reave"));
             if (reaveSound != null) {
                 serverLevel.playSound(
                         null,
@@ -124,13 +127,13 @@ public class Poder2 {
                 );
             }
 
-            ResourceLocation entityKey = ForgeRegistries.ENTITY_TYPES.getKey(target.getType());
+            ResourceLocation entityKey = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
             if (entityKey != null) {
-                ResourceLocation deathSoundId = new ResourceLocation(
+                ResourceLocation deathSoundId = ResourceLocation.fromNamespaceAndPath(
                         entityKey.getNamespace(),
                         "entity." + entityKey.getPath() + ".death"
                 );
-                SoundEvent deathSound = ForgeRegistries.SOUND_EVENTS.getValue(deathSoundId);
+                SoundEvent deathSound = BuiltInRegistries.SOUND_EVENT.get(deathSoundId);
                 if (deathSound != null) {
                     serverLevel.playSound(
                             null,
@@ -168,7 +171,7 @@ public class Poder2 {
                     0.1D
             );
         } else {
-            var bloodParticleType = ForgeRegistries.PARTICLE_TYPES.getValue(BLOOD_PARTICLE_ID);
+            var bloodParticleType = BuiltInRegistries.PARTICLE_TYPE.get(BLOOD_PARTICLE_ID);
             int bloodCount = Math.max(15, (int) (target.getBbWidth() * target.getBbHeight() * 35.0D));
             if (bloodParticleType instanceof ParticleOptions bloodOptions) {
                 serverLevel.sendParticles(
@@ -219,7 +222,7 @@ public class Poder2 {
                                 .withStyle(ChatFormatting.DARK_RED)
                 );
             }
-        } else if ("spore:inf_player".equals(String.valueOf(ForgeRegistries.ENTITY_TYPES.getKey(target.getType())))) {
+        } else if ("spore:inf_player".equals(String.valueOf(BuiltInRegistries.ENTITY_TYPE.getKey(target.getType())))) {
             boolean isPlayerGenerated = target.getPersistentData().getBoolean("is_player_generated");
 
             if (isPlayerGenerated) {
@@ -384,7 +387,7 @@ public class Poder2 {
     }
 
     private static void spawnItem(ServerLevel level, LivingEntity target, String modid, String path) {
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(modid, path));
+        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(modid, path));
         if (item != null && item != net.minecraft.world.item.Items.AIR) {
             ItemEntity itemEntity = new ItemEntity(level, target.getX(), target.getY(), target.getZ(), new ItemStack(item));
             level.addFreshEntity(itemEntity);

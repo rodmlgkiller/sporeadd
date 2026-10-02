@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class MoundTerrariumScreen extends AbstractContainerScreen<MoundTerrariumMenu> {
 
     // Ruta de la textura
-    private static final ResourceLocation TEXTURE = new ResourceLocation("sporeadd", "textures/gui/mound_terrarium.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/mound_terrarium.png");
 
     public MoundTerrariumScreen(MoundTerrariumMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

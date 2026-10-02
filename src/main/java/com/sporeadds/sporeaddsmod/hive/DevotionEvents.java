@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.util.SporeClassUtil;
@@ -10,9 +12,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * un amplifier respecto al que ya tuvieran, hasta el tope), -1 de punishment y un mensaje de
  * recompensa del proto.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class DevotionEvents {
 
     private static final int MAX_DEVOTION_AMPLIFIER = 2;

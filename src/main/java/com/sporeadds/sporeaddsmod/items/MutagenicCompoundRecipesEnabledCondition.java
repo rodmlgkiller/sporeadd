@@ -3,13 +3,13 @@ package com.sporeadds.sporeaddsmod.items;
 import com.google.gson.JsonObject;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import net.neoforged.neoforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.crafting.conditions.IConditionSerializer;
 
 public class MutagenicCompoundRecipesEnabledCondition implements ICondition {
 
     public static final ResourceLocation ID =
-            new ResourceLocation("sporeadd", "mutagenic_compound_recipes_enabled");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "mutagenic_compound_recipes_enabled");
 
     @Override
     public ResourceLocation getID() {

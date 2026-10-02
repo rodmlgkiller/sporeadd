@@ -1,9 +1,10 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Las 9 "syringes" que el berserker puede colocar en el inventario de Compounds. Cada una
@@ -24,7 +25,7 @@ public enum CompoundType {
     private final ResourceLocation itemId;
 
     CompoundType(String path) {
-        this.itemId = new ResourceLocation("spore", path);
+        this.itemId = ResourceLocation.fromNamespaceAndPath("spore", path);
     }
 
     public ResourceLocation itemId() {
@@ -37,7 +38,7 @@ public enum CompoundType {
 
     public static CompoundType fromItem(Item item) {
         if (item == null) return null;
-        ResourceLocation key = ForgeRegistries.ITEMS.getKey(item);
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(item);
         if (key == null) return null;
         for (CompoundType type : values()) {
             if (type.itemId.equals(key)) return type;

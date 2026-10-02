@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -69,8 +71,8 @@ public class ProtoLocatorItem extends Item {
 
                 nbt.putLong("lastUsed", currentTime);
 
-                ResourceLocation soundId = new ResourceLocation("spore", "signal");
-                net.minecraft.sounds.SoundEvent signalSound = net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(soundId);
+                ResourceLocation soundId = ResourceLocation.fromNamespaceAndPath("spore", "signal");
+                net.minecraft.sounds.SoundEvent signalSound = BuiltInRegistries.SOUND_EVENT.get(soundId);
                 if (signalSound != null) {
                     level.playSound(
                             null,
@@ -92,7 +94,7 @@ public class ProtoLocatorItem extends Item {
 
                 List<Mob> allMobs = serverLevel.getEntitiesOfClass(Mob.class, searchArea);
                 for (Mob mob : allMobs) {
-                    ResourceLocation entityType = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
+                    ResourceLocation entityType = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
                     if (entityType != null &&
                             "spore".equals(entityType.getNamespace()) &&
                             "proto".equals(entityType.getPath())) {

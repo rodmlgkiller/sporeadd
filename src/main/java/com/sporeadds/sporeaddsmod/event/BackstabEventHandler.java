@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.effects.effects;
@@ -18,14 +20,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.Random;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class BackstabEventHandler {
 
     private static final double BACKSTAB_MULTIPLIER = 2.0D;
@@ -193,7 +195,7 @@ public final class BackstabEventHandler {
                 null,
                 target.getX(), target.getY(), target.getZ(),
                 SoundEvent.createVariableRangeEvent(
-                        new ResourceLocation("spore", "infected_weapon_hit_entity")),
+                        ResourceLocation.fromNamespaceAndPath("spore", "infected_weapon_hit_entity")),
                 SoundSource.MASTER,
                 1.0F,
                 0.75F

@@ -1,14 +1,16 @@
 package com.sporeadds.origins;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.util.ClassAssignmentUtil;
 import com.sporeadds.sporeaddsmod.util.OriginSyncUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.UUID;
 
@@ -20,7 +22,7 @@ import java.util.UUID;
  *  - cualquier otro origin ya elegido (humano u otro) -> {@code none}
  *  - origin sin elegir todavía ({@code origins:empty}) -> no se toca nada
  *
- * NO lleva {@code @Mod.EventBusSubscriber}: se registra a mano desde {@code SporeAddsMod} SOLO si
+ * NO lleva {@code @EventBusSubscriber}: se registra a mano desde {@code SporeAddsMod} SOLO si
  * Origins está cargado, para que esta clase (y sus imports de Origins) no se carguen cuando
  * Origins pase a ser dependencia opcional y esté ausente.
  *
@@ -32,7 +34,7 @@ public final class OriginClassSyncHandler {
 
     private static final int POLL_INTERVAL_TICKS = 20;
     private static final String SPOREADD_NAMESPACE = "sporeadd";
-    private static final ResourceLocation EMPTY_ORIGIN = new ResourceLocation("origins", "empty");
+    private static final ResourceLocation EMPTY_ORIGIN = ResourceLocation.fromNamespaceAndPath("origins", "empty");
 
     private OriginClassSyncHandler() {
     }

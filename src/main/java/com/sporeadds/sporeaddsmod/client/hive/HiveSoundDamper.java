@@ -1,11 +1,13 @@
 package com.sporeadds.sporeaddsmod.client.hive;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.EnumSet;
 
@@ -21,7 +23,7 @@ import java.util.EnumSet;
  *
  * MASTER no se reduce (ahí van los sonidos de la propia cinemática, p.ej. el tecleo).
  */
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public final class HiveSoundDamper {
 
     private static final SoundSource[] DUCKED_CATEGORIES = {

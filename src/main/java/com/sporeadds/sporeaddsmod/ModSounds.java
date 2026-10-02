@@ -1,32 +1,33 @@
 package com.sporeadds.sporeaddsmod;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ModSounds {
 
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
-            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, "sporeadd");
+            DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, "sporeadd");
 
-    public static final RegistryObject<SoundEvent> DETECTION = SOUND_EVENTS.register(
+    public static final DeferredHolder<SoundEvent, SoundEvent> DETECTION = SOUND_EVENTS.register(
             "detection",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("sporeadd", "detection"))
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("sporeadd", "detection"))
     );
 
     /** Sonido de "tecleo" de la cinemática de la colmena (uno por carácter). */
-    public static final RegistryObject<SoundEvent> HIVE_TYPE = SOUND_EVENTS.register(
+    public static final DeferredHolder<SoundEvent, SoundEvent> HIVE_TYPE = SOUND_EVENTS.register(
             "hive_type",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("sporeadd", "hive_type"))
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("sporeadd", "hive_type"))
     );
 
     /** Latido en bucle (8 s, 8 pares de pulsaciones) del efecto "punishment". */
-    public static final RegistryObject<SoundEvent> HEARTBEAT = SOUND_EVENTS.register(
+    public static final DeferredHolder<SoundEvent, SoundEvent> HEARTBEAT = SOUND_EVENTS.register(
             "heartbeat",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("sporeadd", "heartbeat"))
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("sporeadd", "heartbeat"))
     );
 
     public static void register(IEventBus eventBus) {

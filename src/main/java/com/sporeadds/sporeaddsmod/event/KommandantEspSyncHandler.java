@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncKommandantEspPacket;
@@ -11,13 +15,12 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,12 +29,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class KommandantEspSyncHandler {
 
-    private static final ResourceLocation MARKER_EFFECT_ID = new ResourceLocation("spore", "marker");
-    private static final ResourceLocation UNEASY_EFFECT_ID = new ResourceLocation("spore", "uneasy");
-    private static final ResourceLocation SEASONED_EFFECT_ID = new ResourceLocation("sporeadd", "seasoned");
+    private static final ResourceLocation MARKER_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "marker");
+    private static final ResourceLocation UNEASY_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "uneasy");
+    private static final ResourceLocation SEASONED_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "seasoned");
 
     private static final Map<UUID, State> LAST_PLAYER_STATES = new HashMap<>();
     private static final Map<UUID, State> LAST_ENTITY_STATES = new HashMap<>();
@@ -42,9 +45,9 @@ public class KommandantEspSyncHandler {
         if (event.player.level().isClientSide()) return;
         if (!(event.player instanceof ServerPlayer target)) return;
 
-        MobEffect marker = ForgeRegistries.MOB_EFFECTS.getValue(MARKER_EFFECT_ID);
-        MobEffect uneasy = ForgeRegistries.MOB_EFFECTS.getValue(UNEASY_EFFECT_ID);
-        MobEffect seasoned = ForgeRegistries.MOB_EFFECTS.getValue(SEASONED_EFFECT_ID);
+        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
+        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);
+        MobEffect seasoned = BuiltInRegistries.MOB_EFFECT.get(SEASONED_EFFECT_ID);
 
         MobEffectInstance markerInstance = marker != null ? target.getEffect(marker) : null;
         boolean hasMarker = markerInstance != null;
@@ -81,9 +84,9 @@ public class KommandantEspSyncHandler {
         if (event.level.isClientSide()) return;
         if (!(event.level instanceof ServerLevel level)) return;
 
-        MobEffect marker = ForgeRegistries.MOB_EFFECTS.getValue(MARKER_EFFECT_ID);
-        MobEffect uneasy = ForgeRegistries.MOB_EFFECTS.getValue(UNEASY_EFFECT_ID);
-        MobEffect seasoned = ForgeRegistries.MOB_EFFECTS.getValue(SEASONED_EFFECT_ID);
+        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
+        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);
+        MobEffect seasoned = BuiltInRegistries.MOB_EFFECT.get(SEASONED_EFFECT_ID);
 
         if (marker == null && uneasy == null && seasoned == null) return;
 
@@ -93,7 +96,7 @@ public class KommandantEspSyncHandler {
             if (!(raw instanceof LivingEntity entity)) continue;
             if (entity instanceof Player) continue;
 
-            ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+            ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
             boolean allowedByConfig = key != null && allowedIds.contains(key.toString());
 
             MobEffectInstance markerInstance = marker != null ? entity.getEffect(marker) : null;

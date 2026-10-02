@@ -36,8 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class RaidControlerBlockEntity extends BlockEntity implements MenuProvider {
@@ -219,8 +218,8 @@ public class RaidControlerBlockEntity extends BlockEntity implements MenuProvide
     }
 
     private void broadcastRaidAlert(ServerLevel level, BlockPos raidPos, int waveSize, int potency, int specialSpawns) {
-        SoundEvent alertSound = ForgeRegistries.SOUND_EVENTS.getValue(
-                new ResourceLocation("minecraft", "entity.warden.sonic_boom")
+        SoundEvent alertSound = BuiltInRegistries.SOUND_EVENT.get(
+                ResourceLocation.fromNamespaceAndPath("minecraft", "entity.warden.sonic_boom")
         );
 
         double radiusSqr = ALERT_RADIUS * ALERT_RADIUS;

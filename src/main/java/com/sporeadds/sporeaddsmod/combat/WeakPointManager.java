@@ -23,13 +23,13 @@ public final class WeakPointManager {
     private static final Map<Integer, Boolean> isPlayerTarget = new HashMap<>();
 
     private static final net.minecraft.resources.ResourceLocation[] TIER_TEXTURES = {
-            new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point.png"),
-            new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point2.png"),
-            new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point3.png"),
-            new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point4.png"),
-            new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point5.png"),
-            new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point6.png"),
-            new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point7.png")
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point.png"),
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point2.png"),
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point3.png"),
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point4.png"),
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point5.png"),
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point6.png"),
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/weak_point7.png")
     };
 
     private static final int[] TIER_COLORS = {
@@ -103,7 +103,7 @@ public final class WeakPointManager {
     }
 
     public static LivingEntity resolveEntity(int entityId) {
-        for (var level : net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
+        for (var level : net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer().getAllLevels()) {
             var entity = level.getEntity(entityId);
             if (entity instanceof LivingEntity living) {
                 return living;

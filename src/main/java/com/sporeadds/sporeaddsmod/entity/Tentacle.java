@@ -36,8 +36,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -59,7 +58,7 @@ public class Tentacle extends Organoid {
     private static final EntityDataAccessor<Integer> LAST_DAMAGE_TICK =
             SynchedEntityData.defineId(Tentacle.class, EntityDataSerializers.INT);
 
-    private static final ResourceLocation LIMB_SLASH_SOUND_ID = new ResourceLocation("spore", "limb_slash");
+    private static final ResourceLocation LIMB_SLASH_SOUND_ID = ResourceLocation.fromNamespaceAndPath("spore", "limb_slash");
     private static final float DEATH_SOUND_VOLUME = 2.7F;
     private static final float DEATH_SOUND_PITCH = 0.5F;
 
@@ -388,8 +387,8 @@ public class Tentacle extends Organoid {
     protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHit) {
         super.dropCustomDeathLoot(source, looting, recentlyHit);
 
-        Item membrane = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "organoid_membrane"));
-        Item tendons = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "tendons"));
+        Item membrane = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"));
+        Item tendons = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "tendons"));
 
         if (membrane != null && this.random.nextFloat() < 0.10F) {
             this.spawnAtLocation(new ItemStack(membrane, 1));

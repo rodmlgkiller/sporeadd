@@ -12,11 +12,11 @@ import com.sporeadds.sporeaddsmod.util.SporeClassUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 public class ArmorGui {
     private static final ResourceLocation ARMOR_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/spore_armor.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/spore_armor.png");
 
     public static final IGuiOverlay ARMOR_BAR = (gui, poseStack, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();

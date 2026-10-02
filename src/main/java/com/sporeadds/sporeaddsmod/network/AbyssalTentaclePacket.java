@@ -19,7 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -39,7 +39,7 @@ public class AbyssalTentaclePacket {
 
     private static final int RECALL_DAMAGE_IMMUNITY_TICKS = 40;
 
-    private static final ResourceLocation TENTACLE_LAUNCH_SOUND_ID = new ResourceLocation("spore", "cleaver_spin");
+    private static final ResourceLocation TENTACLE_LAUNCH_SOUND_ID = ResourceLocation.fromNamespaceAndPath("spore", "cleaver_spin");
     private static final float TENTACLE_LAUNCH_SOUND_VOLUME = 1.0F;
     private static final float TENTACLE_LAUNCH_SOUND_PITCH = 1.1F;
 

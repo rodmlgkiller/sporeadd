@@ -1,17 +1,21 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class StarvationHandler {
 
     private static boolean hasKommandantClass(ServerPlayer player) {
@@ -38,8 +42,8 @@ public class StarvationHandler {
         if (!(event.player instanceof ServerPlayer player)) return;
         if (!hasKommandantClass(player)) return;
 
-        MobEffect starvationEffect = net.minecraftforge.registries.ForgeRegistries.MOB_EFFECTS
-                .getValue(new net.minecraft.resources.ResourceLocation("spore", "starvation"));
+        MobEffect starvationEffect = BuiltInRegistries.MOB_EFFECT
+                .getValue(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("spore", "starvation"));
         if (starvationEffect == null) return;
 
         boolean starving = player.getFoodData().getFoodLevel() <= 0;

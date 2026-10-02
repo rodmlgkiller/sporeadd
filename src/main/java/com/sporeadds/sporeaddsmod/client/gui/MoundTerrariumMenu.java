@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.gui;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.MoundTerrariumBlockEntity;
 import com.sporeadds.sporeaddsmod.blocks.modblocks;
 import com.sporeadds.sporeaddsmod.client.screen.ModMenuTypes;
@@ -13,10 +15,9 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 public class MoundTerrariumMenu extends AbstractContainerMenu {
 
@@ -39,13 +40,13 @@ public class MoundTerrariumMenu extends AbstractContainerMenu {
         this.data = data;
 
         // Obtenemos el inventario del bloque
-        IItemHandler blockInventory = this.blockEntity.getCapability(net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER).orElseThrow(NullPointerException::new);
+        IItemHandler blockInventory = this.blockEntity.getCapability(net.neoforged.neoforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER).orElseThrow(NullPointerException::new);
 
         // Slot 0: Biomass (Solo acepta spore:biomass) - X=19, Y=25
         this.addSlot(new SlotItemHandler(blockInventory, 0, 19, 25) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
+                ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
                 return id != null && id.toString().equals("spore:biomass");
             }
         });
@@ -94,7 +95,7 @@ public class MoundTerrariumMenu extends AbstractContainerMenu {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemstack1.getItem());
+            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(itemstack1.getItem());
 
             if (index < 3) {
                 if (!this.moveItemStackTo(itemstack1, 3, this.slots.size(), true)) {

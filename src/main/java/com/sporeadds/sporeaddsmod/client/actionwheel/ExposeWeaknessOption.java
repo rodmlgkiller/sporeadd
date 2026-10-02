@@ -15,7 +15,7 @@ import java.util.UUID;
 public final class ExposeWeaknessOption {
 
     private static final ResourceLocation ICON_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/mob_effect/expose_weakness.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/expose_weakness.png");
 
     private static final long COOLDOWN_TICKS = 20L * 15L;
 

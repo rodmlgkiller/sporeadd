@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event.TentacleHandler;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.network.AbyssalTentaclePacket;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -8,11 +10,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class AbyssalTentacleRegenEvents {
 
     public static final int REGEN_TIME_TICKS = 15 * 20;
@@ -24,8 +26,8 @@ public class AbyssalTentacleRegenEvents {
     public static final String SLOT_3_TIMER_TAG = "sporeadds_tentacle_slot_3_regen_timer";
 
     // Identificadores de sonido personalizados
-    private static final ResourceLocation HOWLER_GROWL_RL = new ResourceLocation("spore", "howler_growl");
-    private static final ResourceLocation UMARMER_AMBIENT_RL = new ResourceLocation("spore", "umarmer_ambient");
+    private static final ResourceLocation HOWLER_GROWL_RL = ResourceLocation.fromNamespaceAndPath("spore", "howler_growl");
+    private static final ResourceLocation UMARMER_AMBIENT_RL = ResourceLocation.fromNamespaceAndPath("spore", "umarmer_ambient");
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {

@@ -1,20 +1,22 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * Barra lateral de "Brutality" (Claws of Brutality). Se muestra a los jugadores berserker
  * cuando el contador tiene valor o las garras están activas.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public final class BerserkerHudOverlay {
 
     private static final int BAR_X = 6;

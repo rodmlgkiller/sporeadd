@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -25,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -175,7 +176,7 @@ public class NanoInjectorItem extends Item {
             level.playSound(
                     null,
                     player.getX(), player.getY(), player.getZ(),
-                    ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "pci_inject")),
+                    BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "pci_inject")),
                     SoundSource.PLAYERS,
                     2.0f,
                     0.4f
@@ -189,7 +190,7 @@ public class NanoInjectorItem extends Item {
         int found = 0;
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack invStack = player.getInventory().getItem(i);
-            if (invStack.getItem() == ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", "packed_ice"))) {
+            if (invStack.getItem() == BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("minecraft", "packed_ice"))) {
                 int canTake = Math.min(invStack.getCount(), 1 - found);
                 invStack.shrink(canTake);
                 found += canTake;

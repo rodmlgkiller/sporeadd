@@ -1,15 +1,15 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 
 public class NetworkHandle {
 
     private static final String PROTOCOL_VERSION = "1.0";
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation("sporeadd", "main"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "main"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
@@ -210,7 +210,7 @@ public class NetworkHandle {
                 EyesDataSyncPacket::toBytes,
                 EyesDataSyncPacket::new,
                 EyesDataSyncPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -219,7 +219,7 @@ public class NetworkHandle {
                 SyncBlomfungTweakPacket::encode,
                 SyncBlomfungTweakPacket::decode,
                 SyncBlomfungTweakPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
         INSTANCE.registerMessage(
                 nextId(),
@@ -227,7 +227,7 @@ public class NetworkHandle {
                 SyncPelletTweakPacket::encode,
                 SyncPelletTweakPacket::decode,
                 SyncPelletTweakPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
         INSTANCE.registerMessage(
                 nextId(),
@@ -235,7 +235,7 @@ public class NetworkHandle {
                 gluttonousShotPacket::encode,
                 gluttonousShotPacket::decode,
                 gluttonousShotPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
         INSTANCE.registerMessage(
                 nextId(),
@@ -243,7 +243,7 @@ public class NetworkHandle {
                 AbyssalTentaclePacket::encode,
                 AbyssalTentaclePacket::decode,
                 AbyssalTentaclePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
         INSTANCE.registerMessage(
                 nextId(),
@@ -282,7 +282,7 @@ public class NetworkHandle {
                 SetInjectorModePacket::encode,
                 SetInjectorModePacket::decode,
                 SetInjectorModePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -299,7 +299,7 @@ public class NetworkHandle {
                 SyncCamouflagePacket::encode,
                 SyncCamouflagePacket::decode,
                 SyncCamouflagePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -308,7 +308,7 @@ public class NetworkHandle {
                 SyncCamouflageCooldownPacket::encode,
                 SyncCamouflageCooldownPacket::decode,
                 SyncCamouflageCooldownPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -381,7 +381,7 @@ public class NetworkHandle {
                 RequestDelayedDefibrillationPacket::toBytes,
                 RequestDelayedDefibrillationPacket::new,
                 RequestDelayedDefibrillationPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -390,7 +390,7 @@ public class NetworkHandle {
                 SyncDelayedDefibrillationCooldownPacket::toBytes,
                 SyncDelayedDefibrillationCooldownPacket::new,
                 SyncDelayedDefibrillationCooldownPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -399,7 +399,7 @@ public class NetworkHandle {
                 OpenSelfDefibrillateScreenPacket::encode,
                 OpenSelfDefibrillateScreenPacket::decode,
                 OpenSelfDefibrillateScreenPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -408,7 +408,7 @@ public class NetworkHandle {
                 RequestSelfDefibrillateStartPacket::encode,
                 RequestSelfDefibrillateStartPacket::decode,
                 RequestSelfDefibrillateStartPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -417,7 +417,7 @@ public class NetworkHandle {
                 SubmitSelfDefibrillateChoicePacket::encode,
                 SubmitSelfDefibrillateChoicePacket::decode,
                 SubmitSelfDefibrillateChoicePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -426,7 +426,7 @@ public class NetworkHandle {
                 SyncSelfDefibrillateCooldownPacket::toBytes,
                 SyncSelfDefibrillateCooldownPacket::new,
                 SyncSelfDefibrillateCooldownPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -435,7 +435,7 @@ public class NetworkHandle {
                 CloseSelfDefibrillateScreenPacket::encode,
                 CloseSelfDefibrillateScreenPacket::decode,
                 CloseSelfDefibrillateScreenPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         NetworkHandle.INSTANCE.registerMessage(
@@ -444,7 +444,7 @@ public class NetworkHandle {
                 SelectClassPacket::encode,
                 SelectClassPacket::decode,
                 SelectClassPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -453,7 +453,7 @@ public class NetworkHandle {
                 RequestClassCountsPacket::encode,
                 RequestClassCountsPacket::decode,
                 RequestClassCountsPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -462,7 +462,7 @@ public class NetworkHandle {
                 SyncClassCountsPacket::encode,
                 SyncClassCountsPacket::decode,
                 SyncClassCountsPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -471,7 +471,7 @@ public class NetworkHandle {
                 SyncHiveDownedPacket::encode,
                 SyncHiveDownedPacket::decode,
                 SyncHiveDownedPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -480,7 +480,7 @@ public class NetworkHandle {
                 StartHiveCinematicPacket::encode,
                 StartHiveCinematicPacket::decode,
                 StartHiveCinematicPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -489,7 +489,7 @@ public class NetworkHandle {
                 HiveDialogueAdvancePacket::encode,
                 HiveDialogueAdvancePacket::decode,
                 HiveDialogueAdvancePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -498,7 +498,7 @@ public class NetworkHandle {
                 SubmitHiveChoicePacket::encode,
                 SubmitHiveChoicePacket::decode,
                 SubmitHiveChoicePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -507,7 +507,7 @@ public class NetworkHandle {
                 HiveCinematicDonePacket::encode,
                 HiveCinematicDonePacket::decode,
                 HiveCinematicDonePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -516,7 +516,7 @@ public class NetworkHandle {
                 SyncHiveChancePacket::encode,
                 SyncHiveChancePacket::decode,
                 SyncHiveChancePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -525,7 +525,7 @@ public class NetworkHandle {
                 ActivateCounterPacket::encode,
                 ActivateCounterPacket::decode,
                 ActivateCounterPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -534,7 +534,7 @@ public class NetworkHandle {
                 ActivateClawsPacket::encode,
                 ActivateClawsPacket::decode,
                 ActivateClawsPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -543,7 +543,7 @@ public class NetworkHandle {
                 SyncBerserkerCooldownPacket::encode,
                 SyncBerserkerCooldownPacket::decode,
                 SyncBerserkerCooldownPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -552,7 +552,7 @@ public class NetworkHandle {
                 SyncClawCounterPacket::encode,
                 SyncClawCounterPacket::decode,
                 SyncClawCounterPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -561,7 +561,7 @@ public class NetworkHandle {
                 SyncClawsActivePacket::encode,
                 SyncClawsActivePacket::decode,
                 SyncClawsActivePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -570,7 +570,7 @@ public class NetworkHandle {
                 OpenCompoundsPacket::encode,
                 OpenCompoundsPacket::decode,
                 OpenCompoundsPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
         INSTANCE.registerMessage(
@@ -579,7 +579,7 @@ public class NetworkHandle {
                 SyncCompoundsPacket::encode,
                 SyncCompoundsPacket::decode,
                 SyncCompoundsPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -588,7 +588,7 @@ public class NetworkHandle {
                 SyncGasSpheresPacket::encode,
                 SyncGasSpheresPacket::decode,
                 SyncGasSpheresPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -597,7 +597,7 @@ public class NetworkHandle {
                 TriggerCameraShakePacket::encode,
                 TriggerCameraShakePacket::decode,
                 TriggerCameraShakePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -606,7 +606,7 @@ public class NetworkHandle {
                 SyncGluttonousFragmentsPacket::encode,
                 SyncGluttonousFragmentsPacket::decode,
                 SyncGluttonousFragmentsPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -615,7 +615,7 @@ public class NetworkHandle {
                 SyncAbyssalStormPacket::encode,
                 SyncAbyssalStormPacket::decode,
                 SyncAbyssalStormPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -624,7 +624,7 @@ public class NetworkHandle {
                 CausticShotScalePacket::encode,
                 CausticShotScalePacket::decode,
                 CausticShotScalePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -633,7 +633,7 @@ public class NetworkHandle {
                 CausticSprayModePacket::encode,
                 CausticSprayModePacket::decode,
                 CausticSprayModePacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT)
         );
 
         INSTANCE.registerMessage(
@@ -642,7 +642,7 @@ public class NetworkHandle {
                 FireCausticSprayShotPacket::encode,
                 FireCausticSprayShotPacket::decode,
                 FireCausticSprayShotPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+                java.util.Optional.of(net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
     }

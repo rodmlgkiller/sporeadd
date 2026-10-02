@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncMoundCountPacket;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -20,8 +22,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class SporeMoundSummoner {
 
@@ -57,8 +58,8 @@ public class SporeMoundSummoner {
                     debugLook = "" + spawnPos;
                 }
 
-                EntityType<?> moundType = ForgeRegistries.ENTITY_TYPES.getValue(
-                        new net.minecraft.resources.ResourceLocation("spore", "mound")
+                EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(
+                        net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("spore", "mound")
                 );
 
                 if (moundType == null) {

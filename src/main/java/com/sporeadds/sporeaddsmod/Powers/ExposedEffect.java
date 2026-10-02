@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffect;
@@ -10,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 // Importamos tu clase ModItems para poder acceder a MUTATION_ESSENCE
@@ -18,8 +19,8 @@ import com.sporeadds.sporeaddsmod.ModItems;
 
 public class ExposedEffect extends MobEffect {
 
-    private static final ResourceLocation MYCELIUM_EFFECT_ID = new ResourceLocation("spore", "mycelium_ef");
-    private static final ResourceLocation SOUND_REAGENT_ID = new ResourceLocation("spore", "reagent");
+    private static final ResourceLocation MYCELIUM_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef");
+    private static final ResourceLocation SOUND_REAGENT_ID = ResourceLocation.fromNamespaceAndPath("spore", "reagent");
     private static final String TRIGGERED_TAG = "exposed_triggered";
 
     public ExposedEffect() {
@@ -37,7 +38,7 @@ public class ExposedEffect extends MobEffect {
                     // Marca que ya se disparó
                     entity.getPersistentData().putBoolean(TRIGGERED_TAG, true);
 
-                    MobEffect myceliumEffect = ForgeRegistries.MOB_EFFECTS.getValue(MYCELIUM_EFFECT_ID);
+                    MobEffect myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EFFECT_ID);
 
                     // Paso 1: Aplica el efecto de mycelium siempre
                     if (myceliumEffect != null) {

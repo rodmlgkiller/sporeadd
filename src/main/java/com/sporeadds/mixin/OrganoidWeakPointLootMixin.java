@@ -40,7 +40,7 @@ public abstract class OrganoidWeakPointLootMixin {
         for (String str : doubled) {
             String[] parts = str.split("\\|");
             ItemStack itemStack = new ItemStack((ItemLike) Objects.requireNonNull(
-                    BuiltInRegistries.ITEM.get(new ResourceLocation(parts[0]))));
+                    BuiltInRegistries.ITEM.get(ResourceLocation.parse(parts[0]))));
 
             int min = Integer.parseUnsignedInt(parts[2]);
             int max = Integer.parseUnsignedInt(parts[3]);

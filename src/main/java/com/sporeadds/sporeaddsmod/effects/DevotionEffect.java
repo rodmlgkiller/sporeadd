@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -9,7 +11,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ import java.util.UUID;
 public class DevotionEffect extends MobEffect {
 
     private static final UUID DAMAGE_MODIFIER_ID = UUID.fromString("f3a9c1d4-6b52-4e88-9a01-7c3d5f9e2b41");
-    private static final ResourceLocation MARKER_ID = new ResourceLocation("spore", "marker");
+    private static final ResourceLocation MARKER_ID = ResourceLocation.fromNamespaceAndPath("spore", "marker");
     private static final int MARKER_AMPLIFIER = 3;
 
     /** +10% de daño de ataque por nivel. */
@@ -67,7 +68,7 @@ public class DevotionEffect extends MobEffect {
     public void applyEffectTick(LivingEntity living, int amplifier) {
         if (living.level().isClientSide) return;
 
-        MobEffect marker = ForgeRegistries.MOB_EFFECTS.getValue(MARKER_ID);
+        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_ID);
         if (marker != null) {
             living.addEffect(new MobEffectInstance(marker, 100, MARKER_AMPLIFIER, false, false));
         }

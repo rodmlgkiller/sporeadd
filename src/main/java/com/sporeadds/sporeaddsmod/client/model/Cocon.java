@@ -16,7 +16,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 public class Cocon<T extends Entity> extends EntityModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("sporeadd", "cocon"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath("sporeadd", "cocon"), "main");
 	private final ModelPart Animation_Elements;
 	private final ModelPart Membrans;
 	private final ModelPart Membrane_Bone_South;

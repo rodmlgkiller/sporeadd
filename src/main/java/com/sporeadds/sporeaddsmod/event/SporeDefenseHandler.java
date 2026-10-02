@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -9,12 +13,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class SporeDefenseHandler {
 
     @SubscribeEvent
@@ -28,7 +31,7 @@ public class SporeDefenseHandler {
         if (!(event.getSource().getEntity() instanceof Player attacker)) return;
 
         // Verificar si el atacante tiene "spore:uneasy"
-        MobEffect uneasy = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "uneasy"));
+        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "uneasy"));
         if (uneasy == null || !attacker.hasEffect(uneasy)) return;
 
         // Verificar que el defensor está en el equipo "spore"
@@ -45,7 +48,7 @@ public class SporeDefenseHandler {
                     event.setCanceled(true);
 
                     // 2. Reproducir el sonido del escudo bloqueando
-                    SoundEvent shieldBash = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "shield_bash"));
+                    SoundEvent shieldBash = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "shield_bash"));
                     if (shieldBash != null) {
                         defender.level().playSound(null, defender.blockPosition(), shieldBash, SoundSource.PLAYERS, 1.0F, 2.0F);
                     }

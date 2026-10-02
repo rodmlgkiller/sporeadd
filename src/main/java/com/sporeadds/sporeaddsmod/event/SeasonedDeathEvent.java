@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Core.SConfig;
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
 import com.Harbinger.Spore.Sentities.BaseEntities.EvolvedInfected;
@@ -20,17 +24,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class SeasonedDeathEvent {
 
-    private static final ResourceLocation SEASONED_ID = new ResourceLocation("sporeadd", "seasoned");
+    private static final ResourceLocation SEASONED_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "seasoned");
     private static final String TAG_PERFECTED_EVO = "perfected_evolution";
 
     private static final Set<String> EVOLVABLE_MOBS = Set.of(
@@ -51,7 +54,7 @@ public class SeasonedDeathEvent {
         LivingEntity victim = event.getEntity();
         if (victim.level().isClientSide) return;
 
-        MobEffect seasoned = ForgeRegistries.MOB_EFFECTS.getValue(SEASONED_ID);
+        MobEffect seasoned = BuiltInRegistries.MOB_EFFECT.get(SEASONED_ID);
         if (seasoned == null || !victim.hasEffect(seasoned)) return;
 
         Entity killer = resolveTrueKiller(event);

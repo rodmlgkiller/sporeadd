@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
@@ -17,18 +21,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class gluttonousBiteAttackHandler {
 
-    private static final ResourceLocation MEAT_ABOMINATION_ID = new ResourceLocation("sporeadd", "meat_abomination");
-    private static final ResourceLocation SCENT_ID = new ResourceLocation("spore", "scent");
+    private static final ResourceLocation MEAT_ABOMINATION_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "meat_abomination");
+    private static final ResourceLocation SCENT_ID = ResourceLocation.fromNamespaceAndPath("spore", "scent");
 
     @SubscribeEvent
     public static void onPlayerAttack(AttackEntityEvent event) {
@@ -43,7 +46,7 @@ public class gluttonousBiteAttackHandler {
             return;
         }
 
-        MobEffect faminedEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "famined"));
+        MobEffect faminedEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
         if (faminedEffect == null || !player.hasEffect(faminedEffect)) {
             return;
         }
@@ -60,7 +63,7 @@ public class gluttonousBiteAttackHandler {
             return;
         }
 
-        ResourceLocation targetId = ForgeRegistries.ENTITY_TYPES.getKey(target.getType());
+        ResourceLocation targetId = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
         if (target.isInvulnerable() || SCENT_ID.equals(targetId)) {
             return;
         }
@@ -111,13 +114,13 @@ public class gluttonousBiteAttackHandler {
 
                 boolean killedTarget = livingTarget.isDeadOrDying() || livingTarget.getHealth() <= 0;
 
-                SoundEvent biteSound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "sieger_bite"));
+                SoundEvent biteSound = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "sieger_bite"));
                 if (biteSound != null) {
                     float pitch = 0.6F + (level.random.nextFloat() * 0.1F);
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), biteSound, SoundSource.PLAYERS, 1.5F, pitch);
                 }
 
-                MobEffect mangledEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "mangled"));
+                MobEffect mangledEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "mangled"));
                 int currentMangledLevel = 0;
                 if (mangledEffect != null) {
                     MobEffectInstance currentEffect = livingTarget.getEffect(mangledEffect);
@@ -158,12 +161,12 @@ public class gluttonousBiteAttackHandler {
                         );
                     }
 
-                    SoundEvent evolveHurt = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "evolve_hurt"));
+                    SoundEvent evolveHurt = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "evolve_hurt"));
                     if (evolveHurt != null) {
                         serverLevel.playSound(null, targetX, targetY, targetZ, evolveHurt, SoundSource.HOSTILE, 1.0F, 0.5F);
                     }
 
-                    SoundEvent hyperDamage = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "hyper_damage"));
+                    SoundEvent hyperDamage = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "hyper_damage"));
                     if (hyperDamage != null) {
                         serverLevel.playSound(null, targetX, targetY, targetZ, hyperDamage, SoundSource.HOSTILE, 1.0F, 0.5F);
                     }

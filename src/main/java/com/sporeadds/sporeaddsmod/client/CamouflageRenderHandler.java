@@ -1,17 +1,19 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.client.renderer.GhostCamouflageLayer;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public final class CamouflageRenderHandler {
 
     private static final Map<PlayerRenderer, GhostCamouflageLayer> LAYER_CACHE = new HashMap<>();

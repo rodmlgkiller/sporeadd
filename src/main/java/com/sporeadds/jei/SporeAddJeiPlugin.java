@@ -1,5 +1,7 @@
 package com.sporeadds.jei;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.recipe.RecipeType;
@@ -12,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 @JeiPlugin
 public class SporeAddJeiPlugin implements IModPlugin {
 
-    private static final ResourceLocation PLUGIN_ID = new ResourceLocation("sporeadd", "jei_plugin");
+    private static final ResourceLocation PLUGIN_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "jei_plugin");
 
     public static final RecipeType<ScientistJeiRecipe> SCIENTIST_TYPE =
             RecipeType.create("sporeadd", "scientist_category", ScientistJeiRecipe.class);
@@ -47,15 +48,15 @@ public class SporeAddJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(
-                new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "scientist_block"))),
+                new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "scientist_block"))),
                 SCIENTIST_TYPE
         );
         registration.addRecipeCatalyst(
-                new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "medic_constructor_block"))),
+                new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "medic_constructor_block"))),
                 MEDIC_CONSTRUCTOR_TYPE
         );
         registration.addRecipeCatalyst(
-                new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "medic_block"))),
+                new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "medic_block"))),
                 MEDIC_BLOCK_TYPE
         );
         registration.addRecipeCatalyst(createMoundTerrariumStack(), MOUND_TERRARIUM_TYPE);
@@ -63,7 +64,7 @@ public class SporeAddJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        Item biomassItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "frozen_decayed_biomass"));
+        Item biomassItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "frozen_decayed_biomass"));
 
         List<ItemStack> in50 = new ArrayList<>();
         in50.add(new ItemStack(biomassItem, 50));
@@ -77,9 +78,9 @@ public class SporeAddJeiPlugin implements IModPlugin {
         in150.add(new ItemStack(biomassItem, 50));
         in150.add(new ItemStack(biomassItem, 50));
 
-        ItemStack research50 = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "research_50")));
-        ItemStack research100 = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "research_100")));
-        ItemStack research150 = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "research_150")));
+        ItemStack research50 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "research_50")));
+        ItemStack research100 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "research_100")));
+        ItemStack research150 = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "research_150")));
 
         List<ScientistJeiRecipe> scientistRecipes = new ArrayList<>();
         scientistRecipes.add(new ScientistJeiRecipe(in50, research50));
@@ -87,19 +88,19 @@ public class SporeAddJeiPlugin implements IModPlugin {
         scientistRecipes.add(new ScientistJeiRecipe(in150, research150));
         registration.addRecipes(SCIENTIST_TYPE, scientistRecipes);
 
-        ItemStack redstoneBlock = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", "redstone_block")));
-        ItemStack ironBlock = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", "iron_block")));
-        ItemStack medicBlockOut = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "medic_block")));
+        ItemStack redstoneBlock = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("minecraft", "redstone_block")));
+        ItemStack ironBlock = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("minecraft", "iron_block")));
+        ItemStack medicBlockOut = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "medic_block")));
 
         List<MedicConstructorJeiRecipe> constructorRecipes = new ArrayList<>();
         constructorRecipes.add(new MedicConstructorJeiRecipe(redstoneBlock, ironBlock, medicBlockOut));
         registration.addRecipes(MEDIC_CONSTRUCTOR_TYPE, constructorRecipes);
 
-        ItemStack syringeFilled = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "syringe")));
+        ItemStack syringeFilled = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "syringe")));
         CompoundTag syringeTag = syringeFilled.getOrCreateTag();
         syringeTag.putInt("CustomModelData", 1);
 
-        ItemStack vaccineOut = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "vaccine")));
+        ItemStack vaccineOut = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "vaccine")));
 
         List<MedicBlockJeiRecipe> medicRecipes = new ArrayList<>();
         medicRecipes.add(new MedicBlockJeiRecipe(syringeFilled, vaccineOut));
@@ -109,7 +110,7 @@ public class SporeAddJeiPlugin implements IModPlugin {
     }
 
     public static ItemStack createMoundTerrariumStack() {
-        ItemStack stack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "mound_terrarium")));
+        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "mound_terrarium")));
         CompoundTag tag = stack.getOrCreateTag();
         tag.putBoolean("HasMound", true);
         tag.putBoolean("Linked", false);
@@ -120,10 +121,10 @@ public class SporeAddJeiPlugin implements IModPlugin {
     private static List<MoundTerrariumJeiRecipe> createMoundTerrariumRecipes() {
         List<MoundTerrariumJeiRecipe> recipes = new ArrayList<>();
 
-        Item reaver = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "reaver"));
-        Item mutatedFiber = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "mutated_fiber"));
-        Item tumor = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "tumor"));
-        Item organoidMembrane = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "organoid_membrane"));
+        Item reaver = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "reaver"));
+        Item mutatedFiber = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "mutated_fiber"));
+        Item tumor = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "tumor"));
+        Item organoidMembrane = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"));
 
         if (reaver != null && mutatedFiber != null && tumor != null && organoidMembrane != null) {
             List<ItemStack> inputs = new ArrayList<>();
@@ -143,15 +144,15 @@ public class SporeAddJeiPlugin implements IModPlugin {
             ));
         }
 
-        Item blomfung = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "blomfung"));
-        Item bloomfung2 = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "bloomfung2"));
-        Item biomassBulb = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "biomass_bulb"));
-        Item growthsBig = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "growths_big"));
-        Item fungalRoots = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "fungal_roots"));
-        Item growthMycelium = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "growth_mycelium"));
-        Item myceliumVeins = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "mycelium_veins"));
-        Item growthsSmall = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "growths_small"));
-        Item fungalStemSapling = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "fungal_stem_sapling"));
+        Item blomfung = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "blomfung"));
+        Item bloomfung2 = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "bloomfung2"));
+        Item biomassBulb = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "biomass_bulb"));
+        Item growthsBig = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "growths_big"));
+        Item fungalRoots = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "fungal_roots"));
+        Item growthMycelium = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "growth_mycelium"));
+        Item myceliumVeins = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_veins"));
+        Item growthsSmall = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "growths_small"));
+        Item fungalStemSapling = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "fungal_stem_sapling"));
 
         List<ItemStack> shearOutputs = new ArrayList<>();
         if (blomfung != null) shearOutputs.add(new ItemStack(blomfung));
@@ -177,7 +178,7 @@ public class SporeAddJeiPlugin implements IModPlugin {
             ));
         }
 
-        Item scentSpawnEgg = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "scent_spawnegg"));
+        Item scentSpawnEgg = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "scent_spawnegg"));
         if (scentSpawnEgg != null) {
             List<ItemStack> inputs = new ArrayList<>();
             inputs.add(new ItemStack(Items.GLASS_BOTTLE));

@@ -1,15 +1,17 @@
 package com.sporeadds.sporeaddsmod.combat;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class WeakPointEffectExpireHandler {
 
     private WeakPointEffectExpireHandler() {
@@ -37,7 +39,7 @@ public final class WeakPointEffectExpireHandler {
                 WeakPointManager.remove(id);
 
                 com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                        net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+                        net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
                         new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(id, false, null)
                 );
             }

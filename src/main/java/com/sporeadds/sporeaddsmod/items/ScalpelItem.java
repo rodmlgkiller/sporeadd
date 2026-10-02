@@ -145,8 +145,8 @@ public class ScalpelItem extends Item {
     }
 
     private static void playDataSound(Level level, LivingEntity target) {
-        net.minecraft.sounds.SoundEvent sound = net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(
-                new net.minecraft.resources.ResourceLocation("spore", "reaver_reave")
+        net.minecraft.sounds.SoundEvent sound = BuiltInRegistries.SOUND_EVENT.get(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("spore", "reaver_reave")
         );
 
         if (sound == null) {

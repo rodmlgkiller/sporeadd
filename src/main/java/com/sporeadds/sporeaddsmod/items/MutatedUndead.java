@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class MutatedUndead extends Item {
 
@@ -35,7 +36,7 @@ public class MutatedUndead extends Item {
         Direction direction = context.getClickedFace();
         BlockPos spawnPos = blockpos.relative(direction);
 
-        EntityType<?> biobloobType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "biobloob"));
+        EntityType<?> biobloobType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "biobloob"));
 
         if (biobloobType != null) {
             Entity entity = biobloobType.create(serverLevel);

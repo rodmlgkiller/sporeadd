@@ -2,8 +2,8 @@ package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.client.DecoyCooldownClientState;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.api.distmarker.Dist;
 
 import java.util.function.Supplier;
 
@@ -25,7 +25,7 @@ public class SyncDecoyCooldownPacket {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            if (net.minecraftforge.fml.loading.FMLEnvironment.dist == Dist.CLIENT) {
+            if (net.neoforged.fml.loading.FMLEnvironment.dist == Dist.CLIENT) {
                 DecoyCooldownClientState.startCooldown(cooldownTicks);
             }
         });

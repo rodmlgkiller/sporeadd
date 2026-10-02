@@ -1,14 +1,16 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.commands.ClassCommand;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 /**
  * Mantiene la máscara de gas del Medic sincronizada con
@@ -21,7 +23,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
  * En ambos casos solo se toca el enchant Curse of Binding; el resto del NBT de la máscara
  * (nombre, lore, Vanishing Curse, modificadores de atributo, Unbreakable...) no se modifica.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class MedicGasMaskConfigSync {
 
     private MedicGasMaskConfigSync() {
@@ -34,7 +36,7 @@ public final class MedicGasMaskConfigSync {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.MOD)
     public static final class ConfigReload {
 
         private ConfigReload() {

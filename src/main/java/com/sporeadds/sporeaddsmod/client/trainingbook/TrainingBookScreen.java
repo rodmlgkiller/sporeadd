@@ -20,7 +20,7 @@ import java.util.List;
 
 public class TrainingBookScreen extends Screen {
 
-    static final ResourceLocation BOOK_TEXTURE = new ResourceLocation("textures/gui/book.png");
+    static final ResourceLocation BOOK_TEXTURE = ResourceLocation.parse("textures/gui/book.png");
     static final int IMAGE_WIDTH = 192;
     static final int IMAGE_HEIGHT = 192;
     static final int TEXT_LEFT_OFFSET = 36;

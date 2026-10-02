@@ -1,5 +1,7 @@
 package com.sporeadds.jei;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.jei.MedicConstructorJeiRecipe;
 import com.sporeadds.jei.SporeAddJeiPlugin;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -12,18 +14,17 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class MedicConstructorRecipeCategory implements IRecipeCategory<MedicConstructorJeiRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation("sporeadd", "medic_constructor_category");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath("sporeadd", "medic_constructor_category");
     private final IDrawable background;
     private final IDrawable icon;
 
     public MedicConstructorRecipeCategory(IGuiHelper helper) {
         this.background = helper.createBlankDrawable(120, 50);
         this.icon = helper.createDrawableItemStack(new ItemStack(
-                ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "medic_constructor_block"))
+                BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "medic_constructor_block"))
         ));
     }
 

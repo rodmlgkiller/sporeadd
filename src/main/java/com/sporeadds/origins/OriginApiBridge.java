@@ -19,7 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public final class OriginApiBridge {
 
-    private static final ResourceLocation MAIN_LAYER_ID = new ResourceLocation("origins", "origin");
+    private static final ResourceLocation MAIN_LAYER_ID = ResourceLocation.fromNamespaceAndPath("origins", "origin");
 
     private OriginApiBridge() {
     }

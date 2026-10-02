@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.entity.projectile;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -24,7 +26,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 /**
@@ -105,7 +106,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
 
         BlockPos above = result.getBlockPos().above();
         if (this.level().getBlockState(above).isAir()) {
-            Block acidBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "acid"));
+            Block acidBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "acid"));
             if (acidBlock != null && acidBlock != Blocks.AIR) {
                 this.level().setBlock(above, acidBlock.defaultBlockState(), 3);
             }
@@ -140,7 +141,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
             applyCorrosion(target);
 
             this.level().playSound(null, target.getX(), target.getY(), target.getZ(),
-                    ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "chemist_fuse")),
+                    BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "chemist_fuse")),
                     SoundSource.NEUTRAL, 1.0F, 2.0F);
         }
 
@@ -160,7 +161,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
     }
 
     private void applyStackingDissolution(LivingEntity target) {
-        MobEffect dissolution = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "dissolution"));
+        MobEffect dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
         if (dissolution == null) return;
 
         MobEffectInstance existing = target.getEffect(dissolution);
@@ -169,7 +170,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
     }
 
     private void applyCorrosion(LivingEntity target) {
-        MobEffect corrosion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "corrosion"));
+        MobEffect corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
         if (corrosion == null) return;
 
         target.addEffect(new MobEffectInstance(corrosion, CORROSION_DURATION_TICKS, CORROSION_AMPLIFIER, false, true, true));

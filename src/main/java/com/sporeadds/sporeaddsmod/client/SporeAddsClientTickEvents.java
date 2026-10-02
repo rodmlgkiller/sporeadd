@@ -1,12 +1,14 @@
 package com.sporeadds.sporeaddsmod.client;
 
-import com.sporeadds.sporeaddsmod.client.renderer.ClientgluttonousCrosshairRenderState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+import com.sporeadds.sporeaddsmod.client.renderer.ClientgluttonousCrosshairRenderState;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class SporeAddsClientTickEvents {
 
     @SubscribeEvent

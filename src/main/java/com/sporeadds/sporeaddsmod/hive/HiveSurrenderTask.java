@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.Organoids.Proto;
 import com.Harbinger.Spore.Sentities.Organoids.Verwa;
 import com.sporeadds.sporeaddsmod.Powers.Levelstats;
@@ -20,12 +24,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityMountEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,11 +53,11 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * Durante todo el proceso el jugador NO puede bajarse con shift (se cancela el dismount).
  */
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public final class HiveSurrenderTask {
 
     private static final String NO_DESPAWN_TAG = "SporeAdds_NoHardFloorDespawn";
-    private static final ResourceLocation VERWA_ID = new ResourceLocation("spore", "verva");
+    private static final ResourceLocation VERWA_ID = ResourceLocation.fromNamespaceAndPath("spore", "verva");
 
     private static final double PROTO_SEARCH_RADIUS = 512.0D;
     /** Distancia máxima del cocoon al centro del proto. */
@@ -281,7 +284,7 @@ public final class HiveSurrenderTask {
 
             var holderOpt = registry.getHolder(net.minecraft.resources.ResourceKey.create(
                     net.minecraft.core.registries.Registries.STRUCTURE,
-                    new ResourceLocation("spore", "mass_grave")
+                    ResourceLocation.fromNamespaceAndPath("spore", "mass_grave")
             ));
             if (holderOpt.isEmpty()) return null;
 
@@ -378,7 +381,7 @@ public final class HiveSurrenderTask {
     }
 
     private static Mob spawnVerwa(ServerLevel level, Vec3 pos) {
-        EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(VERWA_ID);
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(VERWA_ID);
         if (type == null || !(type.create(level) instanceof Mob verwa)) return null;
 
         verwa.setPos(pos.x, pos.y, pos.z);

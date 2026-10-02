@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.util;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 import java.util.Locale;
 import java.util.Map;

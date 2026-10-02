@@ -1,5 +1,7 @@
 package com.sporeadds.jei;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -10,12 +12,11 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import java.util.List;
 
 public class ScientistRecipeCategory implements IRecipeCategory<ScientistJeiRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation("sporeadd", "scientist_category");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath("sporeadd", "scientist_category");
     private final IDrawable background;
     private final IDrawable icon;
 
@@ -23,7 +24,7 @@ public class ScientistRecipeCategory implements IRecipeCategory<ScientistJeiReci
         // Hacemos el fondo un poco más ancho (140) para acomodar más ítems de biomasa
         this.background = helper.createBlankDrawable(140, 50);
         this.icon = helper.createDrawableItemStack(new ItemStack(
-                ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", "scientist_block"))
+                BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "scientist_block"))
         ));
     }
 

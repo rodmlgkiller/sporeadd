@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sporeadds.sporeaddsmod.blocks.modblocks;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -9,7 +11,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MoundTerrariumItemEntityRendererMixin {
 
     @Unique
-    private static final ResourceLocation SPORE_BIOMASS_BULB_ID = new ResourceLocation("spore", "biomass_bulb");
+    private static final ResourceLocation SPORE_BIOMASS_BULB_ID = ResourceLocation.fromNamespaceAndPath("spore", "biomass_bulb");
 
     @Unique
     private static boolean sporeadds$shouldShrink(ItemStack stack) {
@@ -34,7 +35,7 @@ public abstract class MoundTerrariumItemEntityRendererMixin {
             return true;
         }
 
-        Block biomassBulb = ForgeRegistries.BLOCKS.getValue(SPORE_BIOMASS_BULB_ID);
+        Block biomassBulb = BuiltInRegistries.BLOCK.get(SPORE_BIOMASS_BULB_ID);
         return biomassBulb != null && block == biomassBulb;
     }
 

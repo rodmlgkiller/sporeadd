@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 @JeiPlugin
 public class SporeAddsJeiPlugin implements IModPlugin {
-    public static final ResourceLocation PLUGIN_UID = new ResourceLocation("sporeadd", "jei_plugin");
+    public static final ResourceLocation PLUGIN_UID = ResourceLocation.fromNamespaceAndPath("sporeadd", "jei_plugin");
 
 
 

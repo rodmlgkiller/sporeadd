@@ -1,18 +1,20 @@
 package com.sporeadds.sporeaddsmod.client.actionwheel;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.lang.reflect.Field;
 import java.util.EnumMap;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public final class AmbientSoundDamper {
 
     private static final SoundSource[] DUCKED_CATEGORIES = {

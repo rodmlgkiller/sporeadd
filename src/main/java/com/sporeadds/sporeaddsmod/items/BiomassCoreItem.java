@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
@@ -21,7 +23,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,18 +33,18 @@ import java.util.Random;
 public class BiomassCoreItem extends Item {
 
     private static final List<ResourceLocation> WEAPON_POOL = Arrays.asList(
-            new ResourceLocation("spore", "armads"),
-            new ResourceLocation("spore", "cleaver"),
-            new ResourceLocation("spore", "greatsword"),
-            new ResourceLocation("spore", "halberd"),
-            new ResourceLocation("spore", "mace"),
-            new ResourceLocation("spore", "maul"),
-            new ResourceLocation("spore", "rapier"),
-            new ResourceLocation("spore", "saber"),
-            new ResourceLocation("spore", "scythe"),
-            new ResourceLocation("spore", "sickle"),
-            new ResourceLocation("spore", "boomerang"),
-            new ResourceLocation("spore", "infected_spear")
+            ResourceLocation.fromNamespaceAndPath("spore", "armads"),
+            ResourceLocation.fromNamespaceAndPath("spore", "cleaver"),
+            ResourceLocation.fromNamespaceAndPath("spore", "greatsword"),
+            ResourceLocation.fromNamespaceAndPath("spore", "halberd"),
+            ResourceLocation.fromNamespaceAndPath("spore", "mace"),
+            ResourceLocation.fromNamespaceAndPath("spore", "maul"),
+            ResourceLocation.fromNamespaceAndPath("spore", "rapier"),
+            ResourceLocation.fromNamespaceAndPath("spore", "saber"),
+            ResourceLocation.fromNamespaceAndPath("spore", "scythe"),
+            ResourceLocation.fromNamespaceAndPath("spore", "sickle"),
+            ResourceLocation.fromNamespaceAndPath("spore", "boomerang"),
+            ResourceLocation.fromNamespaceAndPath("spore", "infected_spear")
     );
 
     private static final String[] MODES = {"weapon", "pickaxe", "shovel", "shield", "ranged"};
@@ -146,7 +147,7 @@ public class BiomassCoreItem extends Item {
 
         switch (currentMode) {
             case "pickaxe":
-                moldedItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "combat_pickaxe")));
+                moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "combat_pickaxe")));
                 if (plvl > 0) {
                     if (!isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
                     addEnch(moldedItem, Enchantments.BLOCK_EFFICIENCY, Math.min(plvl, 5));
@@ -154,7 +155,7 @@ public class BiomassCoreItem extends Item {
                 break;
 
             case "shovel":
-                moldedItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "combat_shovel")));
+                moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "combat_shovel")));
                 if (plvl > 0) {
                     if (!isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
                     addEnch(moldedItem, Enchantments.BLOCK_EFFICIENCY, Math.min(plvl, 5));
@@ -162,7 +163,7 @@ public class BiomassCoreItem extends Item {
                 break;
 
             case "shield":
-                moldedItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "shield")));
+                moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "shield")));
                 if (plvl > 0 && !isLevel9) {
                     addEnch(moldedItem, Enchantments.UNBREAKING, plvl);
                 }
@@ -171,13 +172,13 @@ public class BiomassCoreItem extends Item {
             case "ranged":
                 boolean isBow = RAND.nextBoolean();
                 if (isBow) {
-                    moldedItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "infected_bow")));
+                    moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "infected_bow")));
                     if (plvl > 0 && !isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
 
                     if (plvl >= 5) addEnch(moldedItem, Enchantments.INFINITY_ARROWS, 1);
                     if (plvl > 4) addEnch(moldedItem, Enchantments.POWER_ARROWS, plvl - 4);
                 } else {
-                    moldedItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "infected_crossbow")));
+                    moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "infected_crossbow")));
                     if (plvl > 0 && !isLevel9) addEnch(moldedItem, Enchantments.UNBREAKING, Math.min(plvl, 5));
                     if (plvl > 0) addEnch(moldedItem, Enchantments.QUICK_CHARGE, Math.min(plvl, 4));
                     if (plvl >= 5) addEnch(moldedItem, Enchantments.MULTISHOT, 1);
@@ -187,14 +188,14 @@ public class BiomassCoreItem extends Item {
             case "weapon":
             default:
                 if (plvl <= 4) {
-                    moldedItem = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "knife")));
+                    moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "knife")));
                     if (plvl > 0) {
                         addEnch(moldedItem, Enchantments.UNBREAKING, plvl);
                         addEnch(moldedItem, Enchantments.SHARPNESS, plvl);
                     }
                 } else {
                     ResourceLocation weaponRL = WEAPON_POOL.get(RAND.nextInt(WEAPON_POOL.size()));
-                    moldedItem = new ItemStack(ForgeRegistries.ITEMS.getValue(weaponRL));
+                    moldedItem = new ItemStack(BuiltInRegistries.ITEM.get(weaponRL));
 
                     int enchLvl = plvl - 4;
 
@@ -222,9 +223,9 @@ public class BiomassCoreItem extends Item {
 
         addEnch(moldedItem, Enchantments.VANISHING_CURSE, 1);
 
-        ResourceLocation soundLoc = new ResourceLocation("spore", "hyper_damage");
+        ResourceLocation soundLoc = ResourceLocation.fromNamespaceAndPath("spore", "hyper_damage");
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                ForgeRegistries.SOUND_EVENTS.getValue(soundLoc),
+                BuiltInRegistries.SOUND_EVENT.get(soundLoc),
                 net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 2.0F);
 
         coreStack.shrink(1);

@@ -1,11 +1,12 @@
 package com.sporeadds.sporeaddsmod.util;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class gluttonousFaminedHelper {
 
@@ -19,7 +20,7 @@ public class gluttonousFaminedHelper {
 
         if (!isgluttonous) return false;
 
-        MobEffect famined = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "famined"));
+        MobEffect famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
         return famined != null && player.hasEffect(famined);
     }
 }

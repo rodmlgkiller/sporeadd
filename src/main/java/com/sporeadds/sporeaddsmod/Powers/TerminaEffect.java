@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Damage.Damagetypes2;
 
 import net.minecraft.ChatFormatting;
@@ -12,7 +14,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -73,7 +74,7 @@ public class TerminaEffect extends MobEffect {
             }
             // 5% chance: náusea
             if (RAND.nextDouble() < 0.05) {
-                var nausea = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "nausea"));
+                var nausea = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "nausea"));
                 if (nausea != null) {
                     player.addEffect(new MobEffectInstance(nausea, 20 * 5, 0));
                 }
@@ -102,7 +103,7 @@ public class TerminaEffect extends MobEffect {
                 return;
             }
             // ---- Resto del código mortal habitual ----
-            var myceliumEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "mycelium_ef"));
+            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
             if (myceliumEffect != null) {
                 player.addEffect(new MobEffectInstance(myceliumEffect, 20 * 30, 0));
             }

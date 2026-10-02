@@ -1,9 +1,10 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.BaseEntities.Organoid;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,15 +18,15 @@ public abstract class OrganoidHardFloorMixin {
     @Inject(method = "despawnIfHardFloor", at = @At("HEAD"), cancellable = true, remap = false)
     private void sporeadds$ignoreHardFloorForSpecificEntities(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
-        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
 
         if (id == null) {
             return;
         }
 
-        if (id.equals(new ResourceLocation("sporeadd", "cocoon"))
-                || id.equals(new ResourceLocation("sporeadd", "tentacle"))
-                || id.equals(new ResourceLocation("sporeadd", "meat_abomination"))) {
+        if (id.equals(ResourceLocation.fromNamespaceAndPath("sporeadd", "cocoon"))
+                || id.equals(ResourceLocation.fromNamespaceAndPath("sporeadd", "tentacle"))
+                || id.equals(ResourceLocation.fromNamespaceAndPath("sporeadd", "meat_abomination"))) {
             ci.cancel();
             return;
         }

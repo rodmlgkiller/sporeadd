@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.data.MoundSavedData;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncMoundCountPacket;
@@ -23,8 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.UUID;
 
@@ -57,7 +58,7 @@ public class Poder3 extends PowerBase {
                     ? hitResult.getBlockPos().above()
                     : BlockPos.containing(endVec);
 
-            EntityType<?> moundType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "mound"));
+            EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "mound"));
 
             if (moundType != null) {
                 var entity = moundType.create(level);

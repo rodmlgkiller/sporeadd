@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.data.MoundSavedData;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncMoundCountPacket;
@@ -10,25 +14,24 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class MoundEvents {
 
-    private static final ResourceLocation MOUND_ID = new ResourceLocation("spore", "mound");
+    private static final ResourceLocation MOUND_ID = ResourceLocation.fromNamespaceAndPath("spore", "mound");
 
     @SubscribeEvent
     public static void onMoundDeath(LivingDeathEvent event) {
         LivingEntity living = event.getEntity();
         if (!(living.level() instanceof ServerLevel serverLevel)) return;
 
-        ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(living.getType());
+        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(living.getType());
         if (!MOUND_ID.equals(key)) return;
 
         ChunkPos chunkPos = new ChunkPos(living.blockPosition());

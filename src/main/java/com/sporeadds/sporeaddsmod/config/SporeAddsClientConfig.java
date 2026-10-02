@@ -1,6 +1,6 @@
 package com.sporeadds.sporeaddsmod.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class SporeAddsClientConfig {
     public static final ForgeConfigSpec SPEC;

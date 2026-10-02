@@ -23,7 +23,7 @@ import java.util.List;
 public class CompoundsScreen extends AbstractContainerScreen<CompoundsMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/berserker.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/berserker.png");
 
     private static final int TEX_W = 352;
     private static final int TEX_H = 332;

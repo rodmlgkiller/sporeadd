@@ -1,8 +1,8 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 import com.sporeadds.sporeaddsmod.effects.SelfDefibrillateAbility;
 
 import java.util.function.Supplier;

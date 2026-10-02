@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.util;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.ModItems;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.Powers.Levelstats;
@@ -15,11 +17,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public final class ClassAssignmentUtil {
 
-    private static final ResourceLocation GAS_MASK_ID = new ResourceLocation("spore", "gas_mask");
+    private static final ResourceLocation GAS_MASK_ID = ResourceLocation.fromNamespaceAndPath("spore", "gas_mask");
 
     private ClassAssignmentUtil() {
     }
@@ -121,7 +122,7 @@ public final class ClassAssignmentUtil {
     }
 
     public static void equipMedicMask(ServerPlayer player) {
-        Item gasMaskItem = ForgeRegistries.ITEMS.getValue(GAS_MASK_ID);
+        Item gasMaskItem = BuiltInRegistries.ITEM.get(GAS_MASK_ID);
 
         if (gasMaskItem != null) {
             ItemStack gasMask = new ItemStack(gasMaskItem);
@@ -132,7 +133,7 @@ public final class ClassAssignmentUtil {
 
     private static void removeMedicItems(ServerPlayer player) {
         ItemStack headItem = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (headItem.getItem() == ForgeRegistries.ITEMS.getValue(GAS_MASK_ID)) {
+        if (headItem.getItem() == BuiltInRegistries.ITEM.get(GAS_MASK_ID)) {
             player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
         }
 

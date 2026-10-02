@@ -15,10 +15,10 @@ import java.util.List;
 public final class MedicActionWheelSource {
 
     private static final ResourceLocation DEFIBRILLATOR_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/defibrilator.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/defibrilator.png");
 
     private static final ResourceLocation SELF_DEFIBRILLATE_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/defibrilator2.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/defibrilator2.png");
 
     private static final float SELF_DEFIBRILLATE_HEALTH_THRESHOLD = 0.30F;
 

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -46,9 +48,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class MoundTerrariumBlock extends BaseEntityBlock {
@@ -87,7 +88,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack heldStack = player.getItemInHand(hand);
-        ResourceLocation heldId = ForgeRegistries.ITEMS.getKey(heldStack.getItem());
+        ResourceLocation heldId = BuiltInRegistries.ITEM.getKey(heldStack.getItem());
 
         if (!level.isClientSide && state.getValue(HAS_MOUND)) {
             BlockEntity entity = level.getBlockEntity(pos);
@@ -113,20 +114,20 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
     private void doReaverHarvest(ServerLevel level, BlockPos pos, Player player, ItemStack tool, MoundTerrariumBlockEntity terrarium) {
         RandomSource random = level.random;
 
-        ResourceLocation reaveSoundId = new ResourceLocation("spore", "reaver_reave");
-        var reaveSound = ForgeRegistries.SOUND_EVENTS.getValue(reaveSoundId);
+        ResourceLocation reaveSoundId = ResourceLocation.fromNamespaceAndPath("spore", "reaver_reave");
+        var reaveSound = BuiltInRegistries.SOUND_EVENT.get(reaveSoundId);
         if (reaveSound != null) {
             level.playSound(null, pos, reaveSound, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
-        ResourceLocation damageSoundId = new ResourceLocation("spore", "organoid_damage");
-        var damageSound = ForgeRegistries.SOUND_EVENTS.getValue(damageSoundId);
+        ResourceLocation damageSoundId = ResourceLocation.fromNamespaceAndPath("spore", "organoid_damage");
+        var damageSound = BuiltInRegistries.SOUND_EVENT.get(damageSoundId);
         if (damageSound != null) {
             level.playSound(null, pos, damageSound, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
-        ResourceLocation bloodParticleId = new ResourceLocation("spore", "blood_particle");
-        var bloodParticle = ForgeRegistries.PARTICLE_TYPES.getValue(bloodParticleId);
+        ResourceLocation bloodParticleId = ResourceLocation.fromNamespaceAndPath("spore", "blood_particle");
+        var bloodParticle = BuiltInRegistries.PARTICLE_TYPE.get(bloodParticleId);
         if (bloodParticle instanceof net.minecraft.core.particles.ParticleOptions options) {
             level.sendParticles(
                     options,
@@ -135,7 +136,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
             );
         }
 
-        Block biomassBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "biomass_block"));
+        Block biomassBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "biomass_block"));
         if (biomassBlock != null) {
             level.sendParticles(
                     new BlockParticleOption(ParticleTypes.BLOCK, biomassBlock.defaultBlockState()),
@@ -148,7 +149,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
 
         int looting = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MOB_LOOTING, tool);
 
-        Item mutatedFiber = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "mutated_fiber"));
+        Item mutatedFiber = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "mutated_fiber"));
         if (mutatedFiber != null) {
             int count = 1 + random.nextInt(5) + looting;
             Containers.dropItemStack(
@@ -160,7 +161,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
             );
         }
 
-        Item tumor = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "tumor"));
+        Item tumor = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "tumor"));
         if (tumor != null) {
             int count = 1 + random.nextInt(3) + (looting > 0 ? random.nextInt(looting + 1) : 0);
             Containers.dropItemStack(
@@ -172,7 +173,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
             );
         }
 
-        Item organoidMembrane = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "organoid_membrane"));
+        Item organoidMembrane = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"));
         if (organoidMembrane != null) {
             double chance = Math.min(1.0D, 0.80D + (0.05D * looting));
             if (random.nextDouble() < chance) {
@@ -227,7 +228,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
 
         level.playSound(null, pos, SoundEvents.WET_GRASS_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-        Block growthsSmallBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "growths_small"));
+        Block growthsSmallBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "growths_small"));
         if (growthsSmallBlock != null) {
             level.sendParticles(
                     new BlockParticleOption(ParticleTypes.BLOCK, growthsSmallBlock.defaultBlockState()),
@@ -238,19 +239,19 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
 
         spawnVisualSplitExperience(level, Vec3.atCenterOf(pos), 5, 3);
 
-        Item bloomfung2 = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "bloomfung2"));
+        Item bloomfung2 = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "bloomfung2"));
         if (bloomfung2 != null && random.nextDouble() < 0.40D) {
             int count = 1 + random.nextInt(2);
             Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.4D, pos.getZ() + 0.5D, new ItemStack(bloomfung2, count));
         }
 
-        Item bloomfung = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "blomfung"));
+        Item bloomfung = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "blomfung"));
         if (bloomfung != null && random.nextDouble() < 0.70D) {
             int count = 2 + random.nextInt(3);
             Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.4D, pos.getZ() + 0.5D, new ItemStack(bloomfung, count));
         }
 
-        Item biomassBulb = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "biomass_bulb"));
+        Item biomassBulb = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "biomass_bulb"));
         if (biomassBulb != null && random.nextDouble() < 0.40D) {
             Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.4D, pos.getZ() + 0.5D, new ItemStack(biomassBulb, 1));
         }
@@ -267,7 +268,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
         int chosenCount = 2 + random.nextInt(4);
         for (int i = 0; i < chosenCount; i++) {
             String id = randomPlantDrops[random.nextInt(randomPlantDrops.length)];
-            Item dropItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", id));
+            Item dropItem = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", id));
             if (dropItem != null) {
                 Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.4D, pos.getZ() + 0.5D, new ItemStack(dropItem, 1));
             }
@@ -352,8 +353,8 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
     }
 
     private void spawnMoundFromTerrarium(Level level, BlockPos pos, boolean linked) {
-        ResourceLocation moundId = new ResourceLocation("spore", "mound");
-        EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(moundId);
+        ResourceLocation moundId = ResourceLocation.fromNamespaceAndPath("spore", "mound");
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(moundId);
 
         if (entityType == null || !(level instanceof ServerLevel serverLevel)) {
             return;

@@ -27,7 +27,7 @@ public class ImplantScreen extends AbstractContainerScreen<ImplantMenu> {
             new ItemGuiData(new ItemStack(ModItems.LEFTLEG_IMPLANT.get()), 42, 80, 196, 77, 15, 31)
     );
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("sporeadd", "textures/gui/implantgui.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/implantgui.png");
 
     public ImplantScreen(ImplantMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

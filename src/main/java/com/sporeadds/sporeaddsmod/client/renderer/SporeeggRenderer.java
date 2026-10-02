@@ -18,7 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 public class SporeeggRenderer extends OrganoidMobRenderer<StaticEntity, Cocon<StaticEntity>> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/cocon.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/cocon.png");
 
     /** El modelo se dibuja a la mitad de tamaño; la hitbox no cambia. */
     private static final float MODEL_SCALE = 0.5f;

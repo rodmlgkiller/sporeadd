@@ -13,7 +13,7 @@ public final class TrackedEntities {
     }
 
     public static final ResourceLocation GOLDEN_FRAME_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/golden.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/golden.png");
 
     public static final List<Entry> ENTRIES;
 
@@ -125,7 +125,7 @@ public final class TrackedEntities {
 
     public static ResourceLocation getPageTexture(int rarity) {
         int clamped = Math.max(1, Math.min(4, rarity));
-        return new ResourceLocation("sporeadd", "textures/gui/page" + clamped + ".png");
+        return ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/page" + clamped + ".png");
     }
 
     private TrackedEntities() {

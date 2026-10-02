@@ -25,10 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KommandantSpriteLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
     private static final ResourceLocation[] TEXTURES = new ResourceLocation[] {
-            new ResourceLocation("sporeadd", "textures/entity/kommandant/pellet1.png"),
-            new ResourceLocation("sporeadd", "textures/entity/kommandant/pellet2.png"),
-            new ResourceLocation("sporeadd", "textures/entity/kommandant/pellet3.png"),
-            new ResourceLocation("sporeadd", "textures/entity/kommandant/pellet4.png")
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/pellet1.png"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/pellet2.png"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/pellet3.png"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/pellet4.png")
     };
 
     public static class PelletConfig {

@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.Powers.Levelstats;
 import com.sporeadds.sporeaddsmod.commands.ClassCommand;
@@ -15,16 +19,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
 
 import java.util.Iterator;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class RespawnEvents {
 
     private static boolean hasKommandantClass(ServerPlayer player) {
@@ -71,10 +74,10 @@ public class RespawnEvents {
             );
 
             ResourceLocation soundId =
-                    new ResourceLocation("spore", "bioblob");
+                    ResourceLocation.fromNamespaceAndPath("spore", "bioblob");
 
             SoundEvent customSound =
-                    ForgeRegistries.SOUND_EVENTS.getValue(soundId);
+                    BuiltInRegistries.SOUND_EVENT.get(soundId);
 
             if (customSound != null) {
                 player.playSound(

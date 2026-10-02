@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Damage.SdamageTypes;
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
 import com.Harbinger.Spore.Sentities.BaseEntities.Organoid;
@@ -25,11 +29,10 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -38,13 +41,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class DissolutionEffect extends MobEffect {
 
-    private static final ResourceLocation DISSOLUTION_ID = new ResourceLocation("sporeadd", "dissolution");
-    private static final ResourceLocation CORROSION_ID = new ResourceLocation("spore", "corrosion");
-    private static final ResourceLocation CHEMIST_FUSE_ID = new ResourceLocation("spore", "chemist_fuse");
-    private static final ResourceLocation GOAT_HORN_BREAK_ID = new ResourceLocation("minecraft", "entity.goat.horn_break");
+    private static final ResourceLocation DISSOLUTION_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution");
+    private static final ResourceLocation CORROSION_ID = ResourceLocation.fromNamespaceAndPath("spore", "corrosion");
+    private static final ResourceLocation CHEMIST_FUSE_ID = ResourceLocation.fromNamespaceAndPath("spore", "chemist_fuse");
+    private static final ResourceLocation GOAT_HORN_BREAK_ID = ResourceLocation.fromNamespaceAndPath("minecraft", "entity.goat.horn_break");
 
     private static final String SPORE_TEAM_NAME = "spore";
 
@@ -114,7 +117,7 @@ public class DissolutionEffect extends MobEffect {
 
         if (level.isClientSide) return;
 
-        MobEffect dissolution = ForgeRegistries.MOB_EFFECTS.getValue(DISSOLUTION_ID);
+        MobEffect dissolution = BuiltInRegistries.MOB_EFFECT.get(DISSOLUTION_ID);
         if (dissolution == null) return;
 
         MobEffectInstance victimDissolution = victim.getEffect(dissolution);
@@ -163,7 +166,7 @@ public class DissolutionEffect extends MobEffect {
                     }
 
                     ServerLevel serverLevel = (ServerLevel) level;
-                    SoundEvent hornBreak = ForgeRegistries.SOUND_EVENTS.getValue(GOAT_HORN_BREAK_ID);
+                    SoundEvent hornBreak = BuiltInRegistries.SOUND_EVENT.get(GOAT_HORN_BREAK_ID);
 
                     if (hornBreak != null) {
                         serverLevel.playSound(
@@ -211,7 +214,7 @@ public class DissolutionEffect extends MobEffect {
                 );
             }
 
-            SoundEvent chemistFuse = ForgeRegistries.SOUND_EVENTS.getValue(CHEMIST_FUSE_ID);
+            SoundEvent chemistFuse = BuiltInRegistries.SOUND_EVENT.get(CHEMIST_FUSE_ID);
             if (chemistFuse != null) {
                 serverLevel.playSound(
                         null,
@@ -240,7 +243,7 @@ public class DissolutionEffect extends MobEffect {
             MobEffectInstance attackerDissolution = livingAttacker.getEffect(dissolution);
 
             if (attackerDissolution != null && !isOnSporeTeam(victim)) {
-                MobEffect corrosion = ForgeRegistries.MOB_EFFECTS.getValue(CORROSION_ID);
+                MobEffect corrosion = BuiltInRegistries.MOB_EFFECT.get(CORROSION_ID);
                 if (corrosion != null) {
                     victim.addEffect(new MobEffectInstance(corrosion, 20 * 20, 2, false, true));
                 }
@@ -253,7 +256,7 @@ public class DissolutionEffect extends MobEffect {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide) return;
 
-        MobEffect dissolution = ForgeRegistries.MOB_EFFECTS.getValue(DISSOLUTION_ID);
+        MobEffect dissolution = BuiltInRegistries.MOB_EFFECT.get(DISSOLUTION_ID);
         if (dissolution == null) return;
 
         if (entity.hasEffect(dissolution) && entity.getRandom().nextFloat() < 0.05f) {

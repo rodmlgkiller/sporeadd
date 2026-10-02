@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
 import com.sporeadds.sporeaddsmod.util.SporeClassUtil;
@@ -21,7 +23,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -51,7 +52,7 @@ public class SyringeItem extends Item {
             level.playSound(
                     null,
                     x, y, z,
-                    ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "pci_inject")),
+                    BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "pci_inject")),
                     SoundSource.PLAYERS,
                     1.0f,
                     2.0f
@@ -107,10 +108,10 @@ public class SyringeItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        ResourceLocation termina = new ResourceLocation("sporeadd", "termina");
+        ResourceLocation termina = ResourceLocation.fromNamespaceAndPath("sporeadd", "termina");
         boolean found = false;
         for (MobEffectInstance eff : other.getActiveEffects()) {
-            ResourceLocation effId = ForgeRegistries.MOB_EFFECTS.getKey(eff.getEffect());
+            ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(eff.getEffect());
             if (effId != null && effId.equals(termina)) {
                 found = true;
                 break;
@@ -171,11 +172,11 @@ public class SyringeItem extends Item {
         }
 
         if (player.isCrouching()) {
-            ResourceLocation termina = new ResourceLocation("sporeadd", "termina");
+            ResourceLocation termina = ResourceLocation.fromNamespaceAndPath("sporeadd", "termina");
             boolean found = false;
 
             for (MobEffectInstance eff : player.getActiveEffects()) {
-                ResourceLocation effId = ForgeRegistries.MOB_EFFECTS.getKey(eff.getEffect());
+                ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(eff.getEffect());
                 if (effId != null && effId.equals(termina)) {
                     found = true;
                     break;

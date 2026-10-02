@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.abilities;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.effects.effects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,8 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.network.NetworkDirection;
 
 import java.util.HashMap;
 import java.util.List;
@@ -118,7 +119,7 @@ public final class DelayedDefibrillationAbility {
     }
 
     private static boolean isOnSporeTeam(LivingEntity entity) {
-        ResourceLocation entityId = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         if (entityId != null
                 && "spore".equals(entityId.getNamespace())
                 && "conductor".equals(entityId.getPath())) {
@@ -162,8 +163,8 @@ public final class DelayedDefibrillationAbility {
     }
 
     private static void playApplicationSound(ServerLevel level, LivingEntity target) {
-        net.minecraft.sounds.SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(
-                new ResourceLocation("spore", "electric_spark")
+        net.minecraft.sounds.SoundEvent sound = BuiltInRegistries.SOUND_EVENT.get(
+                ResourceLocation.fromNamespaceAndPath("spore", "electric_spark")
         );
 
         if (sound == null) return;

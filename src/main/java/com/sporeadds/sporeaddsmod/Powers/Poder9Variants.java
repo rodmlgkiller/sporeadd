@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousEntityLists;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousHarvestLogic;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
@@ -29,11 +31,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -52,9 +53,9 @@ public class Poder9Variants {
     private static final int gluttonous_WEAKNESS_DURATION = 5 * 20;
     private static final int gluttonous_WEAKNESS_AMPLIFIER = 2;
 
-    private static final ResourceLocation HOWLER_GROWL_ID = new ResourceLocation("spore", "howler_growl");
-    private static final ResourceLocation MUTATION_ESSENCE_ID = new ResourceLocation("sporeadd", "mutation_essence");
-    private static final ResourceLocation BLOOD_PARTICLE_ID = new ResourceLocation("spore", "blood_particle");
+    private static final ResourceLocation HOWLER_GROWL_ID = ResourceLocation.fromNamespaceAndPath("spore", "howler_growl");
+    private static final ResourceLocation MUTATION_ESSENCE_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mutation_essence");
+    private static final ResourceLocation BLOOD_PARTICLE_ID = ResourceLocation.fromNamespaceAndPath("spore", "blood_particle");
 
     private static final int ABYSSAL_SWIM_SLOW_DURATION = 250;
     private static final UUID ABYSSAL_SWIM_SLOW_UUID = UUID.fromString("7c4ee536-2f4e-4c4f-9f56-0d6f7b4e91a1");
@@ -66,7 +67,7 @@ public class Poder9Variants {
     public static void executegluttonousCall(ServerPlayer player, ServerLevel serverLevel, PlayerSpore spore) {
         spore.addSpore(-Poder9.PHASE_COST);
         player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl ->
-                MinecraftForge.EVENT_BUS.register(new gluttonousCallTask(player, serverLevel))
+                NeoForge.EVENT_BUS.register(new gluttonousCallTask(player, serverLevel))
         );
     }
 
@@ -74,7 +75,7 @@ public class Poder9Variants {
         if (!player.isInWater()) return;
         spore.addSpore(-Poder9.PHASE_COST);
         player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl ->
-                MinecraftForge.EVENT_BUS.register(new AbyssalVortexTask(player, serverLevel, lvl.getLevel()))
+                NeoForge.EVENT_BUS.register(new AbyssalVortexTask(player, serverLevel, lvl.getLevel()))
         );
     }
 
@@ -120,14 +121,14 @@ public class Poder9Variants {
                 initialized = true;
                 initializegluttonousTargets();
                 if (calledEntities.isEmpty()) {
-                    MinecraftForge.EVENT_BUS.unregister(this);
+                    NeoForge.EVENT_BUS.unregister(this);
                     return;
                 }
             }
 
             if (!player.isAlive()) {
                 restoreAll();
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
                 return;
             }
 
@@ -150,7 +151,7 @@ public class Poder9Variants {
 
             if (ticksElapsed >= MAX_TICKS || calledEntities.isEmpty()) {
                 restoreAll();
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
             }
         }
 
@@ -255,7 +256,7 @@ public class Poder9Variants {
         }
 
         private void spawnPlayerSonarPulse() {
-            ParticleOptions bloodParticle = (ParticleOptions) ForgeRegistries.PARTICLE_TYPES.getValue(BLOOD_PARTICLE_ID);
+            ParticleOptions bloodParticle = (ParticleOptions) BuiltInRegistries.PARTICLE_TYPE.get(BLOOD_PARTICLE_ID);
             if (bloodParticle == null) {
                 return;
             }
@@ -378,7 +379,7 @@ public class Poder9Variants {
     }
 
     private static void playgluttonousCallStartEffects(ServerLevel level, ServerPlayer player) {
-        SoundEvent howlerGrowl = ForgeRegistries.SOUND_EVENTS.getValue(HOWLER_GROWL_ID);
+        SoundEvent howlerGrowl = BuiltInRegistries.SOUND_EVENT.get(HOWLER_GROWL_ID);
         if (howlerGrowl != null) {
             level.playSound(
                     null,
@@ -392,7 +393,7 @@ public class Poder9Variants {
             );
         }
 
-        ParticleOptions bloodParticle = (ParticleOptions) ForgeRegistries.PARTICLE_TYPES.getValue(BLOOD_PARTICLE_ID);
+        ParticleOptions bloodParticle = (ParticleOptions) BuiltInRegistries.PARTICLE_TYPE.get(BLOOD_PARTICLE_ID);
         if (bloodParticle != null) {
             AABB box = player.getBoundingBox();
             double inflateXZ = 0.2D;
@@ -414,7 +415,7 @@ public class Poder9Variants {
     private static void maybeDropMutationEssence(ServerLevel level, LivingEntity entity) {
         if (level.random.nextFloat() >= 0.05F) return;
 
-        Item mutationEssence = ForgeRegistries.ITEMS.getValue(MUTATION_ESSENCE_ID);
+        Item mutationEssence = BuiltInRegistries.ITEM.get(MUTATION_ESSENCE_ID);
         if (mutationEssence == null || mutationEssence == Items.AIR) return;
 
         level.addFreshEntity(new ItemEntity(
@@ -461,7 +462,7 @@ public class Poder9Variants {
             if (event.phase != TickEvent.Phase.END) return;
 
             if (!player.isAlive() || !player.isInWater()) {
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
                 return;
             }
 
@@ -503,7 +504,7 @@ public class Poder9Variants {
             if (ticksElapsed >= MAX_TICKS) {
                 level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, startX, startY + 1.0D, startZ, 1, 0.0D, 0.0D, 0.0D, 0.0D);
                 executeAbyssalVortex(player, level, playerLevel);
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
             }
         }
     }
@@ -525,7 +526,7 @@ public class Poder9Variants {
         public void onServerTick(TickEvent.ServerTickEvent event) {
             if (event.phase != TickEvent.Phase.END) return;
             if (living == null || !living.isAlive()) {
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
                 return;
             }
 
@@ -537,7 +538,7 @@ public class Poder9Variants {
                 attr.removeModifier(modifierId);
             }
 
-            MinecraftForge.EVENT_BUS.unregister(this);
+            NeoForge.EVENT_BUS.unregister(this);
         }
     }
 
@@ -586,7 +587,7 @@ public class Poder9Variants {
                             AttributeModifier.Operation.ADDITION
                     ));
 
-                    MinecraftForge.EVENT_BUS.register(
+                    NeoForge.EVENT_BUS.register(
                             new RemoveSwimSpeedModifierTask(living, level, ABYSSAL_SWIM_SLOW_UUID, ABYSSAL_SWIM_SLOW_DURATION)
                     );
                 }
@@ -680,7 +681,7 @@ public class Poder9Variants {
      */
     public static void activateCausticSprayMode(ServerPlayer player, ServerLevel level) {
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "chemist_fuse")),
+                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "chemist_fuse")),
                 SoundSource.PLAYERS, 1.0F, 1.0F);
 
         var gas = com.sporeadds.sporeaddsmod.particles.SporeaddParticleTypes.GAS.get();
@@ -697,7 +698,7 @@ public class Poder9Variants {
         }
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> player),
+                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> player),
                 new com.sporeadds.sporeaddsmod.network.CausticSprayModePacket()
         );
     }

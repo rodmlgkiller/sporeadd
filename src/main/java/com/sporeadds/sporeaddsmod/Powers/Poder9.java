@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.FoliageSpread;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
@@ -18,8 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.util.LazyOptional;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -111,7 +112,7 @@ public class Poder9 extends PowerBase {
         int durationTicks = (30 + Math.max(playerLevel, 0) * 5) * 20;
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "limb_slash")),
+                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "limb_slash")),
                 SoundSource.MASTER, 1.0f, 1.0f);
 
         level.sendParticles(new DustParticleOptions(new Vector3f(1.0f, 0.0f, 0.0f), 1.0f),
@@ -123,8 +124,8 @@ public class Poder9 extends PowerBase {
         );
         List<LivingEntity> entitiesInArea = level.getEntitiesOfClass(LivingEntity.class, effectArea);
 
-        MobEffect myceliumEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore",    "mycelium_ef"));
-        MobEffect exposedEffect  = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "exposed"));
+        MobEffect myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore",    "mycelium_ef"));
+        MobEffect exposedEffect  = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed"));
 
         for (LivingEntity target : entitiesInArea) {
             if (target == player) continue;
@@ -136,8 +137,8 @@ public class Poder9 extends PowerBase {
 
         for (int i = 0; i < 20; i++) FOLIAGE_SPREAD.SpreadInfection(level, 15.0, player.blockPosition());
 
-        Block biomassBulb = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "biomass_bulb"));
-        Block fangLump    = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "fang_lump"));
+        Block biomassBulb = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "biomass_bulb"));
+        Block fangLump    = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "fang_lump"));
 
         if (biomassBulb != null && fangLump != null && biomassBulb != net.minecraft.world.level.block.Blocks.AIR) {
             int radius = (int) EFFECT_RADIUS_NORMAL;

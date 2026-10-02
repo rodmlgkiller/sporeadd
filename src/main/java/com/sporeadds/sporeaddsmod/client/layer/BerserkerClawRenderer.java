@@ -21,7 +21,7 @@ import net.minecraft.world.entity.HumanoidArm;
  */
 public final class BerserkerClawRenderer {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation("sporeadd", "textures/entity/claws.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/claws.png");
 
     // --- forma de cada hoja ---
     private static final float CLAW_BREADTH = 0.34F;    // ancho (a lo largo del eje adelante-atrás)

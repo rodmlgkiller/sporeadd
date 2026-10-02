@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.FoliageSpread;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
@@ -22,11 +24,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class Poder13 {
         }
 
         if (Poder13Variants.isgluttonous(player)) {
-            var famined = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "famined"));
+            var famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
             if (famined != null && player.hasEffect(famined)) {
                 return;
             }
@@ -94,7 +95,7 @@ public class Poder13 {
             }
 
             BlockPos spawnPos = player.blockPosition().above(50);
-            var nukeEntityType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "tumoroid_nuke"));
+            var nukeEntityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "tumoroid_nuke"));
             if (nukeEntityType == null) return;
 
             Entity nukeEntity = nukeEntityType.create(level);
@@ -121,17 +122,17 @@ public class Poder13 {
                         spawnPos.getX() + 0.5,
                         spawnPos.getY(),
                         spawnPos.getZ() + 0.5,
-                        ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "falling_bomb")),
+                        BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "falling_bomb")),
                         SoundSource.MASTER,
                         7.0F, 1.0F
                 );
 
-                var resistance = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "resistance"));
+                var resistance = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "resistance"));
                 if (resistance != null) {
                     player.addEffect(new net.minecraft.world.effect.MobEffectInstance(resistance, 300, 224, false, true));
                 }
 
-                var anticipation = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "anticipation"));
+                var anticipation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "anticipation"));
                 if (anticipation != null) {
                     player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                             anticipation,
@@ -162,7 +163,7 @@ public class Poder13 {
             this.player = player;
             this.delay = delay;
             this.isCaustic = isCaustic;
-            MinecraftForge.EVENT_BUS.register(this);
+            NeoForge.EVENT_BUS.register(this);
         }
 
         @SubscribeEvent
@@ -171,7 +172,7 @@ public class Poder13 {
             ticks++;
             if (ticks >= delay) {
                 detonate(level, nukeEntity, player, isCaustic);
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
             }
         }
     }
@@ -196,7 +197,7 @@ public class Poder13 {
             this.y = y;
             this.z = z;
             this.isCaustic = isCaustic;
-            MinecraftForge.EVENT_BUS.register(this);
+            NeoForge.EVENT_BUS.register(this);
         }
 
         @SubscribeEvent
@@ -213,7 +214,7 @@ public class Poder13 {
 
                 if (spreadCycles <= MAX_CYCLES) {
                     if (isCaustic) {
-                        Block acidBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "acid"));
+                        Block acidBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "acid"));
 
                         if (acidBlock != null && acidBlock != net.minecraft.world.level.block.Blocks.AIR) {
                             int r = (int) currentRadius;
@@ -260,10 +261,10 @@ public class Poder13 {
                 AABB cloudArea = new AABB(x, y, z, x, y, z).inflate(currentRadius, 10.0, currentRadius);
                 List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, cloudArea, LivingEntity::isAlive);
 
-                var exposed = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "exposed"));
-                var dissolution = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "dissolution"));
-                var mycelium = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "mycelium_ef"));
-                var corrosion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "corrosion"));
+                var exposed = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed"));
+                var dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
+                var mycelium = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
+                var corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
 
                 int exposedLevel = SporeAddsConfig.NUKE_EXPOSED_LEVEL.get();
                 int myceliumLevel = SporeAddsConfig.NUKE_MYCELIUM_LEVEL.get();
@@ -288,7 +289,7 @@ public class Poder13 {
             }
 
             if (totalTicks >= MAX_LIFETIME) {
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
             }
         }
     }
@@ -303,7 +304,7 @@ public class Poder13 {
 
         level.playSound(
                 null, ex, ey, ez,
-                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "nuke")),
+                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "nuke")),
                 SoundSource.MASTER,
                 50.0F, 1.0F
         );
@@ -328,10 +329,10 @@ public class Poder13 {
         AABB effectArea = new AABB(ex, ey, ez, ex, ey, ez).inflate(damageRadius);
         List<LivingEntity> affected = level.getEntitiesOfClass(LivingEntity.class, effectArea, LivingEntity::isAlive);
 
-        var mycelium = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "mycelium_ef"));
-        var termina = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "termina"));
-        var dissolution = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "dissolution"));
-        var corrosion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "corrosion"));
+        var mycelium = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
+        var termina = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "termina"));
+        var dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
+        var corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
 
         int minTermina = SporeAddsConfig.TERMINA_DURATION_MIN.get();
         int maxTermina = SporeAddsConfig.TERMINA_DURATION_MAX.get();

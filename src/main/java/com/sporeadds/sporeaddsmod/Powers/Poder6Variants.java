@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.Harbinger.Spore.Sentities.BaseEntities.Organoid;
@@ -19,8 +21,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.util.LazyOptional;
 import org.joml.Vector3f;
 
 public class Poder6Variants {
@@ -93,19 +94,19 @@ public class Poder6Variants {
             baseBiomass = 2;
         }
 
-        SoundEvent evolveHurt = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "evolve_hurt"));
+        SoundEvent evolveHurt = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "evolve_hurt"));
         if (evolveHurt != null) {
             serverLevel.playSound(null, target.getX(), target.getY(), target.getZ(), evolveHurt, SoundSource.HOSTILE, 1.0F, 0.5F);
         }
 
-        SoundEvent hyperDamage = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "hyper_damage"));
+        SoundEvent hyperDamage = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "hyper_damage"));
         if (hyperDamage != null) {
             serverLevel.playSound(null, target.getX(), target.getY(), target.getZ(), hyperDamage, SoundSource.HOSTILE, 1.0F, 0.5F);
         }
 
         spawnConversionParticles(serverLevel, livingTarget);
 
-        EntityType<?> meatType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("sporeadd", "meat_abomination"));
+        EntityType<?> meatType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "meat_abomination"));
         if (meatType != null) {
             Entity newEntity = meatType.create(serverLevel);
             if (newEntity instanceof MeatAbomination meatAbomination) {
@@ -138,7 +139,7 @@ public class Poder6Variants {
                 0.1D
         );
 
-        var bloodType = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation("spore", "blood_particle"));
+        var bloodType = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "blood_particle"));
         if (bloodType instanceof ParticleOptions bloodParticle) {
             level.sendParticles(
                     bloodParticle,

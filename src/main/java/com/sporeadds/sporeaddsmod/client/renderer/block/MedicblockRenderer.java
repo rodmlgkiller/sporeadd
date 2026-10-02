@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.renderer.block;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.mojang.math.Axis;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.MedicBlockEntity;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.modblocksentity;
@@ -9,10 +11,10 @@ import com.sporeadds.sporeaddsmod.procedures.MedicblockClosePlaybackConditionPro
 import com.sporeadds.sporeaddsmod.procedures.MedicblockOpenPlaybackConditionProcedure;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.api.distmarker.Dist;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +30,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.joml.Quaternionf;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class MedicblockRenderer implements BlockEntityRenderer<MedicBlockEntity> {
 	private final CustomHierarchicalModel model;
 	private final ResourceLocation texture;

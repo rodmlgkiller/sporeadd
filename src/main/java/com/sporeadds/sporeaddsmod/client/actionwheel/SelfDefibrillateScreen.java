@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.actionwheel;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SubmitSelfDefibrillateChoicePacket;
@@ -16,13 +18,13 @@ import java.util.Random;
 public class SelfDefibrillateScreen extends Screen {
 
     private static final ResourceLocation FALSE_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/mob_effect/defibrilator3.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/defibrilator3.png");
 
     private static final ResourceLocation TRUE_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/mob_effect/defibrilator.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/defibrilator.png");
 
     private static final ResourceLocation DETECTION_SOUND =
-            new ResourceLocation("sporeadd", "detection");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "detection");
 
     private static final int TOTAL_ICONS = 75;
     private static final int ICON_SIZE = 50;
@@ -133,7 +135,7 @@ public class SelfDefibrillateScreen extends Screen {
 
     private void playDetectionSound() {
         net.minecraft.sounds.SoundEvent sound =
-                net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(DETECTION_SOUND);
+                BuiltInRegistries.SOUND_EVENT.get(DETECTION_SOUND);
 
         if (sound == null) return;
 

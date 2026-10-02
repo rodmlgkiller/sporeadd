@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -10,12 +14,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class CausticArmorReactive {
 
     private static final DustParticleOptions DUST_VERDE = new DustParticleOptions(
@@ -81,7 +84,7 @@ public class CausticArmorReactive {
                     player.getX(),
                     player.getY(),
                     player.getZ(),
-                    ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "chemist_fuse")),
+                    BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "chemist_fuse")),
                     SoundSource.PLAYERS,
                     1.0F,
                     2.0F

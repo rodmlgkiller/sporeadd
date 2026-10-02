@@ -1,14 +1,16 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.effects.PunishmentEffect;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * Reduce el volumen de las categorías de sonido "de mundo" mientras el jugador tiene el efecto
@@ -16,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
  * {@code SoundVolumeDamperMixin} sobre {@code Options#getSoundSourceVolume} (igual que
  * {@link com.sporeadds.sporeaddsmod.client.hive.HiveSoundDamper}). MASTER no se reduce.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public final class PunishmentSoundDamper {
 
     private static final SoundSource[] DUCKED_CATEGORIES = {

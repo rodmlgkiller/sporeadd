@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MoundTerrariumRecipeCategory implements IRecipeCategory<MoundTerrariumJeiRecipe> {
 
-    public static final ResourceLocation UID = new ResourceLocation("sporeadd", "mound_terrarium");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mound_terrarium");
     public static final mezz.jei.api.recipe.RecipeType<MoundTerrariumJeiRecipe> RECIPE_TYPE =
             mezz.jei.api.recipe.RecipeType.create("sporeadd", "mound_terrarium", MoundTerrariumJeiRecipe.class);
 

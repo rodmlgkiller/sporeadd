@@ -15,10 +15,10 @@ import java.util.List;
 public final class GhostActionWheelSource {
 
     private static final ResourceLocation CAMOUFLAGE_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/disguised.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/disguised.png");
 
     private static final ResourceLocation DECOY_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/decoy.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/decoy.png");
 
     private GhostActionWheelSource() {
     }

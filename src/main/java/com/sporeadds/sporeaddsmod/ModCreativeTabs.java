@@ -8,15 +8,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class ModCreativeTabs {
 
     public static final DeferredRegister<CreativeModeTab> TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, "sporeadd");
 
-    public static final RegistryObject<CreativeModeTab> SPOREADD_TAB = TABS.register("sporeadd_tab",
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPOREADD_TAB = TABS.register("sporeadd_tab",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.sporeadd_tab"))
                     .icon(() -> new ItemStack(ModItems.BUCKET_OF_REMAINS.get()))

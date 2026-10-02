@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.renderer.item;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.sporeadds.sporeaddsmod.blocks.modblocks;
@@ -15,11 +17,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class MoundTerrariumItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-    private static final ResourceLocation MOUND_ID = new ResourceLocation("spore", "mound");
+    private static final ResourceLocation MOUND_ID = ResourceLocation.fromNamespaceAndPath("spore", "mound");
     private Entity cachedMound;
 
     public MoundTerrariumItemRenderer() {
@@ -66,7 +67,7 @@ public class MoundTerrariumItemRenderer extends BlockEntityWithoutLevelRenderer 
 
         if (hasMound) {
             if (cachedMound == null) {
-                EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(MOUND_ID);
+                EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(MOUND_ID);
                 if (type != null) {
                     cachedMound = type.create(mc.level);
                 }

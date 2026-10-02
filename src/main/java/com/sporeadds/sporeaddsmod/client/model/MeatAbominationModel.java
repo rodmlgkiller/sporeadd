@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MeatAbominationModel<T extends MeatAbomination> extends EntityModel<T> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
-            new ResourceLocation("sporeadd", "meat_abomination"), "main");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "meat_abomination"), "main");
 
     public final ModelPart group1;
     public final ModelPart group2;

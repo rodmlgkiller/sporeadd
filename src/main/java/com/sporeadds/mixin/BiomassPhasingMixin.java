@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Powers.AdaptedPhysiologyPower;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +13,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,11 +35,11 @@ public abstract class BiomassPhasingMixin {
         }
 
         BlockState state = (BlockState) (Object) this;
-        if (ForgeRegistries.BLOCKS.getKey(state.getBlock()) == null) {
+        if (BuiltInRegistries.BLOCK.getKey(state.getBlock()) == null) {
             return;
         }
 
-        String blockId = ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString();
+        String blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString();
 
         if (AdaptedPhysiologyPower.isPhaseableBlock(blockId) && AdaptedPhysiologyPower.canPhase(player)) {
             double blockTop = pos.getY() + 1.0D;

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.client.gui.MoundTerrariumMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,12 +25,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,7 +89,7 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
 
         if (!be.isDigesting && be.hp < 15) {
             ItemStack biomassStack = be.itemHandler.getStackInSlot(0);
-            ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(biomassStack.getItem());
+            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(biomassStack.getItem());
 
             if (itemId != null && itemId.toString().equals("spore:biomass")) {
                 be.itemHandler.extractItem(0, 1, false);
@@ -138,8 +139,8 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
             ItemStack resultStack = be.itemHandler.getStackInSlot(2);
 
             if (bottleStack.is(Items.GLASS_BOTTLE)) {
-                ResourceLocation spawnEggId = new ResourceLocation("spore", "scent_spawnegg");
-                var spawnEggItem = ForgeRegistries.ITEMS.getValue(spawnEggId);
+                ResourceLocation spawnEggId = ResourceLocation.fromNamespaceAndPath("spore", "scent_spawnegg");
+                var spawnEggItem = BuiltInRegistries.ITEM.get(spawnEggId);
 
                 if (spawnEggItem != null && (resultStack.isEmpty() || (resultStack.is(spawnEggItem) && resultStack.getCount() < 64))) {
                     be.itemHandler.extractItem(1, 1, false);
@@ -154,16 +155,16 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
                     changed = true;
 
                     if (level instanceof ServerLevel serverLevel) {
-                        ResourceLocation soundId = new ResourceLocation("spore", "puff");
-                        var puffEvent = ForgeRegistries.SOUND_EVENTS.getValue(soundId);
+                        ResourceLocation soundId = ResourceLocation.fromNamespaceAndPath("spore", "puff");
+                        var puffEvent = BuiltInRegistries.SOUND_EVENT.get(soundId);
                         if (puffEvent != null) {
                             serverLevel.playSound(null, pos, puffEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
                         }
 
                         serverLevel.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                        ResourceLocation particleId = new ResourceLocation("spore", "spore_particle");
-                        var particleType = ForgeRegistries.PARTICLE_TYPES.getValue(particleId);
+                        ResourceLocation particleId = ResourceLocation.fromNamespaceAndPath("spore", "spore_particle");
+                        var particleType = BuiltInRegistries.PARTICLE_TYPE.get(particleId);
                         if (particleType instanceof ParticleOptions options) {
                             int count = 3 + level.random.nextInt(5);
                             double x = pos.getX() + 0.5D;

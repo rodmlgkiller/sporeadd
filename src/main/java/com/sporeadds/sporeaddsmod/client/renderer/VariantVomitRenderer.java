@@ -16,10 +16,10 @@ import org.joml.Matrix4f;
 public class VariantVomitRenderer extends EntityRenderer<VariantVomitProjectile> {
 
     private static final ResourceLocation TEXTURE_BONE =
-            new ResourceLocation("sporeadd", "textures/entity/vomit_bone.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/vomit_bone.png");
 
     private static final ResourceLocation TEXTURE_GORE =
-            new ResourceLocation("sporeadd", "textures/entity/vomit_gore.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/vomit_gore.png");
 
     private static final ResourceLocation TEXTURE_DEFAULT =
             TEXTURE_BONE;

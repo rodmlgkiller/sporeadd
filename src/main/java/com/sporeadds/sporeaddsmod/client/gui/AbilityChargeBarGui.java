@@ -7,7 +7,7 @@ import com.sporeadds.sporeaddsmod.client.ClientGluttonousFragmentsState;
 import com.sporeadds.sporeaddsmod.config.SporeAddsClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class AbilityChargeBarGui {
     // Caustic: hand-painted fill sprite, cropped horizontally by charge fraction (same technique as
     // the vanilla XP bar). Slight brighten tint once fully charged, no tint while still charging.
     private static final ResourceLocation CAUSTIC_FILL_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/caustic_bar_fill.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/caustic_bar_fill.png");
     private static final int CAUSTIC_FILL_TEX_W = 120;
     private static final int CAUSTIC_FILL_TEX_H = 8;
 
@@ -38,7 +38,7 @@ public class AbilityChargeBarGui {
     // (only the first 15px are used), 5x8 each, left to right: gore, generic (gluttonous/other), bone.
     private static final int SEGMENT_GAP = 1;
     private static final ResourceLocation GLUTTONOUS_SEGMENTS_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/gluttonous_bar_segments.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/gluttonous_bar_segments.png");
     private static final int GLUTTONOUS_SHEET_W = 24;
     private static final int GLUTTONOUS_SHEET_H = 8;
     private static final int GLUTTONOUS_SEGMENT_W = 5;

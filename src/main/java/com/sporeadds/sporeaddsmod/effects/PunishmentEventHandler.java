@@ -1,15 +1,17 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * Lógica del efecto {@link PunishmentEffect}:
@@ -24,7 +26,7 @@ import net.minecraftforge.fml.common.Mod;
  * escala con el amplifier: escalarlo (como en Mangled) hacía que a niveles altos el
  * multiplicador se volviera negativo y el salto dejara de comportarse bien.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class PunishmentEventHandler {
 
     private PunishmentEventHandler() {

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class MedicBlockContructorScreen extends AbstractContainerScreen<MedicBlockContructorMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("sporeadd", "textures/gui/medicblockcons.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/medicblockcons.png");
 
     private Button Start;
 

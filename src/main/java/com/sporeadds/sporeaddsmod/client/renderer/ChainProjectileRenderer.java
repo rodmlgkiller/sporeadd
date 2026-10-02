@@ -21,11 +21,11 @@ import virtuoel.pehkui.api.ScaleTypes;
 public class ChainProjectileRenderer extends EntityRenderer<ChainProjectileEntity> {
 
     private static final ResourceLocation VANILLA_CHAIN_TEXTURE =
-            new ResourceLocation("minecraft", "textures/block/chain.png");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/block/chain.png");
     private static final ResourceLocation MOD_CHAIN_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/chain.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/chain.png");
     private static final ResourceLocation HOOK_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/hook.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/hook.png");
 
     public ChainProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);

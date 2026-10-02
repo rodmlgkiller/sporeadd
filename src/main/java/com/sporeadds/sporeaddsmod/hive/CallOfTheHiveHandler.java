@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.effects.SporeTeamCombatTracker;
 import com.sporeadds.sporeaddsmod.effects.effects;
@@ -7,11 +9,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * Aplica y mantiene el efecto {@code call_of_the_hive}.
@@ -26,7 +28,7 @@ import net.minecraftforge.fml.common.Mod;
  * Mantenimiento: si un jugador con el efecto deja de estar a menos de 300 bloques de un
  * proto, el efecto se retira. Mientras está downed, el efecto lo gestiona {@link HiveDownedManager}.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class CallOfTheHiveHandler {
 
     public static final double PROXIMITY_RADIUS = 300.0D;

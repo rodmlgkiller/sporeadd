@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.Organoids.Proto;
 import com.sporeadds.sporeaddsmod.Damage.Damagetypes2;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -24,15 +28,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -67,10 +70,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * que un Kommandant conectado pase con puntos &gt; 0 (el reloj se pausa mientras está desconectado
  * o mientras tiene un drenaje letal del 3er strike en curso).
  */
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class PunishmentManager {
 
-    private static final ResourceLocation RECONSTRUCTOR_ID = new ResourceLocation("spore", "reconstructor");
+    private static final ResourceLocation RECONSTRUCTOR_ID = ResourceLocation.fromNamespaceAndPath("spore", "reconstructor");
 
     /** Cooldown (gametime) del punto por golpear al proto/reconstructor, por jugador. */
     private static final Map<UUID, Long> LAST_HIT_POINT = new ConcurrentHashMap<>();
@@ -126,7 +129,7 @@ public final class PunishmentManager {
 
         LivingEntity victim = event.getEntity();
         boolean isHiveTarget = victim instanceof Proto
-                || RECONSTRUCTOR_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(victim.getType()));
+                || RECONSTRUCTOR_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(victim.getType()));
         if (!isHiveTarget) return;
 
         if (!(attacker.level() instanceof ServerLevel level)) return;
@@ -384,8 +387,8 @@ public final class PunishmentManager {
     }
 
     private static void playPunishmentSound(ServerLevel level, ServerPlayer player, int points) {
-        SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(
-                new ResourceLocation("spore", points >= 3 ? "evolve_hurt" : "hyper_damage"));
+        SoundEvent sound = BuiltInRegistries.SOUND_EVENT.get(
+                ResourceLocation.fromNamespaceAndPath("spore", points >= 3 ? "evolve_hurt" : "hyper_damage"));
         if (sound != null) {
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     sound, SoundSource.HOSTILE, 1.5F, 0.5F);
@@ -431,11 +434,11 @@ public final class PunishmentManager {
                     x, y, z, 1, mx, my, mz, 0.35D);
         }
 
-        SoundEvent evolveHurt = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "evolve_hurt"));
+        SoundEvent evolveHurt = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "evolve_hurt"));
         if (evolveHurt != null) {
             level.playSound(null, x, y, z, evolveHurt, SoundSource.HOSTILE, 1.0F, 0.5F);
         }
-        SoundEvent hyperDamage = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "hyper_damage"));
+        SoundEvent hyperDamage = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "hyper_damage"));
         if (hyperDamage != null) {
             level.playSound(null, x, y, z, hyperDamage, SoundSource.HOSTILE, 1.0F, 0.5F);
         }

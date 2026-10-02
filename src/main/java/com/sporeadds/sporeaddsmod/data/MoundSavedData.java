@@ -175,7 +175,7 @@ public class MoundSavedData extends SavedData {
 
         ResourceKey<Level> levelKey = ResourceKey.create(
                 Registries.DIMENSION,
-                new ResourceLocation(entry.dimensionId)
+                ResourceLocation.parse(entry.dimensionId)
         );
 
         return server.getLevel(levelKey);

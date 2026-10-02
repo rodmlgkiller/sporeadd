@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sporeadds.sporeaddsmod.Powers.AdaptedPhysiologyPower;
 import net.minecraft.client.Minecraft;
@@ -8,7 +10,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -32,7 +33,7 @@ public abstract class ScreenEffectRendererMixin {
 
         BlockPos eyePos = BlockPos.containing(player.getEyePosition());
         BlockState state = player.level().getBlockState(eyePos);
-        String blockId = String.valueOf(ForgeRegistries.BLOCKS.getKey(state.getBlock()));
+        String blockId = String.valueOf(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
 
         if (!(AdaptedPhysiologyPower.canPhase(player) && AdaptedPhysiologyPower.isPhaseableBlock(blockId))) {
             ScreenEffectRendererInvoker.sporeadds$invokeRenderTex(sprite, poseStack);

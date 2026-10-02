@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Damage.Damagetypes2;
 
 import net.minecraft.ChatFormatting;
@@ -19,10 +23,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.joml.Vector3f;
 
 import java.util.Collections;
@@ -30,7 +33,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class TerminaEffect extends MobEffect {
 
     private static final Random RAND = new Random();
@@ -58,9 +61,9 @@ public class TerminaEffect extends MobEffect {
     };
 
     private static final UUID TERMINA_HEALTH_MODIFIER_UUID = UUID.fromString("2b7b8e09-4e09-4c8c-967f-7b2dbe0c53ab");
-    private static final ResourceLocation SOUND_REAGENT_ID = new ResourceLocation("spore", "reagent");
+    private static final ResourceLocation SOUND_REAGENT_ID = ResourceLocation.fromNamespaceAndPath("spore", "reagent");
 
-    public static final ResourceKey<DamageType> MYCELIUM_OVERTAKE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("spore", "mycelium_overtake"));
+    public static final ResourceKey<DamageType> MYCELIUM_OVERTAKE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("spore", "mycelium_overtake"));
 
     public TerminaEffect() {
         // Color base del efecto en el inventario: Morado oscuro (0x8A38B3)
@@ -93,7 +96,7 @@ public class TerminaEffect extends MobEffect {
 
             // Las náuseas y el daño pasivo aplican a TODOS (jugadores y mobs)
             if (RAND.nextDouble() < 0.05) {
-                var nausea = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "nausea"));
+                var nausea = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "nausea"));
                 if (nausea != null) {
                     entity.addEffect(new MobEffectInstance(nausea, 20 * 5, 0));
                 }
@@ -131,7 +134,7 @@ public class TerminaEffect extends MobEffect {
             }
 
             // ---- Ejecución letal ----
-            var myceliumEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "mycelium_ef"));
+            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
             if (myceliumEffect != null) {
                 entity.addEffect(new MobEffectInstance(myceliumEffect, 20 * 30, 0));
             }
@@ -187,7 +190,7 @@ public class TerminaEffect extends MobEffect {
         if (event.getSource().is(MYCELIUM_OVERTAKE)) {
 
             // Asegúrate de que tu modid sea correcto ("sporeadd" o "sporeadds")
-            MobEffect termina = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadds", "termina"));
+            MobEffect termina = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadds", "termina"));
             if (termina == null) return;
 
             MobEffectInstance currentEffect = entity.getEffect(termina);

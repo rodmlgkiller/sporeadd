@@ -1,12 +1,14 @@
 package com.sporeadds.sporeaddsmod.combat;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.server.ServerLifecycleHooks;;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+import net.minecraft.server.MinecraftServer;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;;
+
+@EventBusSubscriber(modid = "sporeadd")
 public final class WeakPointKillTrackerCleanup {
 
     private WeakPointKillTrackerCleanup() {

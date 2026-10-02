@@ -15,10 +15,10 @@ import java.util.List;
 public final class ScientistActionWheelSource {
 
     private static final ResourceLocation FIELD_RESEARCH_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/field_research.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/field_research.png");
 
     private static final ResourceLocation EXPOSE_WEAKNESS_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/expose_weakness.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/expose_weakness.png");
 
     private ScientistActionWheelSource() {
     }

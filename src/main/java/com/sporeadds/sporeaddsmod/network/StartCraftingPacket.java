@@ -4,7 +4,7 @@ import com.sporeadds.sporeaddsmod.blocks.blocks_entity.MedicBlockCrafterEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

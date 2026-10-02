@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -155,7 +155,7 @@ public class ExposeWeaknessPacket {
                     );
 
                     com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                            net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+                            net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
                             new SyncWeakPointPacket(
                                     entity.getId(), true,
                                     com.sporeadds.sporeaddsmod.combat.WeakPointManager.getOffset(entity.getId())
@@ -180,7 +180,7 @@ public class ExposeWeaknessPacket {
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
                     new SyncExposeWeaknessCooldownPacket((int) COOLDOWN_TICKS_SERVER),
                     player.connection.connection,
-                    net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT
+                    net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT
             );
         });
         context.setPacketHandled(true);

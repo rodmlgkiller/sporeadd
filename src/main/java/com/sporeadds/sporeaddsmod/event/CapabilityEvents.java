@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerData;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.data.MoundSavedData;
@@ -16,10 +18,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class CapabilityEvents {
 
     // La copia de capabilities en PlayerEvent.Clone (muerte y regreso del End) la hace
@@ -138,7 +140,7 @@ public class CapabilityEvents {
                     continue;
                 }
                 ResourceKey<Level> dimKey = ResourceKey.create(
-                        Registries.DIMENSION, new ResourceLocation(loc.getDimension()));
+                        Registries.DIMENSION, ResourceLocation.parse(loc.getDimension()));
                 savedData.addMound(playerUUID, uuid, dimKey,
                         new ChunkPos(new BlockPos(loc.getX(), loc.getY(), loc.getZ())));
             }

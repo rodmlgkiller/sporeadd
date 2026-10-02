@@ -17,16 +17,16 @@ import java.util.Optional;
 public class KommandantSubclassIconRenderer {
 
     private static final ResourceLocation DISSOLUTION_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/dissolution.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/dissolution.png");
 
     private static final ResourceLocation EXPOSED_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/exposed.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/exposed.png");
 
     private static final ResourceLocation ABYSSAL_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/abyssal.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/abyssal.png");
 
     private static final ResourceLocation GLUTTONOUS_ICON =
-            new ResourceLocation("sporeadd", "textures/mob_effect/gluttonous.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/gluttonous.png");
 
     private static final int ICON_SIZE = 18;
 

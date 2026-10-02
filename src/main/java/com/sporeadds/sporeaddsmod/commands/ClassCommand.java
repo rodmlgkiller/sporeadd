@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.commands;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -29,19 +33,18 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class ClassCommand {
 
     private static final List<String> KOMMANDANT_SUBCLASSES = List.of("caustic", "none", "abyssal", "gluttonous");
-    private static final ResourceLocation GAS_MASK_ID = new ResourceLocation("spore", "gas_mask");
+    private static final ResourceLocation GAS_MASK_ID = ResourceLocation.fromNamespaceAndPath("spore", "gas_mask");
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
@@ -205,7 +208,7 @@ public class ClassCommand {
     }
 
     public static void equipMedicMask(ServerPlayer player) {
-        Item gasMaskItem = ForgeRegistries.ITEMS.getValue(GAS_MASK_ID);
+        Item gasMaskItem = BuiltInRegistries.ITEM.get(GAS_MASK_ID);
 
         if (gasMaskItem != null) {
             ItemStack gasMask = new ItemStack(gasMaskItem);
@@ -215,7 +218,7 @@ public class ClassCommand {
     }
 
     private static boolean isGasMask(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() == ForgeRegistries.ITEMS.getValue(GAS_MASK_ID);
+        return !stack.isEmpty() && stack.getItem() == BuiltInRegistries.ITEM.get(GAS_MASK_ID);
     }
 
     /**
@@ -248,7 +251,7 @@ public class ClassCommand {
 
     private static void removeMedicItems(ServerPlayer player) {
         ItemStack headItem = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (headItem.getItem() == ForgeRegistries.ITEMS.getValue(GAS_MASK_ID)) {
+        if (headItem.getItem() == BuiltInRegistries.ITEM.get(GAS_MASK_ID)) {
             player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
         }
 

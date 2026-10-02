@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.trainingbook;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.ModItems;
 import com.sporeadds.sporeaddsmod.client.SporeKeyMapping;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -22,7 +24,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class TrainingBookClassDetailScreen extends Screen {
     private static final int ICON_SPACING = 22;
 
     private static Supplier<Item> byId(String path) {
-        return () -> ForgeRegistries.ITEMS.getValue(new ResourceLocation("sporeadd", path));
+        return () -> BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", path));
     }
 
     /** Cadenas + las 9 syringes de Compounds (items del mod Spore). */
@@ -61,7 +62,7 @@ public class TrainingBookClassDetailScreen extends Screen {
         for (com.sporeadds.sporeaddsmod.Powers.berserker.CompoundType type
                 : com.sporeadds.sporeaddsmod.Powers.berserker.CompoundType.values()) {
             ResourceLocation id = type.itemId();
-            list.add(() -> ForgeRegistries.ITEMS.getValue(id));
+            list.add(() -> BuiltInRegistries.ITEM.get(id));
         }
         return list;
     }

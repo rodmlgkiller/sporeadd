@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.Harbinger.Spore.Sentities.BaseEntities.UtilityEntity;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -118,8 +120,8 @@ public class BucketOfRemainsItem extends Item {
                 level.playSound(
                         null,
                         sp.blockPosition(),
-                        net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(
-                                new ResourceLocation("spore", "limb_slash")),
+                        BuiltInRegistries.SOUND_EVENT.get(
+                                ResourceLocation.fromNamespaceAndPath("spore", "limb_slash")),
                         net.minecraft.sounds.SoundSource.PLAYERS,
                         2.0F,
                         2.0F

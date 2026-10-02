@@ -1,18 +1,20 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * Lógica de la parte "resistencia" de {@link DevotionEffect}: reduce el daño RECIBIDO por quien
  * tenga el efecto, un 10% por nivel (amplifier + 1). El +10% de daño de ataque va por atributo
  * (en el propio {@link DevotionEffect}); esto es lo único que necesita ir por evento.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class DevotionEventHandler {
 
     private DevotionEventHandler() {

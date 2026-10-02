@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -96,8 +98,8 @@ public class CoreMoundLocatorItem extends Item {
                     }
                 }
 
-                ResourceLocation soundId = new ResourceLocation("spore", "signal");
-                net.minecraft.sounds.SoundEvent signalSound = net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(soundId);
+                ResourceLocation soundId = ResourceLocation.fromNamespaceAndPath("spore", "signal");
+                net.minecraft.sounds.SoundEvent signalSound = BuiltInRegistries.SOUND_EVENT.get(soundId);
                 if (signalSound != null) {
                     level.playSound(
                             null,

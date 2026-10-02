@@ -1,15 +1,17 @@
 package com.sporeadds.sporeaddsmod.event;
 
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.level.Level;
 import net.minecraft.ChatFormatting;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class TeamHandler {
 
     @SubscribeEvent

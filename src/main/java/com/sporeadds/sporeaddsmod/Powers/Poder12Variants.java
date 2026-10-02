@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Core.Sitems;
 import com.Harbinger.Spore.Sitems.BaseWeapons.SporeArmorData;
 import com.Harbinger.Spore.Sitems.BaseWeapons.SporeArmorMutations;
@@ -25,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public class Poder12Variants {
     }
 
     public static boolean hasFamined(Player player) {
-        MobEffect famined = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "famined"));
+        MobEffect famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
         return famined != null && player.hasEffect(famined);
     }
 
@@ -135,7 +136,7 @@ public class Poder12Variants {
     public static ItemStack createArmorPiece(Item item, boolean abyssalMutation) {
         ItemStack stack = new ItemStack(item);
 
-        Enchantment binding = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("minecraft", "binding_curse"));
+        Enchantment binding = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", "binding_curse"));
         if (binding != null) {
             stack.enchant(binding, 1);
         }
@@ -312,7 +313,7 @@ public class Poder12Variants {
                 true
         ));
 
-        SoundEvent growl = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "howler_growl"));
+        SoundEvent growl = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "howler_growl"));
         if (growl != null) {
             level.playSound(
                     null,
@@ -472,7 +473,7 @@ public class Poder12Variants {
         serverLevel.playSound(
                 null,
                 player.getX(), player.getY() + 1.0D, player.getZ(),
-                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("minecraft", "entity.item.break")),
+                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "entity.item.break")),
                 SoundSource.PLAYERS,
                 1.0F,
                 0.7F

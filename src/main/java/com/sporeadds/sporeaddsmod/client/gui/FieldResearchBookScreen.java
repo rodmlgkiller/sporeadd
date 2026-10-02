@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.gui;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sporeadds.sporeaddsmod.client.FieldResearchClientData;
@@ -198,7 +200,7 @@ public class FieldResearchBookScreen extends Screen {
 
                 entry.entity = fakePlayer;
             } else {
-                EntityType<?> type = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(entry.id));
+                EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entry.id));
                 if (type != null) {
                     Entity created = type.create(this.minecraft.level);
                     if (created instanceof LivingEntity living) {

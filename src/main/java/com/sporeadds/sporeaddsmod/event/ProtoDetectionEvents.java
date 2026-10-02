@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.Harbinger.Spore.Sentities.Organoids.Proto;
 import com.sporeadds.sporeaddsmod.commands.VervaTransportTask;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -18,11 +20,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -51,7 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Un Kommandant que ya ha sido llamado por otro proto (o ya va en una Verwa) no se vuelve a
  * llamar. La Verwa nunca es para el humano detectado. Reutiliza {@link VervaTransportTask}.
  */
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public final class ProtoDetectionEvents {
 
     /** Última vez (game time) que cada Proto dio la alarma, para no spamear. */

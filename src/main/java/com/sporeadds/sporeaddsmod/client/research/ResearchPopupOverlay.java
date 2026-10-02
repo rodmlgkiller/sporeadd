@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.research;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.research.ResearchPopupManager;
 import com.sporeadds.sporeaddsmod.research.ResearchPopupType;
 import com.sporeadds.sporeaddsmod.research.TrackedEntities;
@@ -7,13 +9,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = net.minecraftforge.api.distmarker.Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = net.neoforged.api.distmarker.Dist.CLIENT)
 public final class ResearchPopupOverlay {
 
     private static final int POPUP_LINE_HEIGHT = 12;

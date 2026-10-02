@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.network;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.Organoids.Verwa;
 import com.Harbinger.Spore.Sentities.Projectile.FleshBomb;
 import com.Harbinger.Spore.Sentities.VariantKeeper;
@@ -29,11 +31,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
 
@@ -114,7 +115,7 @@ public class SpawnVervaPacket {
     );
 
     static {
-        MinecraftForge.EVENT_BUS.register(SpawnVervaPacket.class);
+        NeoForge.EVENT_BUS.register(SpawnVervaPacket.class);
     }
 
     public SpawnVervaPacket(String mobId, int cost, int variant, float bombDamage, int bombRadius, boolean bombCarrier, float bombScale, String bombDisplayName) {
@@ -239,7 +240,7 @@ public class SpawnVervaPacket {
                         return;
                     }
 
-                    EntityType<?> bombType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(msg.mobId));
+                    EntityType<?> bombType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(msg.mobId));
                     if (bombType == null) {
                         player.displayClientMessage(
                                 Component.translatable("message.sporeadd.spawn_verva.entity_not_found", msg.mobId),
@@ -306,7 +307,7 @@ public class SpawnVervaPacket {
                         System.err.println("[SporeAdds] Failed to apply Pehkui scale: " + e.getMessage());
                     }
 
-                    SoundEvent fallingBombSound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "falling_bomb"));
+                    SoundEvent fallingBombSound = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "falling_bomb"));
                     if (fallingBombSound != null) {
                         level.playSound(null, bomb.getX(), bomb.getY(), bomb.getZ(), fallingBombSound, SoundSource.HOSTILE, 10.25F, 1.0F);
                     }
@@ -333,7 +334,7 @@ public class SpawnVervaPacket {
                 double spawnZ = spawnPos.getZ() + 0.5D;
 
                 if (DIRECT_ORGANOIDS.contains(msg.mobId)) {
-                    EntityType<?> directType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(msg.mobId));
+                    EntityType<?> directType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(msg.mobId));
                     if (directType == null) return;
 
                     Entity rawEntity = directType.create(level);
@@ -359,7 +360,7 @@ public class SpawnVervaPacket {
                     return;
                 }
 
-                EntityType<?> vervaType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "verva"));
+                EntityType<?> vervaType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "verva"));
                 if (vervaType == null || vervaType == EntityType.PIG) {
                     return;
                 }
@@ -594,7 +595,7 @@ public class SpawnVervaPacket {
             return;
         }
 
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemId));
         if (item != null && item != Items.AIR) {
             entity.setItemSlot(slot, new ItemStack(item));
         }

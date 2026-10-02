@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class cryoscreen extends AbstractContainerScreen<cryomenu> {
     // Usamos la textura de un cofre genÃ©rico de 3 filas (9x3)
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("minecraft", "textures/gui/container/shulker_box.png");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/shulker_box.png");
 
     public cryoscreen(cryomenu menu, Inventory inv, Component title) {
         super(menu, inv, title);

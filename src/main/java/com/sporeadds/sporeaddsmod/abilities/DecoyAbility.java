@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.abilities;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.entity.DecoyEntity;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import net.minecraft.server.level.ServerLevel;
@@ -8,7 +10,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class DecoyAbility {
 
     public static final int COOLDOWN_TICKS = 20 * 50;
@@ -92,7 +94,7 @@ public class DecoyAbility {
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
                 new com.sporeadds.sporeaddsmod.network.SyncDecoyCooldownPacket(COOLDOWN_TICKS),
                 player.connection.connection,
-                net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT
+                net.neoforged.neoforge.network.NetworkDirection.PLAY_TO_CLIENT
         );
 
         return true;

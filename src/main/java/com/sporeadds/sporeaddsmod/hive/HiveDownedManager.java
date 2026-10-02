@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.network.HiveDialogueAdvancePacket;
@@ -20,8 +22,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public final class HiveDownedManager {
     private static final int ROOT_REAPPLY_TICKS = 40;
     private static final float FINISHING_BLOW_DAMAGE = 100000.0F;
 
-    private static final ResourceLocation MYCELIUM_EF_ID = new ResourceLocation("spore", "mycelium_ef");
+    private static final ResourceLocation MYCELIUM_EF_ID = ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef");
 
     public enum Choice {
         NONE,
@@ -260,7 +261,7 @@ public final class HiveDownedManager {
         clearForcedPose(player);
         player.removeEffect(effects.CALL_OF_THE_HIVE.get());
 
-        MobEffect mycelium = ForgeRegistries.MOB_EFFECTS.getValue(MYCELIUM_EF_ID);
+        MobEffect mycelium = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EF_ID);
         if (mycelium != null) {
             player.addEffect(new MobEffectInstance(mycelium, 600, 0, false, true));
         }
@@ -454,7 +455,7 @@ public final class HiveDownedManager {
         server.execute(() -> {
             if (!player.isAlive()) return;
             player.removeEffect(effects.CALL_OF_THE_HIVE.get());
-            MobEffect mycelium = ForgeRegistries.MOB_EFFECTS.getValue(MYCELIUM_EF_ID);
+            MobEffect mycelium = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EF_ID);
             if (mycelium != null) {
                 player.addEffect(new MobEffectInstance(mycelium, 600, 0, false, true));
             }

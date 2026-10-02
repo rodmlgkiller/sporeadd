@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.loot;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.combat.WeakPointKillTracker;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
@@ -12,15 +14,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class KommandantDeathLootHandler {
 
     @SubscribeEvent
@@ -66,7 +68,7 @@ public class KommandantDeathLootHandler {
         String[] parts = entry.split("\\|");
         if (parts.length != 3) return;
 
-        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(parts[0]));
+        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(parts[0]));
         if (item == null) return;
 
         int min = Integer.parseUnsignedInt(parts[1]);

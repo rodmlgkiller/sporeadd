@@ -2,8 +2,8 @@ package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.client.SelfDefibrillateCooldownClientState;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -25,7 +25,7 @@ public class SyncSelfDefibrillateCooldownPacket {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            if (net.minecraftforge.fml.loading.FMLEnvironment.dist == Dist.CLIENT) {
+            if (net.neoforged.fml.loading.FMLEnvironment.dist == Dist.CLIENT) {
                 SelfDefibrillateCooldownClientState.startCooldown(this.cooldownTicks);
             }
         });

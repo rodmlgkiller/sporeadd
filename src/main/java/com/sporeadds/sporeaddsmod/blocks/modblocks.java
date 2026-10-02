@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.ModItems;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.FreezerBlock;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.MoundTerrariumBlock;
@@ -11,67 +13,66 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
 public class modblocks {
     public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, "sporeadd");
+            DeferredRegister.create(BuiltInRegistries.BLOCK, "sporeadd");
 
-    public static final RegistryObject<Block> MEDIC_BLOCK = registerBlock("medic_block",
+    public static final DeferredHolder<Block, Block> MEDIC_BLOCK = registerBlock("medic_block",
             () -> new medicblock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .noOcclusion()
                     .requiresCorrectToolForDrops()));
 
-    public static final RegistryObject<Block> MEDIC_CONTRUCTOR_BLOCK = registerBlock("medic_constructor_block",
+    public static final DeferredHolder<Block, Block> MEDIC_CONTRUCTOR_BLOCK = registerBlock("medic_constructor_block",
             () -> new MedicBlockCrafter(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .noOcclusion()
                     .requiresCorrectToolForDrops()));
 
-    public static final RegistryObject<Block> SCIENTIST_BLOCK = registerBlock("scientist_block",
+    public static final DeferredHolder<Block, Block> SCIENTIST_BLOCK = registerBlock("scientist_block",
             () -> new scientistblock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .noOcclusion()
                     .requiresCorrectToolForDrops()));
 
-    public static final RegistryObject<Block> CRYO_BLOCK = registerBlock("cryo_block",
+    public static final DeferredHolder<Block, Block> CRYO_BLOCK = registerBlock("cryo_block",
             () -> new cryoblock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .requiresCorrectToolForDrops()));
 
-    public static final RegistryObject<Block> FREEZER_BLOCK = BLOCKS.register("freezer_block",
+    public static final DeferredHolder<Block, Block> FREEZER_BLOCK = BLOCKS.register("freezer_block",
             () -> new FreezerBlock(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops()));
 
-    public static final RegistryObject<Block> PELLET_BLOCK = registerBlock("pellet_block",
+    public static final DeferredHolder<Block, Block> PELLET_BLOCK = registerBlock("pellet_block",
             () -> new PelletBlock(BlockBehaviour.Properties.copy(Blocks.GLASS)
                     .mapColor(MapColor.NONE)
                     .strength(0.2f)
                     .noOcclusion()));
 
-    public static final RegistryObject<Block> MOUND_TERRARIUM = registerBlock("mound_terrarium",
+    public static final DeferredHolder<Block, Block> MOUND_TERRARIUM = registerBlock("mound_terrarium",
             () -> new MoundTerrariumBlock(BlockBehaviour.Properties.copy(Blocks.GLASS)
                     .mapColor(MapColor.PLANT)
                     .strength(0.4f)
                     .sound(SoundType.GLASS)
                     .noOcclusion()));
 
-    public static final RegistryObject<Block> RAID_CONTROLER = registerBlock("raid_controler",
+    public static final DeferredHolder<Block, Block> RAID_CONTROLER = registerBlock("raid_controler",
             () -> new RaidControlerBlock(BlockBehaviour.Properties.of()
                     .strength(3.5f)
                     .requiresCorrectToolForDrops()));
 
-    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
-        RegistryObject<T> toReturn = BLOCKS.register(name, block);
+    private static <T extends Block> DeferredHolder<Block, T> registerBlock(String name, Supplier<T> block) {
+        DeferredHolder<Block, T> toReturn = BLOCKS.register(name, block);
         if (!name.equals("freezer_block")) {
             registerBlockItem(name, toReturn);
         }
         return toReturn;
     }
 
-    private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
+    private static <T extends Block> DeferredHolder<Item, Item> registerBlockItem(String name, DeferredHolder<Block, T> block) {
         return ModItems.ITEMS.register(name, () -> {
             if (name.equals("cryo_block")) {
                 return new CryoBlockItem(block.get(), new Item.Properties());

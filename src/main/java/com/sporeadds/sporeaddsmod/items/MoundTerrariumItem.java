@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -16,14 +18,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class MoundTerrariumItem extends BlockItem {
 
-    private static final ResourceLocation MOUND_ID = new ResourceLocation("spore", "mound");
+    private static final ResourceLocation MOUND_ID = ResourceLocation.fromNamespaceAndPath("spore", "mound");
 
     public MoundTerrariumItem(Block block, Properties properties) {
         super(block, properties);
@@ -64,7 +65,7 @@ public class MoundTerrariumItem extends BlockItem {
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         Level level = player.level();
 
-        ResourceLocation targetId = ForgeRegistries.ENTITY_TYPES.getKey(target.getType());
+        ResourceLocation targetId = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());
         if (targetId == null || !targetId.equals(MOUND_ID)) {
             return super.interactLivingEntity(stack, player, target, hand);
         }

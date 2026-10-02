@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.commands;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.Organoids.Verwa;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncVervaCountdownPacket;
@@ -15,12 +19,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityMountEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class VervaTransportTask {
 
     private static final List<TransportData> activeTransports = new ArrayList<>();
@@ -113,7 +116,7 @@ public class VervaTransportTask {
     }
 
     private static Mob createVerva(ServerLevel level, Vec3 pos) {
-        EntityType<?> vervaType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "verva"));
+        EntityType<?> vervaType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "verva"));
         if (vervaType == null) return null;
         if (!(vervaType.create(level) instanceof Mob verva)) return null;
 

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.Poder4things;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -14,7 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 import java.util.Collection;
@@ -25,9 +26,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class gluttonousHarvestLogic {
 
     private static final ResourceLocation EXQUISITE_CUISINE_ID =
-            new ResourceLocation("sporeadd", "exquisite_cuisine");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "exquisite_cuisine");
     private static final ResourceLocation MANGLED_ID =
-            new ResourceLocation("sporeadd", "mangled");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "mangled");
     private static final int HARVEST_RESISTANCE_DURATION = 20 * 20;
     private static final int HARVEST_RESISTANCE_AMPLIFIER = 0;
 
@@ -146,7 +147,7 @@ public final class gluttonousHarvestLogic {
 
         Collection<MobEffectInstance> activeEffects = target.getActiveEffects();
         for (MobEffectInstance effect : activeEffects) {
-            ResourceLocation effectId = ForgeRegistries.MOB_EFFECTS.getKey(effect.getEffect());
+            ResourceLocation effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect());
             if (effectId != null && (
                     effectId.equals(gluttonousEntityLists.SEASONED_ID)
                             || effectId.equals(EXQUISITE_CUISINE_ID)

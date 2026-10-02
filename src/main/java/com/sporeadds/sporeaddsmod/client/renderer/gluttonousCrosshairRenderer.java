@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.renderer;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -7,15 +9,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class gluttonousCrosshairRenderer {
 
     @SubscribeEvent
@@ -32,11 +34,11 @@ public class gluttonousCrosshairRenderer {
     }
 }
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 class gluttonousCrosshairEvents {
 
     private static final ResourceLocation CROSSHAIR_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/kommandant/crosshairbile.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/crosshairbile.png");
 
     private static final int SPRITE_SIZE = 32;
     private static final int TOTAL_SPRITES = 12;

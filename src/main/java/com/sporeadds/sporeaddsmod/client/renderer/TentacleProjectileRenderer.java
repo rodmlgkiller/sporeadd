@@ -30,9 +30,9 @@ import java.util.UUID;
 public class TentacleProjectileRenderer extends EntityRenderer<TentacleProjectile> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/tentacle.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/tentacle.png");
     private static final ResourceLocation BODY_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/entity/tendril.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/tendril.png");
 
     private static final double BASE_FADE_MIN_DISTANCE = 1.0D;
     private static final double BASE_FADE_MAX_DISTANCE = 3.5D;

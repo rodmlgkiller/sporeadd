@@ -1,9 +1,9 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.fml.DistExecutor;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataClient;
 
 import java.util.function.Supplier;

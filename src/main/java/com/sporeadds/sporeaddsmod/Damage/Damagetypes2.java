@@ -10,14 +10,14 @@ import net.minecraft.world.entity.LivingEntity;
 public class Damagetypes2 {
 
     public static final ResourceKey<DamageType> TERMINAL =
-            ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("sporeadd", "terminal"));
+            ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("sporeadd", "terminal"));
 
     public static final ResourceKey<DamageType> DEHYDRATION =
-            ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("sporeadd", "dehydration"));
+            ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydration"));
 
     /** Ejecución por insubordinación: el 3er strike del evento "punishment" del Proto. */
     public static final ResourceKey<DamageType> PUNISHMENT =
-            ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("sporeadd", "punishment"));
+            ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("sporeadd", "punishment"));
 
     public static DamageSource terminal(LivingEntity entity) {
         return new DamageSource(

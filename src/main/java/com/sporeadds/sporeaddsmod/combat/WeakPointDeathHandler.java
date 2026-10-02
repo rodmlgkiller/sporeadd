@@ -1,11 +1,13 @@
 package com.sporeadds.sporeaddsmod.combat;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+
+@EventBusSubscriber(modid = "sporeadd")
 public final class WeakPointDeathHandler {
 
     private WeakPointDeathHandler() {
@@ -23,7 +25,7 @@ public final class WeakPointDeathHandler {
         WeakPointManager.remove(id);
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+                net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
                 new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(id, false, null)
         );
     }

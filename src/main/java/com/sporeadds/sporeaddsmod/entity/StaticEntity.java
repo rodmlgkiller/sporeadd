@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.entity;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Core.Seffects;
 import com.Harbinger.Spore.Sentities.BaseEntities.Organoid;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -20,14 +24,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
-@Mod.EventBusSubscriber(modid = "sporeadd")
+@EventBusSubscriber(modid = "sporeadd")
 public class StaticEntity extends Organoid {
 
     /** Explosión de polvo rojo: FX del cocoon al aparecer / interrumpirse / completarse. */
@@ -252,7 +255,7 @@ public class StaticEntity extends Organoid {
         super.dropCustomDeathLoot(damageSource, lootingMultiplier, hitByPlayer);
 
         // 1. Dropear de 2 a 6 Organoid Membrane
-        Item membrane = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "organoid_membrane"));
+        Item membrane = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"));
         if (membrane != null && membrane != net.minecraft.world.item.Items.AIR) {
             int membraneCount = this.getRandom().nextInt(5) + 2;
             membraneCount += this.getRandom().nextInt(lootingMultiplier + 1); // Bonus de Saqueo
@@ -260,7 +263,7 @@ public class StaticEntity extends Organoid {
         }
 
         // 2. Dropear de 3 a 9 Armor Fragment
-        Item armorFragment = ForgeRegistries.ITEMS.getValue(new ResourceLocation("spore", "armor_fragment"));
+        Item armorFragment = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("spore", "armor_fragment"));
         if (armorFragment != null && armorFragment != net.minecraft.world.item.Items.AIR) {
             int fragmentCount = this.getRandom().nextInt(7) + 3;
             fragmentCount += this.getRandom().nextInt(lootingMultiplier + 1); // Bonus de Saqueo

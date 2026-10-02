@@ -2,7 +2,7 @@ package com.sporeadds.sporeaddsmod.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class SporeKeyMapping {
@@ -34,7 +34,7 @@ public class SporeKeyMapping {
     public static final KeyMapping CAUSTIC_SHOT = new KeyMapping("key.sporeadd.caustic_shot", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, CATEGORY_SPOREADD);
 
     static {
-        net.minecraftforge.client.settings.KeyModifier.NONE.toString();
+        net.neoforged.neoforge.client.settings.KeyModifier.NONE.toString();
     }
 
     public static void register(RegisterKeyMappingsEvent event) {

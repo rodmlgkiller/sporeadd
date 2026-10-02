@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -32,12 +34,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
 
@@ -68,8 +69,8 @@ public class Poder13Variants {
         level.setWeatherParameters(0, ABYSSAL_DURATION, true, true);
 
         ItemStack trident = new ItemStack(Items.TRIDENT);
-        Enchantment riptide = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("minecraft", "riptide"));
-        Enchantment vanishing = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("minecraft", "vanishing_curse"));
+        Enchantment riptide = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", "riptide"));
+        Enchantment vanishing = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", "vanishing_curse"));
 
         if (riptide != null) trident.enchant(riptide, 5);
         if (vanishing != null) trident.enchant(vanishing, 1);
@@ -79,7 +80,7 @@ public class Poder13Variants {
 
         LockedItemHandler.giveTemporaryLockedItem(player, trident, ABYSSAL_DURATION);
 
-        var subjugation = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "subjugation"));
+        var subjugation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation"));
         if (subjugation != null) {
             player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                     subjugation,
@@ -94,7 +95,7 @@ public class Poder13Variants {
         level.playSound(
                 null,
                 player.getX(), player.getY(), player.getZ(),
-                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("minecraft", "entity.lightning_bolt.thunder")),
+                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "entity.lightning_bolt.thunder")),
                 SoundSource.PLAYERS,
                 1.0F, 1.0F
         );
@@ -119,7 +120,7 @@ public class Poder13Variants {
             this.maxTicks = duration;
             this.nextLightningStrike = getRandomLightningDelay();
             ACTIVE.add(this);
-            MinecraftForge.EVENT_BUS.register(this);
+            NeoForge.EVENT_BUS.register(this);
         }
 
         private int getRandomLightningDelay() {
@@ -164,7 +165,7 @@ public class Poder13Variants {
 
         private void finish() {
             ACTIVE.remove(this);
-            MinecraftForge.EVENT_BUS.unregister(this);
+            NeoForge.EVENT_BUS.unregister(this);
             broadcastStorms();
         }
 
@@ -206,7 +207,7 @@ public class Poder13Variants {
             AABB searchArea = player.getBoundingBox().inflate(200.0);
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, searchArea, LivingEntity::isAlive);
 
-            var mycelium = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "mycelium_ef"));
+            var mycelium = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
             if (mycelium == null) return;
 
             for (LivingEntity entity : nearby) {
@@ -269,12 +270,12 @@ public class Poder13Variants {
                 String[] mobs = {"spore:inf_drowned", "spore:naiad", "spore:bloater"};
                 String selectedMob = mobs[RANDOM.nextInt(mobs.length)];
 
-                var resistance = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "resistance"));
-                var speed = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "speed"));
-                var strength = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "strength"));
-                var marker = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "marker"));
+                var resistance = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "resistance"));
+                var speed = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "speed"));
+                var strength = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "strength"));
+                var marker = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
 
-                EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(selectedMob));
+                EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(selectedMob));
                 if (type != null) {
                     Entity entity = type.spawn(level, spawnPos, MobSpawnType.COMMAND);
                     if (entity instanceof LivingEntity living) {
@@ -317,7 +318,7 @@ public class Poder13Variants {
             }
         }
 
-        var famined = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "famined"));
+        var famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
         if (famined != null && player.hasEffect(famined)) {
             return;
         }
@@ -345,8 +346,8 @@ public class Poder13Variants {
             });
         }
 
-        var weakness = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "weakness"));
-        var calamityIncoming = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "calamity_incoming"));
+        var weakness = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "weakness"));
+        var calamityIncoming = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "calamity_incoming"));
 
         AABB area = player.getBoundingBox().inflate(100.0D);
         List<Player> nearbyPlayers = level.getEntitiesOfClass(Player.class, area, p -> p.isAlive());
@@ -386,7 +387,7 @@ public class Poder13Variants {
     public static void activateCaustic(ServerLevel level, Player player) {
         if (!(player instanceof net.minecraft.server.level.ServerPlayer)) return;
 
-        EntityType<?> moundType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "mound"));
+        EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "mound"));
         if (moundType == null) return;
 
         Entity raw = moundType.create(level);
@@ -450,7 +451,7 @@ public class Poder13Variants {
         level.playSound(
                 null,
                 mound.getX(), mound.getY(), mound.getZ(),
-                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "worm_digging")),
+                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "worm_digging")),
                 net.minecraft.sounds.SoundSource.HOSTILE,
                 CAUSTIC_EMERGE_SHAKE_RADIUS / 16.0F,
                 1.0F
@@ -528,7 +529,7 @@ public class Poder13Variants {
             this.lastY = mound.getY();
             this.lastZ = mound.getZ();
             ACTIVE.add(this);
-            MinecraftForge.EVENT_BUS.register(this);
+            NeoForge.EVENT_BUS.register(this);
         }
 
         @SubscribeEvent
@@ -587,7 +588,7 @@ public class Poder13Variants {
 
         private void finish() {
             ACTIVE.remove(this);
-            MinecraftForge.EVENT_BUS.unregister(this);
+            NeoForge.EVENT_BUS.unregister(this);
             broadcastSpheres();
         }
 
@@ -638,7 +639,7 @@ public class Poder13Variants {
         private void spreadAcidPools() {
             if (radius < 3.0F) return;
 
-            Block acidBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "acid"));
+            Block acidBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("spore", "acid"));
             if (acidBlock == null || acidBlock == net.minecraft.world.level.block.Blocks.AIR) return;
 
             BlockPos center = BlockPos.containing(lastX, lastY, lastZ);
@@ -689,8 +690,8 @@ public class Poder13Variants {
                     .inflate(radius, 10.0, radius);
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAlive);
 
-            var dissolution = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "dissolution"));
-            var corrosion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "corrosion"));
+            var dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
+            var corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
 
             for (LivingEntity entity : nearby) {
                 double dx = entity.getX() - lastX;

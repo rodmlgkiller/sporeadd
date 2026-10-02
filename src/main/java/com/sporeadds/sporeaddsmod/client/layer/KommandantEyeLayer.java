@@ -61,46 +61,46 @@ public class KommandantEyeLayer extends RenderLayer<AbstractClientPlayer, Player
 
     private static ResourceLocation getBaseTexture(int type) {
         return switch (type) {
-            case 2 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_base2.png");
-            case 3 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_base3.png");
-            case 4 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_base4.png");
-            default -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_base.png");
+            case 2 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_base2.png");
+            case 3 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_base3.png");
+            case 4 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_base4.png");
+            default -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_base.png");
         };
     }
 
     private static ResourceLocation getGlowTexture(int type, boolean caustic, boolean abyssal, boolean gluttonous) {
         if (abyssal) {
             return switch (type) {
-                case 2 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow2abyssal.png");
-                case 3 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow3abyssal.png");
-                case 4 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow4abyssal.png");
-                default -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glowabyssal.png");
+                case 2 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow2abyssal.png");
+                case 3 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow3abyssal.png");
+                case 4 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow4abyssal.png");
+                default -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glowabyssal.png");
             };
         }
 
         if (caustic) {
             return switch (type) {
-                case 2 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow2caustic.png");
-                case 3 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow3caustic.png");
-                case 4 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow4caustic.png");
-                default -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glowcaustic.png");
+                case 2 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow2caustic.png");
+                case 3 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow3caustic.png");
+                case 4 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow4caustic.png");
+                default -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glowcaustic.png");
             };
         }
 
         if (gluttonous) {
             return switch (type) {
-                case 2 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow2gluttonous.png");
-                case 3 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow3gluttonous.png");
-                case 4 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow4gluttonous.png");
-                default -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glowgluttonous.png");
+                case 2 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow2gluttonous.png");
+                case 3 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow3gluttonous.png");
+                case 4 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow4gluttonous.png");
+                default -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glowgluttonous.png");
             };
         }
 
         return switch (type) {
-            case 2 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow2.png");
-            case 3 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow3.png");
-            case 4 -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow4.png");
-            default -> new ResourceLocation("sporeadd", "textures/entity/kommandant/eyes_glow.png");
+            case 2 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow2.png");
+            case 3 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow3.png");
+            case 4 -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow4.png");
+            default -> ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/entity/kommandant/eyes_glow.png");
         };
     }
 

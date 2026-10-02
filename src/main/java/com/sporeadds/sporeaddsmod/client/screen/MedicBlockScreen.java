@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class MedicBlockScreen extends AbstractContainerScreen<MedicBlockMenu> {
 
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/medicblockscreen.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/medicblockscreen.png");
 
     public MedicBlockScreen(MedicBlockMenu pmenu, Inventory pinventory, Component pTitle) {
         super(pmenu, pinventory, pTitle);

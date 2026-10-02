@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.Harbinger.Spore.Sentities.BaseEntities.UtilityEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -13,14 +15,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
 public class SeasonedEffect extends MobEffect {
 
-    private static final ResourceLocation MARKER_ID = new ResourceLocation("spore", "marker");
-    private static final ResourceLocation PROTO_ID = new ResourceLocation("spore", "proto");
+    private static final ResourceLocation MARKER_ID = ResourceLocation.fromNamespaceAndPath("spore", "marker");
+    private static final ResourceLocation PROTO_ID = ResourceLocation.fromNamespaceAndPath("spore", "proto");
 
     private static final float SPORE_NO_TARGET_HEALTH_THRESHOLD = 30.0F;
     private static final float PLAYER_MUST_BE_BELOW_HEALTH = 5.0F;
@@ -34,7 +35,7 @@ public class SeasonedEffect extends MobEffect {
     public void applyEffectTick(LivingEntity living, int amplifier) {
         if (living.level().isClientSide) return;
 
-        MobEffect marker = ForgeRegistries.MOB_EFFECTS.getValue(MARKER_ID);
+        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_ID);
         if (marker != null) {
             living.addEffect(new MobEffectInstance(marker, 100, 5, false, false));
         }

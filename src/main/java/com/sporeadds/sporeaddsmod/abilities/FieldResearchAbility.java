@@ -6,8 +6,8 @@ import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncScientistResearchPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.network.NetworkDirection;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.network.NetworkDirection;
 
 public final class FieldResearchAbility {
 

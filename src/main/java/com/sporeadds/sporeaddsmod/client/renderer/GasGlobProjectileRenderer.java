@@ -16,9 +16,9 @@ import org.joml.Matrix4f;
 public class GasGlobProjectileRenderer extends EntityRenderer<GasGlobProjectile> {
 
     private static final ResourceLocation[] TEXTURES = {
-            new ResourceLocation("sporeadd", "textures/particle/gas.png"),
-            new ResourceLocation("sporeadd", "textures/particle/gas2.png"),
-            new ResourceLocation("sporeadd", "textures/particle/gas3.png"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/gas.png"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/gas2.png"),
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/particle/gas3.png"),
     };
 
     public GasGlobProjectileRenderer(EntityRendererProvider.Context context) {

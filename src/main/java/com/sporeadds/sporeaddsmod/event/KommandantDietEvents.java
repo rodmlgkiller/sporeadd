@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -14,20 +18,19 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class KommandantDietEvents {
 
-    private static final ResourceLocation BIOMASS_ID = new ResourceLocation("spore", "biomass");
+    private static final ResourceLocation BIOMASS_ID = ResourceLocation.fromNamespaceAndPath("spore", "biomass");
 
     private static final int DEFAULT_FAKE_FOOD = 2;
     private static final float DEFAULT_FAKE_SATURATION = 1.0F;
@@ -35,251 +38,251 @@ public class KommandantDietEvents {
     private static final Map<ResourceLocation, ManualgluttonousFoodData> MANUAL_gluttonous_FOODS = new HashMap<>();
 
     static {
-        registerManualFood(new ResourceLocation("spore", "claw_fragment"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "claw_fragment"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 0, 1));
 
-        registerManualFood(new ResourceLocation("spore", "claw"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "claw"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 0, 1));
 
-        registerManualFood(new ResourceLocation("spore", "armor_fragment"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "armor_fragment"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 0, 1));
 
-        registerManualFood(new ResourceLocation("spore", "mutated_heart"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "mutated_heart"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 1, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "wing_membrane"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "wing_membrane"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "fleshy_bone"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fleshy_bone"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 1, 0, 0, 1, 2));
 
-        registerManualFood(new ResourceLocation("spore", "hardened_bind"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "hardened_bind"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 4, 0, 0, 0, 4));
 
-        registerManualFood(new ResourceLocation("spore", "fleshy_claw"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fleshy_claw"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 2, 0, 0, 0, 5));
 
-        registerManualFood(new ResourceLocation("spore", "living_core"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "living_core"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 6, 0, 1, 0, 4));
 
-        registerManualFood(new ResourceLocation("spore", "spine_fragment"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "spine_fragment"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 1, 3));
 
-        registerManualFood(new ResourceLocation("spore", "nerves"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "nerves"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 1, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "cerebrum"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "cerebrum"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 1, 3, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "spine"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "spine"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 6, 3, 9));
 
-        registerManualFood(new ResourceLocation("spore", "armor_plate"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "armor_plate"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 3, 0, 2, 0, 4));
 
-        registerManualFood(new ResourceLocation("spore", "plated_muscle"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "plated_muscle"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 11, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "alveolic_sack"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "alveolic_sack"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 2, 6, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "altered_spleen"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "altered_spleen"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 6, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "corrosive_sack"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "corrosive_sack"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 2, 6, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "organoid_membrane"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "organoid_membrane"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 3, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "tendons"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "tendons"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "innards"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "innards"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 1, 3, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "sickle_fragment"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "sickle_fragment"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 0, 1));
 
-        registerManualFood(new ResourceLocation("spore", "fang"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fang"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 0, 1));
 
-        registerManualFood(new ResourceLocation("spore", "spike"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "spike"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 0, 1));
 
-        registerManualFood(new ResourceLocation("spore", "shield_fragment"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "shield_fragment"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 0, 2, 5));
 
-        registerManualFood(new ResourceLocation("spore", "wing"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "wing"),
                 new ManualgluttonousFoodData(2, 1.0F, 7, 14, 0, 0, 3, 11));
 
-        registerManualFood(new ResourceLocation("spore", "tumor"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "tumor"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "sicken_tumor"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "sicken_tumor"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 1, 2, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "calcified_tumor"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "calcified_tumor"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 1, 0, 0, 1, 2));
 
-        registerManualFood(new ResourceLocation("spore", "gluttonous_tumor"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "gluttonous_tumor"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 2, 4, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "reforged_biomass_t"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "reforged_biomass_t"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 1, 2));
 
-        registerManualFood(new ResourceLocation("spore", "reforged_biomass_w"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "reforged_biomass_w"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 1, 2));
 
-        registerManualFood(new ResourceLocation("spore", "acidic_gland"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "acidic_gland"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 10, 20, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "amalgamated_heart"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "amalgamated_heart"),
                 new ManualgluttonousFoodData(2, 1.0F, 15, 30, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "ligaments"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "ligaments"),
                 new ManualgluttonousFoodData(2, 1.0F, 10, 20, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "fins"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fins"),
                 new ManualgluttonousFoodData(2, 1.0F, 10, 20, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "hyperbolized_liver"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "hyperbolized_liver"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 15, 30, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "respirator"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "respirator"),
                 new ManualgluttonousFoodData(2, 1.0F, 3, 6, 2, 4, 0, 2));
 
-        registerManualFood(new ResourceLocation("spore", "mutated_fiber"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "mutated_fiber"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
         // Comidas reales
-        registerManualFood(new ResourceLocation("spore", "sausage"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "sausage"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 3, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "fiber_stew"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fiber_stew"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 3, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "heart_kebab"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "heart_kebab"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 1, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "roasted_heart_kebab"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "roasted_heart_kebab"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 3, 2, 3, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "roasted_tumor"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "roasted_tumor"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 3, 1, 2, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "vigil_eye_soup"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "vigil_eye_soup"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 1, 1, 2, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "milky_sack"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "milky_sack"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 3, 7, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "brain_noodles"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "brain_noodles"),
                 new ManualgluttonousFoodData(2, 1.0F, 0, 0, 0, 4, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "fried_wing_membrane"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fried_wing_membrane"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 3, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "biomass_bacon"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "biomass_bacon"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "tendon_gum"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "tendon_gum"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 1, 1, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "organoid_soup"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "organoid_soup"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 4, 0, 2, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "fungal_sauce"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fungal_sauce"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 1, 1, 2, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "slice_of_heartpie"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "slice_of_heartpie"),
                 new ManualgluttonousFoodData(2, 1.0F, 3, 5, 1, 2, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "fungal_burger"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fungal_burger"),
                 new ManualgluttonousFoodData(2, 1.0F, 7, 13, 2, 5, 0, 0));
 
-        registerManualFood(new ResourceLocation("spore", "fleshy_ribs"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "fleshy_ribs"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 2, 3));
 
-        registerManualFood(new ResourceLocation("spore", "amalgamated_roast"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "amalgamated_roast"),
                 new ManualgluttonousFoodData(2, 1.0F, 3, 5, 2, 4, 1, 3));
 
-        registerManualFood(new ResourceLocation("spore", "eldritch_sushi"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "eldritch_sushi"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 4, 3, 5, 1, 3));
 
-        registerManualFood(new ResourceLocation("spore", "spore_stuffed_abomination"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "spore_stuffed_abomination"),
                 new ManualgluttonousFoodData(2, 1.0F, 3, 5, 2, 4, 1, 3));
 
-        registerManualFood(new ResourceLocation("spore", "decayed_torso"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "decayed_torso"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 4, 0, 0, 2, 5));
 
-        registerManualFood(new ResourceLocation("spore", "stuffed_torso"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "stuffed_torso"),
                 new ManualgluttonousFoodData(2, 1.0F, 3, 5, 3, 6, 2, 5));
 
-        registerManualFood(new ResourceLocation("spore", "decayed_limbs"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "decayed_limbs"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 3, 0, 0, 1, 2));
 
-        registerManualFood(new ResourceLocation("spore", "skull_soup"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "skull_soup"),
                 new ManualgluttonousFoodData(2, 1.0F, 2, 3, 2, 3, 2, 3));
 
-        registerManualFood(new ResourceLocation("spore", "cooked_torso"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("spore", "cooked_torso"),
                 new ManualgluttonousFoodData(2, 1.0F, 5, 7, 5, 7, 4, 6));
         // Vanilla meats / flesh foods -> 1-2 gore
-        registerManualFood(new ResourceLocation("minecraft", "beef"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "beef"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "steak"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "steak"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "porkchop"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "porkchop"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cooked_porkchop"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_porkchop"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "mutton"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "mutton"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cooked_mutton"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_mutton"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "chicken"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "chicken"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cooked_chicken"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_chicken"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "rabbit"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "rabbit"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cooked_rabbit"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_rabbit"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "rabbit_stew"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "rabbit_stew"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cod"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cod"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cooked_cod"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_cod"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "salmon"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "salmon"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cooked_salmon"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_salmon"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "rotten_flesh"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "rotten_flesh"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "spider_eye"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "spider_eye"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "cooked_beef"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_beef"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
 
-        registerManualFood(new ResourceLocation("minecraft", "tropical_fish"),
+        registerManualFood(ResourceLocation.fromNamespaceAndPath("minecraft", "tropical_fish"),
                 new ManualgluttonousFoodData(2, 1.0F, 1, 2, 0, 0, 0, 0));
     }
 
@@ -311,12 +314,12 @@ public class KommandantDietEvents {
     }
 
     private static boolean isBiomass(ItemStack stack) {
-        ResourceLocation key = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return BIOMASS_ID.equals(key);
     }
 
     private static ResourceLocation getItemId(ItemStack stack) {
-        return ForgeRegistries.ITEMS.getKey(stack.getItem());
+        return BuiltInRegistries.ITEM.getKey(stack.getItem());
     }
 
     private static ManualgluttonousFoodData getManualFood(ItemStack stack) {
@@ -343,7 +346,7 @@ public class KommandantDietEvents {
 
         if (!stack.isEdible()) return false;
 
-        ResourceLocation key = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (key == null) return false;
 
         List<? extends String> whitelist = SporeAddsConfig.KOMMANDANT_EDIBLE_ITEMS.get();

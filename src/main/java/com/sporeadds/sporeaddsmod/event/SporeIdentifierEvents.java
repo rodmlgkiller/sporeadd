@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.Projectile.GunProjectiles.AssassinBullet;
 import com.sporeadds.sporeaddsmod.util.SporeIdentifierUtil;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -10,18 +14,18 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class SporeIdentifierEvents {
 
     private static final Set<UUID> PLAYERS_TO_SYNC = new HashSet<>();
@@ -76,8 +80,8 @@ public class SporeIdentifierEvents {
                 int durationSeconds = 10 + chargeLevels;
                 int durationTicks = durationSeconds * 20;
 
-                MobEffect corrosion = net.minecraftforge.registries.ForgeRegistries.MOB_EFFECTS
-                        .getValue(new ResourceLocation("spore", "corrosion"));
+                MobEffect corrosion = BuiltInRegistries.MOB_EFFECT
+                        .getValue(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
 
                 if (corrosion != null) {
                     event.getEntity().addEffect(new MobEffectInstance(corrosion, durationTicks, amplifier));
@@ -97,8 +101,8 @@ public class SporeIdentifierEvents {
                     serverLevel.playSound(
                             null,
                             x, y, z,
-                            net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(
-                                    new ResourceLocation("spore", "chemist_fuse")
+                            BuiltInRegistries.SOUND_EVENT.get(
+                                    ResourceLocation.fromNamespaceAndPath("spore", "chemist_fuse")
                             ),
                             net.minecraft.sounds.SoundSource.PLAYERS,
                             1.0F,

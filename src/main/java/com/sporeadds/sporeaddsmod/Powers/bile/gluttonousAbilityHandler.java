@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers.bile;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import net.minecraft.network.chat.Component;
@@ -10,17 +14,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class gluttonousAbilityHandler {
 
     public static final String FRAGMENTS_TAG = "sporeadd_gluttonous_fragments";
@@ -38,8 +41,8 @@ public class gluttonousAbilityHandler {
         return MAX_FRAGMENTS;
     }
 
-    private static final ResourceLocation SPORE_gluttonous_BULLET_ID = new ResourceLocation("spore", "bile_bullet");
-    private static final ResourceLocation VARIANT_VOMIT_ID = new ResourceLocation("sporeadd", "variant_vomit");
+    private static final ResourceLocation SPORE_gluttonous_BULLET_ID = ResourceLocation.fromNamespaceAndPath("spore", "bile_bullet");
+    private static final ResourceLocation VARIANT_VOMIT_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "variant_vomit");
 
     private static final float gluttonous_BURST_SPRAY = 6.5F;
     private static final float BONE_BURST_SPRAY = 3.75F;
@@ -126,7 +129,7 @@ public class gluttonousAbilityHandler {
     }
 
     private static void fireGoreShotgun(ServerPlayer player) {
-        EntityType<?> projectileType = ForgeRegistries.ENTITY_TYPES.getValue(VARIANT_VOMIT_ID);
+        EntityType<?> projectileType = BuiltInRegistries.ENTITY_TYPE.get(VARIANT_VOMIT_ID);
         if (projectileType == null) return;
 
         int playerLevel = player.getCapability(PlayerLevelProvider.PLAYER_LVL)
@@ -196,7 +199,7 @@ public class gluttonousAbilityHandler {
 
     private static void clearBar(ServerPlayer player) {
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> player),
+                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> player),
                 new com.sporeadds.sporeaddsmod.network.SyncGluttonousFragmentsPacket("")
         );
     }
@@ -208,7 +211,7 @@ public class gluttonousAbilityHandler {
         }
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> player),
+                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> player),
                 new com.sporeadds.sporeaddsmod.network.SyncGluttonousFragmentsPacket(String.join(",", fragments))
         );
     }
@@ -228,7 +231,7 @@ public class gluttonousAbilityHandler {
             if (typeToFire.equals("gore")) {
                 fireGoreShotgun(player);
             } else {
-                MinecraftForge.EVENT_BUS.register(new gluttonousBurstTask(player, typeToFire));
+                NeoForge.EVENT_BUS.register(new gluttonousBurstTask(player, typeToFire));
             }
 
             displayBar(player, fragments);
@@ -310,7 +313,7 @@ public class gluttonousAbilityHandler {
             if (event.phase != TickEvent.Phase.END) return;
 
             if (!player.isAlive()) {
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
                 return;
             }
 
@@ -322,7 +325,7 @@ public class gluttonousAbilityHandler {
             ticksElapsed++;
 
             if (bulletsFired >= this.totalBullets) {
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
             }
         }
 
@@ -331,7 +334,7 @@ public class gluttonousAbilityHandler {
                     ? SPORE_gluttonous_BULLET_ID
                     : VARIANT_VOMIT_ID;
 
-            EntityType<?> projectileType = ForgeRegistries.ENTITY_TYPES.getValue(projectileId);
+            EntityType<?> projectileType = BuiltInRegistries.ENTITY_TYPE.get(projectileId);
             if (projectileType == null) return;
 
             Entity entity = projectileType.create(player.level());

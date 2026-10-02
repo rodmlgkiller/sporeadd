@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Core.Sentities;
 import com.Harbinger.Spore.Core.Ssounds;
 import com.Harbinger.Spore.Sentities.Organoids.Proto;
@@ -32,8 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.util.NonNullConsumer;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.util.NonNullConsumer;
 import net.minecraft.core.particles.ParticleTypes;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
@@ -101,10 +102,10 @@ public class Poder8 extends PowerBase {
                 0.5f
         );
 
-        EntityType<?> naiadType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "naiad"));
+        EntityType<?> naiadType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "naiad"));
         if (naiadType == null) return;
 
-        MobEffect marker = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "marker"));
+        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
 
         int protoCount = getProtoCountAcrossDimensions(player);
         int totalNaiads = 2 + (protoCount * 2);

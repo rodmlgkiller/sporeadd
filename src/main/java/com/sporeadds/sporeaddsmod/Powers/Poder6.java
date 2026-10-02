@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Core.SConfig;
 import com.Harbinger.Spore.Sentities.BaseEntities.EvolvedInfected;
 import com.Harbinger.Spore.Sentities.BaseEntities.Experiment;
@@ -31,8 +33,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.util.LazyOptional;
 import org.joml.Vector3f;
 
 import java.util.Set;
@@ -264,7 +265,7 @@ public class Poder6 {
     }
 
     static MobEffect getDissolutionEffect() {
-        return ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "dissolution"));
+        return BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
     }
 
     static boolean usesEvolutionKillCost(Entity entity) {
@@ -364,7 +365,7 @@ public class Poder6 {
                 0.01
         );
 
-        var soundEvent = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "reaver_reave"));
+        var soundEvent = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "reaver_reave"));
         if (soundEvent == null) {
             soundEvent = SoundEvents.PLAYER_LEVELUP;
         }

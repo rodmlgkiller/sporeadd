@@ -8,11 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 public class SporeBarGui {
     private static final ResourceLocation SPORE_BAR_TEXTURE =
-            new ResourceLocation("sporeadd", "textures/gui/spore_bar.png");
+            ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/spore_bar.png");
 
     public static final IGuiOverlay SPORE_BAR = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Minecraft mc = Minecraft.getInstance();

@@ -1,22 +1,24 @@
 package com.sporeadds.sporeaddsmod.client.renderer;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", value = Dist.CLIENT)
 public class CustomBossBarRenderer {
 
-    private static final ResourceLocation BOSS_BAR_TEXTURE = new ResourceLocation("sporeadd", "textures/gui/bossbar.png");
-    private static final ResourceLocation BOSS_BAR_ABYSSAL_TEXTURE = new ResourceLocation("sporeadd", "textures/gui/bossbar_abyssal.png");
-    private static final ResourceLocation BOSS_BAR_CAUSTIC_TEXTURE = new ResourceLocation("sporeadd", "textures/gui/bossbar_caustic.png");
-    private static final ResourceLocation BOSS_BAR_GLUTTONOUS_TEXTURE = new ResourceLocation("sporeadd", "textures/gui/bossbar_gluttonous.png");
+    private static final ResourceLocation BOSS_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/bossbar.png");
+    private static final ResourceLocation BOSS_BAR_ABYSSAL_TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/bossbar_abyssal.png");
+    private static final ResourceLocation BOSS_BAR_CAUSTIC_TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/bossbar_caustic.png");
+    private static final ResourceLocation BOSS_BAR_GLUTTONOUS_TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/bossbar_gluttonous.png");
 
     private static final int FRAME_WIDTH = 193;
     private static final int FRAME_HEIGHT = 20;

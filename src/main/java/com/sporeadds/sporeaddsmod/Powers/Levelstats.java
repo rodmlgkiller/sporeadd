@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
@@ -8,12 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
 import virtuoel.pehkui.api.ScaleType;
 import virtuoel.pehkui.api.ScaleTypes;
 
@@ -22,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class Levelstats {
 
     private static final HashMap<UUID, Integer> lastLevelMap = new HashMap<>();
@@ -31,7 +34,7 @@ public class Levelstats {
     private static final HashMap<UUID, Integer> lastFoodMap = new HashMap<>();
     private static final HashMap<UUID, Float> lastSatMap = new HashMap<>();
 
-    private static final ResourceLocation SWIM_SPEED_ID = new ResourceLocation("forge", "swim_speed");
+    private static final ResourceLocation SWIM_SPEED_ID = ResourceLocation.fromNamespaceAndPath("forge", "swim_speed");
 
     private static boolean isAbyssal(ServerPlayer player) {
         return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
@@ -40,7 +43,7 @@ public class Levelstats {
     }
 
     private static AttributeInstance getSwimSpeedAttribute(ServerPlayer player) {
-        return player.getAttribute(ForgeRegistries.ATTRIBUTES.getValue(SWIM_SPEED_ID));
+        return player.getAttribute(BuiltInRegistries.ATTRIBUTE.get(SWIM_SPEED_ID));
     }
 
     @SubscribeEvent

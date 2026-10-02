@@ -1,12 +1,13 @@
 package com.sporeadds.sporeaddsmod.client.renderer;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Map;
@@ -242,7 +243,7 @@ public final class KommandantESPClient {
             return entity instanceof Player;
         }
 
-        ResourceLocation entityKey = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation entityKey = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         if (entityKey == null) {
             return false;
         }

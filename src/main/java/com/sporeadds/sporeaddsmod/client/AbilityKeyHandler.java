@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.client;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.client.gui.SporeAbilitySelector;
@@ -12,14 +16,14 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class AbilityKeyHandler {
 
     private static int causticChargeTicks = 0;
@@ -74,8 +78,8 @@ public class AbilityKeyHandler {
         if (SporeKeyMapping.CAUSTIC_SHOT.isDown()) {
             if (causticChargeTicks == 0) {
                 mc.player.playSound(
-                        net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(
-                                new ResourceLocation("spore", "chemist_fuse")
+                        BuiltInRegistries.SOUND_EVENT.get(
+                                ResourceLocation.fromNamespaceAndPath("spore", "chemist_fuse")
                         ),
                         1.0F, 1.0F
                 );

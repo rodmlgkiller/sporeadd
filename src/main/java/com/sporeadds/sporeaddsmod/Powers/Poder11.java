@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.SBlockEntities.CDUBlockEntity;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.FreezerBlockEntity;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
@@ -41,12 +45,11 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
@@ -58,7 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class Poder11 extends PowerBase {
     private static final int PHASE_COST = 20;
     private static final int REQUIRED_LEVEL_USE = 7;
@@ -71,8 +74,8 @@ public class Poder11 extends PowerBase {
 
     private static final int JAM_TIME_TICKS = 500;
 
-    private static final ResourceLocation FREEZER_BLOCK_ID = new ResourceLocation("sporeadd", "freezer_block");
-    private static final ResourceLocation CDU_BLOCK_ID = new ResourceLocation("spore", "cdu");
+    private static final ResourceLocation FREEZER_BLOCK_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "freezer_block");
+    private static final ResourceLocation CDU_BLOCK_ID = ResourceLocation.fromNamespaceAndPath("spore", "cdu");
 
     private static final String JAMMER_TAG = "SporeAdds_IsJammer";
     private static final String JAMMER_TIMER_TAG = "JammingTimer";
@@ -150,7 +153,7 @@ public class Poder11 extends PowerBase {
                 }
 
                 int variant = (lvl.getLevel() >= REQUIRED_LEVEL_VARIANT1) ? 1 : 0;
-                EntityType<?> vigilType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "vigil"));
+                EntityType<?> vigilType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "vigil"));
                 if (vigilType == null) return;
 
                 Entity spawnedEntity = vigilType.create(level);
@@ -265,14 +268,14 @@ public class Poder11 extends PowerBase {
             ServerLevel level = (ServerLevel) entity.level();
             int currentRadius = persistentData.getInt("SporeAdds_ScanRadius");
 
-            SoundEvent sonarSound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "sonar"));
+            SoundEvent sonarSound = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "sonar"));
             if (sonarSound != null) {
                 level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), sonarSound, SoundSource.HOSTILE, 12.5F, 1.0F);
             }
 
             runKommandantScan(entity, level, currentRadius);
 
-            MobEffect markerEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "marker"));
+            MobEffect markerEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
             AABB scanBox = entity.getBoundingBox().inflate(currentRadius);
 
             List<LivingEntity> targets = level.getEntitiesOfClass(
@@ -526,7 +529,7 @@ public class Poder11 extends PowerBase {
         }
 
         NetworkHandle.INSTANCE.send(
-                net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> kommandant),
+                net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> kommandant),
                 new VigilRadarPacket(reportLines)
         );
     }
@@ -549,8 +552,8 @@ public class Poder11 extends PowerBase {
             List<Integer> cduStatus,
             List<Boolean> cduJamming
     ) {
-        Block freezerBlock = ForgeRegistries.BLOCKS.getValue(FREEZER_BLOCK_ID);
-        Block cduBlock = ForgeRegistries.BLOCKS.getValue(CDU_BLOCK_ID);
+        Block freezerBlock = BuiltInRegistries.BLOCK.get(FREEZER_BLOCK_ID);
+        Block cduBlock = BuiltInRegistries.BLOCK.get(CDU_BLOCK_ID);
 
         double radiusSqr = (double) radius * radius;
 
@@ -615,7 +618,7 @@ public class Poder11 extends PowerBase {
     }
 
     private static void trySpawnJammingMound(ServerLevel level, BlockPos machinePos, boolean isFreezer) {
-        EntityType<?> moundType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "mound"));
+        EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "mound"));
         if (moundType == null) return;
 
         if (isMachineBeingJammed(level, machinePos)) return;

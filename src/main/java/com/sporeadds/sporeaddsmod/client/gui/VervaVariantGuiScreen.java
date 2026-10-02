@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.gui;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.VariantKeeper;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,7 +21,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class VervaVariantGuiScreen extends Screen {
 
@@ -146,7 +147,7 @@ public class VervaVariantGuiScreen extends Screen {
             int y = startY;
 
             if (cacheEntities[i] == null && this.minecraft != null && this.minecraft.level != null) {
-                EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(this.mobId));
+                EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(this.mobId));
                 if (type != null) {
                     Entity entity = type.create(this.minecraft.level);
                     if (entity instanceof LivingEntity living) {
@@ -212,7 +213,7 @@ public class VervaVariantGuiScreen extends Screen {
     }
 
     private void equipVisual(LivingEntity entity, EquipmentSlot slot, String itemId) {
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemId));
         if (item != null && item != Items.AIR) {
             entity.setItemSlot(slot, new ItemStack(item));
         }

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.BaseEntities.Organoid;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +22,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
@@ -30,7 +31,7 @@ public class MeatAbomination extends Organoid {
     public static final EntityDataAccessor<Float> BIOMASS =
             SynchedEntityData.defineId(MeatAbomination.class, EntityDataSerializers.FLOAT);
 
-    private static final ResourceLocation WOMB_AMBIENT_ID = new ResourceLocation("spore", "womb_ambient");
+    private static final ResourceLocation WOMB_AMBIENT_ID = ResourceLocation.fromNamespaceAndPath("spore", "womb_ambient");
 
     private float lastAppliedBiomass = -1.0F;
 
@@ -68,7 +69,7 @@ public class MeatAbomination extends Organoid {
     }
 
     @Override
-    public boolean canDrownInFluidType(net.minecraftforge.fluids.FluidType type) {
+    public boolean canDrownInFluidType(net.neoforged.neoforge.fluids.FluidType type) {
         return false;
     }
 
@@ -86,7 +87,7 @@ public class MeatAbomination extends Organoid {
     }
 
     private SoundEvent getWombAmbientSound() {
-        return ForgeRegistries.SOUND_EVENTS.getValue(WOMB_AMBIENT_ID);
+        return BuiltInRegistries.SOUND_EVENT.get(WOMB_AMBIENT_ID);
     }
 
     private void spawnRedDustParticles() {
@@ -226,7 +227,7 @@ public class MeatAbomination extends Organoid {
 
         for (int i = 0; i < totalDrops; i++) {
             String randomItemName = possibleDrops[this.random.nextInt(possibleDrops.length)];
-            Item dropItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(randomItemName));
+            Item dropItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(randomItemName));
 
             if (dropItem != null) {
                 this.spawnAtLocation(dropItem);

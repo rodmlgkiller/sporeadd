@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Core.Sitems;
 import com.Harbinger.Spore.Sentities.Utility.ScentEntity;
 import com.Harbinger.Spore.Sitems.PCI;
@@ -27,20 +31,19 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class Poder12 {
     private static final int SPORE_COST = 30;
     private static final int PCI_DAMAGE_PER_CHARGE = 6;
@@ -202,7 +205,7 @@ public class Poder12 {
                 serverLevel.playSound(
                         null,
                         player.getX(), player.getY(), player.getZ(),
-                        ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "calamity_damage")),
+                        BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "calamity_damage")),
                         SoundSource.PLAYERS,
                         1.0F, 0.01F
                 );
@@ -347,7 +350,7 @@ public class Poder12 {
                     serverLevel.playSound(
                             null,
                             player.getX(), player.getY(), player.getZ(),
-                            ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "calamity_damage")),
+                            BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "calamity_damage")),
                             SoundSource.PLAYERS,
                             1.0F, 0.01F
                     );
@@ -363,12 +366,12 @@ public class Poder12 {
 
                     if (currentTime - lastTrigger >= cooldownTicks) {
                         SCENT_COOLDOWNS.put(player.getUUID(), currentTime);
-                        MinecraftForge.EVENT_BUS.register(new ScentSpawnTask(player, serverLevel, isPhase3));
+                        NeoForge.EVENT_BUS.register(new ScentSpawnTask(player, serverLevel, isPhase3));
 
                         serverLevel.playSound(
                                 null,
                                 player.getX(), player.getY(), player.getZ(),
-                                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "evolve_hurt")),
+                                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "evolve_hurt")),
                                 SoundSource.PLAYERS,
                                 1.0F, 1.0F
                         );
@@ -394,7 +397,7 @@ public class Poder12 {
                 serverLevel.playSound(
                         null,
                         serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
-                        ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "hyper_damage")),
+                        BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "hyper_damage")),
                         SoundSource.PLAYERS,
                         10.0F, 0.1F
                 );
@@ -402,7 +405,7 @@ public class Poder12 {
                 serverLevel.playSound(
                         null,
                         serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
-                        ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("minecraft", "entity.item.break")),
+                        BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "entity.item.break")),
                         SoundSource.PLAYERS,
                         1.0F, 0.7F
                 );
@@ -470,7 +473,7 @@ public class Poder12 {
 
                         Poder12Variants.breakgluttonousHelmet(serverPlayer, gluttonous_HELM_BROKEN, gluttonous_HELM_RESTORE_TIMERS, true);
 
-                        MobEffect famined = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "famined"));
+                        MobEffect famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
                         boolean canTriggerPower13 = famined == null || !serverPlayer.hasEffect(famined);
 
                         if (canTriggerPower13) {
@@ -508,7 +511,7 @@ public class Poder12 {
                 }
 
                 if (serverPlayer.tickCount % 20 == 0) {
-                    MobEffect starvation = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "starvation"));
+                    MobEffect starvation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "starvation"));
                     boolean hasStarvation = starvation != null && serverPlayer.hasEffect(starvation);
 
                     int healAmount = Poder12Variants.getVariantHealPerSecond(serverPlayer, currentHp, hasStarvation);
@@ -548,16 +551,16 @@ public class Poder12 {
         public void onServerTick(TickEvent.ServerTickEvent event) {
             if (event.phase != TickEvent.Phase.END) return;
             if (!player.isAlive()) {
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
                 return;
             }
 
             ticksElapsed++;
 
             ResourceLocation particleId = isOvercharged
-                    ? new ResourceLocation("spore", "blood_particle")
-                    : new ResourceLocation("spore", "spore_particle");
-            ParticleOptions particle = (ParticleOptions) ForgeRegistries.PARTICLE_TYPES.getValue(particleId);
+                    ? ResourceLocation.fromNamespaceAndPath("spore", "blood_particle")
+                    : ResourceLocation.fromNamespaceAndPath("spore", "spore_particle");
+            ParticleOptions particle = (ParticleOptions) BuiltInRegistries.PARTICLE_TYPE.get(particleId);
 
             if (particle != null) {
                 AABB box = player.getBoundingBox();
@@ -570,7 +573,7 @@ public class Poder12 {
             }
 
             if (ticksElapsed >= MAX_TICKS) {
-                EntityType<?> scentType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "scent"));
+                EntityType<?> scentType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "scent"));
                 if (scentType != null) {
                     Entity scent = scentType.create(level);
                     if (scent instanceof ScentEntity scentEntity) {
@@ -581,7 +584,7 @@ public class Poder12 {
                         level.addFreshEntity(scentEntity);
                     }
                 }
-                MinecraftForge.EVENT_BUS.unregister(this);
+                NeoForge.EVENT_BUS.unregister(this);
             }
         }
     }

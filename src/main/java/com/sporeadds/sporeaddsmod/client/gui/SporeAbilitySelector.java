@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.gui;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
@@ -909,7 +911,7 @@ public class SporeAbilitySelector extends Screen {
         for (int i = 0; i < mc.player.getInventory().getContainerSize(); i++) {
             net.minecraft.world.item.ItemStack stack = mc.player.getInventory().getItem(i);
             if (!stack.isEmpty()) {
-                ResourceLocation key = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(stack.getItem());
+                ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
                 if (key != null && key.toString().equals(itemIdStr)) {
                     count += stack.getCount();
                 }
@@ -953,7 +955,7 @@ public class SporeAbilitySelector extends Screen {
             texturePath = "textures/gui/ability_selector.png";
         }
 
-        final ResourceLocation TEXTURE = new ResourceLocation("sporeadd", texturePath);
+        final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("sporeadd", texturePath);
 
         /// Fondo
         RenderSystem.setShaderTexture(0, TEXTURE);

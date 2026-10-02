@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Core.Sentities;
 import com.Harbinger.Spore.Sentities.Projectile.GunProjectiles.AssassinBullet;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
@@ -12,7 +14,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,7 +28,7 @@ public class SubclassAbility {
         level.addFreshEntity(projectile);
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "chemist_fuse")),
+                BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "chemist_fuse")),
                 SoundSource.PLAYERS, 0.5F, 1.6F);
 
         if (player.getRandom().nextFloat() < 0.3F) {
@@ -130,7 +131,7 @@ public class SubclassAbility {
 
         float extraScale = 1.0F + 0.5F * (chargeLevels / 25.0F);
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
-                net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> bullet),
+                net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> bullet),
                 new com.sporeadds.sporeaddsmod.network.CausticShotScalePacket(bullet.getId(), extraScale)
         );
 
@@ -139,8 +140,8 @@ public class SubclassAbility {
                 player.getX(),
                 player.getY(),
                 player.getZ(),
-                net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(
-                        new ResourceLocation("spore", "assassin_bullet_block")
+                BuiltInRegistries.SOUND_EVENT.get(
+                        ResourceLocation.fromNamespaceAndPath("spore", "assassin_bullet_block")
                 ),
                 net.minecraft.sounds.SoundSource.PLAYERS,
                 1.0F,

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.gui;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.Harbinger.Spore.Sentities.Projectile.FleshBomb;
 import com.Harbinger.Spore.Sentities.VariantKeeper;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -24,7 +26,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
@@ -412,7 +413,7 @@ public class VervaGuiScreen extends Screen {
                 int y = startY + (row * 70);
 
                 if (entry.cacheEntity == null && this.minecraft != null && this.minecraft.level != null) {
-                    EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(entry.id));
+                    EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entry.id));
                     if (type != null) {
                         Entity entity = type.create(this.minecraft.level);
                         if (entity != null) {

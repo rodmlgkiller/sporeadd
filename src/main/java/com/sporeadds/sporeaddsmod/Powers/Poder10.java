@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -22,7 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -86,7 +87,7 @@ public class Poder10 extends PowerBase {
 
             spore.setSpore(currentPhase - PHASE_COST);
 
-            playServerSound(serverLevel, player, new ResourceLocation("spore", "calamity_spawn"), 5.0f, 0.5f);
+            playServerSound(serverLevel, player, ResourceLocation.fromNamespaceAndPath("spore", "calamity_spawn"), 5.0f, 0.5f);
 
             ServerPlayer nearestEnemy = null;
             double nearestDistance = Double.MAX_VALUE;
@@ -215,7 +216,7 @@ public class Poder10 extends PowerBase {
 
     private static boolean spawnIndividualScanVigil(ServerPlayer target) {
         ServerLevel level = target.serverLevel();
-        EntityType<?> vigilType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "vigil"));
+        EntityType<?> vigilType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "vigil"));
         if (vigilType == null) return false;
 
         Optional<BlockPos> spawnPosOpt = findValidVigilSpawn(level, target.blockPosition(), MIN_VIGIL_DISTANCE, MAX_VIGIL_DISTANCE);
@@ -310,9 +311,9 @@ public class Poder10 extends PowerBase {
     }
 
     private static void applyEffectsToTarget(ServerPlayer target, ServerLevel serverLevel) {
-        MobEffect glowing = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "glowing"));
-        MobEffect marker = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "marker"));
-        MobEffect uneasy = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "uneasy"));
+        MobEffect glowing = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "glowing"));
+        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
+        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "uneasy"));
 
         if (glowing != null) {
             target.addEffect(new MobEffectInstance(glowing, 2400, 0, false, true));
@@ -331,13 +332,13 @@ public class Poder10 extends PowerBase {
                 Component.translatable("message.sporeadd.power10.found_title").withStyle(style -> style.withColor(0xAA0000))
         ));
 
-        playServerSound(serverLevel, target, new ResourceLocation("spore", "sonar"), 1, 0.8f);
-        playServerSound(serverLevel, target, new ResourceLocation("spore", "signal"), 1, 0.8f);
-        scheduleDelayedSound(serverLevel, target, new ResourceLocation("spore", "signal"), 1, 0.8f, 32);
+        playServerSound(serverLevel, target, ResourceLocation.fromNamespaceAndPath("spore", "sonar"), 1, 0.8f);
+        playServerSound(serverLevel, target, ResourceLocation.fromNamespaceAndPath("spore", "signal"), 1, 0.8f);
+        scheduleDelayedSound(serverLevel, target, ResourceLocation.fromNamespaceAndPath("spore", "signal"), 1, 0.8f, 32);
     }
 
     private static void playServerSound(ServerLevel world, ServerPlayer player, ResourceLocation soundRL, float vol, float pitch) {
-        SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(soundRL);
+        SoundEvent sound = BuiltInRegistries.SOUND_EVENT.get(soundRL);
         if (sound != null) {
             world.playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundSource.MASTER, vol, pitch);
         }

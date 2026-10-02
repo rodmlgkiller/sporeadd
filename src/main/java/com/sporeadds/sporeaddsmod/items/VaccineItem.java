@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -17,7 +19,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
@@ -49,7 +50,7 @@ public class VaccineItem extends Item {
             level.playSound(
                     null,
                     x, y, z,
-                    ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "pci_inject")),
+                    BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "pci_inject")),
                     SoundSource.PLAYERS,
                     1.0f,
                     2.0f
@@ -90,8 +91,8 @@ public class VaccineItem extends Item {
         if (isUniversal || (!playerCode.isEmpty() && bloodCode.equals(playerCode))) {
             other.getPersistentData().putBoolean("VaccineBypassTermina", true);
 
-            ResourceLocation termina = new ResourceLocation("sporeadd", "termina");
-            MobEffect terminaEffect = ForgeRegistries.MOB_EFFECTS.getValue(termina);
+            ResourceLocation termina = ResourceLocation.fromNamespaceAndPath("sporeadd", "termina");
+            MobEffect terminaEffect = BuiltInRegistries.MOB_EFFECT.get(termina);
             if (terminaEffect != null) {
                 other.removeEffect(terminaEffect);
             }
@@ -148,8 +149,8 @@ public class VaccineItem extends Item {
             if (isUniversal || (!playerCode.isEmpty() && bloodCode.equals(playerCode))) {
                 sp.getPersistentData().putBoolean("VaccineBypassTermina", true);
 
-                ResourceLocation termina = new ResourceLocation("sporeadd", "termina");
-                MobEffect terminaEffect = ForgeRegistries.MOB_EFFECTS.getValue(termina);
+                ResourceLocation termina = ResourceLocation.fromNamespaceAndPath("sporeadd", "termina");
+                MobEffect terminaEffect = BuiltInRegistries.MOB_EFFECT.get(termina);
                 if (terminaEffect != null) {
                     sp.removeEffect(terminaEffect);
                 }
