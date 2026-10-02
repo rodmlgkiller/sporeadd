@@ -33,7 +33,6 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
-import net.neoforged.neoforge.event.entity.player.EntityItemPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
@@ -218,7 +217,7 @@ public final class ClawsAbility {
         if (atkInst != null) {
             AttributeModifier bypass = atkInst.getModifier(WEAKNESS_BYPASS_UUID);
             if (bypass != null) {
-                attackAttr -= bypass.getAmount();
+                attackAttr -= bypass.amount();
                 atkInst.removeModifier(WEAKNESS_BYPASS_UUID);
             }
         }
@@ -263,10 +262,9 @@ public final class ClawsAbility {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!ACTIVE.contains(player.getUUID())) return;
         if (!player.getMainHandItem().isEmpty()) return;
-        boolean crit = event.getResult() == Event.Result.ALLOW
-                || (event.getResult() == Event.Result.DEFAULT && event.isVanillaCritical());
+        boolean crit = event.isCriticalHit();
         if (!crit) return;
-        float mult = event.getDamageModifier();
+        float mult = event.getDamageMultiplier();
         CRIT_PENDING.put(player.getUUID(), mult <= 1.0F ? 1.5F : mult);
     }
 
@@ -300,11 +298,11 @@ public final class ClawsAbility {
      * inventario principal (9..35).
      */
     @SubscribeEvent
-    public static void onItemPickup(EntityItemPickupEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+    public static void onItemPickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre event) {
+        if (!(event.getPlayer() instanceof ServerPlayer player)) return;
         if (!ACTIVE.contains(player.getUUID())) return;
 
-        ItemStack live = event.getItem().getItem();
+        ItemStack live = event.getItemEntity().getItem();
         if (live.isEmpty()) return;
 
         int original = live.getCount();
@@ -315,15 +313,15 @@ public final class ClawsAbility {
         }
 
         if (taken > 0) {
-            player.take(event.getItem(), taken);
+            player.take(event.getItemEntity(), taken);
         }
         if (live.isEmpty()) {
-            event.getItem().discard();
+            event.getItemEntity().discard();
         } else {
-            event.getItem().setItem(live);
+            event.getItemEntity().setItem(live);
         }
         player.inventoryMenu.broadcastChanges();
-        event.setCanceled(true);
+        event.setCanPickup(net.neoforged.neoforge.common.util.TriState.FALSE);
     }
 
     private static boolean mergeThenFillMainOnly(Inventory inv, ItemStack stack) {
@@ -333,7 +331,7 @@ public final class ClawsAbility {
         // 1) apilar en pilas existentes del mismo item (incluida la hotbar)
         for (int i = 0; i < inv.items.size() && !stack.isEmpty(); i++) {
             ItemStack slot = inv.items.get(i);
-            if (slot.isEmpty() || !ItemStack.isSameItemSameTags(slot, stack)) continue;
+            if (slot.isEmpty() || !ItemStack.isSameItemSameComponents(slot, stack)) continue;
             int room = Math.min(max, slot.getMaxStackSize()) - slot.getCount();
             if (room <= 0) continue;
             int move = Math.min(room, stack.getCount());

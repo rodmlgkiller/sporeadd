@@ -36,7 +36,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.util.NonNullConsumer;
 import net.minecraft.core.particles.ParticleTypes;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleTypes;
@@ -65,9 +64,7 @@ public class Poder8 extends PowerBase {
             PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 int currentPhase = spore.getSpore();
 
-                PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(new NonNullConsumer<PlayerLevel>() {
-                    @Override
-                    public void accept(PlayerLevel lvl) {
+                PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvl -> {
                         if (lvl == null) return;
 
                         int playerLevel = lvl.getLevel();
@@ -78,7 +75,6 @@ public class Poder8 extends PowerBase {
                         } else {
                             executeNormalLogic(player, serverLevel, spore, currentPhase, playerLevel);
                         }
-                    }
                 });
             });
         });

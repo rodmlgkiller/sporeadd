@@ -39,20 +39,7 @@ public class PortableAirPurifierItem extends Item {
         return 1;
     }
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment == Enchantments.UNBREAKING;
-    }
 
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        if (book.isEmpty()) {
-            return false;
-        }
-
-        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(book);
-        return enchantments.size() == 1 && enchantments.containsKey(Enchantments.UNBREAKING);
-    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {

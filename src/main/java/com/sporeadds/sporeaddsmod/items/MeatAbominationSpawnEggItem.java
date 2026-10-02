@@ -12,13 +12,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.ForgeSpawnEggItem;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class MeatAbominationSpawnEggItem extends ForgeSpawnEggItem {
+public class MeatAbominationSpawnEggItem extends DeferredSpawnEggItem {
 
     public MeatAbominationSpawnEggItem(
             Supplier<? extends EntityType<? extends net.minecraft.world.entity.Mob>> type,

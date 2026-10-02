@@ -70,16 +70,12 @@ public class StaticEntity extends Organoid {
     @Override
     public boolean addEffect(MobEffectInstance effectInstance, Entity source) {
         // Inmunidad al micelio, propio de Spore
-        if (effectInstance.getEffect() == Seffects.MYCELIUM.get()) {
+        if (effectInstance.getEffect().is(Seffects.MYCELIUM)) {
             return false;
         }
         return super.addEffect(effectInstance, source);
     }
 
-    @Override
-    public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 1.0D;
-    }
 
     @Override
     protected void registerGoals() {

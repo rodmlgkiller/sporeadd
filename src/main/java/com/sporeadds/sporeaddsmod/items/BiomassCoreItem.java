@@ -242,9 +242,7 @@ public class BiomassCoreItem extends Item {
         return InteractionResultHolder.success(ItemStack.EMPTY);
     }
 
-    private void addEnch(ItemStack stack, Enchantment ench, int level) {
-        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(stack);
-        map.put(ench, level);
-        EnchantmentHelper.setEnchantments(map, stack);
+    private void addEnch(Level world, ItemStack stack, net.minecraft.resources.ResourceKey<net.minecraft.world.item.enchantment.Enchantment> ench, int enchLevel) {
+        com.sporeadds.sporeaddsmod.util.EnchantUtil.add(stack, world.registryAccess(), ench, enchLevel);
     }
 }

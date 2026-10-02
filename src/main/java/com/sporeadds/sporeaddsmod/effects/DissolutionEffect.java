@@ -155,7 +155,7 @@ public class DissolutionEffect extends MobEffect {
                         chosenArmor.setDamageValue(chosenArmor.getMaxDamage());
                         EquipmentSlot slot = getEquipmentSlot(victim, chosenArmor);
                         if (slot != null) {
-                            victim.broadcastBreakEvent(slot);
+                            victim.onEquippedItemBroken(chosenArmor.getItem(), slot);
                         }
                         chosenArmor.shrink(1);
                     } else {

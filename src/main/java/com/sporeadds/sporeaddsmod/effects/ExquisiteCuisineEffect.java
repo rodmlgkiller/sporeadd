@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.resources.ResourceLocation;
+
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;

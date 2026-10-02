@@ -46,12 +46,6 @@ public class ReinforcedCombatChainsItem extends Item {
         return true;
     }
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment == Enchantments.UNBREAKING
-                || enchantment == Enchantments.MENDING
-                || super.canApplyAtEnchantingTable(stack, enchantment);
-    }
 
     @Override
     public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {

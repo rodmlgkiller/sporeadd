@@ -289,7 +289,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(net.minecraft.world.level.LevelReader level, BlockPos pos, BlockState state) {
         ItemStack stack = new ItemStack(this);
 
         boolean hasMound = state.getValue(HAS_MOUND);

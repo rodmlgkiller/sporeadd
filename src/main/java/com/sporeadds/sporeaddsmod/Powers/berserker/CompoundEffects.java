@@ -58,7 +58,7 @@ public final class CompoundEffects {
         setModifier(player, Attributes.KNOCKBACK_RESISTANCE, KB_RES_UUID, "sporeadd_claws_skeletal_kbres",
                 0.25D * skeletal, AttributeModifier.Operation.ADD_VALUE, skeletal > 0);
 
-        Attribute swim = net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED;
+        net.minecraft.core.Holder<Attribute> swim = net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED;
         setModifier(player, swim, SWIM_UUID, "sporeadd_claws_drowned_swim",
                 0.10D * drowned, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, drowned > 0);
 
@@ -87,7 +87,7 @@ public final class CompoundEffects {
         }
     }
 
-    private static void setModifier(LivingEntity entity, Attribute attr, UUID id, String name,
+    private static void setModifier(LivingEntity entity, net.minecraft.core.Holder<Attribute> attr, net.minecraft.resources.ResourceLocation id, String name,
                                     double amount, AttributeModifier.Operation op, boolean present) {
         if (attr == null) return;
         AttributeInstance inst = entity.getAttribute(attr);
@@ -98,7 +98,7 @@ public final class CompoundEffects {
         }
     }
 
-    private static void removeModifier(LivingEntity entity, Attribute attr, UUID id) {
+    private static void removeModifier(LivingEntity entity, net.minecraft.core.Holder<Attribute> attr, net.minecraft.resources.ResourceLocation id) {
         if (attr == null) return;
         AttributeInstance inst = entity.getAttribute(attr);
         if (inst != null) {

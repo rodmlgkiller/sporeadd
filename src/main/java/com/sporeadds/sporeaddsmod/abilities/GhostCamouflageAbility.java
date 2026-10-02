@@ -47,9 +47,6 @@ public class GhostCamouflageAbility {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onLivingHurtRangedBonus(LivingDamageEvent.Pre event) {
-        if (event.isCanceled()) {
-            return;
-        }
 
         ServerPlayer attacker = resolveAttacker(event);
 

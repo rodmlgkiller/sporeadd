@@ -65,7 +65,7 @@ public class PunishmentEffect extends MobEffect {
             ));
         }
 
-        Attribute stepAttr = net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT;
+        net.minecraft.core.Holder<Attribute> stepAttr = net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT;
         AttributeInstance step = stepAttr == null ? null : attributeMap.getInstance(stepAttr);
         if (step != null) {
             step.removeModifier(STEP_MODIFIER_ID);
@@ -84,7 +84,7 @@ public class PunishmentEffect extends MobEffect {
             speed.removeModifier(SPEED_MODIFIER_ID);
         }
 
-        Attribute stepAttr = net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT;
+        net.minecraft.core.Holder<Attribute> stepAttr = net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT;
         AttributeInstance step = stepAttr == null ? null : attributeMap.getInstance(stepAttr);
         if (step != null) {
             step.removeModifier(STEP_MODIFIER_ID);

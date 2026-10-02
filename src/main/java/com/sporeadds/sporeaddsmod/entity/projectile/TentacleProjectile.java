@@ -66,7 +66,7 @@ public class TentacleProjectile extends AbstractArrow {
     }
 
     public TentacleProjectile(EntityType<? extends AbstractArrow> entityType, Level level, LivingEntity shooter, float damage) {
-        super(entityType, shooter, level);
+        super(entityType, shooter, level, ItemStack.EMPTY, null);
         this.entityData.set(OWNER_ID, shooter.getId());
         this.setDamageAmount(damage);
     }
@@ -100,7 +100,7 @@ public class TentacleProjectile extends AbstractArrow {
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected ItemStack getDefaultPickupItem() {
         return ItemStack.EMPTY;
     }
 

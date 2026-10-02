@@ -35,28 +35,16 @@ public class ScalpelItem extends Item {
     private static final float ATTACK_DAMAGE = 3.0F;
     private static final float ATTACK_SPEED = 3.0F;
 
-    private final Multimap<net.minecraft.world.entity.ai.attributes.Attribute, AttributeModifier> defaultModifiers;
-
     public ScalpelItem(Properties properties) {
 
-        super(properties.stacksTo(1).durability(200));
-
-        ImmutableMultimap.Builder<net.minecraft.world.entity.ai.attributes.Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                DAMAGE_MODIFIER_UUID, ATTACK_DAMAGE - 1.0D, AttributeModifier.Operation.ADD_VALUE
-        ));
-
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(
-                SPEED_MODIFIER_UUID, ATTACK_SPEED - 4.0D, AttributeModifier.Operation.ADD_VALUE
-        ));
-
-        this.defaultModifiers = builder.build();
-    }
-
-    @Override
-    public Multimap<net.minecraft.world.entity.ai.attributes.Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        return slot == EquipmentSlot.MAINHAND ? defaultModifiers : super.getAttributeModifiers(slot, stack);
+        super(properties.stacksTo(1).durability(200).attributes(net.minecraft.world.item.component.ItemAttributeModifiers.builder()
+                .add(Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(DAMAGE_MODIFIER_UUID, ATTACK_DAMAGE - 1.0D, AttributeModifier.Operation.ADD_VALUE),
+                        net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                .add(Attributes.ATTACK_SPEED,
+                        new AttributeModifier(SPEED_MODIFIER_UUID, ATTACK_SPEED - 4.0D, AttributeModifier.Operation.ADD_VALUE),
+                        net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                .build()));
     }
 
     @Override
@@ -67,11 +55,6 @@ public class ScalpelItem extends Item {
     @Override
     public int getEnchantmentValue() {
         return 1;
-    }
-
-    @Override
-    public boolean canBeDepleted() {
-        return true;
     }
 
     private static boolean isScientist(Player player) {

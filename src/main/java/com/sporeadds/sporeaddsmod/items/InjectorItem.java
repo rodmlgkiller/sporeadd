@@ -84,15 +84,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
         return false;
     }
 
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, net.minecraft.world.item.enchantment.Enchantment ench) {
-        return false;
-    }
 
     private static boolean hasMedicClass(ServerPlayer sp) {
         return SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp)
@@ -132,7 +124,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
         if (eff instanceof RemoveNegativeEffectOption) {
             for (MobEffectInstance inst : new ArrayList<>(target.getActiveEffects())) {
                 ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(inst.getEffect().value());
-                boolean isNegative = effId != null && (NEGATIVE_EFFECTS.contains(effId) || inst.getEffect().getCategory() == MobEffectCategory.HARMFUL);
+                boolean isNegative = effId != null && (NEGATIVE_EFFECTS.contains(effId) || inst.getEffect().value().getCategory() == MobEffectCategory.HARMFUL);
 
                 if (!isNegative) {
                     continue;

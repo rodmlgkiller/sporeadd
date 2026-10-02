@@ -53,9 +53,6 @@ public final class BackstabEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingHurt(LivingDamageEvent.Pre event) {
-        if (event.isCanceled()) {
-            return;
-        }
 
         LivingEntity target = event.getEntity();
 
@@ -76,8 +73,8 @@ public final class BackstabEventHandler {
         }
 
         ItemStack weapon = attacker.getMainHandItem();
-        if (weapon.isEmpty() || weapon.getAttributeModifiers(EquipmentSlot.MAINHAND)
-                .get(Attributes.ATTACK_DAMAGE).isEmpty()) {
+        if (weapon.isEmpty() || weapon.getOrDefault(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.world.item.component.ItemAttributeModifiers.EMPTY)
+                .modifiers().stream().noneMatch(entry -> entry.attribute().is(Attributes.ATTACK_DAMAGE) && entry.slot().test(EquipmentSlot.MAINHAND))) {
             return;
         }
 
