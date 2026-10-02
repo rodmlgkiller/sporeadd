@@ -138,16 +138,16 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
     };
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        pTag.put("inventory", itemHandler.serializeNBT());
+    protected void saveAdditional(CompoundTag pTag, net.minecraft.core.HolderLookup.Provider registries) {
+        pTag.put("inventory", itemHandler.serializeNBT(registries));
         pTag.putInt("Analize", progress);
-        super.saveAdditional(pTag);
+        super.saveAdditional(pTag, registries);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        itemHandler.deserializeNBT(pTag.getCompound("inventory"));
+    public void loadAdditional(CompoundTag pTag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(pTag, registries);
+        itemHandler.deserializeNBT(registries, pTag.getCompound("inventory"));
         progress = pTag.getInt("Analize");
     }
 

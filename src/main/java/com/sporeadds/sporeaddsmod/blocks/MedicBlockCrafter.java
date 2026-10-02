@@ -53,7 +53,8 @@ public class MedicBlockCrafter extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        InteractionHand hand = InteractionHand.MAIN_HAND;
         if (!level.isClientSide()) {
             BlockEntity be = level.getBlockEntity(pos);
             if (!(be instanceof MedicBlockCrafterEntity entity)) {

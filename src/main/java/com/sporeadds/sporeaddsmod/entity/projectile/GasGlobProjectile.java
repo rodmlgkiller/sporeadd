@@ -65,8 +65,8 @@ public class GasGlobProjectile extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(TEXTURE_INDEX, (byte) 0);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        builder.define(TEXTURE_INDEX, (byte) 0);
     }
 
     public int getTextureIndex() {
@@ -74,7 +74,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
     }
 
     @Override
-    protected float getGravity() {
+    protected double getDefaultGravity() {
         return 0.09F;
     }
 

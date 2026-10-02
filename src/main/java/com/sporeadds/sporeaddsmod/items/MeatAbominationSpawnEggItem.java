@@ -30,8 +30,9 @@ public class MeatAbominationSpawnEggItem extends ForgeSpawnEggItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        net.minecraft.world.level.Level level = context.level();
+        super.appendHoverText(stack, context, tooltip, flag);
 
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.translatable("tooltip.sporeadds.meat_abomination_spawn_egg.desc1").withStyle(ChatFormatting.GRAY));

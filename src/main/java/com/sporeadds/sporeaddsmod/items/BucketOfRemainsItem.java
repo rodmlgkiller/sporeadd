@@ -44,8 +44,9 @@ public class BucketOfRemainsItem extends Item {
 
     // --- TOOLTIP MULTILÍNEA ---
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        net.minecraft.world.level.Level level = context.level();
+        super.appendHoverText(stack, context, tooltip, flag);
 
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.BUCKET_OF_REMAINS_REQUIRES_ORIGIN.get(), "ghost"));
 

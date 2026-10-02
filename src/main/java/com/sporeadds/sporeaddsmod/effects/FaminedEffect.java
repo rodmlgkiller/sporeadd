@@ -38,9 +38,9 @@ public class FaminedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!(entity instanceof ServerPlayer player)) {
-            return;
+            return true;
         }
 
         LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
@@ -48,14 +48,14 @@ public class FaminedEffect extends MobEffect {
                 && "gluttonous".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
 
         if (!isgluttonous) {
-            return;
+            return true;
         }
 
         UUID playerId = player.getUUID();
 
         if (!player.hasEffect(this)) {
             APPLIED_THIS_INSTANCE.remove(playerId);
-            return;
+            return true;
         }
 
         if (!APPLIED_THIS_INSTANCE.contains(playerId)) {
@@ -108,10 +108,11 @@ public class FaminedEffect extends MobEffect {
         if (current == null || current.getDuration() <= 1) {
             APPLIED_THIS_INSTANCE.remove(playerId);
         }
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

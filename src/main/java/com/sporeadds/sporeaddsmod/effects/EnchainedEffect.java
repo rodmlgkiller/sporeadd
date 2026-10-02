@@ -12,7 +12,7 @@ public class EnchainedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide) {
             entity.addEffect(new MobEffectInstance(
                     effects.CLIPPED_WINGS,
@@ -23,10 +23,11 @@ public class EnchainedEffect extends MobEffect {
                     true
             ));
         }
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

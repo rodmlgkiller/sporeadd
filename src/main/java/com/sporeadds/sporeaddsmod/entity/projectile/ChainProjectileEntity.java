@@ -82,9 +82,9 @@ public class ChainProjectileEntity extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(ATTACHED, false);
-        this.entityData.define(TARGET_ID, -1);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        builder.define(ATTACHED, false);
+        builder.define(TARGET_ID, -1);
     }
 
     @Override

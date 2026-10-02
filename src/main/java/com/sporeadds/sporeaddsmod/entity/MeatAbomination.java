@@ -49,9 +49,9 @@ public class MeatAbomination extends Organoid {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(BIOMASS, 1.0F);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(BIOMASS, 1.0F);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class MeatAbomination extends Organoid {
     }
 
     @Override
-    public int getExperienceReward() {
+    public int getBaseExperienceReward() {
         return Math.max(0, (int) this.getBiomass());
     }
 

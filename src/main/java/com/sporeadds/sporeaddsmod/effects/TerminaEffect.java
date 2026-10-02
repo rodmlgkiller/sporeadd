@@ -79,13 +79,13 @@ public class TerminaEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         // Cada 10 segundos (200 ticks) para que no sea spam excesivo
         return duration % 200 == 0;
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide) {
 
             // Si la entidad es un Jugador, le mandamos los mensajes aterradores
@@ -108,6 +108,7 @@ public class TerminaEffect extends MobEffect {
                 entity.hurt(Damagetypes2.terminal(entity), 2.0F);
             }
         }
+        return true;
     }
 
     @Override

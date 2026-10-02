@@ -13,8 +13,8 @@ public class CamouflagedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!(entity instanceof ServerPlayer player)) return;
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+        if (!(entity instanceof ServerPlayer player)) return true;
 
         PlayerTeam sporeTeam = player.getScoreboard().getPlayerTeam("spore");
 
@@ -30,6 +30,7 @@ public class CamouflagedEffect extends MobEffect {
             player.getScoreboard().removePlayerFromTeam(player.getScoreboardName());
             player.getScoreboard().addPlayerToTeam(player.getScoreboardName(), sporeTeam);
         }
+        return true;
     }
 
     // Nota: Aunque usemos onEffectRemoved, a veces Forge no llama a este método si el jugador
@@ -55,7 +56,7 @@ public class CamouflagedEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

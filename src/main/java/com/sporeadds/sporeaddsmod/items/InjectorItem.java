@@ -176,7 +176,8 @@ public class InjectorItem extends Item implements ActionWheelProvider {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, java.util.List<Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
+        net.minecraft.world.level.Level level = context.level();
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.INJECTOR_REQUIRES_ORIGIN.get(), "medic"));
 
         int index = stack.getOrCreateTag().getInt(NBT_EFFECT_INDEX);

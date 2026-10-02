@@ -95,17 +95,17 @@ public class MedicBlockCrafterEntity extends BlockEntity implements MenuProvider
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put("Inventory", inventory.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put("Inventory", inventory.serializeNBT(registries));
         tag.putInt("Cooldown", cooldown);
         tag.putBoolean("IsCrafting", isCrafting);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        inventory.deserializeNBT(tag.getCompound("Inventory"));
+    public void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         cooldown = tag.getInt("Cooldown");
         isCrafting = tag.getBoolean("IsCrafting");
     }

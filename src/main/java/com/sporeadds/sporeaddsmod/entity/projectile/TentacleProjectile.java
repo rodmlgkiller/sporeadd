@@ -88,15 +88,15 @@ public class TentacleProjectile extends AbstractArrow {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DAMAGE, 0.0F);
-        this.entityData.define(OWNER_ID, -1);
-        this.entityData.define(VICTIM_ID, -1);
-        this.entityData.define(TENTACLE_ID, -1);
-        this.entityData.define(TENTACLE_SLOT, -1);
-        this.entityData.define(SHOT, false);
-        this.entityData.define(POST_HIT_LIFE, 0);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DAMAGE, 0.0F);
+        builder.define(OWNER_ID, -1);
+        builder.define(VICTIM_ID, -1);
+        builder.define(TENTACLE_ID, -1);
+        builder.define(TENTACLE_SLOT, -1);
+        builder.define(SHOT, false);
+        builder.define(POST_HIT_LIFE, 0);
     }
 
     @Override

@@ -67,17 +67,18 @@ public class DevotionEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity living, int amplifier) {
-        if (living.level().isClientSide) return;
+    public boolean applyEffectTick(LivingEntity living, int amplifier) {
+        if (living.level().isClientSide) return true;
 
         Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(MARKER_ID).orElse(null);
         if (marker != null) {
             living.addEffect(new MobEffectInstance(marker, 100, MARKER_AMPLIFIER, false, false));
         }
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration % 20 == 0;
     }
 }

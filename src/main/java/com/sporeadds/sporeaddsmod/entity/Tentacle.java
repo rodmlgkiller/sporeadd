@@ -81,13 +81,13 @@ public class Tentacle extends Organoid {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ATTACHED_TARGET_ID, -1);
-        this.entityData.define(OWNER_ID, -1);
-        this.entityData.define(HIDE_RENDER, false);
-        this.entityData.define(TENTACLE_SLOT, -1);
-        this.entityData.define(LAST_DAMAGE_TICK, -99999);
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ATTACHED_TARGET_ID, -1);
+        builder.define(OWNER_ID, -1);
+        builder.define(HIDE_RENDER, false);
+        builder.define(TENTACLE_SLOT, -1);
+        builder.define(LAST_DAMAGE_TICK, -99999);
     }
 
     public void setAttachedTargetId(int id) {
@@ -403,8 +403,8 @@ public class Tentacle extends Organoid {
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType,
-                                        @Nullable SpawnGroupData spawnData, @Nullable CompoundTag tag) {
-        SpawnGroupData data = super.finalizeSpawn(level, difficulty, spawnType, spawnData, tag);
+                                        @Nullable SpawnGroupData spawnData) {
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, spawnType, spawnData);
 
         if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
             Scoreboard scoreboard = serverLevel.getScoreboard();

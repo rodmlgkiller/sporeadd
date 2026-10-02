@@ -80,7 +80,8 @@ public class medicblock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pstate, Level plevel, BlockPos ppos, Player player, InteractionHand phand, BlockHitResult phit) {
+    public InteractionResult useWithoutItem(BlockState pstate, Level plevel, BlockPos ppos, Player player, BlockHitResult phit) {
+        InteractionHand phand = InteractionHand.MAIN_HAND;
         if (!plevel.isClientSide()) {
             BlockEntity entity = plevel.getBlockEntity(ppos);
             if(entity instanceof MedicBlockEntity) {

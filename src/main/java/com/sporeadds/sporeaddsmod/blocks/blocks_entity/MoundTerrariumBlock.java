@@ -86,7 +86,8 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        InteractionHand hand = InteractionHand.MAIN_HAND;
         ItemStack heldStack = player.getItemInHand(hand);
         ResourceLocation heldId = BuiltInRegistries.ITEM.getKey(heldStack.getItem());
 

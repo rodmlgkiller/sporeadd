@@ -126,7 +126,7 @@ public class ThrowableBandagesEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected float getGravity() {
+    protected double getDefaultGravity() {
         return 0.03F;
     }
 }

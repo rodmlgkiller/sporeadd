@@ -59,13 +59,13 @@ public class TerminaEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         // Cada 10 segundos (200 ticks)
         return duration % 200 == 0;
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide && entity instanceof ServerPlayer player) {
             // 5% chance: mensaje actionbar
             if (RAND.nextDouble() < 0.05) {
@@ -84,6 +84,7 @@ public class TerminaEffect extends MobEffect {
                 player.hurt(Damagetypes2.terminal(player), 2.0F);
             }
         }
+        return true;
     }
 
     @Override

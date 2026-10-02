@@ -100,15 +100,15 @@ public class FreezerBlockEntity extends BlockEntity {
     // SISTEMA DE GUARDADO NBT - NECESARIO PARA EL RADAR DEL KOMMANDANT
     // ==========================================================
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putBoolean("isJammed", this.wasJammed);
         tag.putInt("ticksUntilSnowJam", this.ticksUntilSnowJam);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (tag.contains("isJammed")) {
             this.wasJammed = tag.getBoolean("isJammed");
         }

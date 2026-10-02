@@ -47,8 +47,8 @@ public class VariantVomitProjectile extends ThrowableProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(VARIANT, "default");
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        builder.define(VARIANT, "default");
     }
 
     public String getVariant() {

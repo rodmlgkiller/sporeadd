@@ -110,7 +110,7 @@ public class MangledEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         if (amplifier > 0 && duration <= DOWNGRADE_THRESHOLD_TICKS) {
             return true;
         }
@@ -134,10 +134,10 @@ public class MangledEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         MobEffectInstance current = entity.getEffect(this);
         if (current == null) {
-            return;
+            return true;
         }
 
         if (current.getAmplifier() > 0 && current.getDuration() <= DOWNGRADE_THRESHOLD_TICKS) {
@@ -150,11 +150,11 @@ public class MangledEffect extends MobEffect {
                     current.isVisible(),
                     current.showIcon()
             ));
-            return;
+            return true;
         }
 
         if (!(entity.level() instanceof ServerLevel serverLevel)) {
-            return;
+            return true;
         }
 
         AABB box = entity.getBoundingBox();
@@ -183,5 +183,6 @@ public class MangledEffect extends MobEffect {
                     0.0D
             );
         }
+        return true;
     }
 }

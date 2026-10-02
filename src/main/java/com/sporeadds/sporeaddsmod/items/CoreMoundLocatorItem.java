@@ -33,8 +33,9 @@ public class CoreMoundLocatorItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        net.minecraft.world.level.Level level = context.level();
+        super.appendHoverText(stack, context, tooltip, flag);
 
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.CORE_MOUND_LOCATOR_REQUIRES_ORIGIN.get(), "scientist"));
 

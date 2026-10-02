@@ -30,7 +30,7 @@ public class ExposedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity.getHealth() <= entity.getMaxHealth() * 0.25f) {
             Level level = entity.level();
             if (!level.isClientSide()) {
@@ -86,10 +86,11 @@ public class ExposedEffect extends MobEffect {
                 entity.getPersistentData().putBoolean(TRIGGERED_TAG, false);
             }
         }
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

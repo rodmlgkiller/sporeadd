@@ -30,7 +30,7 @@ public class ExposedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
 
         // El umbral base es 25%. Cada nivel adicional (amplifier) aumenta este umbral un 5% (0.05f).
         // Amplifier 0 (Exposed I) = 25% | Amplifier 1 (Exposed II) = 30% | Amplifier 4 (Exposed V) = 45%
@@ -96,10 +96,11 @@ public class ExposedEffect extends MobEffect {
                 entity.getPersistentData().putBoolean(TRIGGERED_TAG, false);
             }
         }
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 }

@@ -129,17 +129,17 @@ public class ScientistBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        tag.put("inventory", itemHandler.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        tag.put("inventory", itemHandler.serializeNBT(registries));
         tag.putInt("stored_biomass", storedBiomass);
         tag.putInt("processing_progress", processingProgress);
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        itemHandler.deserializeNBT(tag.getCompound("inventory"));
+    public void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        itemHandler.deserializeNBT(registries, tag.getCompound("inventory"));
         storedBiomass = tag.getInt("stored_biomass");
         processingProgress = tag.getInt("processing_progress");
     }

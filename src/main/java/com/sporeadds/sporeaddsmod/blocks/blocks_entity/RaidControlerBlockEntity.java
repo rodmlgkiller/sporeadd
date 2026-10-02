@@ -341,9 +341,9 @@ public class RaidControlerBlockEntity extends BlockEntity implements MenuProvide
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put("inventory", itemHandler.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put("inventory", itemHandler.serializeNBT(registries));
         tag.putInt("cooldown", cooldownTicks);
         tag.putInt("gasAnimationTicks", gasAnimationTicks);
         tag.putInt("gasAnimationDuration", gasAnimationDuration);
@@ -351,9 +351,9 @@ public class RaidControlerBlockEntity extends BlockEntity implements MenuProvide
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        itemHandler.deserializeNBT(tag.getCompound("inventory"));
+    public void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        itemHandler.deserializeNBT(registries, tag.getCompound("inventory"));
         cooldownTicks = tag.getInt("cooldown");
         gasAnimationTicks = tag.getInt("gasAnimationTicks");
         gasAnimationDuration = tag.getInt("gasAnimationDuration");

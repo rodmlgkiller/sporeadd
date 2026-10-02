@@ -490,11 +490,11 @@ public class spore_egg<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		SporePod.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone3.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void renderToBuffer(com.mojang.blaze3d.vertex.PoseStack poseStack, com.mojang.blaze3d.vertex.VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+		SporePod.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+		bone.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+		bone3.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+		bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
 	}
 
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {

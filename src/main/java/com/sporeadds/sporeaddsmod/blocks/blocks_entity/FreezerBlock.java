@@ -119,7 +119,8 @@ public class FreezerBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        InteractionHand hand = InteractionHand.MAIN_HAND;
         return InteractionResult.SUCCESS;
     }
 

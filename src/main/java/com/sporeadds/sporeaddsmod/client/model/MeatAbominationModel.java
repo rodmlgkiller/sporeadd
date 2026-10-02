@@ -83,7 +83,7 @@ public class MeatAbominationModel<T extends MeatAbomination> extends EntityModel
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        this.group1.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderToBuffer(com.mojang.blaze3d.vertex.PoseStack poseStack, com.mojang.blaze3d.vertex.VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+        this.group1.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
     }
 }

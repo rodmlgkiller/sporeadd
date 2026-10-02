@@ -29,15 +29,16 @@ public class ExquisiteCuisineEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity living, int amplifier) {
-        if (living.level().isClientSide) return;
+    public boolean applyEffectTick(LivingEntity living, int amplifier) {
+        if (living.level().isClientSide) return true;
 
         living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 10 * 20, 0, false, false, true));
         living.addEffect(new MobEffectInstance(MobEffects.SATURATION, 1, 0, false, false, true));
+        return true;
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration % (9 * 20) == 0;
     }
 

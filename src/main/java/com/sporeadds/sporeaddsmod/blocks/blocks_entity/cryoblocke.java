@@ -109,15 +109,15 @@ public class cryoblocke extends BlockEntity implements MenuProvider {
 
     // 4. Guardado de datos (NBT)
     @Override
-    protected void saveAdditional(CompoundTag nbt) {
-        nbt.put("inventory", itemHandler.serializeNBT());
-        super.saveAdditional(nbt);
+    protected void saveAdditional(CompoundTag nbt, net.minecraft.core.HolderLookup.Provider registries) {
+        nbt.put("inventory", itemHandler.serializeNBT(registries));
+        super.saveAdditional(nbt, registries);
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+    public void loadAdditional(CompoundTag nbt, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(nbt, registries);
+        itemHandler.deserializeNBT(registries, nbt.getCompound("inventory"));
     }
 
     // 5. Interfaz (MenuProvider)
@@ -139,8 +139,8 @@ public class cryoblocke extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+    public CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
 }

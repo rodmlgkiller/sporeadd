@@ -34,8 +34,8 @@ public class SeasonedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity living, int amplifier) {
-        if (living.level().isClientSide) return;
+    public boolean applyEffectTick(LivingEntity living, int amplifier) {
+        if (living.level().isClientSide) return true;
 
         Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(MARKER_ID).orElse(null);
         if (marker != null) {
@@ -91,6 +91,7 @@ public class SeasonedEffect extends MobEffect {
                 ));
             }
         }
+        return true;
     }
 
     @Override
@@ -153,7 +154,7 @@ public class SeasonedEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration % 20 == 0;
     }
 }

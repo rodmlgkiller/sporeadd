@@ -52,7 +52,8 @@ public class ReinforcedCombatChainsItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        net.minecraft.world.level.Level level = context.level();
         tooltip.add(ClassTooltipUtil.classRequirement(
                 SporeAddsConfig.REINFORCED_COMBAT_CHAINS_REQUIRES_ORIGIN.get(), "berserker"));
 
@@ -69,7 +70,7 @@ public class ReinforcedCombatChainsItem extends Item {
             tooltip.add(Component.translatable("tooltip.sporeadd.hold_shift").withStyle(ChatFormatting.DARK_GRAY));
         }
 
-        super.appendHoverText(stack, level, tooltip, flag);
+        super.appendHoverText(stack, context, tooltip, flag);
     }
 
     @Override

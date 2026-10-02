@@ -138,14 +138,14 @@ public class DehydrationEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity.level().isClientSide()) {
-            return;
+            return true;
         }
 
         WaterCureResult waterCure = getWaterCureResult(entity);
@@ -154,7 +154,7 @@ public class DehydrationEffect extends MobEffect {
                 removeWaterSource(entity.level(), waterCure.blockPos());
             }
             entity.removeEffect(this);
-            return;
+            return true;
         }
 
         if (!entity.onGround() && !isCreativeFlying(entity)) {
@@ -180,6 +180,7 @@ public class DehydrationEffect extends MobEffect {
                 }
             }
         }
+        return true;
     }
 
     @Override

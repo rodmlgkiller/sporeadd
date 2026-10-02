@@ -289,9 +289,9 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put("inventory", itemHandler.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put("inventory", itemHandler.serializeNBT(registries));
         tag.putInt("animation_tick", animationTick);
         tag.putInt("hp", hp);
         tag.putInt("stomach", stomach);
@@ -303,11 +303,11 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
 
         if (tag.contains("inventory")) {
-            itemHandler.deserializeNBT(tag.getCompound("inventory"));
+            itemHandler.deserializeNBT(registries, tag.getCompound("inventory"));
         }
 
         animationTick = tag.getInt("animation_tick");
@@ -323,8 +323,8 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+    public CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
     @Override
