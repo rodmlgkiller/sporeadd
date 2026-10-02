@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class CalamityEffectCheckMixin {
 
     @Redirect(
-            method = "m_147207_(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
+            method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/effect/MobEffect;m_19483_()Lnet/minecraft/world/effect/MobEffectCategory;"
+                    target = "Lnet/minecraft/world/effect/MobEffect;getCategory()Lnet/minecraft/world/effect/MobEffectCategory;"
             ),
             remap = false
     )

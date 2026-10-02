@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SickenBiomassBlock.class)
 public class SickenBiomassBlockMixin {
 
-    // m_6256_ es el método "attack" (cuando se golpea el bloque)
-    @Inject(method = "m_6256_", at = @At("HEAD"), cancellable = true, remap = false)
+    // attack es el método "attack" (cuando se golpea el bloque)
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true, remap = false)
     private void sporeadds$protectTeamSporeFromWither(BlockState state, Level level, BlockPos pos, Player player, CallbackInfo ci) {
 
         // Comprobamos si el jugador está en la familia/team "spore"

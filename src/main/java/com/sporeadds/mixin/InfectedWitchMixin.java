@@ -15,7 +15,7 @@ import java.util.List;
 @Mixin(InfectedWitch.class)
 public class InfectedWitchMixin {
 
-    @Inject(method = "m_8099_()V", at = @At("TAIL"), remap = false)
+    @Inject(method = "registerGoals()V", at = @At("TAIL"), remap = false)
     private void sporeadds$addPlayerBuffGoal(CallbackInfo ci) {
         InfectedWitch witch = (InfectedWitch) (Object) this;
 

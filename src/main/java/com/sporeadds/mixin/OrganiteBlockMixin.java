@@ -26,7 +26,7 @@ import java.util.List;
 @Mixin(OrganiteBlock.class)
 public class OrganiteBlockMixin {
 
-    @Inject(method = "m_213897_", at = @At("TAIL"), remap = false)
+    @Inject(method = "tick", at = @At("TAIL"), remap = false)
     private void sporeadds$applyMarkerToBlacklisted(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, CallbackInfo ci) {
 
         if (!SporeAddsConfig.ORGANITE_MARKER_FOR_BLACKLIST.get()) {

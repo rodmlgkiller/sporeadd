@@ -235,7 +235,7 @@ public class Poder8 extends PowerBase {
                 player.getX(),
                 player.getY(),
                 player.getZ(),
-                Ssounds.HOWLER_GROWL.get(),
+                Ssounds.HOWLER_GROWL.value(),
                 SoundSource.PLAYERS,
                 4.0f,
                 1.0f

@@ -24,9 +24,12 @@ import java.util.UUID;
 @Mixin(UtilityEntity.class)
 public abstract class OrganoidWeakPointLootMixin {
 
-    @Inject(method = "m_7472_", at = @At("HEAD"), cancellable = true, remap = false)
-    private void sporeadd$injectDoubleLoot(DamageSource source, int val, boolean bool, CallbackInfo ci) {
+    @Inject(method = "dropCustomDeathLoot", at = @At("HEAD"), cancellable = true, remap = false)
+    private void sporeadd$injectDoubleLoot(ServerLevel level, DamageSource source, boolean bool, CallbackInfo ci) {
         UtilityEntity self = (UtilityEntity)(Object)this;
+        int val = source.getEntity() instanceof net.minecraft.world.entity.LivingEntity killer
+                ? com.sporeadds.sporeaddsmod.util.EnchantUtil.level(killer.getMainHandItem(), level.registryAccess(), net.minecraft.world.item.enchantment.Enchantments.LOOTING)
+                : 0;
         List<? extends String> original = self.getDropList();
 
         if (original == null || original.isEmpty()) return;

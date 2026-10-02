@@ -101,7 +101,7 @@ public abstract class HowlerMixin {
         }
 
         // Reproducimos el sonido casteando origin al Howler original y llamando a su método vanilla
-        SoundEvent soundEvent = (SoundEvent) Ssounds.HOWLER_GROWL.get();
+        SoundEvent soundEvent = Ssounds.HOWLER_GROWL.value();
         if (soundEvent != null && origin instanceof LivingEntity) {
             origin.playSound(soundEvent, 1.0F, ((LivingEntity) origin).getVoicePitch());
         }

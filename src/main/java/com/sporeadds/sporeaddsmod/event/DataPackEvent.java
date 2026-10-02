@@ -51,7 +51,7 @@ public class DataPackEvent {
             try {
                 Path tempDir = Files.createTempDirectory("sporeadds_hidden_origins");
                 Path mcmeta = tempDir.resolve("pack.mcmeta");
-                Files.write(mcmeta, "{\"pack\":{\"pack_format\":15,\"description\":\"SporeAdds Hidden Origins\"}}".getBytes(StandardCharsets.UTF_8));
+                Files.write(mcmeta, "{\"pack\":{\"pack_format\":48,\"description\":\"SporeAdds Hidden Origins\"}}".getBytes(StandardCharsets.UTF_8));
 
                 // El namespace es fijo ahora
                 String namespace = "sporeadd";
@@ -76,19 +76,28 @@ public class DataPackEvent {
 
                 Pack.ResourcesSupplier supplier = new Pack.ResourcesSupplier() {
                     @Override
-                    public net.minecraft.server.packs.PackResources open(String id) {
-                        return new PathPackResources(id, tempDir, true);
+                    public net.minecraft.server.packs.PackResources openPrimary(net.minecraft.server.packs.PackLocationInfo location) {
+                        return new PathPackResources(location, tempDir);
+                    }
+
+                    @Override
+                    public net.minecraft.server.packs.PackResources openFull(net.minecraft.server.packs.PackLocationInfo location, Pack.Metadata metadata) {
+                        return new PathPackResources(location, tempDir);
                     }
                 };
 
-                Pack pack = Pack.readMetaAndCreate(
+                net.minecraft.server.packs.PackLocationInfo locationInfo = new net.minecraft.server.packs.PackLocationInfo(
                         "sporeadds_hidden",
                         Component.literal("SporeAdds Hidden Origins"),
-                        true,
+                        PackSource.BUILT_IN,
+                        java.util.Optional.empty()
+                );
+
+                Pack pack = Pack.readMetaAndCreate(
+                        locationInfo,
                         supplier,
                         PackType.SERVER_DATA,
-                        Pack.Position.TOP,
-                        PackSource.BUILT_IN
+                        new net.minecraft.server.packs.PackSelectionConfig(true, Pack.Position.TOP, false)
                 );
 
                 if (pack != null) {

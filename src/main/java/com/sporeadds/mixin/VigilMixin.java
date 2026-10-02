@@ -30,7 +30,7 @@ public abstract class VigilMixin {
     @Shadow(remap = false)
     private Vigil vigil;
 
-    @Inject(method = "m_8037_()V", at = @At("TAIL"), remap = false)
+    @Inject(method = "tick()V", at = @At("TAIL"), remap = false)
     private void onWatchTargetGoatStart(CallbackInfo ci) {
         try {
             if (this.vigil == null || this.vigil.level().isClientSide) return;

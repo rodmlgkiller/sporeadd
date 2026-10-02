@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GastricBiomassBlockMixin {
 
     @Inject(
-            method = "m_6256_",
+            method = "attack",
             at = @At("HEAD"),
             cancellable = true,
             remap = false

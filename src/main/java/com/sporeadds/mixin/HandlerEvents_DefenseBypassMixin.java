@@ -19,11 +19,11 @@ public class HandlerEvents_DefenseBypassMixin {
     private static final int PCI_DAMAGE_PER_CHARGE = 6; // 3 * 2
 
     @Inject(
-            method = "DefenseBypass(Lnet/minecraftforge/event/entity/living/LivingDamageEvent;)V",
+            method = "DefenseBypass(Lnet/neoforged/neoforge/event/entity/living/LivingDamageEvent$Pre;)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void onDefenseBypassSporePlayers(LivingDamageEvent event, CallbackInfo ci) {
+    private static void onDefenseBypassSporePlayers(LivingDamageEvent.Pre event, CallbackInfo ci) {
         LivingEntity target = event.getEntity();
 
         boolean isSporePlayer = (

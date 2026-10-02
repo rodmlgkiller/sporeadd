@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Arregla un bug de la dependencia Spore: {@code Vigil.finalizeSpawn} (m_6518_) SIEMPRE
+ * Arregla un bug de la dependencia Spore: {@code Vigil.finalizeSpawn} (finalizeSpawn) SIEMPRE
  * re-sortea la variante del Vigil al azar entre las 4 ({@code DEFAULT, STALKER, TROLL, RINGER}),
  * ignorando la que ya tuviera la entidad o su NBT. Resultado: ~25% de los Vigils invocados por
  * huevo de spawn / {@code /summon} sin NBT / spawn natural / herramientas de copia acaban siendo
@@ -31,7 +31,7 @@ public abstract class VigilVariantFixMixin {
     @Unique
     private int sporeadds$intendedVariant;
 
-    @Inject(method = "m_6518_", at = @At("HEAD"), remap = false)
+    @Inject(method = "finalizeSpawn", at = @At("HEAD"), remap = false)
     private void sporeadds$captureVariant(ServerLevelAccessor level, DifficultyInstance difficulty,
                                           MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag spawnNbt,
                                           CallbackInfoReturnable<SpawnGroupData> cir) {
@@ -41,7 +41,7 @@ public abstract class VigilVariantFixMixin {
                 : self.getTypeVariant();
     }
 
-    @Inject(method = "m_6518_", at = @At("RETURN"), remap = false)
+    @Inject(method = "finalizeSpawn", at = @At("RETURN"), remap = false)
     private void sporeadds$restoreVariant(ServerLevelAccessor level, DifficultyInstance difficulty,
                                           MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag spawnNbt,
                                           CallbackInfoReturnable<SpawnGroupData> cir) {

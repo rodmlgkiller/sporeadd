@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Acid.class)
 public abstract class SporeAcidMixin {
 
-    // Si tu entorno usa SRG mappings, cambia "entityInside" por "m_7892_"
+    // Si tu entorno usa SRG mappings, cambia "entityInside" por "entityInside"
     @Inject(
-            method = "m_7892_", // Nombre SRG
+            method = "entityInside", // Nombre SRG
             at = @At("HEAD"),
             cancellable = true,
             remap = false

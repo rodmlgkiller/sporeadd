@@ -1,26 +1,28 @@
 package com.sporeadds.sporeaddsmod.particles;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class GoreParticleData implements ParticleOptions {
 
-    public static final Deserializer<GoreParticleData> DESERIALIZER = new Deserializer<>() {
-        @Override
-        public GoreParticleData fromCommand(ParticleType<GoreParticleData> type, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            int variant = reader.readInt();
-            return new GoreParticleData(type, variant);
-        }
+    public static MapCodec<GoreParticleData> codec(ParticleType<GoreParticleData> type) {
+        return RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.INT.fieldOf("variant").forGetter(GoreParticleData::getVariant)
+        ).apply(instance, variant -> new GoreParticleData(type, variant)));
+    }
 
-        @Override
-        public GoreParticleData fromNetwork(ParticleType<GoreParticleData> type, FriendlyByteBuf buf) {
-            return new GoreParticleData(type, buf.readInt());
-        }
-    };
+    public static StreamCodec<RegistryFriendlyByteBuf, GoreParticleData> streamCodec(ParticleType<GoreParticleData> type) {
+        return StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, GoreParticleData::getVariant,
+                variant -> new GoreParticleData(type, variant)
+        );
+    }
 
     private final ParticleType<GoreParticleData> type;
     private final int variant;
@@ -37,15 +39,5 @@ public class GoreParticleData implements ParticleOptions {
     @Override
     public ParticleType<GoreParticleData> getType() {
         return type;
-    }
-
-    @Override
-    public void writeToNetwork(FriendlyByteBuf buf) {
-        buf.writeInt(variant);
-    }
-
-    @Override
-    public String writeToString() {
-        return type.toString() + " " + variant;
     }
 }

@@ -17,11 +17,11 @@ import java.util.List;
 public class BrauereiSpreadBuffsMixin {
 
     @Inject(
-            method = "spreadBuffs(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/effect/MobEffect;)V",
+            method = "spreadBuffs(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/core/Holder;)V",
             at = @At("TAIL"),
             remap = false
     )
-    private void includeSporeTeamBuffs(LivingEntity entity, MobEffect effect, CallbackInfo ci) {
+    private void includeSporeTeamBuffs(LivingEntity entity, net.minecraft.core.Holder<MobEffect> effect, CallbackInfo ci) {
         AABB aabb = entity.getBoundingBox().inflate(32);
         // Busca todos los jugadores "spore" en el área y les aplica el buff
         List<Player> sporePlayers = entity.level().players().stream()
@@ -40,11 +40,11 @@ public class BrauereiSpreadBuffsMixin {
     }
 
     @Inject(
-            method = "spreadDeBuffs(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/effect/MobEffect;)V",
+            method = "spreadDeBuffs(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/core/Holder;)V",
             at = @At("TAIL"),
             remap = false
     )
-    private void excludeSporeTeamDebuffs(LivingEntity entity, MobEffect effect, CallbackInfo ci) {
+    private void excludeSporeTeamDebuffs(LivingEntity entity, net.minecraft.core.Holder<MobEffect> effect, CallbackInfo ci) {
         AABB aabb = entity.getBoundingBox().inflate(32);
         // Busca todos los jugadores en el área que NO son "spore"
         List<Player> notSporePlayers = entity.level().players().stream()
