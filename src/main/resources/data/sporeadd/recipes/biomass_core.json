@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TMT",
+    "MHM",
+    "TMT"
+  ],
+  "key": {
+    "M": {
+      "item": "spore:organoid_membrane"
+    },
+    "H": {
+      "item": "spore:mutated_heart"
+    },
+    "T": {
+      "item": "spore:armor_fragment"
+    }
+  },
+  "result": {
+    "item": "sporeadd:biomass_core",
+    "count": 1
+  }
+}

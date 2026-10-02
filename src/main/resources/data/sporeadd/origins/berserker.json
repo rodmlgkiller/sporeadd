@@ -1,0 +1,13 @@
+{
+  "name": "Berserker",
+  "description": "A mercenary who trades defense for overwhelming melee pressure: a reactive Counter and unarmed Claws of Brutality that build from the damage they deal.",
+  "icon": "spore:cleaver",
+  "powers": [
+    "sporeadd:armor",
+    "sporeadd:join_mercs_team",
+    "sporeadd:health",
+    "sporeadd:hasberserkerclass"
+  ],
+  "impact": 1,
+  "order": 3
+}

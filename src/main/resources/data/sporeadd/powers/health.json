@@ -1,0 +1,12 @@
+
+{  "hidden": true,
+    "name": "Durable",
+    "description": "You are built for combat and can withstand a bit more damage.",
+    "type": "origins:attribute",
+    "modifier": {
+        "name": "Max health increase",
+        "attribute": "minecraft:generic.max_health",
+        "value": 6,
+        "operation": "addition"
+    }
+}

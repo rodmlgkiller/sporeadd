@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AI",
+    "IA"
+  ],
+  "key": {
+    "I": {
+      "item": "spore:biomass"
+    },
+    "A": {
+      "item": "spore:tumor"
+    }
+  },
+  "result": {
+    "item": "sporeadd:biomass_bait"
+  }
+}

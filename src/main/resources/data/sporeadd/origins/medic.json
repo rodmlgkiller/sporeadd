@@ -1,0 +1,14 @@
+{
+  "name": "Medic",
+  "description": "A mercenary specialized on keeping others alive the rest of mercenaries, can use injector, syringes and the centrifugator",
+  "icon": "sporeadd:injector",
+  "powers": [
+
+
+
+
+    "sporeadd:hasmedicclass"
+  ],
+  "impact": 1,
+  "order": 1
+}

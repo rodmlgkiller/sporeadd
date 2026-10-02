@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "sporeadd:block/cryo_block_side",
+    "top": "sporeadd:block/cryo_block_top",
+    "bottom": "sporeadd:block/cryo_block_bottom"
+  }
+}

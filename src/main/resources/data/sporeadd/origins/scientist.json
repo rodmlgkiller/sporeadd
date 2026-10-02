@@ -1,0 +1,11 @@
+{
+  "name": "Scientist",
+  "description": "A mercenary specialized on developing tech against the infection, can use any locator nano injector and surgical implantator",
+  "icon": "sporeadd:proto_locator",
+  "powers": [
+    "sporeadd:join_mercs_team",
+    "sporeadd:hasscientistclass"
+  ],
+  "impact": 1,
+  "order": 2
+}

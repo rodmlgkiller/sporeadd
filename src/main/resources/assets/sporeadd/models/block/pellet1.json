@@ -1,0 +1,23 @@
+{
+  "render_type": "cutout",
+  "ambientocclusion": false,
+  "textures": {
+    "pellet": "sporeadd:block/pellet1"
+  },
+  "elements": [
+    {
+      "from": [0, 15.9, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "up": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#pellet"
+        },
+        "down": {
+          "uv": [0, 0, 16, 16],
+          "texture": "#pellet"
+        }
+      }
+    }
+  ]
+}

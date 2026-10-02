@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "sporeadd:block/raid_controler"
+    }
+  }
+}

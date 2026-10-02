@@ -1,0 +1,29 @@
+{
+  "name": "Unique physiology",
+  "description": "Your body was never meant to wear man made armors.",
+  "type": "origins:multiple",
+  "armor": {
+    "type": "origins:restrict_armor",
+    "head": {
+      "type": "origins:relative_durability",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "chest": {
+      "type": "origins:relative_durability",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "legs": {
+      "type": "origins:relative_durability",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "feet": {
+      "type": "origins:relative_durability",
+      "comparison": ">",
+      "compare_to": 0
+    }
+  }
+
+  }

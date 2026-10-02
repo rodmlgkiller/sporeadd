@@ -1,0 +1,20 @@
+{
+  "detection": {
+    "category": "player",
+    "sounds": [
+      "sporeadd:detection"
+    ]
+  },
+  "hive_type": {
+    "category": "master",
+    "sounds": [
+      "sporeadd:hive_type"
+    ]
+  },
+  "heartbeat": {
+    "category": "master",
+    "sounds": [
+      "sporeadd:heartbeat"
+    ]
+  }
+}

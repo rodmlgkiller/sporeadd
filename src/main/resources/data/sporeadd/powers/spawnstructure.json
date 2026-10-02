@@ -1,0 +1,8 @@
+{
+  "type": "origins:modify_player_spawn",
+  "dimension": "minecraft:overworld",
+  "structure": "spore:mass_grave",
+  "spawn_strategy": "center",
+  "name": "Spawn of the spore",
+  "description": "You spawn in a mass grave."
+}

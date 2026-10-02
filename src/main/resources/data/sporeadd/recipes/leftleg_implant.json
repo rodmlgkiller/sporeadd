@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RSS",
+    "CSC",
+    "SSS"
+  ],
+  "key": {
+    "C": {
+      "item": "spore:compound_plate"
+    },
+    "R": {
+      "item": "sporeadd:research_50"
+    },
+
+    "S": {
+      "item": "spore:tendons"
+    }
+  },
+  "result": {
+    "item": "sporeadd:leftleg_implant",
+    "count": 1
+  }
+}

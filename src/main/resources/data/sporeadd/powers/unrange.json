@@ -1,0 +1,11 @@
+{
+    "type": "apoli:prevent_item_use",
+    "item_condition": {
+        "type": "apoli:ingredient",
+        "ingredient": {
+            "tag": "origins:ranged_weapons"
+        }
+    },
+    "name": "No range",
+    "description": "You are unable to use ranged weapons."
+}

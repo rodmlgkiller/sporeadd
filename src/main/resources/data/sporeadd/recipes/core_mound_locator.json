@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RV ",
+    "CBC",
+    "CIC"
+  ],
+  "key": {
+    "C": {
+      "item": "spore:compound_plate"
+    },
+    "R": {
+      "item": "sporeadd:research_100"
+    },
+    "V": {
+      "item": "spore:vigil_eye"
+    },
+    "B": {
+      "item": "sporeadd:biomass_core"
+    },
+    "I": {
+      "item": "spore:circuit_board"
+    }
+  },
+  "result": {
+    "item": "sporeadd:core_mound_locator",
+    "count": 1
+  }
+}

@@ -1,0 +1,101 @@
+{
+    "name": "Backstab",
+    "description": "When hitting an entity from behind, you deal 2x damage and afflict slowness 3 for 3 seconds.",
+    "type": "origins:multiple",
+    "inflict": {
+        "condition": {
+            "type": "origins:and",
+            "conditions": [
+                {
+                    "type": "origins:command",
+                    "command": "tag @s add backstab.initiator",
+                    "comparison": ">=",
+                    "compare_to": 0
+                },
+                {
+                    "inverted": true,
+                    "type": "origins:resource",
+                    "resource": "*:*_cooldown",
+                    "comparison": ">=",
+                    "compare_to": 1
+                }
+            ]
+        },
+        "type": "origins:modify_damage_dealt",
+        "target_condition": {
+            "type": "origins:and",
+            "conditions": [
+                {
+                    "type": "origins:command",
+                    "command": "tag @s add backstab.potential_target",
+                    "comparison": ">=",
+                    "compare_to": 0
+                },
+                {
+                    "type": "origins:command",
+                    "command": "execute anchored eyes as @a[tag = backstab.initiator, distance = ..5] facing entity @s eyes anchored feet positioned ^ ^ ^1 rotated as @e[tag = backstab.potential_target, limit = 1] rotated ~180 ~ positioned ^ ^ ^-1 if entity @e[tag = backstab.potential_target, distance = ..0.8]",
+                    "comparison": ">",
+                    "compare_to": 0
+                }
+            ]
+        },
+        "modifier": {
+            "operation": "multiply_total",
+            "value": 2.0
+        },
+        "bientity_action": {
+            "type": "origins:target_action",
+            "action": {
+                "type": "origins:apply_effect",
+                "effect": {
+                    "effect": "slowness",
+                    "duration": 60,
+                    "amplifier": 2,
+                    "show_particles": true,
+                    "show_icon": true
+                }
+            }
+        },
+        "self_action": {
+            "type": "origins:and",
+            "actions": [
+                {
+                    "type": "origins:execute_command",
+                    "command": "tag @s remove backstab.initiator"
+                },
+                {
+                    "type": "origins:trigger_cooldown",
+                    "power": "*:*_cooldown"
+                }
+            ]
+        },
+        "target_action": {
+            "type": "origins:and",
+            "actions": [
+                {
+                    "type": "origins:execute_command",
+                    "command": "tag @s remove backstab.potential_target"
+                },
+                {
+                    "type": "origins:execute_command",
+                    "command": "playsound minecraft:block.nether_wart.break master @a ~ ~ ~ 1 0"
+                },
+                {
+                    "type": "origins:execute_command",
+                    "command": "playsound minecraft:item.shield.break master @a ~ ~ ~ 0.25 2"
+                }
+            ]
+        }
+    },
+    "failsafe": {
+        "type": "origins:self_action_on_hit",
+        "entity_action": {
+            "type": "origins:execute_command",
+            "command": "tag @s remove backstab.initiator"
+        },
+        "cooldown": 2,
+        "hud_render": {
+            "should_render": false
+        }
+    }
+}

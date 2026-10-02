@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BFB",
+    "BDB",
+    "BBB"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:dirt"
+    },
+    "B": {
+      "item": "spore:fungal_bonemeal"
+    },
+    "F": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "result": {
+    "item": "minecraft:podzol",
+    "count": 1
+  }
+}

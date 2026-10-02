@@ -1,0 +1,164 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release.set(17)
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                "$mod_id" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
+repositories {
+    maven {
+        name = "MinecraftForge"
+        url = "https://maven.minecraftforge.net"
+    }
+    maven {
+        name = "NeoForged"
+        url = "https://maven.neoforged.net/releases"
+    }
+    maven {
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "JitPack"
+        url = "https://jitpack.io"
+    }
+    // Temporalmente desactivado por 522 al resolver modlauncher
+    // maven {
+    //     name = "SpongePowered"
+    //     url = "https://repo.spongepowered.org/repository/maven-public/"
+    // }
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+ext {
+    minecraft_version = "1.20.1"
+    forge_version = "47.4.0"
+    loader_version_range = "[47,)"
+    minecraft_version_range = "[1.20.1,1.20.2)"
+    forge_version_range = "[47.4.0,)"
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    implementation fg.deobf(files('libs/spore_1.20.1_2.2.0j.jar'))
+    implementation fg.deobf(files('libs/Pehkui-3.8.2+1.20.1-forge.jar'))
+    implementation fg.deobf(files('libs/origins-forge-1.20.1-1.10.0.9-all.jar'))
+
+    implementation 'org.spongepowered:mixin:0.8.5'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:15.20.0.111")
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:15.20.0.111")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.20.0.111")
+}
+
+mixin {
+    add sourceSets.main, "sporeadds.refmap.json"
+    config "sporeadds.mixin.json"
+
+    debug.verbose = true
+    debug.export = true
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    def replaceProperties = [
+            minecraft_version        : minecraft_version,
+            forge_version            : forge_version,
+            loader_version_range     : loader_version_range,
+            minecraft_version_range  : minecraft_version_range,
+            forge_version_range      : forge_version_range,
+            mod_id                   : mod_id,
+            mod_name                 : mod_name,
+            mod_license              : mod_license,
+            mod_version              : mod_version,
+            mod_authors              : mod_authors,
+            mod_description          : mod_description
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title': mod_id,
+                'Specification-Vendor': mod_authors,
+                'Specification-Version': '1',
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.jar.archiveVersion,
+                'Implementation-Vendor': mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    finalizedBy 'reobfJar'
+}

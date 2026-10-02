@@ -1,0 +1,10 @@
+{
+  "name": "Injector",
+  "description": "You start with a special injector and only you know how to use it, it recharges with experience orbs and can remove or add many different effects)",
+  "hidden": false,
+  "type": "origins:action_on_callback",
+  "entity_action_chosen": {
+    "type": "origins:execute_command",
+    "command": "/give @s sporeadd:injector"
+  }
+}

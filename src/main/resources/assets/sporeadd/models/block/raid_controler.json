@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "sporeadd:block/raid_controler",
+    "top": "sporeadd:block/raid_controler_top",
+    "bottom": "sporeadd:block/raid_controler_bottom"
+  }
+}

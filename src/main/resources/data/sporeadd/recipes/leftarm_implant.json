@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EBA",
+    "SIR",
+    "CTC"
+  ],
+  "key": {
+    "C": {
+      "item": "spore:compound_plate"
+    },
+    "E": {
+      "item": "sporeadd:research_50"
+    },
+
+    "B": {
+      "item": "spore:bucket_of_bile"
+    },
+
+    "S": {
+      "item": "sporeadd:syringe"
+    },
+
+    "A": {
+      "item": "spore:charred_syringe"
+    },
+
+    "R": {
+      "item": "spore:rotten_syringe"
+    },
+
+    "I": {
+      "item": "spore:circuit_board"
+    },
+
+    "T": {
+      "item": "spore:toxic_syringe"
+    }
+  },
+  "result": {
+    "item": "sporeadd:leftarm_implant",
+    "count": 1
+  }
+}

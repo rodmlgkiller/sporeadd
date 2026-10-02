@@ -1,0 +1,13 @@
+{
+  "name": "Ghost",
+  "description": "A mercenary specialized on stealth, can use bucket of remains",
+  "icon": "sporeadd:bucket_of_remains",
+  "powers": [
+
+
+    "sporeadd:join_mercs_team",
+    "sporeadd:hasghostclass"
+  ],
+  "impact": 1,
+  "order": 1
+}

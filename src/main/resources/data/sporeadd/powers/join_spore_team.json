@@ -1,0 +1,13 @@
+{
+  "name": "Part of the infection",
+  "description": "You are on the spore team.",
+  "type": "origins:action_on_callback",
+  "entity_action_chosen": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:execute_command",
+        "command": "team join spore @s"}]
+
+}
+}

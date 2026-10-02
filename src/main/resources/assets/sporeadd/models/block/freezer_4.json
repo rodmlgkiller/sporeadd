@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "sporeadd:block/freezerf2",
+    "south": "sporeadd:block/freezers3",
+    "east":  "sporeadd:block/freezers1",
+    "west":  "sporeadd:block/freezers1",
+    "up":    "sporeadd:block/freezers1",
+    "down":  "sporeadd:block/freezert1"
+  }
+}

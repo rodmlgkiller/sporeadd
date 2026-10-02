@@ -1,0 +1,11 @@
+{
+    "name": "Resistant",
+    "description": "You are built for combat and can withstand a bit more damage.",
+    "type": "origins:attribute",
+    "modifier": {
+        "name": "Max health increase",
+        "attribute": "minecraft:generic.armor",
+        "value": 5,
+        "operation": "addition"
+    }
+}

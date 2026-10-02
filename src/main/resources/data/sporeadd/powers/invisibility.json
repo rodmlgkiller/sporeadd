@@ -1,0 +1,31 @@
+{
+  "name": "Sneak tactics",
+  "description": "Whenever you sneak, you get invisibility. You also get special leggings when you choose this origin.",
+  "type": "origins:multiple",
+  "invisibility": {
+    "type": "origins:invisibility",
+    "render_armor": false,
+    "render_outline": true,
+    "condition": {
+      "type": "origins:sneaking"
+    }
+  },
+  "sneak_speed": {
+    "type": "origins:action_over_time",
+    "interval": 1,
+    "entity_action": {
+      "type": "origins:apply_effect",
+      "effect": {
+        "effect": "minecraft:speed",
+        "duration": 3,
+        "amplifier": 5,
+        "is_ambient": true,
+        "show_particles": false,
+        "show_icon": false
+      }
+    },
+    "condition": {
+      "type": "origins:sneaking"
+    }
+  }
+}

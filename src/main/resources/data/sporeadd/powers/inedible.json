@@ -1,0 +1,8 @@
+{
+  "type": "origins:prevent_item_use",
+  "item_condition": {
+    "type": "origins:food"
+  },
+  "name": "Inedible",
+  "description": "As a infected all you can eat are remains."
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "has_mound=false,linked=false": {
+      "model": "sporeadd:block/mound_terrarium"
+    },
+    "has_mound=false,linked=true": {
+      "model": "sporeadd:block/mound_terrarium"
+    },
+    "has_mound=true,linked=false": {
+      "model": "sporeadd:block/mound_terrarium2"
+    },
+    "has_mound=true,linked=true": {
+      "model": "sporeadd:block/mound_terrarium3"
+    }
+  }
+}

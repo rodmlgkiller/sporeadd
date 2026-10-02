@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "sporeadd:item/mutation_original"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "sporeadd:item/mutation_caustic"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "sporeadd:item/mutation_abyssal"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "sporeadd:item/mutation_gluttonous"
+    }
+  ]
+}

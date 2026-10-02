@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "sporeadd:block/medic_constructor_block"
+  }
+}

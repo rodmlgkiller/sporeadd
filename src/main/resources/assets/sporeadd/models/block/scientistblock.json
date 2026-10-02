@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "sporeadd:block/scientistblock_texture",
+    "particle": "sporeadd:block/scientistblock_texture"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MMM",
+    "MPM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "item": "sporeadd:mutation_essence"
+    },
+    "P": {
+      "type": "forge:nbt",
+      "item": "minecraft:potion",
+      "nbt": {
+        "Potion": "spore:mycelium_potion"
+      }
+    }
+  },
+  "result": {
+    "item": "sporeadd:airborne_refinated_mycelium",
+    "count": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "sporeadd:freezer_block",
+    "sporeadd:medic_block",
+    "sporeadd:scientist_block",
+    "sporeadd:medic_constructor_block",
+    "sporeadd:cryo_block",
+    "sporeadd:raid_controler"
+  ]
+}

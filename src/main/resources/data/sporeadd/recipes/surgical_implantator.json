@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "RII",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "spore:compound_plate"
+    },
+    "R": {
+      "item": "sporeadd:research_100"
+    },
+
+    "I": {
+      "item": "spore:circuit_board"
+    }
+  },
+  "result": {
+    "item": "sporeadd:surgical_implantator",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  H",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "H": {
+      "item": "sporeadd:small_hook"
+    },
+    "C": {
+      "item": "sporeadd:reinforced_chain"
+    }
+  },
+  "result": {
+    "item": "sporeadd:reinforced_combat_chains",
+    "count": 1
+  }
+}

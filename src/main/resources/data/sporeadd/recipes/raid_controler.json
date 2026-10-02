@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "ZRI",
+    "BBB"
+  ],
+  "key": {
+    "C": {
+      "item": "spore:circuit_board"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "Z": {
+      "item": "spore:zoaholic"
+    },
+    "R": {
+      "item": "sporeadd:research_100"
+    },
+    "I": {
+      "item": "spore:incubator"
+    }
+  },
+  "result": {
+    "item": "sporeadd:raid_controler",
+    "count": 1
+  }
+}

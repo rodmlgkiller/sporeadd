@@ -1,0 +1,19 @@
+{
+  "name": "Backpack",
+  "description": "You are always carrying a backpack for extra resources.",
+  "badges": [
+    {
+      "type": "origins:keybind",
+      "text": "Open with %s",
+      "sprite": "origins:textures/gui/badge/info.png"
+    }
+  ],
+  "type": "origins:inventory",
+  "drop_on_death": true,
+  "title": "Backpack",
+  "container_type": "dropper",
+  "key": {
+    "key": "key.spectatorOutlines"
+  },
+  "recoverable": true
+}

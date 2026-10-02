@@ -1,0 +1,13 @@
+{
+  "name": "Sp:Kommandant",
+  "description": "A spore creation with the sole objective of spreading the infection, (open ability selector with h)",
+  "icon": "spore:remains",
+  "unchoosable": false,
+  "powers": [
+    "sporeadd:join_spore_team",
+    "sporeadd:haskommandantclass"
+  ],
+  "impact": 3,
+  "order": 0
+}
+

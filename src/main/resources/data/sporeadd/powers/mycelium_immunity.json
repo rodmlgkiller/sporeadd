@@ -1,0 +1,9 @@
+{
+  "name": "Mycelium immunity",
+  "description": "You are immune to negative effects of the infection",
+  "type": "origins:effect_immunity",
+  "effects": [
+    "spore:mycelium_ef",
+    "spore:madness"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CIC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "spore:compound_plate"
+    },
+
+    "I": {
+      "item": "spore:circuit_board"
+    }
+
+  },
+  "result": {
+    "item": "sporeadd:medic_constructor_block",
+    "count": 1
+  }
+}
