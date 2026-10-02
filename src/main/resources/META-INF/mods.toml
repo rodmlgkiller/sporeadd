@@ -1,13 +1,13 @@
 modLoader="javafml"
 loaderVersion="[47,)"              # Cambia según el rango requerido para tu versión de Forge
-license="MIT"                      # O la licencia real de tu mod
+license="All Rights Reserved"
 
 [[mods]]
 modId="sporeadd"
 version="${mod_version}"          # Cambia por la versión real de tu mod
 displayName="Spore Add"
 description="""
-Spore additions pretty self explanatory.
+A mod that allows the player to play as a spore infected miniboss or choose 4 diferent survivor classes with different skills to fight the infection. Each class is a strong gamechanger originally balanced for pvp so have that in account.
 """
 authors="rodmlgkiller"
 mixins = "sporeadd.mixins.json"
