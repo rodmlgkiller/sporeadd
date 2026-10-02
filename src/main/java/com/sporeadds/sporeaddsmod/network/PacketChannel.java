@@ -30,7 +30,7 @@ public final class PacketChannel {
     }
 
     public void sendToServer(Object message) {
-        com.sporeadds.sporeaddsmod.network.PacketDistributor.sendToServer(wrap(message));
+        net.neoforged.neoforge.network.PacketDistributor.sendToServer(wrap(message));
     }
 
     public void sendTo(Object message, Connection connection, NetworkDirection direction) {

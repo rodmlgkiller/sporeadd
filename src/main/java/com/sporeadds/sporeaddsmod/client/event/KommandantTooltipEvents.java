@@ -49,7 +49,7 @@ public class KommandantTooltipEvents {
             return false;
         }
 
-        if (!stack.isEdible()) {
+        if (!stack.has(net.minecraft.core.component.DataComponents.FOOD)) {
             return false;
         }
 

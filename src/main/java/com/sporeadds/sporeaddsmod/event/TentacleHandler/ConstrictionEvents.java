@@ -110,7 +110,7 @@ public class ConstrictionEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingIncomingDamageEvent event) {
         LivingEntity victim = event.getEntity();
         DamageSource source = event.getSource();
 

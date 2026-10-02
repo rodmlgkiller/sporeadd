@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.events;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -63,11 +65,11 @@ public class EffectsImmunity {
                 case "gluttonous" -> immunities.addAll(gluttonous_IMMUNITIES);
             }
 
-            MobEffect incomingEffect = event.getEffectInstance().getEffect();
-            ResourceLocation incomingId = BuiltInRegistries.MOB_EFFECT.getKey(incomingEffect);
+            Holder<MobEffect> incomingEffect = event.getEffectInstance().getEffect();
+            ResourceLocation incomingId = BuiltInRegistries.MOB_EFFECT.getKey(incomingEffect.value());
 
             if (incomingId != null && immunities.contains(incomingId)) {
-                event.setResult(Event.Result.DENY);
+                event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
             }
         });
     }

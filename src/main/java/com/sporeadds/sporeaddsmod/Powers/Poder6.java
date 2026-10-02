@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.core.SConfig;
@@ -264,7 +266,7 @@ public class Poder6 {
         return false;
     }
 
-    static MobEffect getDissolutionEffect() {
+    static Holder<MobEffect> getDissolutionEffect() {
         return BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")).orElse(null);
     }
 
@@ -344,7 +346,7 @@ public class Poder6 {
         target.addEffect(new MobEffectInstance(MobEffects.GLOWING, effectDuration * 20, 0, false, true));
 
         if (caustic) {
-            MobEffect dissolution = getDissolutionEffect();
+            Holder<MobEffect> dissolution = getDissolutionEffect();
             if (dissolution != null) {
                 target.addEffect(new MobEffectInstance(dissolution, INFINITE_EFFECT_DURATION, 0, false, true));
             }

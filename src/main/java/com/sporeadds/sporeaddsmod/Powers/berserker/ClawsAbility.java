@@ -166,7 +166,7 @@ public final class ClawsAbility {
     // ------------------------------------------------------------------ counting
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingIncomingDamageEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
         if (!SporeClassUtil.hasClass(player, "berserker")) return;
 

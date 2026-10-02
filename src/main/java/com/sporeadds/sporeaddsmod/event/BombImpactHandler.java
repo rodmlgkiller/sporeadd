@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.Harbinger.Spore.core.Seffects;
@@ -40,7 +42,7 @@ public class BombImpactHandler {
                     AABB aabb = new AABB(hitLocation, hitLocation).inflate(radius);
                     for (LivingEntity target : level.getEntitiesOfClass(LivingEntity.class, aabb)) {
                         if (target.distanceToSqr(hitLocation) <= radius * radius) {
-                            target.setSecondsOnFire(fireSeconds);
+                            target.igniteForSeconds(fireSeconds);
                         }
                     }
                 }
@@ -67,7 +69,7 @@ public class BombImpactHandler {
                     }
 
                     // Obtenemos el efecto de corrosión del mod base
-                    MobEffect corrosionEffect = Seffects.CORROSION.get();
+                    Holder<MobEffect> corrosionEffect = Seffects.CORROSION;
 
                     if (corrosionEffect != null) {
                         // Creamos la nube de efecto

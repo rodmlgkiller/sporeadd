@@ -47,7 +47,7 @@ public final class CamouflageTickHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingDamageEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }

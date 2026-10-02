@@ -147,7 +147,7 @@ public final class gluttonousHarvestLogic {
 
         Collection<MobEffectInstance> activeEffects = target.getActiveEffects();
         for (MobEffectInstance effect : activeEffects) {
-            ResourceLocation effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect());
+            ResourceLocation effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect().value());
             if (effectId != null && (
                     effectId.equals(gluttonousEntityLists.SEASONED_ID)
                             || effectId.equals(EXQUISITE_CUISINE_ID)

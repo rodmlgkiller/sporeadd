@@ -114,7 +114,7 @@ public class SyringeItem extends Item {
         ResourceLocation termina = ResourceLocation.fromNamespaceAndPath("sporeadd", "termina");
         boolean found = false;
         for (MobEffectInstance eff : other.getActiveEffects()) {
-            ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(eff.getEffect());
+            ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(eff.getEffect().value());
             if (effId != null && effId.equals(termina)) {
                 found = true;
                 break;
@@ -179,7 +179,7 @@ public class SyringeItem extends Item {
             boolean found = false;
 
             for (MobEffectInstance eff : player.getActiveEffects()) {
-                ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(eff.getEffect());
+                ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(eff.getEffect().value());
                 if (effId != null && effId.equals(termina)) {
                     found = true;
                     break;

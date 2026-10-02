@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -172,7 +174,7 @@ public final class DelayedDefibrillationEffectHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingIncomingDamageEvent event) {
         LivingEntity entity = event.getEntity();
         if (!(entity.level() instanceof ServerLevel serverLevel)) return;
 

@@ -20,7 +20,7 @@ public class CamouflagedEvent {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        var camouflagedEffect = effects.CAMOUFLAGED.get();
+        var camouflagedEffect = effects.CAMOUFLAGED;
         boolean hadEffect = player.getPersistentData().getBoolean("wasCamouflaged");
 
         if (!player.hasEffect(camouflagedEffect) && hadEffect) {
@@ -41,7 +41,7 @@ public class CamouflagedEvent {
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        var camouflagedEffect = effects.CAMOUFLAGED.get();
+        var camouflagedEffect = effects.CAMOUFLAGED;
         if (!player.hasEffect(camouflagedEffect)) return;
 
         String previousTeamName = player.getPersistentData().getString("PreviousTeam");
@@ -60,7 +60,7 @@ public class CamouflagedEvent {
         if (!(event.getEntity() instanceof ServerPlayer newPlayer)) return;
         if (!(event.getOriginal() instanceof ServerPlayer oldPlayer)) return;
 
-        var camouflagedEffect = effects.CAMOUFLAGED.get();
+        var camouflagedEffect = effects.CAMOUFLAGED;
         newPlayer.removeEffect(camouflagedEffect);
 
         String teamToRestore = oldPlayer.getPersistentData().getString("RestoreTeamOnRespawn");

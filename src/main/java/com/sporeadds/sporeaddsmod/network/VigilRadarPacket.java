@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.network;
 
+import com.sporeadds.sporeaddsmod.util.BufUtil;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import com.sporeadds.sporeaddsmod.network.NetworkEvent;
@@ -19,14 +21,14 @@ public class VigilRadarPacket {
         this.lines = new ArrayList<>();
         int size = buf.readInt();
         for (int i = 0; i < size; i++) {
-            this.lines.add(buf.readComponent());
+            this.lines.add(BufUtil.readComponent(buf));
         }
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(lines.size());
         for (Component comp : lines) {
-            buf.writeComponent(comp);
+            BufUtil.writeComponent(buf, comp);
         }
     }
 

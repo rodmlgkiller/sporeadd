@@ -40,7 +40,7 @@ public final class HiveDownedEvents {
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChangeTarget(LivingChangeTargetEvent event) {
-        LivingEntity newTarget = event.getNewTarget();
+        LivingEntity newTarget = event.getNewAboutToBeSetTarget();
         if (!(newTarget instanceof ServerPlayer player)) return;
         if (HiveDownedManager.isAggroProtected(player.getUUID(), player.level().getGameTime())) {
             event.setCanceled(true);
@@ -64,7 +64,7 @@ public final class HiveDownedEvents {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (blockIncoming(player, event.getSource())) {
             event.setCanceled(true);

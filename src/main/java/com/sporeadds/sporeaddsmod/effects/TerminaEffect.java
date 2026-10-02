@@ -186,7 +186,7 @@ public class TerminaEffect extends MobEffect implements com.sporeadds.sporeaddsm
     // EVENTO GLOBAL: Reduce el tiempo del efecto al recibir MYCELIUM_OVERTAKE
     // =========================================================================================
     @SubscribeEvent
-    public static void onMyceliumOvertakeDamage(LivingDamageEvent event) {
+    public static void onMyceliumOvertakeDamage(LivingDamageEvent.Post event) {
         LivingEntity entity = event.getEntity();
 
         if (event.getSource().is(MYCELIUM_OVERTAKE)) {

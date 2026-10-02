@@ -245,7 +245,7 @@ public class Poder12 {
                 PREVIOUS_ARMOR_HP.put(player.getUUID(), newArmor);
             }
 
-            event.setResult(Event.Result.DENY);
+            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         });
     }
 

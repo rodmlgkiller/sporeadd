@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -307,7 +309,7 @@ public final class PunishmentManager {
         int points = PunishmentTracker.getPoints(player) + 1;
         PunishmentTracker.setPoints(player, points);
 
-        MobEffect punishment = effects.PUNISHMENT.get();
+        Holder<MobEffect> punishment = effects.PUNISHMENT;
 
         if (points == 1) {
             player.addEffect(new MobEffectInstance(punishment, 200, 0, false, true, true));

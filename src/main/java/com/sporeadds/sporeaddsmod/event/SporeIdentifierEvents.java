@@ -85,7 +85,7 @@ public class SporeIdentifierEvents {
                 int durationTicks = durationSeconds * 20;
 
                 Holder<MobEffect> corrosion = BuiltInRegistries.MOB_EFFECT
-                        .getValue(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
+                        .getHolder(ResourceLocation.fromNamespaceAndPath("spore", "corrosion")).orElse(null);
 
                 if (corrosion != null) {
                     event.getEntity().addEffect(new MobEffectInstance(corrosion, durationTicks, amplifier));

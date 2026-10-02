@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.network;
 
+import com.sporeadds.sporeaddsmod.util.BufUtil;
+
 import com.sporeadds.sporeaddsmod.client.CompoundsClientState;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -20,14 +22,14 @@ public class SyncCompoundsPacket {
         for (int i = 0; i < CompoundsClientState.SIZE; i++) {
             ItemStack s = (msg.stacks != null && i < msg.stacks.length && msg.stacks[i] != null)
                     ? msg.stacks[i] : ItemStack.EMPTY;
-            buf.writeItem(s);
+            BufUtil.writeItem(buf, s);
         }
     }
 
     public static SyncCompoundsPacket decode(FriendlyByteBuf buf) {
         ItemStack[] arr = new ItemStack[CompoundsClientState.SIZE];
         for (int i = 0; i < CompoundsClientState.SIZE; i++) {
-            arr[i] = buf.readItem();
+            arr[i] = BufUtil.readItem(buf);
         }
         return new SyncCompoundsPacket(arr);
     }

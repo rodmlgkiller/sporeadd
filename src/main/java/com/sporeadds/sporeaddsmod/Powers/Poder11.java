@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import net.minecraft.core.Holder;
@@ -360,7 +362,7 @@ public class Poder11 extends PowerBase {
     }
 
     @SubscribeEvent
-    public static void onMoundDamage(LivingDamageEvent event) {
+    public static void onMoundDamage(LivingIncomingDamageEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide()) return;
         if (!isOwnedByPoder11(entity)) return;
@@ -680,7 +682,7 @@ public class Poder11 extends PowerBase {
     }
 
     @SubscribeEvent
-    public static void onVigilDamage(LivingDamageEvent event) {
+    public static void onVigilDamage(LivingIncomingDamageEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide()) return;
 

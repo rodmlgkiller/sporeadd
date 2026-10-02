@@ -48,7 +48,7 @@ public class StarvationHandler {
         if (!hasKommandantClass(player)) return;
 
         Holder<MobEffect> starvationEffect = BuiltInRegistries.MOB_EFFECT
-                .getValue(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("spore", "starvation"));
+                .getHolder(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("spore", "starvation")).orElse(null);
         if (starvationEffect == null) return;
 
         boolean starving = player.getFoodData().getFoodLevel() <= 0;

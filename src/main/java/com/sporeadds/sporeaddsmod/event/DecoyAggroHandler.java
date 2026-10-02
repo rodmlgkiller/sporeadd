@@ -43,7 +43,7 @@ public class DecoyAggroHandler {
             return;
         }
 
-        LivingEntity newTarget = event.getNewTarget();
+        LivingEntity newTarget = event.getNewAboutToBeSetTarget();
 
         if (!(newTarget instanceof ServerPlayer player)) {
             return;
@@ -53,7 +53,7 @@ public class DecoyAggroHandler {
 
         if (decoy != null) {
             hookMobToDecoy(mob, decoy);
-            event.setNewTarget(decoy);
+            event.setNewAboutToBeSetTarget(decoy);
         }
     }
 

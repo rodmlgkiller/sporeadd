@@ -12,11 +12,11 @@ import net.neoforged.fml.common.EventBusSubscriber;
 public class EnchainedDamageHandler {
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingDamageEvent.Pre event) {
         Entity source = event.getSource().getEntity();
         if (source instanceof LivingEntity attacker) {
             if (attacker.hasEffect(effects.ENCHAINED)) {
-                float damage = event.getAmount();
+                float damage = event.getNewDamage();
 
                 if (attacker instanceof Player) {
                     damage *= 0.85F;
@@ -24,7 +24,7 @@ public class EnchainedDamageHandler {
                     damage *= 0.35F;
                 }
 
-                event.setAmount(damage);
+                event.setNewDamage(damage);
             }
         }
     }

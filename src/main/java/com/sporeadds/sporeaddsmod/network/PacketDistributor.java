@@ -47,26 +47,26 @@ public final class PacketDistributor {
     }
 
     public static final WithArg<ServerPlayer> PLAYER =
-            new WithArg<>(p -> payload -> com.sporeadds.sporeaddsmod.network.PacketDistributor.sendToPlayer(p, payload));
+            new WithArg<>(p -> payload -> net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(p, payload));
 
     public static final WithArg<Entity> TRACKING_ENTITY =
-            new WithArg<>(e -> payload -> com.sporeadds.sporeaddsmod.network.PacketDistributor.sendToPlayersTrackingEntity(e, payload));
+            new WithArg<>(e -> payload -> net.neoforged.neoforge.network.PacketDistributor.sendToPlayersTrackingEntity(e, payload));
 
     public static final WithArg<Entity> TRACKING_ENTITY_AND_SELF =
-            new WithArg<>(e -> payload -> com.sporeadds.sporeaddsmod.network.PacketDistributor.sendToPlayersTrackingEntityAndSelf(e, payload));
+            new WithArg<>(e -> payload -> net.neoforged.neoforge.network.PacketDistributor.sendToPlayersTrackingEntityAndSelf(e, payload));
 
     public static final WithArg<TargetPoint> NEAR = new WithArg<>(tp -> payload -> {
         var server = net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         if (server == null) return;
         var level = server.getLevel(tp.dimension());
         if (level == null) return;
-        com.sporeadds.sporeaddsmod.network.PacketDistributor.sendToPlayersNear(
+        net.neoforged.neoforge.network.PacketDistributor.sendToPlayersNear(
                 level, null, tp.x(), tp.y(), tp.z(), tp.radius(), payload);
     });
 
     public static final NoArg ALL =
-            new NoArg(payload -> com.sporeadds.sporeaddsmod.network.PacketDistributor.sendToAllPlayers(payload));
+            new NoArg(payload -> net.neoforged.neoforge.network.PacketDistributor.sendToAllPlayers(payload));
 
     public static final NoArg SERVER =
-            new NoArg(payload -> com.sporeadds.sporeaddsmod.network.PacketDistributor.sendToServer(payload));
+            new NoArg(payload -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(payload));
 }

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -161,7 +163,7 @@ public class ArenaTendrilJammerHandler {
     }
 
     @SubscribeEvent
-    public static void onMoundDamage(LivingDamageEvent event) {
+    public static void onMoundDamage(LivingIncomingDamageEvent event) {
         LivingEntity entity = event.getEntity();
 
         if (entity.level().isClientSide()) {

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event.TentacleHandler;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -28,7 +30,7 @@ public class GrabEntity {
     private static final String REDIRECT_TO_ATTACHED_TAG = "sporeadds_redirect_to_attached";
 
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event) {
+    public static void onLivingDamage(LivingIncomingDamageEvent event) {
         LivingEntity target = event.getEntity();
         if (target.level().isClientSide()) {
             return;

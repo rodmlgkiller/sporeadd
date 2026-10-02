@@ -43,14 +43,14 @@ import java.util.Set;
 public class InjectorItem extends Item implements ActionWheelProvider {
 
     private static final Set<ResourceLocation> NEGATIVE_EFFECTS = Set.of(
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.POISON),
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.BLINDNESS),
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WEAKNESS),
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WITHER),
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.UNLUCK),
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.BAD_OMEN),
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DARKNESS),
-            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.LEVITATION),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.POISON.value()),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.BLINDNESS.value()),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WEAKNESS.value()),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WITHER.value()),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.UNLUCK.value()),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.BAD_OMEN.value()),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DARKNESS.value()),
+            BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.LEVITATION.value()),
             ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"),
             ResourceLocation.fromNamespaceAndPath("spore", "corrosion"),
             ResourceLocation.fromNamespaceAndPath("spore", "madness"),
@@ -131,7 +131,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
 
         if (eff instanceof RemoveNegativeEffectOption) {
             for (MobEffectInstance inst : new ArrayList<>(target.getActiveEffects())) {
-                ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(inst.getEffect());
+                ResourceLocation effId = BuiltInRegistries.MOB_EFFECT.getKey(inst.getEffect().value());
                 boolean isNegative = effId != null && (NEGATIVE_EFFECTS.contains(effId) || inst.getEffect().getCategory() == MobEffectCategory.HARMFUL);
 
                 if (!isNegative) {
@@ -252,12 +252,12 @@ public class InjectorItem extends Item implements ActionWheelProvider {
     }
 
     private static class EffectOption {
-        final net.minecraft.world.effect.MobEffect effect;
+        final net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect;
         final int amplifier;
         final int duration;
         final String translationKey;
 
-        EffectOption(net.minecraft.world.effect.MobEffect eff, int amp, int dur, String translationKey) {
+        EffectOption(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> eff, int amp, int dur, String translationKey) {
             this.effect = eff;
             this.amplifier = amp - 1;
             this.duration = dur;

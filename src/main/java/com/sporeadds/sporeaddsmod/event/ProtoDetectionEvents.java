@@ -92,7 +92,7 @@ public final class ProtoDetectionEvents {
         if (!(proto.level() instanceof ServerLevel protoLevel)) return;
         if (proto.isEmerging()) return;
 
-        if (!(event.getNewTarget() instanceof ServerPlayer human)) return;
+        if (!(event.getNewAboutToBeSetTarget() instanceof ServerPlayer human)) return;
         if (human.isSpectator() || human.isCreative()) return;
         if (human.level() != protoLevel) return;
 

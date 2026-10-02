@@ -333,7 +333,7 @@ public class KommandantDietEvents {
 
     private static boolean isInstantgluttonousConsumable(Player player, ItemStack stack) {
         if (!isKommandant(player) || !isSubclassgluttonous(player)) return false;
-        return stack.getItem() == Items.BONE || stack.isEdible() || isBiomass(stack) || isManualgluttonousFood(stack);
+        return stack.getItem() == Items.BONE || stack.has(net.minecraft.core.component.DataComponents.FOOD) || isBiomass(stack) || isManualgluttonousFood(stack);
     }
 
     private static boolean isForbiddenFood(Player player, ItemStack stack) {
@@ -344,7 +344,7 @@ public class KommandantDietEvents {
         if (stack.getItem() == Items.BONE) return false;
         if (isBiomass(stack)) return false;
 
-        if (!stack.isEdible()) return false;
+        if (!stack.has(net.minecraft.core.component.DataComponents.FOOD)) return false;
 
         ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (key == null) return false;
@@ -457,7 +457,7 @@ public class KommandantDietEvents {
             return;
         }
 
-        if (manualFood != null && !stack.isEdible()) {
+        if (manualFood != null && !stack.has(net.minecraft.core.component.DataComponents.FOOD)) {
             if (!player.level().isClientSide && player instanceof ServerPlayer serverPlayer) {
                 consumeManualNonEdible(serverPlayer, hand, stack, manualFood);
             }
@@ -467,7 +467,7 @@ public class KommandantDietEvents {
             return;
         }
 
-        if (stack.isEdible() || isBiomass(stack)) {
+        if (stack.has(net.minecraft.core.component.DataComponents.FOOD) || isBiomass(stack)) {
             player.startUsingItem(hand);
             event.setCancellationResult(InteractionResult.sidedSuccess(player.level().isClientSide));
             event.setCanceled(true);
@@ -500,7 +500,7 @@ public class KommandantDietEvents {
         ItemStack stack = event.getItem();
 
         if (isKommandant(player) && isSubclassgluttonous(player)) {
-            if (stack.isEdible() || isBiomass(stack)) {
+            if (stack.has(net.minecraft.core.component.DataComponents.FOOD) || isBiomass(stack)) {
                 ManualgluttonousFoodData manualFood = getManualFood(stack);
 
                 if (manualFood != null) {

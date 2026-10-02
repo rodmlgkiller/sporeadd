@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -83,7 +85,7 @@ public final class DevotionEvents {
         String key = pool[ThreadLocalRandom.current().nextInt(pool.length)];
         Component message = Component.translatable(key).withStyle(ChatFormatting.DARK_RED);
 
-        MobEffect devotion = effects.DEVOTION.get();
+        Holder<MobEffect> devotion = effects.DEVOTION;
         int durationTicks = SporeAddsConfig.DEVOTION_DURATION_TICKS.get();
 
         for (ServerPlayer kommandant : rewarded) {

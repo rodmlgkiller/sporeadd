@@ -25,9 +25,9 @@ public class ThrownTumorMixin {
 
         for (Entity entity : entityList) {
             if (entity instanceof LivingEntity livingEntity) {
-                MobEffectInstance current = livingEntity.getEffect((MobEffect) Seffects.FROSTBITE.get());
+                MobEffectInstance current = livingEntity.getEffect(Seffects.FROSTBITE);
                 int amplifier = current == null ? 0 : Math.min(current.getAmplifier(), 0);
-                livingEntity.addEffect(new MobEffectInstance((MobEffect) Seffects.FROSTBITE.get(), 600, amplifier));
+                livingEntity.addEffect(new MobEffectInstance(Seffects.FROSTBITE, 600, amplifier));
             }
         }
 

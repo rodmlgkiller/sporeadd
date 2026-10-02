@@ -19,7 +19,7 @@ public class KommandantFoodHelper {
     }
 
     public static boolean isAllowedKommandantFood(ItemStack stack) {
-        if (stack.isEmpty() || !stack.isEdible()) {
+        if (stack.isEmpty() || !stack.has(net.minecraft.core.component.DataComponents.FOOD)) {
             return false;
         }
 
