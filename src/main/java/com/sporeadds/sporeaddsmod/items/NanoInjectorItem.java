@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -48,7 +50,7 @@ public class NanoInjectorItem extends Item {
 
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.NANO_INJECTOR_REQUIRES_ORIGIN.get(), "scientist"));
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         int charges = tag.getInt("nano_charges");
 
         tooltip.add(Component.literal("Charges: " + charges + " / " + MAX_CHARGES).withStyle(ChatFormatting.AQUA));
@@ -78,7 +80,7 @@ public class NanoInjectorItem extends Item {
         if (level.isClientSide) return InteractionResultHolder.success(stack);
 
         ServerPlayer sp = (player instanceof ServerPlayer) ? (ServerPlayer) player : null;
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         int charges = tag.getInt("nano_charges");
 
         boolean canUse = (sp != null);

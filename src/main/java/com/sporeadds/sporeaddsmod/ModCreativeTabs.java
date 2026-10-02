@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import com.sporeadds.sporeaddsmod.blocks.modblocks;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundItem;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundVariant;
@@ -71,13 +73,13 @@ public class ModCreativeTabs {
                         output.accept(ModItems.BIOMASS_BAIT.get());
 
                         ItemStack emptyTerrarium = new ItemStack(modblocks.MOUND_TERRARIUM.get());
-                        CompoundTag emptyTag = emptyTerrarium.getOrCreateTag();
+                        CompoundTag emptyTag = ItemNbt.getOrCreateTag(emptyTerrarium);
                         emptyTag.putBoolean("HasMound", false);
                         emptyTag.putBoolean("Linked", false);
                         output.accept(emptyTerrarium);
 
                         ItemStack fullTerrarium = new ItemStack(modblocks.MOUND_TERRARIUM.get());
-                        CompoundTag fullTag = fullTerrarium.getOrCreateTag();
+                        CompoundTag fullTag = ItemNbt.getOrCreateTag(fullTerrarium);
                         fullTag.putBoolean("HasMound", true);
                         fullTag.putBoolean("Linked", false);
                         fullTag.putInt("CustomModelData", 1);

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.util;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.ModItems;
@@ -126,7 +128,7 @@ public final class ClassAssignmentUtil {
 
         if (gasMaskItem != null) {
             ItemStack gasMask = new ItemStack(gasMaskItem);
-            gasMask.setTag(buildGasMaskNbt());
+            ItemNbt.setTag(gasMask, buildGasMaskNbt());
             player.setItemSlot(EquipmentSlot.HEAD, gasMask);
         }
     }

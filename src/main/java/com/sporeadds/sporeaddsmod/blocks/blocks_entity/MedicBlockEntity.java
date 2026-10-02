@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import com.sporeadds.sporeaddsmod.blocks.medicblock;
 import com.sporeadds.sporeaddsmod.client.screen.MedicBlockMenu;
 import com.sporeadds.sporeaddsmod.ModItems;
@@ -185,10 +187,10 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
 
 
         boolean hasSyringe = input.getItem() == ModItems.SYRINGE.get()
-                && input.hasTag()
-                && input.getTag().contains("BloodCode")
-                && input.getTag().contains("Filled")
-                && input.getTag().getByte("Filled") == 1;
+                && ItemNbt.hasTag(input)
+                && ItemNbt.getTag(input).contains("BloodCode")
+                && ItemNbt.getTag(input).contains("Filled")
+                && ItemNbt.getTag(input).getByte("Filled") == 1;
 
 
         boolean canInsert = output.isEmpty() ||
@@ -206,9 +208,9 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
         this.itemHandler.extractItem(INPUT_SLOT, 1, false);
 
         ItemStack result = new ItemStack(ModItems.VACCINE.get(), 1);
-        if (input.hasTag()) {
-            CompoundTag tag = input.getTag().copy();
-            result.setTag(tag);
+        if (ItemNbt.hasTag(input)) {
+            CompoundTag tag = ItemNbt.getTag(input).copy();
+            ItemNbt.setTag(result, tag);
 
             // Asigna el nombre custom si tiene "BloodSubject"
             if (tag.contains("BloodSubject")) {
@@ -221,7 +223,7 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
             this.itemHandler.setStackInSlot(OUTPUT_SLOT, result);
         } else if (output.getItem() == ModItems.VACCINE.get() && output.getCount() < output.getMaxStackSize()) {
             output.grow(1);
-            output.setTag(result.getTag());
+            ItemNbt.setTag(output, ItemNbt.getTag(result));
             if (result.hasCustomHoverName()) {
                 output.setHoverName(result.getHoverName());
             }

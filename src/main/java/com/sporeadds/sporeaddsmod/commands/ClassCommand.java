@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.commands;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -212,7 +214,7 @@ public class ClassCommand {
 
         if (gasMaskItem != null) {
             ItemStack gasMask = new ItemStack(gasMaskItem);
-            gasMask.setTag(buildGasMaskNbt());
+            ItemNbt.setTag(gasMask, buildGasMaskNbt());
             player.setItemSlot(EquipmentSlot.HEAD, gasMask);
         }
     }

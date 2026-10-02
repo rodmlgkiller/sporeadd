@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.Holder;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -143,10 +145,10 @@ public class Poder12Variants {
             stack.enchant(binding, 1);
         }
 
-        if (!stack.hasTag()) {
-            stack.setTag(new CompoundTag());
+        if (!ItemNbt.hasTag(stack)) {
+            ItemNbt.setTag(stack, new CompoundTag());
         }
-        stack.getTag().putBoolean("Unbreakable", true);
+        ItemNbt.getTag(stack).putBoolean("Unbreakable", true);
         stack.setDamageValue(0);
 
         if (abyssalMutation && stack.getItem() instanceof SporeArmorData armorData) {

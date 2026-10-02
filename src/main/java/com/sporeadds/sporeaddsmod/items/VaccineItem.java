@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.Holder;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -85,7 +87,7 @@ public class VaccineItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         String bloodCode = tag.contains("BloodCode", Tag.TAG_STRING) ? tag.getString("BloodCode") : "";
         String playerCode = other.getPersistentData().getString("SporeSyringeCode");
 
@@ -143,7 +145,7 @@ public class VaccineItem extends Item {
         }
 
         if (player.isCrouching()) {
-            CompoundTag tag = stack.getOrCreateTag();
+            CompoundTag tag = ItemNbt.getOrCreateTag(stack);
             String bloodCode = tag.contains("BloodCode", Tag.TAG_STRING) ? tag.getString("BloodCode") : "";
             String playerCode = sp.getPersistentData().getString("SporeSyringeCode");
 

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
@@ -61,7 +63,7 @@ public class PlayerJoinEvents {
 
     private static boolean isAbyssalTempTrident(ItemStack stack) {
         if (stack.isEmpty()) return false;
-        if (!stack.hasTag()) return false;
-        return stack.getTag().getBoolean("AbyssalTempTrident");
+        if (!ItemNbt.hasTag(stack)) return false;
+        return ItemNbt.getTag(stack).getBoolean("AbyssalTempTrident");
     }
 }

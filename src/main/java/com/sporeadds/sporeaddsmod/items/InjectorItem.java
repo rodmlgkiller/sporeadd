@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -103,7 +105,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
         if (index < 0 || index >= EFFECTS.length) {
             return;
         }
-        stack.getOrCreateTag().putInt(NBT_EFFECT_INDEX, index);
+        ItemNbt.getOrCreateTag(stack).putInt(NBT_EFFECT_INDEX, index);
     }
 
     private static void applyInjectorEffect(ItemStack stack, LivingEntity target, ServerPlayer sp) {
@@ -120,7 +122,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
             return;
         }
 
-        int index = stack.getOrCreateTag().getInt(NBT_EFFECT_INDEX);
+        int index = ItemNbt.getOrCreateTag(stack).getInt(NBT_EFFECT_INDEX);
         if (index < 0 || index >= EFFECTS.length) {
             index = 0;
         }
@@ -180,7 +182,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
         net.minecraft.world.level.Level level = context.level();
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.INJECTOR_REQUIRES_ORIGIN.get(), "medic"));
 
-        int index = stack.getOrCreateTag().getInt(NBT_EFFECT_INDEX);
+        int index = ItemNbt.getOrCreateTag(stack).getInt(NBT_EFFECT_INDEX);
         if (index < 0 || index >= EFFECTS.length) {
             index = 0;
         }
@@ -290,13 +292,13 @@ public class InjectorItem extends Item implements ActionWheelProvider {
             }
 
             long gameTime = sp.level().getGameTime();
-            long lastAttackTick = stack.getOrCreateTag().getLong(NBT_LAST_ATTACK_TICK);
+            long lastAttackTick = ItemNbt.getOrCreateTag(stack).getLong(NBT_LAST_ATTACK_TICK);
 
             if (lastAttackTick == gameTime) {
                 return;
             }
 
-            stack.getOrCreateTag().putLong(NBT_LAST_ATTACK_TICK, gameTime);
+            ItemNbt.getOrCreateTag(stack).putLong(NBT_LAST_ATTACK_TICK, gameTime);
             applyInjectorEffect(stack, target, sp);
         }
 

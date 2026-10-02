@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.entity.projectile.ChainProjectileEntity;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -94,7 +96,7 @@ public class ReinforcedCombatChainsItem extends Item {
                 }
             }
 
-            CompoundTag tag = currentStack.getOrCreateTag();
+            CompoundTag tag = ItemNbt.getOrCreateTag(currentStack);
             if (!tag.hasUUID(TAG_CHAIN_UUID)) {
                 tag.putUUID(TAG_CHAIN_UUID, UUID.randomUUID());
             }

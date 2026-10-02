@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.renderer.item;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -37,7 +39,7 @@ public class MoundTerrariumItemRenderer extends BlockEntityWithoutLevelRenderer 
         }
 
         BlockRenderDispatcher blockRenderer = mc.getBlockRenderer();
-        boolean hasMound = stack.hasTag() && stack.getTag() != null && stack.getTag().getBoolean("HasMound");
+        boolean hasMound = ItemNbt.hasTag(stack) && ItemNbt.getTag(stack) != null && ItemNbt.getTag(stack).getBoolean("HasMound");
         BlockState state = modblocks.MOUND_TERRARIUM.get().defaultBlockState()
                 .setValue(com.sporeadds.sporeaddsmod.blocks.blocks_entity.MoundTerrariumBlock.HAS_MOUND, hasMound)
                 .setValue(com.sporeadds.sporeaddsmod.blocks.blocks_entity.MoundTerrariumBlock.LINKED, false);

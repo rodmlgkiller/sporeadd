@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.Powers.Levelstats;
 import com.sporeadds.sporeaddsmod.util.SporeIdentifierUtil;
@@ -32,7 +34,7 @@ public class MutagenicCompoundItem extends Item {
     }
 
     public static MutagenicCompoundVariant getVariant(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         if (tag != null && tag.contains(TAG_VARIANT)) {
             return MutagenicCompoundVariant.byId(tag.getString(TAG_VARIANT));
         }
@@ -40,7 +42,7 @@ public class MutagenicCompoundItem extends Item {
     }
 
     public static void setVariant(ItemStack stack, MutagenicCompoundVariant variant) {
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putString(TAG_VARIANT, variant.getId());
         tag.putInt("CustomModelData", variant.getCustomModelData());
     }
@@ -54,7 +56,7 @@ public class MutagenicCompoundItem extends Item {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         MutagenicCompoundVariant variant = getVariant(stack);
         int expected = variant.getCustomModelData();
 

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,7 +22,7 @@ public class AbyssalRiptideDamageHandler {
         if (subjugation == null || !player.hasEffect(subjugation)) return;
 
         ItemStack mainHand = player.getMainHandItem();
-        if (mainHand.isEmpty() || !mainHand.hasTag() || !mainHand.getTag().getBoolean("AbyssalTempTrident")) return;
+        if (mainHand.isEmpty() || !ItemNbt.hasTag(mainHand) || !ItemNbt.getTag(mainHand).getBoolean("AbyssalTempTrident")) return;
 
         if (!player.isAutoSpinAttack()) return;
 

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -30,7 +32,7 @@ public class LockedItemHandler {
     private static final String TAG_EXPIRE_TIME = "SporeExpireTime";
 
     public static void giveTemporaryLockedItem(Player player, ItemStack stack, long durationTicks) {
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putBoolean(TAG_LOCKED, true);
         tag.putLong(TAG_EXPIRE_TIME, player.level().getGameTime() + durationTicks);
 
@@ -38,7 +40,7 @@ public class LockedItemHandler {
     }
 
     public static boolean isLocked(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().getBoolean(TAG_LOCKED);
+        return ItemNbt.hasTag(stack) && ItemNbt.getTag(stack).getBoolean(TAG_LOCKED);
     }
 
     @SubscribeEvent
@@ -52,7 +54,7 @@ public class LockedItemHandler {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (isLocked(stack)) {
-                if (stack.getTag().contains(TAG_EXPIRE_TIME) && currentTime >= stack.getTag().getLong(TAG_EXPIRE_TIME)) {
+                if (ItemNbt.getTag(stack).contains(TAG_EXPIRE_TIME) && currentTime >= ItemNbt.getTag(stack).getLong(TAG_EXPIRE_TIME)) {
                     stack.shrink(stack.getCount());
                 }
             }
@@ -122,7 +124,7 @@ public class LockedItemHandler {
             for (int i = 0; i < original.getInventory().getContainerSize(); i++) {
                 ItemStack stack = original.getInventory().getItem(i);
                 if (isLocked(stack)) {
-                    if (!stack.getTag().contains(TAG_EXPIRE_TIME) || clone.level().getGameTime() < stack.getTag().getLong(TAG_EXPIRE_TIME)) {
+                    if (!ItemNbt.getTag(stack).contains(TAG_EXPIRE_TIME) || clone.level().getGameTime() < ItemNbt.getTag(stack).getLong(TAG_EXPIRE_TIME)) {
                         clone.getInventory().add(stack.copy());
                     }
                 }

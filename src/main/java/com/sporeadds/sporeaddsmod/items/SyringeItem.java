@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -67,7 +69,7 @@ public class SyringeItem extends Item {
 
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.SYRINGE_REQUIRES_ORIGIN.get(), "medic"));
 
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         boolean isFilled = tag != null && tag.contains("BloodCode", Tag.TAG_STRING);
 
         if (isFilled) {
@@ -103,7 +105,7 @@ public class SyringeItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         if (tag.contains("BloodCode", Tag.TAG_STRING)) {
             sp.displayClientMessage(Component.translatable("message.sporeadds.syringe.already_filled").withStyle(ChatFormatting.RED), true);
             return InteractionResult.FAIL;
@@ -166,7 +168,7 @@ public class SyringeItem extends Item {
             return InteractionResultHolder.fail(stack);
         }
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         if (tag.contains("BloodCode", Tag.TAG_STRING)) {
             sp.displayClientMessage(Component.translatable("message.sporeadds.syringe.already_filled").withStyle(ChatFormatting.RED), true);
             return InteractionResultHolder.fail(stack);

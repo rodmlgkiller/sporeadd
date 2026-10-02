@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.entity;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import com.sporeadds.sporeaddsmod.PlayerData.ScientistResearchProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import net.minecraft.nbt.CompoundTag;
@@ -27,9 +29,9 @@ public class DataDropItemEntity extends ItemEntity {
         DataDropItemEntity entity = new DataDropItemEntity(ModEntities.DATA_DROP_ITEM.get(), level);
         entity.setPos(x, y, z);
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putString(SOURCE_ENTITY_TAG, sourceEntityId);
-        stack.setTag(tag);
+        ItemNbt.setTag(stack, tag);
 
         entity.setItem(stack);
         return entity;
@@ -59,8 +61,8 @@ public class DataDropItemEntity extends ItemEntity {
         ItemStack stack = this.getItem();
         int amount = stack.getCount();
 
-        String sourceEntityId = stack.hasTag() && stack.getTag().contains(SOURCE_ENTITY_TAG)
-                ? stack.getTag().getString(SOURCE_ENTITY_TAG)
+        String sourceEntityId = ItemNbt.hasTag(stack) && ItemNbt.getTag(stack).contains(SOURCE_ENTITY_TAG)
+                ? ItemNbt.getTag(stack).getString(SOURCE_ENTITY_TAG)
                 : "unknown";
 
         ScientistResearchProvider.SCIENTIST_RESEARCH.get(serverPlayer).ifPresent(research -> {

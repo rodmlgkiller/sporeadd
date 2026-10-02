@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.ChatFormatting;
@@ -35,7 +37,7 @@ public class MoundTerrariumItem extends BlockItem {
         net.minecraft.world.level.Level level = context.level();
         super.appendHoverText(stack, context, tooltip, flag);
 
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         boolean hasMound = tag != null && tag.getBoolean("HasMound");
 
         if (Screen.hasShiftDown()) {
@@ -71,7 +73,7 @@ public class MoundTerrariumItem extends BlockItem {
             return super.interactLivingEntity(stack, player, target, hand);
         }
 
-        CompoundTag stackTag = stack.getOrCreateTag();
+        CompoundTag stackTag = ItemNbt.getOrCreateTag(stack);
         if (stackTag.getBoolean("HasMound")) {
             return InteractionResult.PASS;
         }

@@ -1,5 +1,7 @@
 package com.sporeadds.jei;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import mezz.jei.api.IModPlugin;
@@ -97,7 +99,7 @@ public class SporeAddJeiPlugin implements IModPlugin {
         registration.addRecipes(MEDIC_CONSTRUCTOR_TYPE, constructorRecipes);
 
         ItemStack syringeFilled = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "syringe")));
-        CompoundTag syringeTag = syringeFilled.getOrCreateTag();
+        CompoundTag syringeTag = ItemNbt.getOrCreateTag(syringeFilled);
         syringeTag.putInt("CustomModelData", 1);
 
         ItemStack vaccineOut = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "vaccine")));
@@ -111,7 +113,7 @@ public class SporeAddJeiPlugin implements IModPlugin {
 
     public static ItemStack createMoundTerrariumStack() {
         ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "mound_terrarium")));
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putBoolean("HasMound", true);
         tag.putBoolean("Linked", false);
         tag.putInt("CustomModelData", 1);

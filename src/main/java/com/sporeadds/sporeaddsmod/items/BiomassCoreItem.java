@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -74,7 +76,7 @@ public class BiomassCoreItem extends Item {
 
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.BIOMASS_CORE_REQUIRES_ORIGIN.get(), "kommandant"));
 
-        String currentMode = stack.getOrCreateTag().getString("MoldMode");
+        String currentMode = ItemNbt.getOrCreateTag(stack).getString("MoldMode");
         if (currentMode.isEmpty()) currentMode = "weapon";
 
         if (net.minecraft.client.gui.screens.Screen.hasShiftDown()) {
@@ -111,7 +113,7 @@ public class BiomassCoreItem extends Item {
             }
         }
 
-        CompoundTag tag = coreStack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(coreStack);
         String currentMode = tag.getString("MoldMode");
         if (currentMode.isEmpty()) currentMode = "weapon";
 
@@ -218,7 +220,7 @@ public class BiomassCoreItem extends Item {
         }
 
         if (isLevel9) {
-            CompoundTag nbt = moldedItem.getOrCreateTag();
+            CompoundTag nbt = ItemNbt.getOrCreateTag(moldedItem);
             nbt.putBoolean("Unbreakable", true);
         }
 

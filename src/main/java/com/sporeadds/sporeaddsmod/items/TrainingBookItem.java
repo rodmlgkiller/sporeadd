@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import com.sporeadds.sporeaddsmod.client.trainingbook.TrainingBookClientHooks;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.ChatFormatting;
@@ -30,11 +32,11 @@ public class TrainingBookItem extends Item {
     }
 
     public static void markInitial(ItemStack stack) {
-        stack.getOrCreateTag().putBoolean(INITIAL_TAG, true);
+        ItemNbt.getOrCreateTag(stack).putBoolean(INITIAL_TAG, true);
     }
 
     public static boolean isInitial(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         return tag != null && tag.getBoolean(INITIAL_TAG);
     }
 
@@ -47,7 +49,7 @@ public class TrainingBookItem extends Item {
         if (isReadOnly(stack)) {
             return 0;
         }
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         if (!tag.contains(USES_REMAINING_TAG)) {
             tag.putInt(USES_REMAINING_TAG, SporeAddsConfig.TRAINING_BOOK_MAX_USES.get());
         }
@@ -55,7 +57,7 @@ public class TrainingBookItem extends Item {
     }
 
     public static void setUsesRemaining(ItemStack stack, int uses) {
-        stack.getOrCreateTag().putInt(USES_REMAINING_TAG, Math.max(0, uses));
+        ItemNbt.getOrCreateTag(stack).putInt(USES_REMAINING_TAG, Math.max(0, uses));
     }
 
     public static boolean consumeUse(ItemStack stack) {

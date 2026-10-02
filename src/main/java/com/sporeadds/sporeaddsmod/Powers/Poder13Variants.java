@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -76,8 +78,8 @@ public class Poder13Variants {
         if (riptide != null) trident.enchant(riptide, 5);
         if (vanishing != null) trident.enchant(vanishing, 1);
 
-        trident.getOrCreateTag().putBoolean("Unbreakable", true);
-        trident.getOrCreateTag().putBoolean("AbyssalTempTrident", true);
+        ItemNbt.getOrCreateTag(trident).putBoolean("Unbreakable", true);
+        ItemNbt.getOrCreateTag(trident).putBoolean("AbyssalTempTrident", true);
 
         LockedItemHandler.giveTemporaryLockedItem(player, trident, ABYSSAL_DURATION);
 

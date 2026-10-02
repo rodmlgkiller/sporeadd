@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.entity.projectile;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import com.sporeadds.sporeaddsmod.items.ReinforcedCombatChainsItem;
@@ -478,11 +480,11 @@ public class ChainProjectileEntity extends ThrowableProjectile {
             return false;
         }
 
-        if (!stack.hasTag() || !stack.getTag().hasUUID("ChainUUID")) {
+        if (!ItemNbt.hasTag(stack) || !ItemNbt.getTag(stack).hasUUID("ChainUUID")) {
             return false;
         }
 
-        UUID stackId = stack.getTag().getUUID("ChainUUID");
+        UUID stackId = ItemNbt.getTag(stack).getUUID("ChainUUID");
         return stackId.equals(this.itemUUID);
     }
 

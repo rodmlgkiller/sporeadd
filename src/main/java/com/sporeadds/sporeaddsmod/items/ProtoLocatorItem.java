@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -54,7 +56,7 @@ public class ProtoLocatorItem extends Item {
             }
 
             if (canUse) {
-                CompoundTag nbt = stack.getOrCreateTag();
+                CompoundTag nbt = ItemNbt.getOrCreateTag(stack);
                 long currentTime = System.currentTimeMillis();
                 long lastUsed = nbt.getLong("lastUsed");
                 long timeLeft = (lastUsed + COOLDOWN_DURATION) - currentTime;
@@ -178,7 +180,7 @@ public class ProtoLocatorItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        CompoundTag nbt = stack.getTag();
+        CompoundTag nbt = ItemNbt.getTag(stack);
         if (nbt != null && nbt.contains("lastUsed")) {
             long currentTime = System.currentTimeMillis();
             long lastUsed = nbt.getLong("lastUsed");
@@ -193,7 +195,7 @@ public class ProtoLocatorItem extends Item {
         net.minecraft.world.level.Level level = context.level();
         tooltip.add(ClassTooltipUtil.classRequirement(SporeAddsConfig.PROTO_LOCATOR_REQUIRES_ORIGIN.get(), "scientist"));
 
-        CompoundTag nbt = stack.getTag();
+        CompoundTag nbt = ItemNbt.getTag(stack);
         if (nbt != null && nbt.contains("lastUsed")) {
             long currentTime = System.currentTimeMillis();
             long lastUsed = nbt.getLong("lastUsed");

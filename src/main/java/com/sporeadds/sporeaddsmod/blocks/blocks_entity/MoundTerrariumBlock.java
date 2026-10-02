@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import com.sporeadds.sporeaddsmod.util.ItemNbt;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.core.BlockPos;
@@ -287,7 +289,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
         boolean hasMound = state.getValue(HAS_MOUND);
         boolean linked = state.getValue(LINKED);
 
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = ItemNbt.getOrCreateTag(stack);
         tag.putBoolean("HasMound", hasMound);
         tag.putBoolean("Linked", linked);
         if (hasMound) {
@@ -308,7 +310,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = ItemNbt.getTag(stack);
         if (tag == null) {
             return;
         }
