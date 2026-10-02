@@ -22,7 +22,7 @@ public class PlayerJoinEvents {
 
         removeAbyssalTempTridents(player);
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             spore.getMoundRegistry().cleanupDeadOrMissingMounds(player.serverLevel());
             CompoundTag nbt = new CompoundTag();
             spore.saveNBTData(nbt);

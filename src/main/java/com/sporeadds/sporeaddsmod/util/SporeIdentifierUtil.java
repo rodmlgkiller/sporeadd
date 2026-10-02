@@ -13,10 +13,10 @@ public class SporeIdentifierUtil {
     private static final String DEFAULT_SWITCHES = "00000000000000";
 
     public static boolean setIdentifierAndSync(ServerPlayer player, String newIdentifier) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).map(data -> {
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).map(data -> {
             boolean changed = data.setIdentifier(newIdentifier);
             if (changed) {
-                player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(playerData -> {
+                PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(playerData -> {
                     playerData.setSwitch(DEFAULT_SWITCHES);
                 });
                 ClassPopulationData.get(player.server).setPlayerClass(player.getUUID(), newIdentifier);
@@ -48,14 +48,14 @@ public class SporeIdentifierUtil {
     }
 
     public static void setSubclassAndSync(ServerPlayer player, String newSubclass) {
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             data.setSubclass(newSubclass);
             sync(player);
         });
     }
 
     public static void sync(ServerPlayer player) {
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             NetworkHandle.INSTANCE.send(
                     PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
                     new SyncSporeIdentifierPacket(

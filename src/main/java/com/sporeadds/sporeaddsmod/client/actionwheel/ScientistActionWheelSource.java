@@ -24,7 +24,7 @@ public final class ScientistActionWheelSource {
     }
 
     public static List<ActionWheelOption> getOptionsIfApplicable(Player player) {
-        boolean isScientist = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isScientist = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
 

@@ -36,7 +36,7 @@ public final class gluttonousBlockHarvestLogic {
 
         if (!isRemains && !isBulb) return false;
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             boolean gluttonousSubclass = gluttonousPowerHelper.isSubclassgluttonous(player);
 
             if (isRemains) {

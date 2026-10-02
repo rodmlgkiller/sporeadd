@@ -41,8 +41,8 @@ public class SyncImplantPacket {
             if (ctx.getDirection().getReceptionSide().isClient()) {
                 Player player = Minecraft.getInstance().level.getPlayerByUUID(playerUUID);
                 if (player != null) {
-                    player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
-                        implants.deserializeNBT(implantData);
+                    PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
+                        implants.deserializeNBT(player.level().registryAccess(), implantData);
                     });
                 }
             }

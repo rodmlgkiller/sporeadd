@@ -24,7 +24,7 @@ public class KommandantEyeLayer extends RenderLayer<AbstractClientPlayer, Player
     }
 
     private static boolean isKommandant(AbstractClientPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String id = data.getIdentifier();
                     return id != null && id.equals("kommandant");
@@ -33,7 +33,7 @@ public class KommandantEyeLayer extends RenderLayer<AbstractClientPlayer, Player
     }
 
     private static boolean isCaustic(AbstractClientPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.equalsIgnoreCase("caustic");
@@ -42,7 +42,7 @@ public class KommandantEyeLayer extends RenderLayer<AbstractClientPlayer, Player
     }
 
     private static boolean isAbyssal(AbstractClientPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.equalsIgnoreCase("abyssal");
@@ -51,7 +51,7 @@ public class KommandantEyeLayer extends RenderLayer<AbstractClientPlayer, Player
     }
 
     private static boolean isGluttonous(AbstractClientPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.equalsIgnoreCase("gluttonous");

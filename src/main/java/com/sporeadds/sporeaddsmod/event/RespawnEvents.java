@@ -31,17 +31,13 @@ import java.util.UUID;
 public class RespawnEvents {
 
     private static boolean hasKommandantClass(ServerPlayer player) {
-        return player.getCapability(
-                SporeIdentifierProvider.SPORE_IDENTIFIER
-        ).map(data ->
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).map(data ->
                 "kommandant".equalsIgnoreCase(data.getIdentifier())
         ).orElse(false);
     }
 
     private static boolean hasMedicClass(ServerPlayer player) {
-        return player.getCapability(
-                SporeIdentifierProvider.SPORE_IDENTIFIER
-        ).map(data ->
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).map(data ->
                 "medic".equalsIgnoreCase(data.getIdentifier())
         ).orElse(false);
     }
@@ -122,9 +118,7 @@ public class RespawnEvents {
             return;
         }
 
-        player.getCapability(
-                PlayerLevelProvider.PLAYER_LVL
-        ).ifPresent(levelData -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData -> {
             int currentPhase = levelData.getLevel();
 
             int levelsLost =
@@ -143,9 +137,7 @@ public class RespawnEvents {
             );
         });
 
-        player.getCapability(
-                PlayerSporeProvider.PLAYER_CAP
-        ).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             MinecraftServer server = player.getServer();
 
             if (server == null) {

@@ -64,7 +64,7 @@ public class BucketOfRemainsItem extends Item {
     // --- NUEVO: COMPROBACIÓN DE CLASE GHOST ---
 
     private boolean hasGhostClass(ServerPlayer sp) {
-        return sp.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).map(data -> {
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp).map(data -> {
             // COMPROBACIÓN ACTUALIZADA: solo "ghost"
             return "ghost".equals(data.getIdentifier());
         }).orElse(false);

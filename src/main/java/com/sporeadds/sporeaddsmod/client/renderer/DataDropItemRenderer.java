@@ -20,7 +20,7 @@ public class DataDropItemRenderer extends ItemEntityRenderer {
         Player localPlayer = Minecraft.getInstance().player;
 
         boolean isScientist = localPlayer != null
-                && localPlayer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+                && SporeIdentifierProvider.SPORE_IDENTIFIER.get(localPlayer)
                 .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
 

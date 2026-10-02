@@ -23,7 +23,7 @@ public class GhostCamouflageAbility {
     }
 
     private static boolean isCamouflaged(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(SporeIdentifierData::isCamouflaged)
                 .orElse(false);
     }

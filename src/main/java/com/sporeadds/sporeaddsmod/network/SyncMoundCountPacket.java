@@ -28,7 +28,7 @@ public class SyncMoundCountPacket {
         ctx.get().enqueueWork(() -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player != null) {
-                mc.player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(cap -> {
+                PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(cap -> {
                     cap.loadNBTData(msg.nbt);
                 });
             }

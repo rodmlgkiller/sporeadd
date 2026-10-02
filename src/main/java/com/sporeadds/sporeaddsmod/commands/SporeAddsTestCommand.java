@@ -43,7 +43,7 @@ public class SporeAddsTestCommand {
     private static int toggleAbility(CommandSourceStack source, ServerPlayer target, int valor) {
         int index = valor - 1;
 
-        target.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(target).ifPresent(data -> {
             String currentSwitch = data.getSwitch();
 
             if (currentSwitch == null || currentSwitch.isEmpty()) {

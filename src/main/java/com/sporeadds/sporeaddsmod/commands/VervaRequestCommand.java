@@ -39,7 +39,7 @@ public class VervaRequestCommand {
                             int index = IntegerArgumentType.getInteger(context, "moundIndex") - 1;
 
                             AtomicBoolean hasLevel = new AtomicBoolean(false);
-                            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvlCap -> {
+                            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvlCap -> {
                                 if (lvlCap.getLevel() >= 4) {
                                     hasLevel.set(true);
                                 }
@@ -64,7 +64,7 @@ public class VervaRequestCommand {
 
                             boolean isUnified = SporeAddsConfig.UNIFIED_MOUNDS_LIST.get();
 
-                            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+                            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                                 List<UUID> rawList = new ArrayList<>(spore.getMoundRegistry().getDisplayList());
 
                                 if (rawList.isEmpty()) {
@@ -146,7 +146,7 @@ public class VervaRequestCommand {
             MinecraftServer server = context.getSource().getServer();
 
             AtomicBoolean hasLevel = new AtomicBoolean(false);
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvlCap -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvlCap -> {
                 if (lvlCap.getLevel() >= 4) {
                     hasLevel.set(true);
                 }
@@ -158,7 +158,7 @@ public class VervaRequestCommand {
 
             boolean isUnified = SporeAddsConfig.UNIFIED_MOUNDS_LIST.get();
 
-            return player.getCapability(PlayerSporeProvider.PLAYER_CAP).map(spore -> {
+            return PlayerSporeProvider.PLAYER_CAP.get(player).map(spore -> {
                 List<UUID> rawList = new ArrayList<>(spore.getMoundRegistry().getDisplayList());
 
                 if (rawList.isEmpty()) {

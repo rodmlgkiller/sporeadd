@@ -66,7 +66,7 @@ public final class BackstabEventHandler {
             return;
         }
 
-        boolean isGhost = attacker.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isGhost = SporeIdentifierProvider.SPORE_IDENTIFIER.get(attacker)
                 .map(data -> "ghost".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
 
@@ -88,7 +88,7 @@ public final class BackstabEventHandler {
             return;
         }
 
-        boolean bushAbilityActive = attacker.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean bushAbilityActive = SporeIdentifierProvider.SPORE_IDENTIFIER.get(attacker)
                 .map(data -> data.isCamouflaged())
                 .orElse(false);
 
@@ -128,7 +128,7 @@ public final class BackstabEventHandler {
         }
 
         boolean targetHasActiveArmor = target instanceof ServerPlayer targetPlayer
-                && targetPlayer.getCapability(PlayerDataProvider.PLAYER_DATA)
+                && PlayerDataProvider.PLAYER_DATA.get(targetPlayer)
                 .map(data -> data.getArmorHp() > 0)
                 .orElse(false);
 

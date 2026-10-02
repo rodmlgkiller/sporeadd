@@ -74,9 +74,7 @@ public class SyncScientistResearchPacket {
             return;
         }
 
-        boolean isScientist = mc.player.getCapability(
-                com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER
-        ).map(d -> "scientist".equalsIgnoreCase(d.getIdentifier())).orElse(false);
+        boolean isScientist = com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(mc.player).map(d -> "scientist".equalsIgnoreCase(d.getIdentifier())).orElse(false);
 
         if (!isScientist) {
             return;

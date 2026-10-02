@@ -51,7 +51,7 @@ public class KommandantBlockLayer extends RenderLayer<AbstractClientPlayer, Play
     }
 
     private static boolean isKommandant(AbstractClientPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String id = data.getIdentifier();
                     return id != null && id.equals("kommandant");

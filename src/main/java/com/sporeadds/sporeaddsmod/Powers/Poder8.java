@@ -56,14 +56,14 @@ public class Poder8 extends PowerBase {
         Level level = player.level();
         if (!(level instanceof ServerLevel serverLevel)) return;
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(idData -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(idData -> {
             boolean isAbyssal = "kommandant".equalsIgnoreCase(idData.getIdentifier())
                     && "abyssal".equalsIgnoreCase(idData.getSubclass());
 
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 int currentPhase = spore.getSpore();
 
-                player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(new NonNullConsumer<PlayerLevel>() {
+                PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(new NonNullConsumer<PlayerLevel>() {
                     @Override
                     public void accept(PlayerLevel lvl) {
                         if (lvl == null) return;

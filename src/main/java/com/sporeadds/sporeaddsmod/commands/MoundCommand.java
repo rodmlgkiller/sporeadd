@@ -25,7 +25,7 @@ public class MoundCommand {
                 .then(Commands.argument("target", StringArgumentType.word())
                         .suggests((context, builder) -> {
                             if (context.getSource().getEntity() instanceof ServerPlayer player) {
-                                player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+                                PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                                     List<UUID> list = spore.getMoundRegistry().getDisplayList();
 
                                     for (int i = 0; i < list.size(); i++) {
@@ -64,7 +64,7 @@ public class MoundCommand {
     private static int selectPreferred(CommandSourceStack source, String target) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer player = source.getPlayerOrException();
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             UUID chosenMound = resolveTarget(spore, target);
 
             if (chosenMound == null) {
@@ -97,7 +97,7 @@ public class MoundCommand {
     private static int removeMound(CommandSourceStack source, String target) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer player = source.getPlayerOrException();
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             UUID chosenMound = resolveTarget(spore, target);
 
             if (chosenMound == null) {
@@ -139,7 +139,7 @@ public class MoundCommand {
     private static int renameMound(CommandSourceStack source, String target, String newName) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
         ServerPlayer player = source.getPlayerOrException();
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             UUID chosenMound = resolveTarget(spore, target);
 
             if (chosenMound == null) {

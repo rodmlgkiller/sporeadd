@@ -78,7 +78,7 @@ public class ScalpelItem extends Item {
         }
 
         return player instanceof ServerPlayer sp
-                && sp.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+                && SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp)
                 .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
@@ -131,7 +131,7 @@ public class ScalpelItem extends Item {
         }
 
         if (target instanceof ServerPlayer targetPlayer) {
-            boolean targetIsKommandant = targetPlayer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+            boolean targetIsKommandant = SporeIdentifierProvider.SPORE_IDENTIFIER.get(targetPlayer)
                     .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                     .orElse(false);
 
@@ -185,7 +185,7 @@ public class ScalpelItem extends Item {
             return;
         }
 
-        boolean victimIsKommandant = victim.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean victimIsKommandant = SporeIdentifierProvider.SPORE_IDENTIFIER.get(victim)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
 

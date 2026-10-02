@@ -156,7 +156,7 @@ public class DecoyAggroHandler {
     }
 
     private static boolean isGhostAndInvisible(ServerPlayer player) {
-        boolean isGhost = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isGhost = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "ghost".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
 

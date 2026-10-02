@@ -37,7 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import net.neoforged.bus.api.SubscribeEvent;
 import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 import virtuoel.pehkui.api.ScaleData;
@@ -59,7 +59,7 @@ public class Poder13Variants {
     private static final float CAUSTIC_EMERGE_SHAKE_INTENSITY = 3.0F;
 
     public static boolean isAbyssal(Player player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "abyssal".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }
@@ -293,7 +293,7 @@ public class Poder13Variants {
             int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get() / 2;
 
             if (levelsToLose > 0 && player.isAlive()) {
-                player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+                PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData -> {
                     int newLevel = Math.max(0, levelData.getLevel() - levelsToLose);
                     levelData.setLevel(newLevel);
                 });
@@ -303,7 +303,7 @@ public class Poder13Variants {
     }
 
     public static boolean isgluttonous(Player player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "gluttonous".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }
@@ -312,7 +312,7 @@ public class Poder13Variants {
 
     public static void activategluttonous(ServerLevel level, Player player) {
         if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            var playerDataCap = serverPlayer.getCapability(com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider.PLAYER_DATA);
+            var playerDataCap = com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider.PLAYER_DATA.get(serverPlayer);
             if (playerDataCap.isPresent() && playerDataCap.orElseThrow(IllegalStateException::new).getArmorHp() < 1) {
                 return;
             }
@@ -335,7 +335,7 @@ public class Poder13Variants {
         }
 
         if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            serverPlayer.getCapability(com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider.PLAYER_DATA.get(serverPlayer).ifPresent(data -> {
                 int currentArmor = data.getArmorHp();
                 int maxArmor = Poder12Variants.getEffectiveArmorCap(serverPlayer);
                 int newArmor = Math.min(maxArmor, currentArmor + 1);
@@ -466,7 +466,7 @@ public class Poder13Variants {
 
         int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get();
         if (levelsToLose > 0) {
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData ->
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData ->
                     levelData.setLevel(Math.max(0, levelData.getLevel() - levelsToLose)));
             player.sendSystemMessage(Component.translatable("message.sporeadd.power13.grow_weaker").withStyle(ChatFormatting.RED));
         }

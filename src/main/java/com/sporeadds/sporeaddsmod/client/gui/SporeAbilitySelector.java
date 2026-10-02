@@ -87,10 +87,10 @@ public class SporeAbilitySelector extends Screen {
     @Override
     protected void init() {
         assert mc.player != null;
-        mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl -> {
+        PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(lvl -> {
             Sporelvl = lvl.getLevel() + 4;
         });
-        mc.player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(mc.player).ifPresent(data -> {
             Switches = data.getSwitch();
         });
 
@@ -129,7 +129,7 @@ public class SporeAbilitySelector extends Screen {
                             }
                             Switches = new String(chars);
                             NetworkHandle.INSTANCE.sendToServer(new DataToServer(Switches));
-                            mc.player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> data.setSwitch(Switches));
+                            PlayerDataProvider.PLAYER_DATA.get(mc.player).ifPresent(data -> data.setSwitch(Switches));
                         }
                     }
                 }));
@@ -157,7 +157,7 @@ public class SporeAbilitySelector extends Screen {
     private List<Component> getAbilityDescription(int abilityNumber) {
         if (mc.player != null) {
             String subclass = "none";
-            var cap = mc.player.getCapability(com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER);
+            var cap = com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(mc.player);
             if (cap.isPresent()) {
                 subclass = cap.orElseThrow(IllegalStateException::new).getSubclass();
             }
@@ -179,7 +179,7 @@ public class SporeAbilitySelector extends Screen {
             case 1:
                 tooltip.add(Component.translatable("tooltip.sporeadd.power1.title"));
                 if (mc.player != null) {
-                    mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
                         int curKnowledge = levelCap.getKnowledgeLevel();
 
@@ -188,7 +188,7 @@ public class SporeAbilitySelector extends Screen {
                         ItemStack main = mc.player.getMainHandItem();
                         ItemStack off = mc.player.getOffhandItem();
 
-                        mc.player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+                        SporeIdentifierProvider.SPORE_IDENTIFIER.get(mc.player).ifPresent(data -> {
                             if ("kommandant".equalsIgnoreCase(data.getIdentifier())) {
                                 if (main.getItem() instanceof MutagenicCompoundItem) {
                                     MutagenicCompoundVariant mainVariant = MutagenicCompoundItem.getVariant(main);
@@ -314,7 +314,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power2.title"));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int level = levelCap.getLevel();
 
                         boolean isActive = false;
@@ -364,7 +364,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power3.title"));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+                    PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(spore -> {
                         int cost = 15;
                         String biomassColor = (Spore >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
@@ -541,7 +541,7 @@ public class SporeAbilitySelector extends Screen {
                     tooltip.add(Component.translatable("tooltip.sporeadd.power6.cost_discount1"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power6.cost_discount2"));
 
-                    mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int rawLevel = levelCap.getLevel();
                         int sporeLevel = Math.max(rawLevel, 0);
 
@@ -606,7 +606,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power8.title"));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
                         int cost = 15;
                         String biomassColor = (Spore >= cost) ? "§a" : "§c";
@@ -674,7 +674,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power9.title"));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
                         int cost = 5;
                         String biomassColor = (Spore >= cost) ? "§a" : "§c";
@@ -743,7 +743,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power11.title"));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
                         int reqLevel = 7;
                         int cost = 20;
@@ -938,7 +938,7 @@ public class SporeAbilitySelector extends Screen {
         // Obtenemos la subclase del jugador para elegir la textura base
         String subclass = "none";
         if (mc.player != null) {
-            var cap = mc.player.getCapability(com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER);
+            var cap = com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(mc.player);
             if (cap.isPresent()) {
                 subclass = cap.orElseThrow(IllegalStateException::new).getSubclass();
             }
@@ -974,7 +974,7 @@ public class SporeAbilitySelector extends Screen {
         );
 // Datos de jugador
         assert mc.player != null;
-        mc.player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(cap -> {
+        PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(cap -> {
             Spore = cap.getSpore();
         });
 

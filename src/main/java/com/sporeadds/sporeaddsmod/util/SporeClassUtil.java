@@ -9,7 +9,7 @@ public final class SporeClassUtil {
     }
 
     public static boolean hasClass(Player player, String classId) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> classId.equals(data.getIdentifier()))
                 .orElse(false);
     }

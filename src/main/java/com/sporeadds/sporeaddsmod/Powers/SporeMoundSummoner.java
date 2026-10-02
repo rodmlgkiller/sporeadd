@@ -27,7 +27,7 @@ import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 public class SporeMoundSummoner {
 
     public static void spawnMound(ServerPlayer player) {
-        var cap = player.getCapability(PlayerSporeProvider.PLAYER_CAP);
+        var cap = PlayerSporeProvider.PLAYER_CAP.get(player);
 
         cap.ifPresent(spore -> {
 

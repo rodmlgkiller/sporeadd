@@ -43,7 +43,7 @@ public class HandlerEvents_DefenseBypassMixin {
         // Si todavía tiene armadura del Poder12, NO hacer nada aquí.
         // Poder12 ya lo resuelve en LivingHurtEvent.
         if (target instanceof ServerPlayer serverTarget) {
-            var opt = serverTarget.getCapability(PlayerDataProvider.PLAYER_DATA).resolve();
+            var opt = PlayerDataProvider.PLAYER_DATA.get(serverTarget).resolve();
             if (opt.isPresent() && opt.get().getArmorHp() > 0) {
                 return;
             }

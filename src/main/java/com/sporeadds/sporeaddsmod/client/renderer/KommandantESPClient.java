@@ -260,13 +260,13 @@ public final class KommandantESPClient {
     }
 
     private static boolean isKommandant(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
 
     private static boolean isAbyssal(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data ->
                         "kommandant".equalsIgnoreCase(data.getIdentifier()) &&
                                 "abyssal".equalsIgnoreCase(data.getSubclass()))
@@ -274,7 +274,7 @@ public final class KommandantESPClient {
     }
 
     private static boolean isMedic(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "medic".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }

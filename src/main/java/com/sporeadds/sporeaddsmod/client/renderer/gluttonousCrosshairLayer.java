@@ -19,7 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -44,7 +44,7 @@ public class gluttonousCrosshairLayer extends RenderLayer<AbstractClientPlayer, 
     }
 
     public static boolean isValidgluttonous(Player player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             SporeIdentifierData data = cap.orElseThrow(IllegalStateException::new);
             return "gluttonous".equalsIgnoreCase(data.getSubclass())

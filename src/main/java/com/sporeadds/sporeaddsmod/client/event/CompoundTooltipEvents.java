@@ -22,7 +22,7 @@ public class CompoundTooltipEvents {
 
     private static boolean isBerserker(Player player) {
         if (player == null) return false;
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "berserker".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }

@@ -144,7 +144,7 @@ public final class SelfDefibrillateAbility {
     }
 
     private static boolean isMedic(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "medic".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }

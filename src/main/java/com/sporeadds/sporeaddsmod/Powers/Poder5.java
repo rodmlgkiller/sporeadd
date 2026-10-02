@@ -57,7 +57,7 @@ public class Poder5 {
         );
 
         if (blockId != null && collectableBlocks.contains(blockId) && player.isCrouching()) {
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 if (data.getSwitch().length() > 5 && data.getSwitch().charAt(5) == '1') {
                     ItemStack itemStack = new ItemStack(clickedBlock);
                     boolean given = player.getInventory().add(itemStack);
@@ -94,9 +94,9 @@ public class Poder5 {
         );
 
         if (blockId != null && biomassBlocks.contains(blockId)) {
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 if (data.getSwitch().length() > 5 && data.getSwitch().charAt(5) == '1') {
-                    player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+                    PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                         if (player.level().getBlockEntity(pos) instanceof com.Harbinger.Spore.SBlockEntities.LivingStructureBlocks be) {
 
                             if (spore.getSpore() >= 1) {

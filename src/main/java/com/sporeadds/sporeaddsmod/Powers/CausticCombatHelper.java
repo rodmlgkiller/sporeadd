@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 public class CausticCombatHelper {
 
     public static boolean isCaustic(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.trim().equalsIgnoreCase("caustic");
@@ -20,7 +20,7 @@ public class CausticCombatHelper {
     }
 
     public static boolean hasActiveArmor(ServerPlayer player) {
-        return player.getCapability(PlayerDataProvider.PLAYER_DATA)
+        return PlayerDataProvider.PLAYER_DATA.get(player)
                 .map(data -> data.getArmorHp() > 0)
                 .orElse(false);
     }

@@ -27,7 +27,7 @@ public class ServerToData {
     public static void handle(ServerToData msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                Minecraft.getInstance().player.getCapability(PlayerDataProvider.PLAYER_DATA)
+                PlayerDataProvider.PLAYER_DATA.get(Minecraft.getInstance().player)
                         .ifPresent(cap -> cap.setSwitch(msg.value));
             });
         });

@@ -37,7 +37,7 @@ public class ScientistMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
+        ForgeCapabilities.ITEM_HANDLER.get(this.blockEntity).ifPresent(iItemHandler -> {
             // Slot azul (biomasa)
             this.addSlot(new SlotItemHandler(iItemHandler, 0, 11, 20));
             // Slot papel

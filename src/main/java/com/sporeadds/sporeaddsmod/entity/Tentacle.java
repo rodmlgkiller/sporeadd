@@ -147,7 +147,7 @@ public class Tentacle extends Organoid {
             return 0;
         }
 
-        return serverPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL)
+        return PlayerLevelProvider.PLAYER_LVL.get(serverPlayer)
                 .map(cap -> cap.getLevel())
                 .orElse(0);
     }

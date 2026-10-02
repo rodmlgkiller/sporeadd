@@ -69,7 +69,7 @@ public class SubclassAbility {
         bullet.setYRot(player.getYRot());
 
         AtomicInteger playerLvl = new AtomicInteger(0);
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvlCap -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvlCap -> {
             playerLvl.set(lvlCap.getLevel());
         });
 

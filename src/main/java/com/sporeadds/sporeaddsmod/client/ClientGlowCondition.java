@@ -28,7 +28,7 @@ public class ClientGlowCondition {
         if (localPlayer.distanceTo(targetPlayer) > 100.0f) return false;
 
         // 4. El jugador local debe ser nivel 7 o superior
-        return localPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL)
+        return PlayerLevelProvider.PLAYER_LVL.get(localPlayer)
                 .map(lvl -> lvl.getLevel() >= 7)
                 .orElse(false);
     }

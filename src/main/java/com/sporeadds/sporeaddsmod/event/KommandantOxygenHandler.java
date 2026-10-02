@@ -8,7 +8,7 @@ import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -23,7 +23,7 @@ public class KommandantOxygenHandler {
     private static final Map<UUID, Double> serverDebtMap = new ConcurrentHashMap<>();
 
     private static boolean isKommandant(Player player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "kommandant".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getIdentifier());
         }
@@ -31,7 +31,7 @@ public class KommandantOxygenHandler {
     }
 
     private static boolean isAbyssal(Player player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "abyssal".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }

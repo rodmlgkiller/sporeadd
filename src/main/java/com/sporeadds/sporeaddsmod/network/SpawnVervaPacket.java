@@ -221,7 +221,7 @@ public class SpawnVervaPacket {
                 return;
             }
 
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(sporeCap -> {
                 if (sporeCap.getSpore() < realCost) {
                     player.displayClientMessage(
                             Component.translatable("message.sporeadd.spawn_verva.not_enough_biomass"),

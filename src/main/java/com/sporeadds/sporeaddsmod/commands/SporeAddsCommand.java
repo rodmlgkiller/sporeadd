@@ -125,7 +125,7 @@ public class SporeAddsCommand {
     }
 
     private static int executeLevel(CommandContext<CommandSourceStack> context, ServerPlayer target, int value) {
-        target.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> {
+        PlayerLevelProvider.PLAYER_LVL.get(target).ifPresent(level -> {
             level.setLevel(value);
 
             // Sincronizar con el cliente usando el mismo paquete que usa el provider.
@@ -148,7 +148,7 @@ public class SporeAddsCommand {
     }
 
     private static int executeKnowledgeLevel(CommandContext<CommandSourceStack> context, ServerPlayer target, int value) {
-        target.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> {
+        PlayerLevelProvider.PLAYER_LVL.get(target).ifPresent(level -> {
             level.setKnowledgeLevel(value);
 
             // Forzamos sincronización del level + knowledge al cliente
@@ -187,7 +187,7 @@ public class SporeAddsCommand {
     }
 
     private static int executeBiomass(CommandContext<CommandSourceStack> context, ServerPlayer target, int value) {
-        target.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(target).ifPresent(spore -> {
             spore.setSpore(value);
 
             // Si tienes un packet específico para spore, úsalo; aquí asumo que existe:

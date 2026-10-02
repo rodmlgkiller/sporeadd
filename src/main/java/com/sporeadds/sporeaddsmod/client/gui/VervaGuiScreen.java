@@ -119,7 +119,7 @@ public class VervaGuiScreen extends Screen {
 
         Player player = Minecraft.getInstance().player;
         if (player != null) {
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(cap -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(cap -> {
                 this.playerSporeLevel = cap.getLevel();
             });
         }

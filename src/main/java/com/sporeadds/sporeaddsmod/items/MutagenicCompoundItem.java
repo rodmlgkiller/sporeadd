@@ -166,7 +166,7 @@ public class MutagenicCompoundItem extends Item {
 
         MutagenicCompoundVariant itemVariant = getVariant(stack);
 
-        sp.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp).ifPresent(data -> {
             if (!"kommandant".equalsIgnoreCase(data.getIdentifier())) {
                 sp.displayClientMessage(
                         Component.translatable("message.sporeadd.mutagenic_compound.not_kommandant")

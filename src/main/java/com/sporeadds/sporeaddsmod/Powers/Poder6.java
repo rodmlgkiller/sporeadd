@@ -33,7 +33,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import org.joml.Vector3f;
 
 import java.util.Set;
@@ -83,7 +83,7 @@ public class Poder6 {
         if (!(player instanceof ServerPlayer serverPlayer)) return false;
 
         AtomicBoolean enabled = new AtomicBoolean(false);
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             if (data.getSwitch().length() > 6 && data.getSwitch().charAt(6) == '1') {
                 enabled.set(true);
             }
@@ -142,8 +142,8 @@ public class Poder6 {
             return true;
         }
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                 int rawLevel = levelCap.getLevel();
                 int sporeLevel = Math.max(rawLevel, 0);
                 int effectDuration = 20 + sporeLevel * 3;
@@ -249,7 +249,7 @@ public class Poder6 {
     }
 
     static boolean isCaustic(ServerPlayer player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "caustic".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }
@@ -257,7 +257,7 @@ public class Poder6 {
     }
 
     static boolean isAbyssal(ServerPlayer player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "abyssal".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }

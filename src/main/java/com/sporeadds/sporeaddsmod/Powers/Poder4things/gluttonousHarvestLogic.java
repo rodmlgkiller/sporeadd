@@ -82,7 +82,7 @@ public final class gluttonousHarvestLogic {
                 ? player.getRandom().nextIntBetweenInclusive(1, 2)
                 : player.getRandom().nextIntBetweenInclusive(3, 5);
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> spore.addSpore(biomassReward));
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> spore.addSpore(biomassReward));
 
         if (player instanceof ServerPlayer serverPlayer) {
             for (int i = 0; i < genericFoodReward; i++) {

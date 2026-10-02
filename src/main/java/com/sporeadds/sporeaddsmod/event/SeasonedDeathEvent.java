@@ -90,7 +90,7 @@ public class SeasonedDeathEvent {
     }
 
     private static boolean isSporePlayer(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String id = data.getIdentifier();
                     return id != null && !id.isBlank() && !"human".equalsIgnoreCase(id);

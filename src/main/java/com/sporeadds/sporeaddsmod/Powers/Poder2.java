@@ -47,9 +47,9 @@ public class Poder2 {
 
         if (source.getEntity() instanceof Player player) {
             if (!source.is(DamageTypes.MAGIC) && !source.is(DamageTypes.EXPLOSION)) {
-                player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+                PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                     if (data.getSwitch().length() > 2 && data.getSwitch().charAt(2) == '1') {
-                        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                             int level = levelCap.getLevel();
 
                             if (level >= 0) {
@@ -79,7 +79,7 @@ public class Poder2 {
         if (target.getHealth() <= 0) return false;
 
         AtomicBoolean enabled = new AtomicBoolean(false);
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             if (data.getSwitch().length() > 2 && data.getSwitch().charAt(2) == '1') {
                 enabled.set(true);
             }
@@ -340,10 +340,10 @@ public class Poder2 {
                 );
             }
         } else if (target.getType() == EntityType.ZOMBIE || target.getType() == EntityType.DROWNED || target.getType() == EntityType.HUSK) {
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 if (spore.getSpore() >= 1) {
                     spore.setSpore(spore.getSpore() - 1);
-                    player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                         int levelphase = levelCap.getLevel();
                         int probability = 20 + (levelphase * 5);
                         int zRoll = player.getRandom().nextInt(100) + 1;

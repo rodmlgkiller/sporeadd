@@ -25,7 +25,7 @@ public final class PrestigeManager {
         int rarity = TrackedEntities.getRarity(entityId);
         Requirement req = getRequirement(rarity);
 
-        return player.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH)
+        return ScientistResearchProvider.SCIENTIST_RESEARCH.get(player)
                 .map(research -> research.getKillCount(entityId) >= req.kills()
                         && research.getDataAmount(entityId) >= req.data())
                 .orElse(false);
@@ -39,9 +39,7 @@ public final class PrestigeManager {
 
     public static boolean isPrestigedByAnyScientist(net.minecraft.server.MinecraftServer server, String entityId) {
         for (ServerPlayer online : server.getPlayerList().getPlayers()) {
-            boolean isScientist = online.getCapability(
-                    com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER
-            ).map(data -> "scientist".equalsIgnoreCase(data.getIdentifier())).orElse(false);
+            boolean isScientist = com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(online).map(data -> "scientist".equalsIgnoreCase(data.getIdentifier())).orElse(false);
 
             if (!isScientist) {
                 continue;

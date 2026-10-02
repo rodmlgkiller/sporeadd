@@ -62,7 +62,7 @@ public class BiomassCoreItem extends Item {
     private boolean hasKommandantClass(Player player) {
         if (!(player instanceof ServerPlayer sp)) return false;
 
-        return sp.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp)
                 .map(data -> "kommandant".equals(data.getIdentifier()))
                 .orElse(false);
     }
@@ -136,7 +136,7 @@ public class BiomassCoreItem extends Item {
         }
 
         final int[] playerLevel = {0};
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
             playerLevel[0] = levelCap.getLevel();
         });
 

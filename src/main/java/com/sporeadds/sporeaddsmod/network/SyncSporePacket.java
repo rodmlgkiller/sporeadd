@@ -32,7 +32,7 @@ public class SyncSporePacket {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player != null) {
-                    player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(cap -> {
+                    PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(cap -> {
                         cap.setSpore(msg.spore);
                     });
                 }
@@ -42,7 +42,7 @@ public class SyncSporePacket {
     }
 
     public static void syncManaToClient(ServerPlayer player) {
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(cap -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(cap -> {
             NetworkHandle.INSTANCE.sendTo(
                     new SyncSporePacket(cap.getSpore()),
                     player.connection.connection,

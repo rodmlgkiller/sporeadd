@@ -38,7 +38,7 @@ public class SporeDefenseHandler {
         if (defender.getTeam() == null || !defender.getTeam().getName().equals("spore")) return;
 
         // Verificar que el defensor es nivel 7 o mayor
-        defender.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+        PlayerLevelProvider.PLAYER_LVL.get(defender).ifPresent(levelCap -> {
             if (levelCap.getLevel() >= 7) {
 
                 // 30% de probabilidad de bloquear el ataque

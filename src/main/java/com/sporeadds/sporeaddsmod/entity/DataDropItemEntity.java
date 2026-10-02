@@ -37,7 +37,7 @@ public class DataDropItemEntity extends ItemEntity {
 
     private static boolean isScientist(Player player) {
         return player instanceof ServerPlayer sp
-                && sp.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+                && SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp)
                 .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
@@ -63,7 +63,7 @@ public class DataDropItemEntity extends ItemEntity {
                 ? stack.getTag().getString(SOURCE_ENTITY_TAG)
                 : "unknown";
 
-        serverPlayer.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).ifPresent(research -> {
+        ScientistResearchProvider.SCIENTIST_RESEARCH.get(serverPlayer).ifPresent(research -> {
             com.sporeadds.sporeaddsmod.research.ResearchEventHelper.recordData(
                     serverPlayer, research, sourceEntityId, amount
             );

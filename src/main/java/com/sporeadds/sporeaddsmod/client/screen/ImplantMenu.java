@@ -111,8 +111,8 @@ public class ImplantMenu extends AbstractContainerMenu {
 
         implantInventory.saveToPlayer();
 
-        targetPlayer.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
-            CompoundTag data = implants.serializeNBT();
+        PlayerImplantsCapability.PLAYER_IMPLANTS.get(targetPlayer).ifPresent(implants -> {
+            CompoundTag data = implants.serializeNBT(targetPlayer.level().registryAccess());
 
             if (!this.player.equals(this.targetPlayer)) {
                 NetworkHandle.INSTANCE.send(
@@ -171,7 +171,7 @@ public class ImplantMenu extends AbstractContainerMenu {
         }
 
         private void loadFromPlayer() {
-            player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
+            PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
                 for (PlayerImplantsCapability.ImplantType type : PlayerImplantsCapability.ImplantType.values()) {
                     setStackInSlot(type.getIndex(), implants.getImplant(type));
                 }
@@ -185,7 +185,7 @@ public class ImplantMenu extends AbstractContainerMenu {
             if (!loadedFromCapability) {
                 return;
             }
-            player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
+            PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
                 for (PlayerImplantsCapability.ImplantType type : PlayerImplantsCapability.ImplantType.values()) {
                     ItemStack stack = getStackInSlot(type.getIndex());
                     implants.setImplant(type, stack.isEmpty() ? ItemStack.EMPTY : stack.copy());

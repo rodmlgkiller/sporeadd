@@ -30,7 +30,7 @@ public class ArmorGui {
             return;
         }
 
-        mc.player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(armor -> {
+        PlayerDataProvider.PLAYER_DATA.get(mc.player).ifPresent(armor -> {
             int armorHp = PlayerDataClient.getClientArmorHp();
 
             // Obtenemos el máximo de armadura específico de este jugador
@@ -51,7 +51,7 @@ public class ArmorGui {
 
             float alpha = SporeAddsClientConfig.ARMOR_BAR_OPACITY.get().floatValue();
 
-            mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> {
+            PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(level -> {
                 if (level.getLevel() >= 8 || armorHp > 0) {
                     RenderSystem.enableBlend();
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);

@@ -26,7 +26,7 @@ public class SporeArmorBossBar {
     }
 
     private static Component buildBossBarName(Player owner) {
-        String subclass = owner.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        String subclass = SporeIdentifierProvider.SPORE_IDENTIFIER.get(owner)
                 .map(data -> data.getSubclass() == null ? "default" : data.getSubclass().trim().toLowerCase())
                 .orElse("default");
 

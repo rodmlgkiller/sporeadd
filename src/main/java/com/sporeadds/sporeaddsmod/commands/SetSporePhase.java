@@ -16,7 +16,7 @@ public class SetSporePhase {
                 .then(Commands.argument("phase", IntegerArgumentType.integer(0, 50))
                         .executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
-                            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+                            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                                 spore.setSpore(IntegerArgumentType.getInteger(context, "phase"));
                                 context.getSource().sendSuccess(() -> Component.literal("§4Current biomass:" + spore.getSpore()), true);
                             });

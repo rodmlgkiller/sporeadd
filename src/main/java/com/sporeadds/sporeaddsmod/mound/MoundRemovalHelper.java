@@ -105,7 +105,7 @@ public class MoundRemovalHelper {
             }
 
             if (owner != null) {
-                owner.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+                PlayerSporeProvider.PLAYER_CAP.get(owner).ifPresent(spore -> {
                     boolean changed = false;
                     for (UUID moundUUID : confirmedGone) {
                         changed |= spore.getMoundRegistry().remove(moundUUID);

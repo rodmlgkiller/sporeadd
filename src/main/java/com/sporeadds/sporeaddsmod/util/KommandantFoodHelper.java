@@ -13,7 +13,7 @@ import java.util.List;
 public class KommandantFoodHelper {
 
     public static boolean isKommandant(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equals(data.getIdentifier()))
                 .orElse(false);
     }

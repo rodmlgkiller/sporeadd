@@ -26,7 +26,7 @@ public class DataToServer{
     public static void handle(DataToServer msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(cap -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(cap -> {
                 cap.setSwitch(msg.data);
                 NetworkHandle.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player),
                         new DataToServer(cap.getSwitch()));

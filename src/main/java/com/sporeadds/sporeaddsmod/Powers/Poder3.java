@@ -34,7 +34,7 @@ public class Poder3 extends PowerBase {
 
     @Override
     public void use(ServerPlayer player) {
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             int currentSpore = spore.getSpore();
 
             if (currentSpore < 15) {

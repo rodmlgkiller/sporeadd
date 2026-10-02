@@ -34,7 +34,7 @@ public final class CompoundEffects {
     /** Cuenta las syringes por tipo en el inventario de Compounds del jugador. */
     public static EnumMap<CompoundType, Integer> counts(ServerPlayer player) {
         EnumMap<CompoundType, Integer> map = new EnumMap<>(CompoundType.class);
-        player.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).ifPresent(store -> {
+        CompoundsCapability.PLAYER_COMPOUNDS.get(player).ifPresent(store -> {
             for (int i = 0; i < store.size(); i++) {
                 CompoundType type = CompoundType.fromItem(store.getStack(i).getItem());
                 if (type != null) {
@@ -161,7 +161,7 @@ public final class CompoundEffects {
     public static void syncToClient(ServerPlayer player) {
         ItemStack[] arr = new ItemStack[CompoundsCapability.SIZE];
         java.util.Arrays.fill(arr, ItemStack.EMPTY);
-        player.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).ifPresent(store -> {
+        CompoundsCapability.PLAYER_COMPOUNDS.get(player).ifPresent(store -> {
             for (int i = 0; i < store.size() && i < arr.length; i++) {
                 ItemStack s = store.getStack(i);
                 arr[i] = s == null ? ItemStack.EMPTY : s;
@@ -172,7 +172,7 @@ public final class CompoundEffects {
 
     /** Suelta al suelo y vacía las syringes de Compounds (al dejar la clase berserker). */
     public static void dropAndClearCompounds(ServerPlayer player) {
-        player.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).ifPresent(store -> {
+        CompoundsCapability.PLAYER_COMPOUNDS.get(player).ifPresent(store -> {
             for (int i = 0; i < store.size(); i++) {
                 ItemStack s = store.getStack(i);
                 if (!s.isEmpty()) {

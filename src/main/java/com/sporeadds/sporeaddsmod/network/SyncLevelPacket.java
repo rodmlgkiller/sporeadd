@@ -35,7 +35,7 @@ public class SyncLevelPacket {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player != null) {
-                    player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(cap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(cap -> {
                         cap.setLevel(msg.level);
                         cap.setKnowledgeLevel(msg.knowledgeLevel);
                     });
@@ -46,7 +46,7 @@ public class SyncLevelPacket {
     }
 
     public static void syncLevelToClient(ServerPlayer player) {
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(cap -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(cap -> {
             NetworkHandle.INSTANCE.sendTo(
                     new SyncLevelPacket(cap.getLevel(), cap.getKnowledgeLevel()),
                     player.connection.connection,

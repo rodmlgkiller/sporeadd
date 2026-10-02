@@ -148,7 +148,7 @@ public class Poder12 {
     }
 
     public static void activate(ServerPlayer player) {
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             int currentSpore = spore.getSpore();
             if (currentSpore < SPORE_COST) {
                 player.sendSystemMessage(Component.literal("§4Not enough biomass"));
@@ -157,7 +157,7 @@ public class Poder12 {
 
             spore.subSpore(SPORE_COST);
 
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 if (data.getArmorHp() == 0) {
                     dropArmorSlots(player);
                 }
@@ -224,7 +224,7 @@ public class Poder12 {
         if (effectInstance == null) return;
         if (effectInstance.getEffect() != MobEffects.HEAL) return;
 
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             if (data.getArmorHp() <= 0) return;
 
             int amplifier = Math.max(0, effectInstance.getAmplifier());
@@ -254,7 +254,7 @@ public class Poder12 {
         // El daño que ignora invulnerabilidad (/kill, vacío, castigo del Proto...) no lo absorbe la armadura.
         if (event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
 
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             int armorHp = data.getArmorHp();
             if (armorHp <= 0) return;
 
@@ -388,7 +388,7 @@ public class Poder12 {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer serverPlayer)) return;
 
-        serverPlayer.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(serverPlayer).ifPresent(data -> {
             int currentHp = data.getArmorHp();
             UUID playerId = serverPlayer.getUUID();
             int previousHp = PREVIOUS_ARMOR_HP.getOrDefault(playerId, 0);
@@ -438,7 +438,7 @@ public class Poder12 {
                 gluttonous_CRITICAL_TRIGGERED.remove(playerId);
 
                 if (Poder12Variants.isgluttonous(serverPlayer)) {
-                    serverPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(serverPlayer).ifPresent(levelData -> {
                         int currentLevel = levelData.getLevel();
                         if (currentLevel > 0) {
                             levelData.setLevel(currentLevel - 1);
@@ -479,7 +479,7 @@ public class Poder12 {
                         boolean canTriggerPower13 = famined == null || !serverPlayer.hasEffect(famined);
 
                         if (canTriggerPower13) {
-                            serverPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+                            PlayerLevelProvider.PLAYER_LVL.get(serverPlayer).ifPresent(levelData -> {
                                 if (levelData.getLevel() >= 9) {
                                     Poder13Variants.activategluttonous((ServerLevel) serverPlayer.level(), serverPlayer);
                                 }

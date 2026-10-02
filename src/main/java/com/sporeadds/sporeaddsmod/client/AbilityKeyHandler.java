@@ -237,7 +237,7 @@ public class AbilityKeyHandler {
                 );
             } else if (!(mc.screen instanceof VervaGuiScreen) && !(mc.screen instanceof VervaVariantGuiScreen)) {
                 AtomicInteger playerLevel = new AtomicInteger(0);
-                mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl -> {
+                PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(lvl -> {
                     playerLevel.set(lvl.getLevel());
                 });
 
@@ -259,7 +259,7 @@ public class AbilityKeyHandler {
         if (mc.player == null) return;
 
         AtomicInteger sporeLevel = new AtomicInteger(0);
-        mc.player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl -> {
+        PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(lvl -> {
             sporeLevel.set(lvl.getLevel() + 4);
         });
 
@@ -273,7 +273,7 @@ public class AbilityKeyHandler {
             case 5:
             case 6:
             case 7:
-                mc.player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+                PlayerDataProvider.PLAYER_DATA.get(mc.player).ifPresent(data -> {
                     String switches = data.getSwitch();
                     if (switches != null && switches.length() > abilityNumber) {
                         char[] chars = switches.toCharArray();
@@ -299,7 +299,7 @@ public class AbilityKeyHandler {
     private static boolean hasKommandantClass() {
         var player = Minecraft.getInstance().player;
         if (player == null) return false;
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equals(data.getIdentifier()))
                 .orElse(false);
     }
@@ -307,13 +307,13 @@ public class AbilityKeyHandler {
     private static boolean hasBerserkerClass() {
         var player = Minecraft.getInstance().player;
         if (player == null) return false;
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "berserker".equals(data.getIdentifier()))
                 .orElse(false);
     }
 
     private static boolean hasSubclass(net.minecraft.world.entity.player.Player player, String mainClass, String subClass) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).map(data ->
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).map(data ->
                 mainClass.equals(data.getIdentifier()) && subClass.equals(data.getSubclass())
         ).orElse(false);
     }

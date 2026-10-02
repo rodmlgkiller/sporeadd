@@ -48,7 +48,7 @@ public class SporeArmorBossBarManager {
         UUID playerId = player.getUUID();
 
         AtomicInteger currentArmorHp = new AtomicInteger(0);
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             currentArmorHp.set(data.getArmorHp());
         });
 

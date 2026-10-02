@@ -64,7 +64,7 @@ public class Poder1 extends PowerBase {
             return;
         }
 
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
             int curLevel = levelCap.getLevel();
             int curKnowledge = levelCap.getKnowledgeLevel();
 
@@ -73,7 +73,7 @@ public class Poder1 extends PowerBase {
                 return;
             }
 
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 int phaseCost;
 
                 if (curLevel >= 9) {
@@ -459,7 +459,7 @@ public class Poder1 extends PowerBase {
                 );
             }
 
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                 if (levelCap.getLevel() >= 9 && timeLeft % 40 == 0) {
                     player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 1, false, false, true));
                 }
@@ -472,7 +472,7 @@ public class Poder1 extends PowerBase {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.cocoon_interrupted"));
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 20, 1));
 
-                player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                     if (levelCap.getLevel() >= 9) {
                         player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 20, 2));
                     }
@@ -561,7 +561,7 @@ public class Poder1 extends PowerBase {
                     continue;
                 }
 
-                player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                     int currentLevel = levelCap.getLevel();
 
                     if (currentLevel < 9) {
@@ -588,7 +588,7 @@ public class Poder1 extends PowerBase {
 
                 MutagenicCompoundVariant pending = pendingVariantMap.remove(uuid);
                 if (pending != null) {
-                    player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                         int penalty = com.sporeadds.sporeaddsmod.config.SporeAddsConfig
                                 .KOMMANDANT_VARIANT_CHANGE_LEVEL_PENALTY.get();
 
@@ -652,7 +652,7 @@ public class Poder1 extends PowerBase {
 
         final MutagenicCompoundVariant[] result = {null};
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if (!"kommandant".equalsIgnoreCase(data.getIdentifier())) {
                 return;
             }

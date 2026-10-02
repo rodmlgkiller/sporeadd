@@ -42,7 +42,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -68,7 +67,7 @@ public class ForgeEvents {
     private static final java.util.Map<java.util.UUID, Integer> pendingLoginPenalties = new java.util.concurrent.ConcurrentHashMap<>();
 
     private static void syncSporeIdentifier(ServerPlayer player) {
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             NetworkHandle.INSTANCE.send(
                     PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
                     new SyncSporeIdentifierPacket(
@@ -112,8 +111,8 @@ public class ForgeEvents {
         if (player.isAlive()) return;   // tótem / defibrillation / downed revirtieron la muerte
         if (com.sporeadds.sporeaddsmod.hive.HiveDownedManager.isDowned(player.getUUID())) return;
 
-        player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(store -> {
-            CompoundTag tag = store.serializeNBT();
+        PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(store -> {
+            CompoundTag tag = store.serializeNBT(player.level().registryAccess());
             String behavior = SporeAddsConfig.IMPLANT_DEATH_BEHAVIOR.get().toLowerCase();
             boolean known = "keep".equals(behavior) || "drop".equals(behavior) || "clear".equals(behavior);
 
@@ -147,16 +146,16 @@ public class ForgeEvents {
             }
 
             if (event.getSource().getEntity() instanceof ServerPlayer killer && killer != victimPlayer) {
-                boolean victimIsKommandant = victimPlayer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+                boolean victimIsKommandant = SporeIdentifierProvider.SPORE_IDENTIFIER.get(victimPlayer)
                         .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                         .orElse(false);
 
-                boolean killerIsScientist = killer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+                boolean killerIsScientist = SporeIdentifierProvider.SPORE_IDENTIFIER.get(killer)
                         .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                         .orElse(false);
 
                 if (victimIsKommandant && killerIsScientist) {
-                    killer.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).ifPresent(research -> {
+                    ScientistResearchProvider.SCIENTIST_RESEARCH.get(killer).ifPresent(research -> {
                         com.sporeadds.sporeaddsmod.research.ResearchEventHelper.recordKill(
                                 killer, research, com.sporeadds.sporeaddsmod.research.TrackedEntities.KOMMANDANT_PLAYER_ID
                         );
@@ -171,7 +170,7 @@ public class ForgeEvents {
 
         if (!(event.getSource().getEntity() instanceof ServerPlayer killer)) return;
 
-        boolean isScientist = killer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isScientist = SporeIdentifierProvider.SPORE_IDENTIFIER.get(killer)
                 .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
 
@@ -182,7 +181,7 @@ public class ForgeEvents {
 
         if (!com.sporeadds.sporeaddsmod.research.TrackedEntities.ENTITY_IDS.contains(entityId)) return;
 
-        killer.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).ifPresent(research -> {
+        ScientistResearchProvider.SCIENTIST_RESEARCH.get(killer).ifPresent(research -> {
             com.sporeadds.sporeaddsmod.research.ResearchEventHelper.recordKill(killer, research, entityId);
         });
 
@@ -211,76 +210,14 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        // Se ejecuta tanto en muerte+respawn como en el regreso del End (isWasDeath() == false).
-        // En AMBOS casos hay que copiar las capabilities del mod al jugador nuevo, o se pierden.
-        event.getOriginal().reviveCaps();
-        try {
-            event.getOriginal().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(oldData -> {
-                event.getEntity().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(newData -> {
-                    CompoundTag tag = new CompoundTag();
-                    oldData.saveNBTData(tag);
-                    newData.loadNBTData(tag);
-                });
-            });
-
-            event.getOriginal().getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(oldSpore -> {
-                event.getEntity().getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(newSpore -> {
-                    CompoundTag tag = new CompoundTag();
-                    oldSpore.saveNBTData(tag);
-                    newSpore.loadNBTData(tag);
-                });
-            });
-
-            event.getOriginal().getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(oldLevel -> {
-                event.getEntity().getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(newLevel -> {
-                    CompoundTag tag = new CompoundTag();
-                    oldLevel.saveNBTData(tag);
-                    newLevel.loadNBTData(tag);
-                });
-            });
-
-            event.getOriginal().getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(oldIdentifier -> {
-                event.getEntity().getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(newIdentifier -> {
-                    CompoundTag tag = new CompoundTag();
-                    oldIdentifier.saveNBTData(tag);
-                    newIdentifier.loadNBTData(tag);
-                });
-            });
-
-            event.getOriginal().getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).ifPresent(oldResearch -> {
-                event.getEntity().getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).ifPresent(newResearch -> {
-                    CompoundTag tag = new CompoundTag();
-                    oldResearch.saveNBTData(tag);
-                    newResearch.loadNBTData(tag);
-                });
-            });
-
-            event.getOriginal().getCapability(CompoundsCapability.PLAYER_COMPOUNDS).ifPresent(oldCompounds -> {
-                event.getEntity().getCapability(CompoundsCapability.PLAYER_COMPOUNDS).ifPresent(newCompounds -> {
-                    newCompounds.deserializeNBT(oldCompounds.serializeNBT());
-                });
-            });
-
-            // Implantes: en muerte los gestiona el flujo de caché + respawn; en el regreso del
-            // End (sin muerte) hay que copiarlos aquí o el jugador los pierde.
-            if (!event.isWasDeath()) {
-                event.getOriginal().getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(oldImplants -> {
-                    event.getEntity().getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(newImplants -> {
-                        newImplants.deserializeNBT(oldImplants.serializeNBT());
-                    });
-                });
-            }
-
-        } finally {
-            event.getOriginal().invalidateCaps();
-        }
+        // Player data lives in data attachments; NeoForge copies them on clone (copyOnDeath decides what survives death).
 
         if (event.getEntity() instanceof ServerPlayer player) {
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 data.setArmorHpAndSync(data.getArmorHp(), player);
             });
 
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 CompoundTag nbt = new CompoundTag();
                 spore.saveNBTData(nbt);
                 NetworkHandle.INSTANCE.send(
@@ -304,21 +241,21 @@ public class ForgeEvents {
         if (SporeAddsConfig.shouldKeepImplantsOnDeath()) {
             CompoundTag cached = ImplantDeathCache.take(player.getUUID());
             if (cached != null) {
-                player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(newStore -> {
-                    newStore.deserializeNBT(cached);
+                PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(newStore -> {
+                    newStore.deserializeNBT(player.level().registryAccess(), cached);
                 });
             }
         } else {
-            player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(newStore -> {
+            PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(newStore -> {
                 newStore.clearAllImplants();
             });
         }
 
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             data.setArmorHpAndSync(data.getArmorHp(), player);
         });
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             CompoundTag nbt = new CompoundTag();
             spore.saveNBTData(nbt);
             NetworkHandle.INSTANCE.send(
@@ -327,7 +264,7 @@ public class ForgeEvents {
             );
         });
 
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(level -> {
             SyncLevelPacket.syncLevelToClient(player);
         });
 
@@ -339,11 +276,11 @@ public class ForgeEvents {
         if (event.getEntity() instanceof ServerPlayer player) {
             com.sporeadds.sporeaddsmod.util.OriginSyncUtil.beginSettleGrace(player);
 
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 data.setArmorHpAndSync(data.getArmorHp(), player);
             });
 
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 CompoundTag nbt = new CompoundTag();
                 spore.saveNBTData(nbt);
                 NetworkHandle.INSTANCE.send(
@@ -353,37 +290,6 @@ public class ForgeEvents {
             });
 
             syncSporeIdentifier(player);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Player player) {
-            if (!player.getCapability(PlayerSporeProvider.PLAYER_CAP).isPresent()) {
-                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "properties"), new PlayerSporeProvider());
-            }
-            if (!player.getCapability(PlayerLevelProvider.PLAYER_LVL).isPresent()) {
-                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "properties_level"), new PlayerLevelProvider());
-            }
-            if (!player.getCapability(PlayerDataProvider.PLAYER_DATA).isPresent()) {
-                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "properties_data"), new PlayerDataProvider());
-            }
-            if (!player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).isPresent()) {
-                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "spore_identifier"), new SporeIdentifierProvider());
-            }
-            if (!player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).isPresent()) {
-                PlayerImplantsCapability provider = new PlayerImplantsCapability();
-                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "player_implants"), provider);
-                event.addListener(provider::invalidate);
-            }
-            if (!player.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).isPresent()) {
-                CompoundsCapability provider = new CompoundsCapability();
-                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "player_compounds"), provider);
-                event.addListener(provider::invalidate);
-            }
-            if (!player.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).isPresent()) {
-                event.addCapability(ResourceLocation.fromNamespaceAndPath("sporeadd", "scientist_research"), new ScientistResearchProvider());
-            }
         }
     }
 
@@ -407,8 +313,8 @@ public class ForgeEvents {
     public static void onServerTick(ServerTickEvent.Post event) {
 
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> SyncSporePacket.syncManaToClient(player));
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> SyncLevelPacket.syncLevelToClient(player));
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> SyncSporePacket.syncManaToClient(player));
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(level -> SyncLevelPacket.syncLevelToClient(player));
         }
 
         long gameTime = event.getServer().overworld().getGameTime();
@@ -443,18 +349,18 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        event.getEntity().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> data.setSwitch("000000000"));
+        PlayerDataProvider.PLAYER_DATA.get(event.getEntity()).ifPresent(data -> data.setSwitch("000000000"));
         NetworkHandle.INSTANCE.send(
                 PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()),
                 new ServerToData("000000000")
         );
 
         if (event.getEntity() instanceof ServerPlayer player) {
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 data.setArmorHpAndSync(data.getArmorHp(), player);
             });
 
-            player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 CompoundTag nbt = new CompoundTag();
                 spore.saveNBTData(nbt);
                 NetworkHandle.INSTANCE.send(
@@ -466,7 +372,7 @@ public class ForgeEvents {
             syncSporeIdentifier(player);
 
             if (SporeAddsConfig.TRAINING_BOOK_GIVE_ON_FIRST_JOIN.get()) {
-                player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+                SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
                     if (!data.hasReceivedTrainingBook()) {
                         data.setReceivedTrainingBook(true);
                         ItemStack initialBook = new ItemStack(ModItems.TRAINING_BOOK.get());
@@ -481,7 +387,7 @@ public class ForgeEvents {
                 final int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get() / 2;
 
                 if (levelsToLose > 0) {
-                    player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData -> {
                         int newLevel = Math.max(0, levelData.getLevel() - levelsToLose);
                         levelData.setLevel(newLevel);
                     });
@@ -496,7 +402,7 @@ public class ForgeEvents {
                 int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get();
 
                 if (levelsToLose > 0) {
-                    player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData -> {
                         int newLevel = Math.max(0, levelData.getLevel() - levelsToLose);
                         levelData.setLevel(newLevel);
                     });
@@ -552,7 +458,7 @@ public class ForgeEvents {
                     player.sendSystemMessage(Component.translatable("message.sporeadd.power1.cocoon_interrupted"));
                     player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 20, 1));
 
-                    player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                         if (levelCap.getLevel() >= 9) {
                             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 20, 2));
                         }

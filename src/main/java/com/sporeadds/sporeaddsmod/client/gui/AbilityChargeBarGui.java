@@ -129,7 +129,7 @@ public class AbilityChargeBarGui {
     }
 
     private static String getKommandantSubclass(Minecraft mc) {
-        return mc.player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).map(data -> {
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(mc.player).map(data -> {
             if (!"kommandant".equals(data.getIdentifier())) return null;
             String sub = data.getSubclass();
             return ("caustic".equals(sub) || "gluttonous".equals(sub)) ? sub : null;

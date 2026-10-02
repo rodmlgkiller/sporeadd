@@ -61,7 +61,7 @@ public final class SporeTeamCombatTracker {
         }
 
         if (attacker instanceof Player attackerPlayer) {
-            boolean isGhost = attackerPlayer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+            boolean isGhost = SporeIdentifierProvider.SPORE_IDENTIFIER.get(attackerPlayer)
                     .map(data -> GHOST_IDENTIFIER.equalsIgnoreCase(data.getIdentifier()))
                     .orElse(false);
 

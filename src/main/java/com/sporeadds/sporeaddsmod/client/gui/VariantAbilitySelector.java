@@ -29,7 +29,7 @@ public class VariantAbilitySelector {
             case 6:
                 tooltip.add(Component.translatable("tooltip.sporeadd.power6_caustic.title").withStyle(ChatFormatting.GREEN));
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.level.PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    com.sporeadds.sporeaddsmod.level.PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int rawLevel = levelCap.getLevel();
                         int sporeLevel = Math.max(rawLevel, 0);
 
@@ -77,7 +77,7 @@ public class VariantAbilitySelector {
             case 9:
                 tooltip.add(Component.translatable("tooltip.sporeadd.power9_caustic.title").withStyle(ChatFormatting.GREEN));
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 5;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
@@ -109,7 +109,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power12_caustic.title").withStyle(ChatFormatting.GREEN));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 30;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
@@ -150,7 +150,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power13_caustic.title").withStyle(ChatFormatting.GREEN));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 20;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
@@ -213,7 +213,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power8_abyssal.title").withStyle(ChatFormatting.AQUA));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 15;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
@@ -241,13 +241,13 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power9_abyssal.title").withStyle(ChatFormatting.AQUA));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 5;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
                     });
 
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.level.PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                    com.sporeadds.sporeaddsmod.level.PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
                         double swimPenalty = curLevel > 5 ? -0.5D - (0.1D * (curLevel - 5)) : -0.5D;
 
@@ -270,7 +270,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power12_abyssal.title").withStyle(ChatFormatting.AQUA));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 30;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
@@ -298,7 +298,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power13_abyssal.title").withStyle(ChatFormatting.AQUA));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 20;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
@@ -391,7 +391,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power9_gluttonous.title").withStyle(ChatFormatting.GOLD));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 5;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));
@@ -421,7 +421,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power12_gluttonous.title").withStyle(ChatFormatting.GOLD));
 
                 if (mc.player != null) {
-                    mc.player.getCapability(com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                    com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(sporeCap -> {
                         int cost = 30;
                         String biomassColor = (sporeCap.getSpore() >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, sporeCap.getSpore(), cost));

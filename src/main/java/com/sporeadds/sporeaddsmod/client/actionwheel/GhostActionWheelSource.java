@@ -24,7 +24,7 @@ public final class GhostActionWheelSource {
     }
 
     private static boolean hasGhostClass(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "ghost".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }

@@ -85,7 +85,7 @@ public class Poder7 {
         if (target == null) return false;
 
         AtomicBoolean enabled = new AtomicBoolean(false);
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             if (data.getSwitch().length() > 7 && data.getSwitch().charAt(7) == '1') {
                 enabled.set(true);
             }
@@ -132,7 +132,7 @@ public class Poder7 {
             handleMountMovement(player, riddenMob, forward, strafing);
 
             AtomicInteger playerLevel = new AtomicInteger(0);
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData -> {
                 playerLevel.set(levelData.getLevel());
             });
 
@@ -192,7 +192,7 @@ public class Poder7 {
     public static void handleMountMovement(Player player, LivingEntity mob, float forward, float strafing) {
         if (player.level().isClientSide()) return;
 
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             if (data.getSwitch().length() > 7 && data.getSwitch().charAt(7) == '1') {
 
                 mob.setYRot(player.getYRot());
@@ -288,7 +288,7 @@ public class Poder7 {
     public static void handleMountJumpInput(Player player, LivingEntity mob, boolean isAscending, boolean isFirstPress) {
         if (player.level().isClientSide()) return;
 
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             if (data.getSwitch().length() > 7 && data.getSwitch().charAt(7) == '1') {
 
                 if (isCocoon(mob)) {

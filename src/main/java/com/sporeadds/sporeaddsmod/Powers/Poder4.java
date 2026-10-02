@@ -41,7 +41,7 @@ public class Poder4 {
 
         meatAbomination.setBiomass(meatAbomination.getBiomass() - 1.0F);
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> spore.addSpore(1));
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> spore.addSpore(1));
 
         int saturationTicks = 8;
         player.addEffect(new MobEffectInstance(MobEffects.SATURATION, saturationTicks, 0));

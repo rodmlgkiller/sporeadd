@@ -43,7 +43,7 @@ public final class WeakPointPrestigeLootHandler {
         boolean isKommandantTarget = false;
 
         if (target instanceof ServerPlayer targetPlayer) {
-            boolean isKommandant = targetPlayer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+            boolean isKommandant = SporeIdentifierProvider.SPORE_IDENTIFIER.get(targetPlayer)
                     .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                     .orElse(false);
 

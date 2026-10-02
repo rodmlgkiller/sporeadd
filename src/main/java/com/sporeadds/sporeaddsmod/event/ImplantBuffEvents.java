@@ -24,7 +24,7 @@ public class ImplantBuffEvents {
         if (!(event.getEntity() instanceof ServerPlayer player))
             return;
 
-        player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
+        PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
             // LEFT LEG: Jump boost
             if (!implants.getImplant(PlayerImplantsCapability.ImplantType.LEFT_LEG).isEmpty()) {
                 player.addEffect(new MobEffectInstance(MobEffects.JUMP, 40, 3, true, false));
@@ -84,7 +84,7 @@ public class ImplantBuffEvents {
     public static void onLivingFall(LivingFallEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
+        PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
             // RIGHT LEG: Inmunidad daño de caída
             if (!implants.getImplant(PlayerImplantsCapability.ImplantType.RIGHT_LEG).isEmpty()) {
                 event.setCanceled(true); // Cancela completamente el daño de caída
@@ -97,7 +97,7 @@ public class ImplantBuffEvents {
     public static void onPlayerHurt(LivingHurtEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
+        PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
             // TORSO: -25% Daño recibido
             if (!implants.getImplant(PlayerImplantsCapability.ImplantType.TORSO).isEmpty()) {
                 float originalDamage = event.getAmount();
@@ -111,7 +111,7 @@ public class ImplantBuffEvents {
     public static void onPlayerAttack(LivingHurtEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
 
-        player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
+        PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
             // RIGHT ARM: +20% daño
             if (!implants.getImplant(PlayerImplantsCapability.ImplantType.RIGHT_ARM).isEmpty()) {
                 event.setAmount(event.getAmount() * 1.20f);

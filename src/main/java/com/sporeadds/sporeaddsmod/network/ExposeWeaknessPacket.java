@@ -31,13 +31,13 @@ public class ExposeWeaknessPacket {
     private static final int PARTICLES_PER_RING = 24;
 
     private static boolean isScientist(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
 
     private static boolean isKommandant(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
@@ -50,7 +50,7 @@ public class ExposeWeaknessPacket {
                 continue;
             }
 
-            var research = online.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).orElse(null);
+            var research = ScientistResearchProvider.SCIENTIST_RESEARCH.get(online).orElse(null);
             if (research == null) {
                 continue;
             }
@@ -69,7 +69,7 @@ public class ExposeWeaknessPacket {
                 continue;
             }
 
-            var research = online.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).orElse(null);
+            var research = ScientistResearchProvider.SCIENTIST_RESEARCH.get(online).orElse(null);
             if (research == null) {
                 continue;
             }
@@ -116,7 +116,7 @@ public class ExposeWeaknessPacket {
 
             lastUseGameTime.put(player.getUUID(), now);
 
-            player.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).ifPresent(research -> {
+            ScientistResearchProvider.SCIENTIST_RESEARCH.get(player).ifPresent(research -> {
                 Map<String, Integer> kills = research.getAllKills();
 
                 AABB searchBox = player.getBoundingBox().inflate(RANGE);

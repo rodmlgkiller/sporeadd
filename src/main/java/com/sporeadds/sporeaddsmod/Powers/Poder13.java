@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector3f;
 
@@ -44,7 +44,7 @@ public class Poder13 {
     private static final Map<UUID, Long> executionCooldown = new ConcurrentHashMap<>();
 
     static boolean isCaustic(Player player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "caustic".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }
@@ -72,7 +72,7 @@ public class Poder13 {
             return;
         }
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeData -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(sporeData -> {
             int currentSpore = sporeData.getSpore();
             int cost = 20;
 
@@ -383,7 +383,7 @@ public class Poder13 {
         int levelsToLose = Poder12Variants.isgluttonous(player) ? (basePenalty / 2) : basePenalty;
 
         if (levelsToLose > 0) {
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData -> {
                 int newLevel = Math.max(0, levelData.getLevel() - levelsToLose);
                 levelData.setLevel(newLevel);
             });

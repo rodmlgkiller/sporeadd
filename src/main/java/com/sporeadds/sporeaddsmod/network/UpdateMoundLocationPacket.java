@@ -51,7 +51,7 @@ public class UpdateMoundLocationPacket {
             ServerPlayer sender = context.getSender();
             if (sender == null) return;
 
-            sender.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(sender).ifPresent(spore -> {
                 if (msg.dimension == null || msg.dimension.isBlank()) return;
 
                 spore.getMoundRegistry().updateLastKnownLocation(

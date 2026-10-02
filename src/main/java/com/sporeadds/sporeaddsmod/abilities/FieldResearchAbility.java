@@ -6,7 +6,7 @@ import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncScientistResearchPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import com.sporeadds.sporeaddsmod.network.NetworkDirection;
 
 public final class FieldResearchAbility {
@@ -15,7 +15,7 @@ public final class FieldResearchAbility {
     }
 
     public static boolean tryActivate(ServerPlayer player) {
-        boolean isScientist = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isScientist = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "scientist".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
 
@@ -23,7 +23,7 @@ public final class FieldResearchAbility {
             return false;
         }
 
-        LazyOptional<ScientistResearchData> capability = player.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH);
+        LazyOptional<ScientistResearchData> capability = ScientistResearchProvider.SCIENTIST_RESEARCH.get(player);
 
         if (!capability.isPresent()) {
             return false;

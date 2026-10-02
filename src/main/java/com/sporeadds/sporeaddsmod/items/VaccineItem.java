@@ -40,7 +40,7 @@ public class VaccineItem extends Item {
     }
 
     private static boolean hasMedicClass(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "medic".equals(data.getIdentifier()))
                 .orElse(false);
     }

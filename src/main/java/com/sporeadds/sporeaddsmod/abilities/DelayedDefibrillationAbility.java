@@ -113,7 +113,7 @@ public final class DelayedDefibrillationAbility {
     }
 
     private static boolean isKommandant(ServerPlayer player) {
-        return player.getCapability(com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }

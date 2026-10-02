@@ -35,7 +35,7 @@ public class KommandantSubclassIconRenderer {
         Player player = mc.player;
         if (player == null) return;
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if (!"kommandant".equalsIgnoreCase(data.getIdentifier())) return;
 
             ResourceLocation texture = getTextureForSubclass(data.getSubclass());
@@ -58,7 +58,7 @@ public class KommandantSubclassIconRenderer {
         Player player = mc.player;
         if (player == null) return;
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if (!"kommandant".equalsIgnoreCase(data.getIdentifier())) return;
 
             String subclass = data.getSubclass();

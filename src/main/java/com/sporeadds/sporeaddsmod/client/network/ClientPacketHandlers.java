@@ -26,7 +26,7 @@ public class ClientPacketHandlers {
         Entity entity = mc.level.getEntity(msg.getPlayerId());
         if (!(entity instanceof Player player)) return;
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             data.setIdentifier(msg.getIdentifier());
             data.setSubclass(msg.getSubclass());
         });

@@ -29,7 +29,7 @@ public class KommandantColdBiomeEvents {
     private static final float EXHAUSTION_ADDED_PER_TICK = 0.005f;
 
     private static boolean hasKommandantClass(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equals(data.getIdentifier()))
                 .orElse(false);
     }

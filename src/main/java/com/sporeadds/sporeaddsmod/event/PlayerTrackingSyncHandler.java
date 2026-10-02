@@ -37,7 +37,7 @@ public class PlayerTrackingSyncHandler {
         );
 
         // 2. Sincronizar Spore Identifier y Subclase (Lo nuevo)
-        target.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(sporeData -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(target).ifPresent(sporeData -> {
             NetworkHandle.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> tracker),
                     new SyncSporeIdentifierPacket(

@@ -26,7 +26,7 @@ public class AbyssalAquaAffinityMixin {
             return;
         }
 
-        boolean abyssal = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean abyssal = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data ->
                         "kommandant".equalsIgnoreCase(data.getIdentifier()) &&
                                 "abyssal".equalsIgnoreCase(data.getSubclass()))

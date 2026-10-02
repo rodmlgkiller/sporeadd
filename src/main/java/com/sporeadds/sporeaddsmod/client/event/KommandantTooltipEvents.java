@@ -27,14 +27,14 @@ public class KommandantTooltipEvents {
 
     private static boolean isKommandant(Player player) {
         if (player == null) return false;
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
 
     private static boolean isgluttonous(Player player) {
         if (player == null) return false;
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "gluttonous".equalsIgnoreCase(data.getSubclass()))
                 .orElse(false);
     }

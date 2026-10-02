@@ -108,7 +108,7 @@ public class Poder11 extends PowerBase {
     }
 
     public void use(ServerPlayer player) {
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
             if (currentPhase < PHASE_COST) {
                 player.displayClientMessage(
@@ -119,7 +119,7 @@ public class Poder11 extends PowerBase {
                 return;
             }
 
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvl -> {
                 if (lvl.getLevel() < REQUIRED_LEVEL_USE) return;
                 spore.setSpore(currentPhase - PHASE_COST);
 

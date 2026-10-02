@@ -38,6 +38,16 @@ public class SporeAddsMod {
                 "sporeadds-client.toml"
         );
 
+        // Touch the provider classes so their attachment types get queued before the registry event fires.
+        com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider.PLAYER_CAP.getClass();
+        com.sporeadds.sporeaddsmod.level.PlayerLevelProvider.PLAYER_LVL.getClass();
+        com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider.PLAYER_DATA.getClass();
+        com.sporeadds.sporeaddsmod.PlayerData.ScientistResearchProvider.SCIENTIST_RESEARCH.getClass();
+        com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.getClass();
+        com.sporeadds.sporeaddsmod.capabilities.PlayerImplantsCapability.PLAYER_IMPLANTS.getClass();
+        com.sporeadds.sporeaddsmod.capabilities.CompoundsCapability.PLAYER_COMPOUNDS.getClass();
+        com.sporeadds.sporeaddsmod.capabilities.Capability.ATTACHMENTS.register(modEventBus);
+
         ModSounds.SOUND_EVENTS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         effects.MOB_EFFECTS.register(modEventBus);

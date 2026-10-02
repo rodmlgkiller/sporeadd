@@ -26,7 +26,7 @@ public class CausticArmorReactive {
     );
 
     private static boolean isCaustic(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.trim().equalsIgnoreCase("caustic");
@@ -40,7 +40,7 @@ public class CausticArmorReactive {
         if (player.level().isClientSide) return;
         if (event.getSource().equals(player.level().damageSources().generic())) return;
 
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             if (data.getArmorHp() <= 0) return;
             if (!isCaustic(player)) return;
 

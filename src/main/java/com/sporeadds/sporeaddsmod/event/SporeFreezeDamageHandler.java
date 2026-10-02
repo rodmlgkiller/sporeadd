@@ -19,7 +19,7 @@ public class SporeFreezeDamageHandler {
         if ("freeze".equals(source.getMsgId()) && event.getEntity() instanceof Player player) {
             if (player.getTeam() != null && "spore".equalsIgnoreCase(player.getTeam().getName())) {
 
-                player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+                PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                     float original = event.getAmount();
 
                     if (data.getArmorHp() > 0) {

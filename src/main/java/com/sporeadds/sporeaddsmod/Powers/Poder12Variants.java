@@ -59,7 +59,7 @@ public class Poder12Variants {
     private Poder12Variants() {}
 
     public static boolean isCaustic(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.trim().equalsIgnoreCase("caustic");
@@ -68,7 +68,7 @@ public class Poder12Variants {
     }
 
     public static boolean isAbyssal(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.trim().equalsIgnoreCase("abyssal");
@@ -77,7 +77,7 @@ public class Poder12Variants {
     }
 
     public static boolean isgluttonous(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> {
                     String subclass = data.getSubclass();
                     return subclass != null && subclass.trim().equalsIgnoreCase("gluttonous");
@@ -97,7 +97,7 @@ public class Poder12Variants {
 
         AtomicInteger maxArmor = new AtomicInteger(250);
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(identifier -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(identifier -> {
             String subclass = identifier.getSubclass();
             if (subclass != null) {
                 String normalized = subclass.trim();

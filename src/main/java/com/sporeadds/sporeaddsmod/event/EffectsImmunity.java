@@ -48,7 +48,7 @@ public class EffectsImmunity {
             return;
         }
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if (!"kommandant".equalsIgnoreCase(data.getIdentifier())) {
                 return;
             }

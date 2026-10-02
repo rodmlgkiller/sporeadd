@@ -30,13 +30,13 @@ public class KommandantDeathLootHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!(player.level() instanceof ServerLevel serverLevel)) return;
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(identifierData -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(identifierData -> {
             if (!"kommandant".equalsIgnoreCase(identifierData.getIdentifier())) return;
 
             String subclass = identifierData.getSubclass();
             boolean prestigedBonus = isPrestigedKill(player, serverLevel);
 
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelData -> {
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelData -> {
                 int level = levelData.getLevel();
 
                 List<String> entries = new ArrayList<>(KommandantLootTables.getBaseForLevel(level));

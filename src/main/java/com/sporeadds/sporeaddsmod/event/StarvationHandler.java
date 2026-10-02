@@ -20,7 +20,7 @@ import net.neoforged.fml.common.Mod;
 public class StarvationHandler {
 
     private static boolean hasKommandantClass(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
@@ -71,7 +71,7 @@ public class StarvationHandler {
         if (currentTick - lastTick < 100) return; // 5 segundos
         player.getPersistentData().putLong("SporeAddsStarvationTick", currentTick);
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             if (spore.getSpore() > 0) {
                 spore.addSpore(-1);
             } else {

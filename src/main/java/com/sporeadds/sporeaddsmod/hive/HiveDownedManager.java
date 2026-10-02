@@ -344,8 +344,7 @@ public final class HiveDownedManager {
         }
 
         // Si ya es kommandant (rendición completada, o intervención externa como /class), cerrar limpio.
-        boolean isKommandant = player.getCapability(
-                        com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isKommandant = com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(id -> "kommandant".equalsIgnoreCase(id.getIdentifier()))
                 .orElse(false);
         // Si se volvió kommandant por vía externa (/class fuera de ceremonia) estando genuinamente
@@ -506,8 +505,7 @@ public final class HiveDownedManager {
         data.choiceTick = now;
         data.downPos = player.position();
         data.originalSource = player.damageSources().generic();
-        data.voluntarySubclass = player.getCapability(
-                        com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER)
+        data.voluntarySubclass = com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(d -> d.getSubclass())
                 .orElse("none");
         DOWNED.put(id, data);

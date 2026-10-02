@@ -26,7 +26,7 @@ public final class ClassAssignmentUtil {
     }
 
     public static boolean applyClass(ServerPlayer player, String requestedIdentifier, String subclass) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).map(data -> {
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).map(data -> {
 
             String previousIdentifier = data.getIdentifier();
 

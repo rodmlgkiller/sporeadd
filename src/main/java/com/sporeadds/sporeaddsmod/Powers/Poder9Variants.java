@@ -67,7 +67,7 @@ public class Poder9Variants {
 
     public static void executegluttonousCall(ServerPlayer player, ServerLevel serverLevel, PlayerSpore spore) {
         spore.addSpore(-Poder9.PHASE_COST);
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl ->
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvl ->
                 NeoForge.EVENT_BUS.register(new gluttonousCallTask(player, serverLevel))
         );
     }
@@ -75,7 +75,7 @@ public class Poder9Variants {
     public static void executeAbyssalVortex(ServerPlayer player, ServerLevel serverLevel, PlayerSpore spore) {
         if (!player.isInWater()) return;
         spore.addSpore(-Poder9.PHASE_COST);
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl ->
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvl ->
                 NeoForge.EVENT_BUS.register(new AbyssalVortexTask(player, serverLevel, lvl.getLevel()))
         );
     }

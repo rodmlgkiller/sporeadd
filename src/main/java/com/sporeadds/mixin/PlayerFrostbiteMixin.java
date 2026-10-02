@@ -37,7 +37,7 @@ public class PlayerFrostbiteMixin {
         // Cada 80 ticks = 4 segundos
         if (player.tickCount % 80 != 0) return;
 
-        player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+        PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
             float damage = (amplifier + 1) * 0.3F;
 
             if (data.getArmorHp() > 0) {

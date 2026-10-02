@@ -105,7 +105,7 @@ public class CapabilityEvents {
         MoundSavedData savedData = MoundSavedData.get(player.server);
         UUID playerUUID = player.getUUID();
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             MoundRegistry registry = spore.getMoundRegistry();
 
             List<UUID> registryOrder = registry.getDisplayList();   // lo que venía del NBT del jugador

@@ -43,7 +43,7 @@ public class OvergrownSpawnerFeedMixin {
             if (team != null && "spore".equalsIgnoreCase(team.getName())) {
 
                 // 1. Dar +15 de biomasa (Spore)
-                player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+                PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(sporeCap -> {
                     sporeCap.addSpore(15);
                 });
 

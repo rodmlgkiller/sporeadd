@@ -15,7 +15,7 @@ public class AbyssalMiningSpeedHandler {
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
 
-        boolean isAbyssal = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isAbyssal = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data ->
                         "kommandant".equalsIgnoreCase(data.getIdentifier()) &&
                                 "abyssal".equalsIgnoreCase(data.getSubclass()))

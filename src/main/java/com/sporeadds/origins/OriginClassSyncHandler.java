@@ -69,7 +69,7 @@ public final class OriginClassSyncHandler {
         String mapped = mappedIdentifier(player);
         if (mapped == null) return;
 
-        String current = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        String current = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(SporeIdentifierData::getIdentifier)
                 .orElse(null);
 

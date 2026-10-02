@@ -85,7 +85,7 @@ public class ClientXRayHandler {
         AtomicBoolean kommandant = new AtomicBoolean(false);
 
         if (player.getTeam() != null && "spore".equalsIgnoreCase(player.getTeam().getName())) {
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 String sw = data.getSwitch();
                 if (sw != null) {
                     if (sw.length() > 4 && sw.charAt(4) == '1') {
@@ -98,7 +98,7 @@ public class ClientXRayHandler {
             });
         }
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if ("kommandant".equalsIgnoreCase(data.getIdentifier())) {
                 kommandant.set(true);
             }
@@ -133,13 +133,13 @@ public class ClientXRayHandler {
     }
 
     private static boolean isKommandant(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
 
     private static boolean isAbyssal(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data ->
                         "kommandant".equalsIgnoreCase(data.getIdentifier()) &&
                                 "abyssal".equalsIgnoreCase(data.getSubclass()))

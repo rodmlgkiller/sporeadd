@@ -133,7 +133,7 @@ public class gluttonousAbilityHandler {
         EntityType<?> projectileType = BuiltInRegistries.ENTITY_TYPE.get(VARIANT_VOMIT_ID);
         if (projectileType == null) return;
 
-        int playerLevel = player.getCapability(PlayerLevelProvider.PLAYER_LVL)
+        int playerLevel = PlayerLevelProvider.PLAYER_LVL.get(player)
                 .map(level -> level.getLevel())
                 .orElse(0);
 
@@ -242,7 +242,7 @@ public class gluttonousAbilityHandler {
     }
 
     private static boolean isgluttonous(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()) &&
                         "gluttonous".equalsIgnoreCase(data.getSubclass()))
                 .orElse(false);
@@ -340,7 +340,7 @@ public class gluttonousAbilityHandler {
             Entity entity = projectileType.create(player.level());
             if (!(entity instanceof Projectile projectile)) return;
 
-            int playerLevel = player.getCapability(PlayerLevelProvider.PLAYER_LVL)
+            int playerLevel = PlayerLevelProvider.PLAYER_LVL.get(player)
                     .map(level -> level.getLevel())
                     .orElse(0);
 

@@ -23,7 +23,7 @@ public class cryomenu extends AbstractContainerMenu {
 
         // 1. Slots del Bloque (3 filas x 9 columnas)
         // Usamos el IItemHandler de la BlockEntity
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+        ForgeCapabilities.ITEM_HANDLER.get(this.blockEntity).ifPresent(handler -> {
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 9; col++) {
                     this.addSlot(new SlotItemHandler(handler, col + row * 9, 8 + col * 18, 18 + row * 18));

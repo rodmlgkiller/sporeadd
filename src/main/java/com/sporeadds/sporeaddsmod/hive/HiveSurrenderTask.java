@@ -434,7 +434,7 @@ public final class HiveSurrenderTask {
 
         int targetLevel = SporeAddsConfig.HIVE_KOMMANDANT_PLAYER_LEVEL.get();
         int targetKnowledge = SporeAddsConfig.HIVE_KOMMANDANT_KNOWLEDGE_LEVEL.get();
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(cap -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(cap -> {
             cap.setLevel(targetLevel);
             cap.setKnowledgeLevel(targetKnowledge);
         });

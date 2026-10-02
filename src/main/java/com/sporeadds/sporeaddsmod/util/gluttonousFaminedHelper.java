@@ -13,7 +13,7 @@ public class gluttonousFaminedHelper {
     public static boolean hasgluttonousFaminedAttack(Player player) {
         if (player == null) return false;
 
-        boolean isgluttonous = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isgluttonous = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(SporeIdentifierData::getSubclass)
                 .map(subclass -> "gluttonous".equalsIgnoreCase(subclass))
                 .orElse(false);

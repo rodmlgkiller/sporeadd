@@ -32,7 +32,7 @@ public class SporeBarGui {
 
         float alpha = SporeAddsClientConfig.SPORE_BAR_OPACITY.get().floatValue();
 
-        mc.player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
 
             RenderSystem.enableBlend();

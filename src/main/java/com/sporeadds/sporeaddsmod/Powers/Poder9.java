@@ -20,7 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class Poder9 extends PowerBase {
     // -------------------------------------------------------------------------
 
     private boolean isAbyssal(ServerPlayer player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "abyssal".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }
@@ -44,7 +44,7 @@ public class Poder9 extends PowerBase {
     }
 
     private boolean isCaustic(ServerPlayer player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "caustic".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }
@@ -52,7 +52,7 @@ public class Poder9 extends PowerBase {
     }
 
     private boolean isgluttonous(ServerPlayer player) {
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         if (cap.isPresent()) {
             return "gluttonous".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
         }
@@ -68,7 +68,7 @@ public class Poder9 extends PowerBase {
         Level level = player.level();
         if (!(level instanceof ServerLevel serverLevel)) return;
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
             if (currentPhase < PHASE_COST) {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.not_enough_biomass"));
@@ -98,7 +98,7 @@ public class Poder9 extends PowerBase {
 
             // Flujo estándar (Kommandant sin subclase)
             spore.addSpore(-PHASE_COST);
-            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl ->
+            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvl ->
                     executeStandardLogic(player, serverLevel, lvl.getLevel())
             );
         });

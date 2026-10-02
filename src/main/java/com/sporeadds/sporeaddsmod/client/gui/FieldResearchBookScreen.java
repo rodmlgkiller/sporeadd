@@ -195,7 +195,7 @@ public class FieldResearchBookScreen extends Screen {
                         profile
                 );
 
-                fakePlayer.getCapability(com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER)
+                com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider.SPORE_IDENTIFIER.get(fakePlayer)
                         .ifPresent(data -> data.setIdentifier("kommandant"));
 
                 entry.entity = fakePlayer;

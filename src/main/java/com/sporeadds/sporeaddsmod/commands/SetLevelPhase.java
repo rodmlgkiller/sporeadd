@@ -16,7 +16,7 @@ public class SetLevelPhase {
                 .then(Commands.argument("phase", IntegerArgumentType.integer(0, 9))
                         .executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
-                            player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> {
+                            PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(level -> {
                                 level.setLevel(IntegerArgumentType.getInteger(context, "phase"));
                                 context.getSource().sendSuccess(() -> Component.literal("§4Evolution level:" + level.getLevel()), true);
                             });

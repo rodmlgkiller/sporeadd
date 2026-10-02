@@ -34,7 +34,7 @@ public final class CamouflageTickHandler {
         boolean shouldPulse = gameTime % PULSE_INTERVAL_TICKS == 0;
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+            SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
                 if (data.isCamouflageOnCooldown()) {
                     data.tickCamouflageCooldown();
                 }
@@ -52,7 +52,7 @@ public final class CamouflageTickHandler {
             return;
         }
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if (data.isCamouflaged()) {
                 CamouflageLogic.deactivate(player, data);
 
@@ -79,7 +79,7 @@ public final class CamouflageTickHandler {
             return;
         }
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if (data.isCamouflaged()) {
                 CamouflageLogic.deactivateSilently(player, data);
             }
@@ -92,7 +92,7 @@ public final class CamouflageTickHandler {
             return;
         }
 
-        player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
             if (data.isCamouflaged()) {
                 CamouflageLogic.deactivateSilently(player, data);
             }

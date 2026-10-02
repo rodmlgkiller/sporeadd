@@ -170,7 +170,7 @@ public class DehydrationEffect extends MobEffect {
                 int duration = instance.getDuration();
 
                 if (duration % 200 == 0) {
-                    player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+                    PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                         if (spore.getSpore() >= 1) {
                             spore.addSpore(-1);
                         } else {
@@ -198,7 +198,7 @@ public class DehydrationEffect extends MobEffect {
             return false;
         }
 
-        return player.getCapability(PlayerDataProvider.PLAYER_DATA)
+        return PlayerDataProvider.PLAYER_DATA.get(player)
                 .map(data -> data.getArmorHp() > 0)
                 .orElse(false);
     }

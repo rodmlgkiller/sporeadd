@@ -40,7 +40,7 @@ public class MoundTerrariumMenu extends AbstractContainerMenu {
         this.data = data;
 
         // Obtenemos el inventario del bloque
-        IItemHandler blockInventory = this.blockEntity.getCapability(net.neoforged.neoforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER).orElseThrow(NullPointerException::new);
+        IItemHandler blockInventory = net.neoforged.neoforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER.get(this.blockEntity).orElseThrow(NullPointerException::new);
 
         // Slot 0: Biomass (Solo acepta spore:biomass) - X=19, Y=25
         this.addSlot(new SlotItemHandler(blockInventory, 0, 19, 25) {

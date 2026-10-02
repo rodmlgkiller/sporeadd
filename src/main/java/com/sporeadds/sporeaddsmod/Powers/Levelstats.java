@@ -38,7 +38,7 @@ public class Levelstats {
     private static final ResourceLocation SWIM_SPEED_ID = ResourceLocation.fromNamespaceAndPath("forge", "swim_speed");
 
     private static boolean isAbyssal(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "abyssal".equalsIgnoreCase(data.getSubclass()))
                 .orElse(false);
     }
@@ -59,7 +59,7 @@ public class Levelstats {
             return;
         }
 
-        tickPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> {
+        PlayerLevelProvider.PLAYER_LVL.get(tickPlayer).ifPresent(level -> {
             int currentLevel = level.getLevel();
             int lastLevel = lastLevelMap.getOrDefault(tickPlayer.getUUID(), -1);
 
@@ -134,7 +134,7 @@ public class Levelstats {
                 resetToBaseStats(respawnPlayer);
                 return;
             }
-            respawnPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+            PlayerLevelProvider.PLAYER_LVL.get(respawnPlayer).ifPresent(levelCap -> {
                 int level = levelCap.getLevel();
                 applyStatsForLevel(respawnPlayer, level);
                 lastLevelMap.put(respawnPlayer.getUUID(), level);
@@ -152,7 +152,7 @@ public class Levelstats {
                 resetToBaseStats(loginPlayer);
                 return;
             }
-            loginPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+            PlayerLevelProvider.PLAYER_LVL.get(loginPlayer).ifPresent(levelCap -> {
                 int level = levelCap.getLevel();
                 applyStatsForLevel(loginPlayer, level);
                 lastLevelMap.put(loginPlayer.getUUID(), level);
@@ -210,7 +210,7 @@ public class Levelstats {
     }
 
     public static boolean hasKommandantClass(ServerPlayer player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equals(data.getIdentifier()))
                 .orElse(false);
     }
@@ -256,7 +256,7 @@ public class Levelstats {
             return;
         }
 
-        player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+        PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
             int level = levelCap.getLevel();
             applyStatsForLevel(player, level);
             lastLevelMap.put(player.getUUID(), level);
@@ -453,7 +453,7 @@ public class Levelstats {
     }
 
     private static Stats[] getStatsTable(ServerPlayer player) {
-        String subclass = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        String subclass = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> data.getSubclass())
                 .orElse("none");
 

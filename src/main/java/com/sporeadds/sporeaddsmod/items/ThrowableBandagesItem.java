@@ -41,7 +41,7 @@ public class ThrowableBandagesItem extends Item {
     }
 
     private static boolean hasMedicClass(ServerPlayer sp) {
-        return sp.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp)
                 .map(data -> "medic".equals(data.getIdentifier()))
                 .orElse(false);
     }

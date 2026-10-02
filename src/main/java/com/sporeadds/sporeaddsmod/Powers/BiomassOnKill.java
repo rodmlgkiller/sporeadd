@@ -62,7 +62,7 @@ public class BiomassOnKill {
 
         float victimMaxHealth = victim.getMaxHealth();
 
-        creditedPlayer.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(creditedPlayer).ifPresent(spore -> {
             if (victimMaxHealth < LOW_MAX_HEALTH_THRESHOLD) {
                 spore.addAlmostBiomass(ALMOST_BIOMASS_PER_LOW_MAX_HEALTH_KILL);
             } else {

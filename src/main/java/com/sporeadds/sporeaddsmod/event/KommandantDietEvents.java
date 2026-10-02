@@ -302,13 +302,13 @@ public class KommandantDietEvents {
     ) {}
 
     private static boolean isKommandant(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                 .orElse(false);
     }
 
     private static boolean isSubclassgluttonous(Player player) {
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "gluttonous".equalsIgnoreCase(data.getSubclass()))
                 .orElse(false);
     }

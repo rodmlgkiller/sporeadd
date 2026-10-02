@@ -20,7 +20,7 @@ public class SporePowerHandler {
             // Solo daño cuerpo a cuerpo: no proyectil, no mágico, no explosión
             if (!source.is(DamageTypes.ARROW) && !source.is(DamageTypes.MAGIC) && !source.is(DamageTypes.EXPLOSION)) {
 
-                player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                     int level = levelCap.getLevel();
 
                     if (level > 3) {

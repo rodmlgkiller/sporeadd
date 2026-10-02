@@ -37,7 +37,7 @@ public class ProtoLocatorItem extends Item {
     }
 
     private boolean hasScientistClass(ServerPlayer sp) {
-        return sp.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(sp)
                 .map(data -> "scientist".equals(data.getIdentifier()))
                 .orElse(false);
     }

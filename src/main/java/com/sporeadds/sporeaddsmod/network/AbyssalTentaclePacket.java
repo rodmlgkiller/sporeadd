@@ -60,7 +60,7 @@ public class AbyssalTentaclePacket {
                 return;
             }
 
-            boolean isAbyssal = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+            boolean isAbyssal = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                     .map(data -> "kommandant".equals(data.getIdentifier()) && "abyssal".equals(data.getSubclass()))
                     .orElse(false);
 
@@ -68,7 +68,7 @@ public class AbyssalTentaclePacket {
                 return;
             }
 
-            int playerLevel = player.getCapability(PlayerLevelProvider.PLAYER_LVL)
+            int playerLevel = PlayerLevelProvider.PLAYER_LVL.get(player)
                     .map(cap -> cap.getLevel())
                     .orElse(0);
 

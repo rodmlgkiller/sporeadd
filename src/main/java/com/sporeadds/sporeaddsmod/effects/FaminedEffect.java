@@ -12,7 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.LazyOptional;
 import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class FaminedEffect extends MobEffect {
             return;
         }
 
-        LazyOptional<SporeIdentifierData> cap = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER);
+        LazyOptional<SporeIdentifierData> cap = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player);
         boolean isgluttonous = cap.isPresent()
                 && "gluttonous".equalsIgnoreCase(cap.orElseThrow(IllegalStateException::new).getSubclass());
 
@@ -59,7 +59,7 @@ public class FaminedEffect extends MobEffect {
         }
 
         if (!APPLIED_THIS_INSTANCE.contains(playerId)) {
-            player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
+            PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 int armorHp = data.getArmorHp();
 
                 if (armorHp > gluttonous_ARMOR_CAP) {

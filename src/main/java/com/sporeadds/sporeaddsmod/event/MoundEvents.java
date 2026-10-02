@@ -48,7 +48,7 @@ public class MoundEvents {
 
         ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
         if (owner != null) {
-            owner.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+            PlayerSporeProvider.PLAYER_CAP.get(owner).ifPresent(spore -> {
                 boolean wasRemoved = spore.getMoundRegistry().remove(moundUUID);
 
                 if (wasRemoved) {

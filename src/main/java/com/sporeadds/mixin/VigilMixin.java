@@ -51,7 +51,7 @@ public abstract class VigilMixin {
                 }
 
                 final boolean[] isLevel7 = {false};
-                onlinePlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
+                PlayerLevelProvider.PLAYER_LVL.get(onlinePlayer).ifPresent(levelCap -> {
                     if (levelCap.getLevel() >= 7) {
                         isLevel7[0] = true;
                     }

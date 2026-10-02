@@ -52,7 +52,7 @@ public class AbyssalDehydrationHandler {
         Player player = event.getEntity();
         UUID playerId = player.getUUID();
 
-        boolean isAbyssal = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        boolean isAbyssal = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(data -> "kommandant".equals(data.getIdentifier()) && "abyssal".equals(data.getSubclass()))
                 .orElse(false);
 
@@ -62,7 +62,7 @@ public class AbyssalDehydrationHandler {
             return;
         }
 
-        boolean hasArmorHpActive = player.getCapability(PlayerDataProvider.PLAYER_DATA)
+        boolean hasArmorHpActive = PlayerDataProvider.PLAYER_DATA.get(player)
                 .map(data -> data.getArmorHp() > 0)
                 .orElse(false);
 

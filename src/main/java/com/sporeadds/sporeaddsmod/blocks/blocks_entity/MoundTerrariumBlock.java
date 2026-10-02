@@ -334,7 +334,7 @@ public class MoundTerrariumBlock extends BaseEntityBlock {
             BlockEntity blockEntity = level.getBlockEntity(pos);
 
             if (blockEntity instanceof MoundTerrariumBlockEntity terrarium) {
-                terrarium.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+                ForgeCapabilities.ITEM_HANDLER.get(terrarium).ifPresent(handler -> {
                     for (int i = 0; i < handler.getSlots(); i++) {
                         ItemStack stack = handler.getStackInSlot(i);
                         if (!stack.isEmpty()) {

@@ -143,7 +143,7 @@ public class gluttonousDamageHandler {
                 int playerLevel = 0;
 
                 if (projectile.getOwner() instanceof Player owner) {
-                    playerLevel = owner.getCapability(PlayerLevelProvider.PLAYER_LVL)
+                    playerLevel = PlayerLevelProvider.PLAYER_LVL.get(owner)
                             .map(level -> level.getLevel())
                             .orElse(0);
                 }

@@ -34,7 +34,7 @@ public class ActivateCamouflagePacket {
             ServerPlayer player = ctx.getSender();
             if (player == null) return;
 
-            player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+            SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
                 if (data.isCamouflaged()) {
                     CamouflageLogic.deactivate(player, data);
                 } else {

@@ -35,7 +35,7 @@ public final class BerserkerHudOverlay {
     private static boolean isBerserker() {
         var player = Minecraft.getInstance().player;
         if (player == null) return false;
-        return player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER)
+        return SporeIdentifierProvider.SPORE_IDENTIFIER.get(player)
                 .map(d -> "berserker".equalsIgnoreCase(d.getIdentifier()))
                 .orElse(false);
     }

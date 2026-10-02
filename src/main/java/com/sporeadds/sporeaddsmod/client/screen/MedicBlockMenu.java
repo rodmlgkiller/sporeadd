@@ -39,7 +39,7 @@ public class MedicBlockMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
+        ForgeCapabilities.ITEM_HANDLER.get(this.blockEntity).ifPresent(iItemHandler -> {
             this.addSlot(new SlotItemHandler(iItemHandler, 0, 42, 117));
             this.addSlot(new OutputSlot(iItemHandler, 1, 76, 117));
         });

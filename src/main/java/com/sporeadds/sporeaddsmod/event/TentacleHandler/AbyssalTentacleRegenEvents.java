@@ -49,7 +49,7 @@ public class AbyssalTentacleRegenEvents {
         // Refresco automático del action bar si hay cooldowns activos
         if (hasDeadOrReturning && player.tickCount % 20 == 0) {
             int playerLevel = AbyssalTentaclePacket.getMaxTentaclesForLevel(
-                    player.getCapability(com.sporeadds.sporeaddsmod.level.PlayerLevelProvider.PLAYER_LVL)
+                    com.sporeadds.sporeaddsmod.level.PlayerLevelProvider.PLAYER_LVL.get(player)
                             .map(cap -> cap.getLevel()).orElse(0)
             );
             AbyssalTentaclePacket.sendTentacleStatus(player, data, playerLevel);
@@ -89,7 +89,7 @@ public class AbyssalTentacleRegenEvents {
             return true;
         }
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(sporeCap -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(sporeCap -> {
             if (sporeCap.getSpore() >= BIOMASS_COST) {
                 sporeCap.subSpore(BIOMASS_COST);
                 AbyssalTentaclePacket.setSlotState(data, slot, AbyssalTentaclePacket.STATE_READY);

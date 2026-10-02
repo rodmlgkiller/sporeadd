@@ -78,7 +78,7 @@ public class Poder10 extends PowerBase {
         MinecraftServer server = player.getServer();
         if (server == null) return;
 
-        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
             if (currentPhase < PHASE_COST) {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.not_enough_biomass").withStyle(ChatFormatting.DARK_RED));

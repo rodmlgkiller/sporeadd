@@ -70,7 +70,7 @@ public class SelectClassPacket {
             return;
         }
 
-        SporeIdentifierData data = player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).resolve().orElse(null);
+        SporeIdentifierData data = SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).resolve().orElse(null);
         if (data == null) {
             return;
         }

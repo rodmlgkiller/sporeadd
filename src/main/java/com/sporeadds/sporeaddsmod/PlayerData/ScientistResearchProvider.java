@@ -1,39 +1,12 @@
 package com.sporeadds.sporeaddsmod.PlayerData;
 
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.ICapabilitySerializable;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import com.sporeadds.sporeaddsmod.capabilities.Capability;
 
-public class ScientistResearchProvider implements ICapabilitySerializable<Tag> {
+public class ScientistResearchProvider {
+    public static final Capability<ScientistResearchData> SCIENTIST_RESEARCH = Capability.ofSimple(
+            "scientist_research", holder -> new ScientistResearchData(),
+            ScientistResearchData::saveNBTData, ScientistResearchData::loadNBTData);
 
-    public static final Capability<ScientistResearchData> SCIENTIST_RESEARCH =
-            CapabilityManager.get(new CapabilityToken<>() {
-            });
-
-    private final ScientistResearchData data = new ScientistResearchData();
-    private final LazyOptional<ScientistResearchData> optional = LazyOptional.of(() -> data);
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        return cap == SCIENTIST_RESEARCH ? optional.cast() : LazyOptional.empty();
-    }
-
-    @Override
-    public Tag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        data.saveNBTData(tag);
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(Tag nbt) {
-        if (nbt instanceof CompoundTag tag) {
-            data.loadNBTData(tag);
-        }
+    private ScientistResearchProvider() {
     }
 }

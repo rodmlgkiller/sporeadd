@@ -139,7 +139,7 @@ public class CompoundsMenu extends AbstractContainerMenu {
         }
 
         private void loadFromPlayer() {
-            owner.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).ifPresent(store -> {
+            CompoundsCapability.PLAYER_COMPOUNDS.get(owner).ifPresent(store -> {
                 for (int i = 0; i < SLOT_COUNT; i++) {
                     ItemStack s = store.getStack(i);
                     setStackInSlot(i, s.isEmpty() ? ItemStack.EMPTY : s.copy());
@@ -148,7 +148,7 @@ public class CompoundsMenu extends AbstractContainerMenu {
         }
 
         public void saveToPlayer() {
-            owner.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).ifPresent(store -> {
+            CompoundsCapability.PLAYER_COMPOUNDS.get(owner).ifPresent(store -> {
                 for (int i = 0; i < SLOT_COUNT; i++) {
                     ItemStack stack = getStackInSlot(i);
                     store.setStack(i, stack.isEmpty() ? ItemStack.EMPTY : stack.copy());

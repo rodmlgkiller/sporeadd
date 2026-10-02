@@ -81,7 +81,7 @@ public class ClassCommand {
         ServerPlayer targetPlayer = EntityArgument.getPlayer(context, "target");
         String requestedIdentifier = StringArgumentType.getString(context, "identifier");
 
-        targetPlayer.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
+        SporeIdentifierProvider.SPORE_IDENTIFIER.get(targetPlayer).ifPresent(data -> {
 
             String previousIdentifier = data.getIdentifier();
 
