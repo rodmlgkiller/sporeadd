@@ -1,8 +1,8 @@
 {
   "required": true,
   "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_21",
   "package": "com.sporeadds.mixin",
-  "refmap": "sporeadds.refmap.json",
   "mixins": [
     "AbyssalAquaAffinityMixin",
     "ArenaEntityMixin",
