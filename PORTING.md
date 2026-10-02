@@ -44,13 +44,13 @@ classes), `tools/evcheck.pl` and `tools/subscribers.pl` (event subscriber sanity
   * `ForgeEventsMixin` removed (it was an empty debug hook on a class Spore no longer has).
   * SRG (`m_xxxx_`) method names were replaced by Mojang names.
 * **Enchanting-table rules** for the Portable Air Purifier and Reinforced Combat Chains are now expressed through the
-  `minecraft:enchantable/durability` item tag, so the Purifier can also take Mending.
+  `minecraft:enchantable/durability` item tag, so an anvil handler (`PurifierEnchantRestriction`) keeps the Purifier to Unbreaking only.
 * Tentacle's "arthropod" / "breathes underwater" behaviour is now an entity-type tag (`data/minecraft/tags/entity_type`).
 * `StaticEntity` lost its passenger riding offset override (removed in 1.21; needs a visual check).
 * `Unbreakable` and gas mask attributes/lore/name use data components instead of NBT (`util/GasMaskFactory`).
 * Data folders were renamed to the 1.21 singular names (`recipe`, `loot_table`, `tags/block`, `tags/item`) and recipes were
   converted (`neoforge:conditions`, `neoforge:components` ingredients, `id`/`components` results).
-* `medic_block` had an empty loot table file (it dropped nothing and logged a parse error). It now drops itself.
+* `medic_block` has an empty loot table on purpose (it drops nothing); the file is now a valid empty table instead of a 0-byte file that logged a parse error.
 * Four unused duplicate textures with uppercase file names were deleted (1.21 rejects uppercase resource paths).
 
 ## Things worth testing in game first
