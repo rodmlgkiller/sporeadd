@@ -12,7 +12,8 @@ public class SubjugationEffect extends MobEffect {
         super(MobEffectCategory.HARMFUL, 0x4A2A6A);
     }
     @Override
-    public List<ItemStack> getCurativeItems() {
-        return Collections.emptyList(); // No se puede curar con leche
+    public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
+        cures.remove(net.neoforged.neoforge.common.EffectCures.MILK);
+        cures.remove(net.neoforged.neoforge.common.EffectCures.HONEY_BOTTLE);
     }
 }

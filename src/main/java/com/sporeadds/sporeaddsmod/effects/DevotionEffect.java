@@ -31,7 +31,7 @@ import java.util.UUID;
  */
 public class DevotionEffect extends MobEffect {
 
-    private static final UUID DAMAGE_MODIFIER_ID = UUID.fromString("f3a9c1d4-6b52-4e88-9a01-7c3d5f9e2b41");
+    private static final ResourceLocation DAMAGE_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "devotioneffect_".lc("DAMAGE_MODIFIER_ID"));
     private static final ResourceLocation MARKER_ID = ResourceLocation.fromNamespaceAndPath("spore", "marker");
     private static final int MARKER_AMPLIFIER = 3;
 
@@ -45,21 +45,20 @@ public class DevotionEffect extends MobEffect {
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void addAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap, int amplifier) {
         AttributeInstance damage = attributeMap.getInstance(Attributes.ATTACK_DAMAGE);
         if (damage != null) {
             damage.removeModifier(DAMAGE_MODIFIER_ID);
             damage.addTransientModifier(new AttributeModifier(
                     DAMAGE_MODIFIER_ID,
-                    "Devotion attack damage",
                     ATTACK_DAMAGE_PER_LEVEL * (amplifier + 1),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             ));
         }
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
         AttributeInstance damage = attributeMap.getInstance(Attributes.ATTACK_DAMAGE);
         if (damage != null) {
             damage.removeModifier(DAMAGE_MODIFIER_ID);

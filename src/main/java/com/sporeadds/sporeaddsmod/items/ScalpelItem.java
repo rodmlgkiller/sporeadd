@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.resources.ResourceLocation;
+
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.research.TrackedEntities;
@@ -27,8 +29,8 @@ import com.google.common.collect.Multimap;
 
 public class ScalpelItem extends Item {
 
-    private static final UUID DAMAGE_MODIFIER_UUID = UUID.fromString("f2a1c1e0-3c4b-4f2a-9b1a-1a2b3c4d5e6f");
-    private static final UUID SPEED_MODIFIER_UUID = UUID.fromString("a1b2c3d4-5e6f-4a1b-8c2d-3e4f5a6b7c8d");
+    private static final ResourceLocation DAMAGE_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "scalpelitem_".lc("DAMAGE_MODIFIER_UUID"));
+    private static final ResourceLocation SPEED_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "scalpelitem_".lc("SPEED_MODIFIER_UUID"));
 
     private static final float ATTACK_DAMAGE = 3.0F;
     private static final float ATTACK_SPEED = 3.0F;
@@ -42,11 +44,11 @@ public class ScalpelItem extends Item {
         ImmutableMultimap.Builder<net.minecraft.world.entity.ai.attributes.Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                DAMAGE_MODIFIER_UUID, "Weapon modifier", ATTACK_DAMAGE - 1.0D, AttributeModifier.Operation.ADDITION
+                DAMAGE_MODIFIER_UUID, ATTACK_DAMAGE - 1.0D, AttributeModifier.Operation.ADD_VALUE
         ));
 
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(
-                SPEED_MODIFIER_UUID, "Weapon modifier", ATTACK_SPEED - 4.0D, AttributeModifier.Operation.ADDITION
+                SPEED_MODIFIER_UUID, ATTACK_SPEED - 4.0D, AttributeModifier.Operation.ADD_VALUE
         ));
 
         this.defaultModifiers = builder.build();

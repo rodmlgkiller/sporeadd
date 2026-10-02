@@ -35,9 +35,9 @@ import java.util.UUID;
 
 public class DehydrationEffect extends MobEffect {
 
-    private static final UUID SPEED_UUID = UUID.fromString("d1bc5555-1234-4321-a1b2-c3d4e5f6a7b8");
-    private static final UUID DAMAGE_UUID = UUID.fromString("d2bc5555-1234-4321-a1b2-c3d4e5f6a7b8");
-    private static final UUID HEALTH_UUID = UUID.fromString("d3bc5555-1234-4321-a1b2-c3d4e5f6a7b8");
+    private static final ResourceLocation SPEED_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_".lc("SPEED_UUID"));
+    private static final ResourceLocation DAMAGE_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_".lc("DAMAGE_UUID"));
+    private static final ResourceLocation HEALTH_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_".lc("HEALTH_UUID"));
 
     private static final ResourceLocation EXTINGUISH_SOUND_ID =
             ResourceLocation.fromNamespaceAndPath("minecraft", "entity.generic.extinguish_fire");
@@ -53,7 +53,7 @@ public class DehydrationEffect extends MobEffect {
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void addAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap, int amplifier) {
         double speedReduction;
         double damageReduction;
         double healthReduction;
@@ -80,9 +80,8 @@ public class DehydrationEffect extends MobEffect {
             if (speedReduction != 0.0D) {
                 speedAttr.addPermanentModifier(new AttributeModifier(
                         SPEED_UUID,
-                        "Dehydration speed",
                         speedReduction,
-                        AttributeModifier.Operation.MULTIPLY_TOTAL
+                        AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
                 ));
             }
         }
@@ -92,9 +91,8 @@ public class DehydrationEffect extends MobEffect {
             damageAttr.removeModifier(DAMAGE_UUID);
             damageAttr.addPermanentModifier(new AttributeModifier(
                     DAMAGE_UUID,
-                    "Dehydration damage",
                     damageReduction,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             ));
         }
 
@@ -104,18 +102,17 @@ public class DehydrationEffect extends MobEffect {
             if (healthReduction < 0) {
                 healthAttr.addPermanentModifier(new AttributeModifier(
                         HEALTH_UUID,
-                        "Dehydration health",
                         healthReduction,
-                        AttributeModifier.Operation.ADDITION
+                        AttributeModifier.Operation.ADD_VALUE
                 ));
             }
         }
 
-        super.addAttributeModifiers(entity, attributeMap, amplifier);
+        super.addAttributeModifiers(attributeMap, amplifier);
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
         var speedAttr = attributeMap.getInstance(Attributes.MOVEMENT_SPEED);
         if (speedAttr != null) speedAttr.removeModifier(SPEED_UUID);
 
@@ -134,7 +131,7 @@ public class DehydrationEffect extends MobEffect {
             playExtinguishSound(entity);
         }
 
-        super.removeAttributeModifiers(entity, attributeMap, amplifier);
+        super.removeAttributeModifiers(attributeMap);
     }
 
     @Override
@@ -184,8 +181,7 @@ public class DehydrationEffect extends MobEffect {
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
-        return List.of(new ItemStack(Items.MILK_BUCKET));
+    public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
     }
 
     private static boolean isCreativeFlying(LivingEntity entity) {

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
+import net.minecraft.resources.ResourceLocation;
+
 import com.sporeadds.sporeaddsmod.capabilities.CompoundsCapability;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncCompoundsPacket;
@@ -12,7 +14,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.common.ForgeMod;
 import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.EnumMap;
@@ -24,9 +25,9 @@ import java.util.UUID;
  */
 public final class CompoundEffects {
 
-    private static final UUID MOVE_SPEED_UUID = UUID.fromString("6c3f1b0a-1f2e-4c3d-8a11-9b7c5d4e2f01");
-    private static final UUID KB_RES_UUID = UUID.fromString("6c3f1b0a-1f2e-4c3d-8a11-9b7c5d4e2f02");
-    private static final UUID SWIM_UUID = UUID.fromString("6c3f1b0a-1f2e-4c3d-8a11-9b7c5d4e2f03");
+    private static final ResourceLocation MOVE_SPEED_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_".lc("MOVE_SPEED_UUID"));
+    private static final ResourceLocation KB_RES_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_".lc("KB_RES_UUID"));
+    private static final ResourceLocation SWIM_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_".lc("SWIM_UUID"));
 
     private CompoundEffects() {
     }
@@ -53,13 +54,13 @@ public final class CompoundEffects {
         int charred = counts.getOrDefault(CompoundType.CHARRED, 0);
 
         setModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_UUID, "sporeadd_claws_skeletal_speed",
-                0.075D * skeletal, AttributeModifier.Operation.MULTIPLY_TOTAL, skeletal > 0);
+                0.075D * skeletal, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, skeletal > 0);
         setModifier(player, Attributes.KNOCKBACK_RESISTANCE, KB_RES_UUID, "sporeadd_claws_skeletal_kbres",
-                0.25D * skeletal, AttributeModifier.Operation.ADDITION, skeletal > 0);
+                0.25D * skeletal, AttributeModifier.Operation.ADD_VALUE, skeletal > 0);
 
-        Attribute swim = ForgeMod.SWIM_SPEED.get();
+        Attribute swim = net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED;
         setModifier(player, swim, SWIM_UUID, "sporeadd_claws_drowned_swim",
-                0.10D * drowned, AttributeModifier.Operation.MULTIPLY_TOTAL, drowned > 0);
+                0.10D * drowned, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, drowned > 0);
 
         if (drowned > 0) {
             player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING,
@@ -74,7 +75,7 @@ public final class CompoundEffects {
     public static void removeBuffs(ServerPlayer player) {
         removeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_UUID);
         removeModifier(player, Attributes.KNOCKBACK_RESISTANCE, KB_RES_UUID);
-        removeModifier(player, ForgeMod.SWIM_SPEED.get(), SWIM_UUID);
+        removeModifier(player, net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED, SWIM_UUID);
 
         MobEffectInstance wb = player.getEffect(MobEffects.WATER_BREATHING);
         if (wb != null && wb.isInfiniteDuration()) {
@@ -93,7 +94,7 @@ public final class CompoundEffects {
         if (inst == null) return;
         inst.removeModifier(id);
         if (present && amount != 0.0D) {
-            inst.addTransientModifier(new AttributeModifier(id, name, amount, op));
+            inst.addTransientModifier(new AttributeModifier(id, amount, op));
         }
     }
 

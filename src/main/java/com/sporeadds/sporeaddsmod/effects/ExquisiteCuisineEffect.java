@@ -24,7 +24,7 @@ public class ExquisiteCuisineEffect extends MobEffect {
                 Attributes.ATTACK_DAMAGE,
                 "d6b5f6c2-1f9a-4d2e-8b7c-6e3f5a1c9b42",
                 0.10D,
-                AttributeModifier.Operation.MULTIPLY_TOTAL
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }
 

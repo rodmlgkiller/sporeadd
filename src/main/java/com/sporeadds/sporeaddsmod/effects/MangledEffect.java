@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.resources.ResourceLocation;
+
 import com.sporeadds.sporeaddsmod.particles.GoreParticleData;
 import com.sporeadds.sporeaddsmod.particles.SporeaddParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +16,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.ForgeMod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,10 @@ import java.util.UUID;
 
 public class MangledEffect extends MobEffect {
 
-    private static final UUID HEALTH_MOD_UUID = UUID.fromString("aaa11111-2222-3333-4444-555555555555");
-    private static final UUID DAMAGE_MOD_UUID = UUID.fromString("bbb11111-2222-3333-4444-666666666666");
-    private static final UUID SPEED_MOD_UUID  = UUID.fromString("ccc11111-2222-3333-4444-777777777777");
-    private static final UUID STEP_MOD_UUID   = UUID.fromString("ddd11111-2222-3333-4444-888888888888");
+    private static final ResourceLocation HEALTH_MOD_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("HEALTH_MOD_UUID"));
+    private static final ResourceLocation DAMAGE_MOD_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("DAMAGE_MOD_UUID"));
+    private static final ResourceLocation SPEED_MOD_UUID  = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("SPEED_MOD_UUID"));
+    private static final ResourceLocation STEP_MOD_UUID   = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("STEP_MOD_UUID"));
 
     private static final int MAX_PARTICLE_AMPLIFIER = 20;
 
@@ -42,22 +43,22 @@ public class MangledEffect extends MobEffect {
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
-        return new ArrayList<>();
+    public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
+        cures.remove(net.neoforged.neoforge.common.EffectCures.MILK);
+        cures.remove(net.neoforged.neoforge.common.EffectCures.HONEY_BOTTLE);
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap map, int amplifier) {
-        removeAttributeModifiers(entity, map, amplifier);
+    public void addAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap map, int amplifier) {
+        removeAttributeModifiers(map);
 
         AttributeInstance health = map.getInstance(Attributes.MAX_HEALTH);
         if (health != null) {
             double healthPenalty = (amplifier + 1) * -3.0D;
             health.addPermanentModifier(new AttributeModifier(
                     HEALTH_MOD_UUID,
-                    "Mangled health penalty",
                     healthPenalty,
-                    AttributeModifier.Operation.ADDITION
+                    AttributeModifier.Operation.ADD_VALUE
             ));
         }
 
@@ -66,9 +67,8 @@ public class MangledEffect extends MobEffect {
             double damagePenalty = (amplifier + 1) * -0.10D;
             damage.addPermanentModifier(new AttributeModifier(
                     DAMAGE_MOD_UUID,
-                    "Mangled damage penalty",
                     damagePenalty,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             ));
         }
 
@@ -77,25 +77,23 @@ public class MangledEffect extends MobEffect {
             double speedPenalty = Math.max(-0.70D, (amplifier + 1) * -0.10D);
             speed.addPermanentModifier(new AttributeModifier(
                     SPEED_MOD_UUID,
-                    "Mangled speed penalty",
                     speedPenalty,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             ));
         }
 
-        AttributeInstance step = map.getInstance(ForgeMod.STEP_HEIGHT_ADDITION.get());
+        AttributeInstance step = map.getInstance(net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT);
         if (step != null) {
             step.addPermanentModifier(new AttributeModifier(
                     STEP_MOD_UUID,
-                    "Mangled step addition",
                     1.0D,
-                    AttributeModifier.Operation.ADDITION
+                    AttributeModifier.Operation.ADD_VALUE
             ));
         }
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap map, int amplifier) {
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap map) {
         AttributeInstance health = map.getInstance(Attributes.MAX_HEALTH);
         if (health != null) health.removeModifier(HEALTH_MOD_UUID);
 
@@ -105,7 +103,7 @@ public class MangledEffect extends MobEffect {
         AttributeInstance speed = map.getInstance(Attributes.MOVEMENT_SPEED);
         if (speed != null) speed.removeModifier(SPEED_MOD_UUID);
 
-        AttributeInstance step = map.getInstance(ForgeMod.STEP_HEIGHT_ADDITION.get());
+        AttributeInstance step = map.getInstance(net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT);
         if (step != null) step.removeModifier(STEP_MOD_UUID);
     }
 

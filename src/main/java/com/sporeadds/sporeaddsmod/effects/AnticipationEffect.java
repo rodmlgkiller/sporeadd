@@ -14,7 +14,8 @@ public class AnticipationEffect extends MobEffect {
     }
 
     @Override
-    public List<ItemStack> getCurativeItems() {
-        return new ArrayList<>();
+    public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
+        cures.remove(net.neoforged.neoforge.common.EffectCures.MILK);
+        cures.remove(net.neoforged.neoforge.common.EffectCures.HONEY_BOTTLE);
     }
 }

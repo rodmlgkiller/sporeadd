@@ -37,8 +37,8 @@ public class CamouflagedEffect extends MobEffect {
     // bebe leche o muere. Por eso también mantenemos la lógica en el TickEvent como respaldo.
     // Pero si se llama, devolvemos el equipo.
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap, int amplifier) {
-        super.removeAttributeModifiers(entity, attributeMap, amplifier);
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
+        super.removeAttributeModifiers(attributeMap);
 
         if (!(entity instanceof ServerPlayer player)) return;
 

@@ -62,7 +62,7 @@ public class TerminaEffect extends MobEffect {
             "You fight to breathe..."
     };
 
-    private static final UUID TERMINA_HEALTH_MODIFIER_UUID = UUID.fromString("2b7b8e09-4e09-4c8c-967f-7b2dbe0c53ab");
+    private static final ResourceLocation TERMINA_HEALTH_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "terminaeffect_".lc("TERMINA_HEALTH_MODIFIER_UUID"));
     private static final ResourceLocation SOUND_REAGENT_ID = ResourceLocation.fromNamespaceAndPath("spore", "reagent");
 
     public static final ResourceKey<DamageType> MYCELIUM_OVERTAKE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("spore", "mycelium_overtake"));
@@ -74,7 +74,7 @@ public class TerminaEffect extends MobEffect {
                 net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH,
                 TERMINA_HEALTH_MODIFIER_UUID.toString(),
                 -8.0D,
-                AttributeModifier.Operation.ADDITION
+                AttributeModifier.Operation.ADD_VALUE
         );
     }
 
@@ -112,13 +112,14 @@ public class TerminaEffect extends MobEffect {
     }
 
     @Override
-    public List<net.minecraft.world.item.ItemStack> getCurativeItems() {
-        return Collections.emptyList(); // No se puede curar con leche
+    public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
+        cures.remove(net.neoforged.neoforge.common.EffectCures.MILK);
+        cures.remove(net.neoforged.neoforge.common.EffectCures.HONEY_BOTTLE);
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributemap, int amplifier) {
-        super.removeAttributeModifiers(entity, attributemap, amplifier);
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributemap) {
+        super.removeAttributeModifiers(attributemap);
 
         if (!entity.level().isClientSide) {
 

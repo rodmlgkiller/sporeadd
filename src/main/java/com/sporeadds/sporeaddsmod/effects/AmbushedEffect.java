@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.resources.ResourceLocation;
+
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +13,7 @@ import java.util.UUID;
 
 public class AmbushedEffect extends MobEffect {
 
-    private static final UUID SPEED_MODIFIER_ID = UUID.fromString("8f3c1a2e-4b6d-4e21-9a2f-1c7d5e9b3f10");
+    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "ambushedeffect_".lc("SPEED_MODIFIER_ID"));
     public static final double MOVEMENT_SPEED_REDUCTION = -0.60D;
     public static final float OUTGOING_DAMAGE_MULTIPLIER = 0.50F;
     public static final float INCOMING_DAMAGE_MULTIPLIER = 2.0F;
@@ -21,20 +23,19 @@ public class AmbushedEffect extends MobEffect {
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void addAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap, int amplifier) {
         var speedAttribute = attributeMap.getInstance(Attributes.MOVEMENT_SPEED);
         if (speedAttribute != null && speedAttribute.getModifier(SPEED_MODIFIER_ID) == null) {
             speedAttribute.addTransientModifier(new AttributeModifier(
                     SPEED_MODIFIER_ID,
-                    "Ambushed speed penalty",
                     MOVEMENT_SPEED_REDUCTION,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             ));
         }
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
         var speedAttribute = attributeMap.getInstance(Attributes.MOVEMENT_SPEED);
         if (speedAttribute != null) {
             speedAttribute.removeModifier(SPEED_MODIFIER_ID);

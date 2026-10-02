@@ -95,8 +95,8 @@ public class SeasonedEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity living, AttributeMap attributeMap, int amplifier) {
-        super.removeAttributeModifiers(living, attributeMap, amplifier);
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
+        super.removeAttributeModifiers(attributeMap);
 
         if (living.level().isClientSide) return;
         clearSporeTargets(living);

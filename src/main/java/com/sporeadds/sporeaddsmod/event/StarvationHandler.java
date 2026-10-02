@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.resources.ResourceLocation;
+
 import net.minecraft.core.Holder;
 
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;

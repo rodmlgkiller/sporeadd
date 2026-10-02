@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
+import net.minecraft.resources.ResourceLocation;
+
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -76,7 +78,7 @@ public final class ClawsAbility {
     // Modificador temporal de ATTACK_DAMAGE para que Minecraft no cancele el golpe desarmado
     // cuando el jugador tiene Debilidad (que dejaría el daño base <= 0). Se añade al iniciar el
     // ataque y se quita al aplicarlo; el valor se descuenta en la fórmula del daño de garra.
-    private static final UUID WEAKNESS_BYPASS_UUID = UUID.fromString("6c3f1b0a-1f2e-4c3d-8a11-9b7c5d4e2f10");
+    private static final ResourceLocation WEAKNESS_BYPASS_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "clawsability_".lc("WEAKNESS_BYPASS_UUID"));
     private static final double WEAKNESS_BYPASS_AMOUNT = 1024.0D;
 
     // Crit desarmado pendiente (multiplicador) a consumir en el proximo LivingIncomingDamageEvent.
@@ -251,8 +253,8 @@ public final class ClawsAbility {
         if (inst == null) return;
         inst.removeModifier(WEAKNESS_BYPASS_UUID);
         inst.addTransientModifier(new AttributeModifier(
-                WEAKNESS_BYPASS_UUID, "sporeadd_claws_weakness_bypass",
-                WEAKNESS_BYPASS_AMOUNT, AttributeModifier.Operation.ADDITION));
+                WEAKNESS_BYPASS_UUID,
+                WEAKNESS_BYPASS_AMOUNT, AttributeModifier.Operation.ADD_VALUE));
     }
 
     /** Crit desarmado con el modo Claws activo: guarda el multiplicador para el LivingIncomingDamageEvent. */

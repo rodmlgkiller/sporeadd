@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.resources.ResourceLocation;
+
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,7 +10,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.neoforged.neoforge.common.ForgeMod;
 
 import java.util.UUID;
 
@@ -28,8 +29,8 @@ import java.util.UUID;
  */
 public class PunishmentEffect extends MobEffect {
 
-    private static final UUID SPEED_MODIFIER_ID = UUID.fromString("d1e4b6c2-7a09-4f53-9b8c-2e6a1f0d4c77");
-    private static final UUID STEP_MODIFIER_ID = UUID.fromString("d1e4b6c2-7a09-4f53-9b8c-2e6a1f0d4c78");
+    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "punishmenteffect_".lc("SPEED_MODIFIER_ID"));
+    private static final ResourceLocation STEP_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "punishmenteffect_".lc("STEP_MODIFIER_ID"));
 
     /** -30% de velocidad por nivel, limitado para no dejar al jugador totalmente clavado. */
     public static final double MOVE_SPEED_PER_LEVEL = -0.30D;
@@ -53,39 +54,37 @@ public class PunishmentEffect extends MobEffect {
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void addAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap, int amplifier) {
         AttributeInstance speed = attributeMap.getInstance(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.removeModifier(SPEED_MODIFIER_ID);
             speed.addTransientModifier(new AttributeModifier(
                     SPEED_MODIFIER_ID,
-                    "Punishment speed penalty",
                     speedReductionFor(amplifier),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             ));
         }
 
-        Attribute stepAttr = ForgeMod.STEP_HEIGHT_ADDITION.get();
+        Attribute stepAttr = net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT;
         AttributeInstance step = stepAttr == null ? null : attributeMap.getInstance(stepAttr);
         if (step != null) {
             step.removeModifier(STEP_MODIFIER_ID);
             step.addTransientModifier(new AttributeModifier(
                     STEP_MODIFIER_ID,
-                    "Punishment step height",
                     STEP_HEIGHT_BONUS,
-                    AttributeModifier.Operation.ADDITION
+                    AttributeModifier.Operation.ADD_VALUE
             ));
         }
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
+    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
         AttributeInstance speed = attributeMap.getInstance(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.removeModifier(SPEED_MODIFIER_ID);
         }
 
-        Attribute stepAttr = ForgeMod.STEP_HEIGHT_ADDITION.get();
+        Attribute stepAttr = net.minecraft.world.entity.ai.attributes.Attributes.STEP_HEIGHT;
         AttributeInstance step = stepAttr == null ? null : attributeMap.getInstance(stepAttr);
         if (step != null) {
             step.removeModifier(STEP_MODIFIER_ID);

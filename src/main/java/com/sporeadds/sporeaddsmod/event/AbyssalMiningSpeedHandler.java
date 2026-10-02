@@ -25,7 +25,7 @@ public class AbyssalMiningSpeedHandler {
             return;
         }
 
-        boolean underwater = player.isEyeInFluidType(net.neoforged.neoforge.common.ForgeMod.WATER_TYPE.get());
+        boolean underwater = player.isEyeInFluidType(net.neoforged.neoforge.common.NeoForgeMod.WATER_TYPE.value());
         boolean airborne = !player.onGround();
 
         float speed = event.getOriginalSpeed();

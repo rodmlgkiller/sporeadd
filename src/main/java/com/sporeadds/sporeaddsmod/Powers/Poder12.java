@@ -55,7 +55,7 @@ public class Poder12 {
     private static final int PCI_DAMAGE_PER_CHARGE = 6;
     private static final int PCI_FREEZE_TICKS = 600;
 
-    private static final UUID ARMOR_HP_KBRES_UUID = UUID.fromString("e5c5c082-c110-4dbc-b320-1ccc2fefad9a");
+    private static final ResourceLocation ARMOR_HP_KBRES_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder12_".lc("ARMOR_HP_KBRES_UUID"));
     private static final Map<UUID, Integer> PREVIOUS_ARMOR_HP = new HashMap<>();
     private static final Map<UUID, Long> SCENT_COOLDOWNS = new HashMap<>();
     private static final Map<UUID, Boolean> gluttonous_HELM_BROKEN = new HashMap<>();
@@ -177,9 +177,8 @@ public class Poder12 {
                         attr.addPermanentModifier(
                                 new AttributeModifier(
                                         ARMOR_HP_KBRES_UUID,
-                                        "spore_armor_hp_knockback_resist",
                                         1.0D,
-                                        AttributeModifier.Operation.ADDITION
+                                        AttributeModifier.Operation.ADD_VALUE
                                 )
                         );
                     }

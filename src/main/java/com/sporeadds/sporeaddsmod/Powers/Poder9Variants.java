@@ -33,7 +33,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.ForgeMod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -59,7 +58,7 @@ public class Poder9Variants {
     private static final ResourceLocation BLOOD_PARTICLE_ID = ResourceLocation.fromNamespaceAndPath("spore", "blood_particle");
 
     private static final int ABYSSAL_SWIM_SLOW_DURATION = 250;
-    private static final UUID ABYSSAL_SWIM_SLOW_UUID = UUID.fromString("7c4ee536-2f4e-4c4f-9f56-0d6f7b4e91a1");
+    private static final ResourceLocation ABYSSAL_SWIM_SLOW_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder9variants_".lc("ABYSSAL_SWIM_SLOW_UUID"));
     private static final String ABYSSAL_VORTEX_MARK = "sporeadd_abyssal_vortex_mark";
 
     private static final String gluttonous_CALL_ACTIVE_TAG = "sporeadd_gluttonous_call_active";
@@ -531,7 +530,7 @@ public class Poder9Variants {
             ticksRemaining--;
             if (ticksRemaining > 0) return;
 
-            var attr = living.getAttribute(ForgeMod.SWIM_SPEED.get());
+            var attr = living.getAttribute(net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED);
             if (attr != null) {
                 attr.removeModifier(modifierId);
             }
@@ -569,7 +568,7 @@ public class Poder9Variants {
             if (entity instanceof LivingEntity living && living.isInWater()) {
                 living.getPersistentData().putBoolean(ABYSSAL_VORTEX_MARK, true);
 
-                var attr = living.getAttribute(ForgeMod.SWIM_SPEED.get());
+                var attr = living.getAttribute(net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED);
                 if (attr != null) {
                     attr.removeModifier(ABYSSAL_SWIM_SLOW_UUID);
 
@@ -580,9 +579,8 @@ public class Poder9Variants {
 
                     attr.addTransientModifier(new AttributeModifier(
                             ABYSSAL_SWIM_SLOW_UUID,
-                            "abyssal_swim_slow",
                             swimPenalty,
-                            AttributeModifier.Operation.ADDITION
+                            AttributeModifier.Operation.ADD_VALUE
                     ));
 
                     NeoForge.EVENT_BUS.register(
