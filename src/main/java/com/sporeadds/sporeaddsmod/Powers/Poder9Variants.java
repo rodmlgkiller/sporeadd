@@ -58,7 +58,7 @@ public class Poder9Variants {
     private static final ResourceLocation BLOOD_PARTICLE_ID = ResourceLocation.fromNamespaceAndPath("spore", "blood_particle");
 
     private static final int ABYSSAL_SWIM_SLOW_DURATION = 250;
-    private static final ResourceLocation ABYSSAL_SWIM_SLOW_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder9variants_".lc("ABYSSAL_SWIM_SLOW_UUID"));
+    private static final ResourceLocation ABYSSAL_SWIM_SLOW_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder9variants_abyssal_swim_slow_uuid");
     private static final String ABYSSAL_VORTEX_MARK = "sporeadd_abyssal_vortex_mark";
 
     private static final String gluttonous_CALL_ACTIVE_TAG = "sporeadd_gluttonous_call_active";

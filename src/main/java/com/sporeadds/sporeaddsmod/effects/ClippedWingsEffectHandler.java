@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.server.level.ServerPlayer;
@@ -11,7 +13,7 @@ import net.neoforged.fml.common.Mod;
 public class ClippedWingsEffectHandler {
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+    public static void onLivingTick(EntityTickEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }

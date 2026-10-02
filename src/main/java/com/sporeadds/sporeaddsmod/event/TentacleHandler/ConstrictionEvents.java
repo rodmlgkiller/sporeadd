@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event.TentacleHandler;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -26,8 +28,8 @@ public class ConstrictionEvents {
     private static final float MIN_DROWN_DAMAGE_HEALTH_RATIO = 0.10F;
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onLivingTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         if (entity.level().isClientSide()) {
             return;

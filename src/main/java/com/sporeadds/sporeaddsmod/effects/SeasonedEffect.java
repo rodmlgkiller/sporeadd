@@ -20,7 +20,7 @@ import net.minecraft.world.scores.Team;
 
 import java.util.List;
 
-public class SeasonedEffect extends MobEffect {
+public class SeasonedEffect extends MobEffect implements com.sporeadds.sporeaddsmod.effects.EffectRemovalEvents.RemovalAware {
 
     private static final ResourceLocation MARKER_ID = ResourceLocation.fromNamespaceAndPath("spore", "marker");
     private static final ResourceLocation PROTO_ID = ResourceLocation.fromNamespaceAndPath("spore", "proto");
@@ -95,8 +95,7 @@ public class SeasonedEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
-        super.removeAttributeModifiers(attributeMap);
+    public void onRemovedFrom(net.minecraft.world.entity.LivingEntity living) {
 
         if (living.level().isClientSide) return;
         clearSporeTargets(living);

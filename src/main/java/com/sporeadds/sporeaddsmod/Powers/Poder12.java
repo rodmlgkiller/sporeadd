@@ -55,7 +55,7 @@ public class Poder12 {
     private static final int PCI_DAMAGE_PER_CHARGE = 6;
     private static final int PCI_FREEZE_TICKS = 600;
 
-    private static final ResourceLocation ARMOR_HP_KBRES_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder12_".lc("ARMOR_HP_KBRES_UUID"));
+    private static final ResourceLocation ARMOR_HP_KBRES_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder12_armor_hp_kbres_uuid");
     private static final Map<UUID, Integer> PREVIOUS_ARMOR_HP = new HashMap<>();
     private static final Map<UUID, Long> SCENT_COOLDOWNS = new HashMap<>();
     private static final Map<UUID, Boolean> gluttonous_HELM_BROKEN = new HashMap<>();

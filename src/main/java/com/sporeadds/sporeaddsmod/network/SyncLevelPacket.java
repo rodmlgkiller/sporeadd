@@ -49,7 +49,7 @@ public class SyncLevelPacket {
         PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(cap -> {
             NetworkHandle.INSTANCE.sendTo(
                     new SyncLevelPacket(cap.getLevel(), cap.getKnowledgeLevel()),
-                    player.connection.connection,
+                    player.connection.getConnection(),
                     NetworkDirection.PLAY_TO_CLIENT
             );
         });

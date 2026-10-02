@@ -31,7 +31,7 @@ import java.util.UUID;
  */
 public class DevotionEffect extends MobEffect {
 
-    private static final ResourceLocation DAMAGE_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "devotioneffect_".lc("DAMAGE_MODIFIER_ID"));
+    private static final ResourceLocation DAMAGE_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "devotioneffect_damage_modifier_id");
     private static final ResourceLocation MARKER_ID = ResourceLocation.fromNamespaceAndPath("spore", "marker");
     private static final int MARKER_AMPLIFIER = 3;
 

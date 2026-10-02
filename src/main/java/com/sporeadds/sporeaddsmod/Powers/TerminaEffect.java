@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public class TerminaEffect extends MobEffect {
+public class TerminaEffect extends MobEffect implements com.sporeadds.sporeaddsmod.effects.EffectRemovalEvents.RemovalAware {
 
     private static final Random RAND = new Random();
     private static final String[] PHRASES = {
@@ -46,13 +46,13 @@ public class TerminaEffect extends MobEffect {
     };
 
     // UUID único para el modificador de vida máximo
-    private static final ResourceLocation TERMINA_HEALTH_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "terminaeffect_".lc("TERMINA_HEALTH_MODIFIER_UUID"));
+    private static final ResourceLocation TERMINA_HEALTH_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "terminaeffect_termina_health_modifier_uuid");
 
     public TerminaEffect() {
         super(MobEffectCategory.HARMFUL, 0x8A38B3);
         addAttributeModifier(
                 net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH,
-                TERMINA_HEALTH_MODIFIER_UUID.toString(),
+                TERMINA_HEALTH_MODIFIER_UUID,
                 -8.0D,
                 AttributeModifier.Operation.ADD_VALUE
         );
@@ -90,12 +90,10 @@ public class TerminaEffect extends MobEffect {
     @Override
     public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
         cures.remove(net.neoforged.neoforge.common.EffectCures.MILK);
-        cures.remove(net.neoforged.neoforge.common.EffectCures.HONEY_BOTTLE);
     }
 
     @Override
-    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributemap) {
-        super.removeAttributeModifiers(attributemap);
+    public void onRemovedFrom(net.minecraft.world.entity.LivingEntity entity) {
 
         if (!entity.level().isClientSide && entity instanceof ServerPlayer player) {
             // EXCEPCIÓN: Si tiene el flag de vacuna, no matar ni poner efectos

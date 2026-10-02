@@ -45,7 +45,7 @@ public class SyncSporePacket {
         PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(cap -> {
             NetworkHandle.INSTANCE.sendTo(
                     new SyncSporePacket(cap.getSpore()),
-                    player.connection.connection,
+                    player.connection.getConnection(),
                     NetworkDirection.PLAY_TO_CLIENT
             );
         });

@@ -41,7 +41,7 @@ public class PlayerData {
         if (player != null && !player.level().isClientSide) {
             NetworkHandlerArmorHp.getChannel().sendTo(
                     new ArmorHpSyncPacket(armorHp),
-                    player.connection.connection,
+                    player.connection.getConnection(),
                     NetworkDirection.PLAY_TO_CLIENT
             );
         }

@@ -33,11 +33,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class DehydrationEffect extends MobEffect {
+public class DehydrationEffect extends MobEffect implements EffectRemovalEvents.RemovalAware {
 
-    private static final ResourceLocation SPEED_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_".lc("SPEED_UUID"));
-    private static final ResourceLocation DAMAGE_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_".lc("DAMAGE_UUID"));
-    private static final ResourceLocation HEALTH_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_".lc("HEALTH_UUID"));
+    private static final ResourceLocation SPEED_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_speed_uuid");
+    private static final ResourceLocation DAMAGE_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_damage_uuid");
+    private static final ResourceLocation HEALTH_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "dehydrationeffect_health_uuid");
 
     private static final ResourceLocation EXTINGUISH_SOUND_ID =
             ResourceLocation.fromNamespaceAndPath("minecraft", "entity.generic.extinguish_fire");
@@ -58,7 +58,7 @@ public class DehydrationEffect extends MobEffect {
         double damageReduction;
         double healthReduction;
 
-        boolean ignoreMovementPenalty = isCreativeFlying(entity);
+        boolean ignoreMovementPenalty = false; // creative flight is handled per tick in applyEffectTick
 
         if (amplifier >= 2) {
             speedReduction = ignoreMovementPenalty ? 0.0D : -0.40D;
@@ -122,16 +122,21 @@ public class DehydrationEffect extends MobEffect {
         var healthAttr = attributeMap.getInstance(Attributes.MAX_HEALTH);
         if (healthAttr != null) {
             healthAttr.removeModifier(HEALTH_UUID);
-            if (entity.getHealth() > entity.getMaxHealth()) {
-                entity.setHealth(entity.getMaxHealth());
-            }
+        }
+
+
+        super.removeAttributeModifiers(attributeMap);
+    }
+
+    @Override
+    public void onRemovedFrom(LivingEntity entity) {
+        if (entity.getHealth() > entity.getMaxHealth()) {
+            entity.setHealth(entity.getMaxHealth());
         }
 
         if (!SILENT_REMOVALS.remove(entity.getUUID())) {
             playExtinguishSound(entity);
         }
-
-        super.removeAttributeModifiers(attributeMap);
     }
 
     @Override
@@ -145,12 +150,14 @@ public class DehydrationEffect extends MobEffect {
             return true;
         }
 
+        syncSpeedModifier(entity, amplifier);
+
         WaterCureResult waterCure = getWaterCureResult(entity);
         if (waterCure.shouldCure()) {
             if (waterCure.consumeWaterBlock()) {
                 removeWaterSource(entity.level(), waterCure.blockPos());
             }
-            entity.removeEffect(this);
+            entity.removeEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this));
             return true;
         }
 
@@ -162,7 +169,7 @@ public class DehydrationEffect extends MobEffect {
         }
 
         if (amplifier >= 2 && entity instanceof Player player) {
-            MobEffectInstance instance = entity.getEffect(this);
+            MobEffectInstance instance = entity.getEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this));
             if (instance != null) {
                 int duration = instance.getDuration();
 
@@ -182,6 +189,21 @@ public class DehydrationEffect extends MobEffect {
 
     @Override
     public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
+    }
+
+    private static void syncSpeedModifier(LivingEntity entity, int amplifier) {
+        var speedAttr = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speedAttr == null) {
+            return;
+        }
+        boolean flying = isCreativeFlying(entity);
+        boolean present = speedAttr.getModifier(SPEED_UUID) != null;
+        if (flying && present) {
+            speedAttr.removeModifier(SPEED_UUID);
+        } else if (!flying && !present) {
+            double reduction = amplifier >= 2 ? -0.40D : (amplifier >= 1 ? -0.30D : -0.10D);
+            speedAttr.addPermanentModifier(new AttributeModifier(SPEED_UUID, reduction, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
     }
 
     private static boolean isCreativeFlying(LivingEntity entity) {

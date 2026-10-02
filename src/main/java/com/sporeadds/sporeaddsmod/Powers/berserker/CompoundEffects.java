@@ -25,9 +25,9 @@ import java.util.UUID;
  */
 public final class CompoundEffects {
 
-    private static final ResourceLocation MOVE_SPEED_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_".lc("MOVE_SPEED_UUID"));
-    private static final ResourceLocation KB_RES_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_".lc("KB_RES_UUID"));
-    private static final ResourceLocation SWIM_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_".lc("SWIM_UUID"));
+    private static final ResourceLocation MOVE_SPEED_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_move_speed_uuid");
+    private static final ResourceLocation KB_RES_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_kb_res_uuid");
+    private static final ResourceLocation SWIM_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "compoundeffects_swim_uuid");
 
     private CompoundEffects() {
     }

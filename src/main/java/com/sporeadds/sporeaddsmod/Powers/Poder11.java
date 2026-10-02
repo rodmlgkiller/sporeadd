@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+
 import net.minecraft.core.Holder;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -256,8 +258,8 @@ public class Poder11 extends PowerBase {
     }
 
     @SubscribeEvent
-    public static void onVigilTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onVigilTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
         if (entity.level().isClientSide()) return;
 
         CompoundTag persistentData = entity.getPersistentData();
@@ -323,8 +325,8 @@ public class Poder11 extends PowerBase {
     }
 
     @SubscribeEvent
-    public static void onMoundTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onMoundTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
         if (entity.level().isClientSide()) return;
         if (!isOwnedByPoder11(entity)) return;
 

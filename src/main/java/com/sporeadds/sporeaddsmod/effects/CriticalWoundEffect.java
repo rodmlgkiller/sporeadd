@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class CriticalWoundEffect extends MobEffect {
 
-    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "criticalwoundeffect_".lc("SPEED_MODIFIER_ID"));
+    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "criticalwoundeffect_speed_modifier_id");
     public static final double MOVEMENT_SPEED_REDUCTION = -0.30D;
     public static final float OUTGOING_DAMAGE_MULTIPLIER = 0.60F;
 

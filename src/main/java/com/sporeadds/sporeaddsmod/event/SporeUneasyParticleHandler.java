@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+
 import net.minecraft.core.Holder;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,8 +22,8 @@ import net.neoforged.fml.common.Mod;
 public class SporeUneasyParticleHandler {
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onLivingTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         // Solo ejecutar en el lado del servidor
         if (entity.level().isClientSide) return;

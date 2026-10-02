@@ -35,7 +35,6 @@ public class FaminedEffect extends MobEffect {
     @Override
     public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
         cures.remove(net.neoforged.neoforge.common.EffectCures.MILK);
-        cures.remove(net.neoforged.neoforge.common.EffectCures.HONEY_BOTTLE);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class FaminedEffect extends MobEffect {
 
         UUID playerId = player.getUUID();
 
-        if (!player.hasEffect(this)) {
+        if (!player.hasEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this))) {
             APPLIED_THIS_INSTANCE.remove(playerId);
             return true;
         }
@@ -105,7 +104,7 @@ public class FaminedEffect extends MobEffect {
             );
         }
 
-        MobEffectInstance current = player.getEffect(this);
+        MobEffectInstance current = player.getEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this));
         if (current == null || current.getDuration() <= 1) {
             APPLIED_THIS_INSTANCE.remove(playerId);
         }

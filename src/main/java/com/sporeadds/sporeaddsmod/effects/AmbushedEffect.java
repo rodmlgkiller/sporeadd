@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class AmbushedEffect extends MobEffect {
 
-    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "ambushedeffect_".lc("SPEED_MODIFIER_ID"));
+    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "ambushedeffect_speed_modifier_id");
     public static final double MOVEMENT_SPEED_REDUCTION = -0.60D;
     public static final float OUTGOING_DAMAGE_MULTIPLIER = 0.50F;
     public static final float INCOMING_DAMAGE_MULTIPLIER = 2.0F;

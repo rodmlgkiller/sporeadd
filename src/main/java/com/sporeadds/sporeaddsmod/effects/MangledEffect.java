@@ -23,10 +23,10 @@ import java.util.UUID;
 
 public class MangledEffect extends MobEffect {
 
-    private static final ResourceLocation HEALTH_MOD_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("HEALTH_MOD_UUID"));
-    private static final ResourceLocation DAMAGE_MOD_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("DAMAGE_MOD_UUID"));
-    private static final ResourceLocation SPEED_MOD_UUID  = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("SPEED_MOD_UUID"));
-    private static final ResourceLocation STEP_MOD_UUID   = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_".lc("STEP_MOD_UUID"));
+    private static final ResourceLocation HEALTH_MOD_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_health_mod_uuid");
+    private static final ResourceLocation DAMAGE_MOD_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_damage_mod_uuid");
+    private static final ResourceLocation SPEED_MOD_UUID  = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_speed_mod_uuid");
+    private static final ResourceLocation STEP_MOD_UUID   = ResourceLocation.fromNamespaceAndPath("sporeadd", "mangledeffect_step_mod_uuid");
 
     private static final int MAX_PARTICLE_AMPLIFIER = 20;
 
@@ -45,7 +45,6 @@ public class MangledEffect extends MobEffect {
     @Override
     public void fillEffectCures(java.util.Set<net.neoforged.neoforge.common.EffectCure> cures, net.minecraft.world.effect.MobEffectInstance effectInstance) {
         cures.remove(net.neoforged.neoforge.common.EffectCures.MILK);
-        cures.remove(net.neoforged.neoforge.common.EffectCures.HONEY_BOTTLE);
     }
 
     @Override
@@ -133,15 +132,15 @@ public class MangledEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        MobEffectInstance current = entity.getEffect(this);
+        MobEffectInstance current = entity.getEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this));
         if (current == null) {
             return true;
         }
 
         if (current.getAmplifier() > 0 && current.getDuration() <= DOWNGRADE_THRESHOLD_TICKS) {
-            entity.removeEffect(this);
+            entity.removeEffect(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this));
             entity.addEffect(new MobEffectInstance(
-                    this,
+                    net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this),
                     DOWNGRADE_DURATION_TICKS,
                     current.getAmplifier() - 1,
                     current.isAmbient(),

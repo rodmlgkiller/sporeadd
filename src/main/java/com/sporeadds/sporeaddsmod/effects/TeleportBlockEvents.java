@@ -8,7 +8,7 @@ import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 
-@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class TeleportBlockEvents {
 
     @SubscribeEvent

@@ -32,7 +32,7 @@ public final class FieldResearchAbility {
         capability.ifPresent(research -> {
             NetworkHandle.INSTANCE.sendTo(
                     new SyncScientistResearchPacket(research.getAllKills(), research.getAllData()),
-                    player.connection.connection,
+                    player.connection.getConnection(),
                     NetworkDirection.PLAY_TO_CLIENT
             );
         });

@@ -52,7 +52,7 @@ public final class SelfDefibrillateAbility {
 
         NetworkHandle.INSTANCE.sendTo(
                 new OpenSelfDefibrillateScreenPacket(),
-                player.connection.connection,
+                player.connection.getConnection(),
                 NetworkDirection.PLAY_TO_CLIENT
         );
     }
@@ -86,7 +86,7 @@ public final class SelfDefibrillateAbility {
 
         NetworkHandle.INSTANCE.sendTo(
                 new com.sporeadds.sporeaddsmod.network.CloseSelfDefibrillateScreenPacket(),
-                player.connection.connection,
+                player.connection.getConnection(),
                 NetworkDirection.PLAY_TO_CLIENT
         );
     }
@@ -104,7 +104,7 @@ public final class SelfDefibrillateAbility {
 
         NetworkHandle.INSTANCE.sendTo(
                 new SyncSelfDefibrillateCooldownPacket(COOLDOWN_TICKS),
-                player.connection.connection,
+                player.connection.getConnection(),
                 NetworkDirection.PLAY_TO_CLIENT
         );
     }

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.SBlockEntities.CDUBlockEntity;
@@ -67,8 +69,8 @@ public class ArenaTendrilJammerHandler {
     }
 
     @SubscribeEvent
-    public static void onArenaTendrilTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onArenaTendrilTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         if (entity.level().isClientSide()) {
             return;
@@ -113,8 +115,8 @@ public class ArenaTendrilJammerHandler {
     }
 
     @SubscribeEvent
-    public static void onMoundTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onMoundTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         if (entity.level().isClientSide()) {
             return;

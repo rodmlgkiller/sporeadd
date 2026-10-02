@@ -31,7 +31,7 @@ public class RequestVervaGuiPacket {
 
                 // Y se la envía al cliente para que abra la interfaz
                 NetworkHandle.INSTANCE.sendTo(new SyncVervaGuiPacket(verwa, organoid, bomb),
-                        player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+                        player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
             }
         });
         context.setPacketHandled(true);

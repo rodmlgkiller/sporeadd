@@ -78,7 +78,7 @@ public final class ClawsAbility {
     // Modificador temporal de ATTACK_DAMAGE para que Minecraft no cancele el golpe desarmado
     // cuando el jugador tiene Debilidad (que dejaría el daño base <= 0). Se añade al iniciar el
     // ataque y se quita al aplicarlo; el valor se descuenta en la fórmula del daño de garra.
-    private static final ResourceLocation WEAKNESS_BYPASS_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "clawsability_".lc("WEAKNESS_BYPASS_UUID"));
+    private static final ResourceLocation WEAKNESS_BYPASS_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "clawsability_weakness_bypass_uuid");
     private static final double WEAKNESS_BYPASS_AMOUNT = 1024.0D;
 
     // Crit desarmado pendiente (multiplicador) a consumir en el proximo LivingIncomingDamageEvent.

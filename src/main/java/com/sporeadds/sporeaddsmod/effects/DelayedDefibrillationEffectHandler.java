@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -46,8 +48,8 @@ public final class DelayedDefibrillationEffectHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onLivingTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         if (!(entity.level() instanceof ServerLevel serverLevel)) {
             return;

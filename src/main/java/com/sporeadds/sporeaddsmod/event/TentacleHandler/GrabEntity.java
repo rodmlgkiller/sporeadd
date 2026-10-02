@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event.TentacleHandler;
 
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.effects.effects;
@@ -111,8 +113,8 @@ public class GrabEntity {
     }
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onLivingTick(EntityTickEvent.Pre event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
         if (entity.level().isClientSide()) {
             return;
         }

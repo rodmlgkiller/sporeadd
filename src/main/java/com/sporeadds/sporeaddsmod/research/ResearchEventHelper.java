@@ -49,7 +49,7 @@ public final class ResearchEventHelper {
     private static void sendPopup(ServerPlayer player, ResearchPopupType type, String entityId, int amount) {
         NetworkHandle.INSTANCE.sendTo(
                 new ResearchPopupPacket(type, entityId, amount),
-                player.connection.connection,
+                player.connection.getConnection(),
                 NetworkDirection.PLAY_TO_CLIENT
         );
     }

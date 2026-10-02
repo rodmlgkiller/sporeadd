@@ -67,7 +67,7 @@ public final class DelayedDefibrillationAbility {
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
                 new com.sporeadds.sporeaddsmod.network.SyncDelayedDefibrillationCooldownPacket(COOLDOWN_TICKS),
-                player.connection.connection,
+                player.connection.getConnection(),
                 NetworkDirection.PLAY_TO_CLIENT
         );
 

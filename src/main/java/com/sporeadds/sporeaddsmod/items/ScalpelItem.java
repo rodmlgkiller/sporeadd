@@ -29,8 +29,8 @@ import com.google.common.collect.Multimap;
 
 public class ScalpelItem extends Item {
 
-    private static final ResourceLocation DAMAGE_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "scalpelitem_".lc("DAMAGE_MODIFIER_UUID"));
-    private static final ResourceLocation SPEED_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "scalpelitem_".lc("SPEED_MODIFIER_UUID"));
+    private static final ResourceLocation DAMAGE_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "scalpelitem_damage_modifier_uuid");
+    private static final ResourceLocation SPEED_MODIFIER_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "scalpelitem_speed_modifier_uuid");
 
     private static final float ATTACK_DAMAGE = 3.0F;
     private static final float ATTACK_SPEED = 3.0F;

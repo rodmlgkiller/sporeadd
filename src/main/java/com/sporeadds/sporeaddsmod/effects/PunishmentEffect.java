@@ -29,8 +29,8 @@ import java.util.UUID;
  */
 public class PunishmentEffect extends MobEffect {
 
-    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "punishmenteffect_".lc("SPEED_MODIFIER_ID"));
-    private static final ResourceLocation STEP_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "punishmenteffect_".lc("STEP_MODIFIER_ID"));
+    private static final ResourceLocation SPEED_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "punishmenteffect_speed_modifier_id");
+    private static final ResourceLocation STEP_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "punishmenteffect_step_modifier_id");
 
     /** -30% de velocidad por nivel, limitado para no dejar al jugador totalmente clavado. */
     public static final double MOVE_SPEED_PER_LEVEL = -0.30D;

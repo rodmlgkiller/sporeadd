@@ -21,8 +21,7 @@ public class ExquisiteCuisineEffect extends MobEffect {
         super(MobEffectCategory.BENEFICIAL, 0xFF9F1C);
 
         this.addAttributeModifier(
-                Attributes.ATTACK_DAMAGE,
-                "d6b5f6c2-1f9a-4d2e-8b7c-6e3f5a1c9b42",
+                Attributes.ATTACK_DAMAGE, ResourceLocation.fromNamespaceAndPath("sporeadd", "exquisitecuisineeffect_mod1"),
                 0.10D,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );

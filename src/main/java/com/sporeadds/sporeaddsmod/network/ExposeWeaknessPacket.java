@@ -179,7 +179,7 @@ public class ExposeWeaknessPacket {
 
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
                     new SyncExposeWeaknessCooldownPacket((int) COOLDOWN_TICKS_SERVER),
-                    player.connection.connection,
+                    player.connection.getConnection(),
                     com.sporeadds.sporeaddsmod.network.NetworkDirection.PLAY_TO_CLIENT
             );
         });
