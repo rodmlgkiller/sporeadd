@@ -31,7 +31,7 @@ public abstract class PlayerDbnoRenderMixin {
 
     @Inject(method = "setupRotations", at = @At("TAIL"))
     private void sporeadds$layDownIfDbno(AbstractClientPlayer player, PoseStack poseStack,
-                                        float ageInTicks, float rotationYaw, float partialTicks,
+                                        float ageInTicks, float rotationYaw, float partialTicks, float scale,
                                         CallbackInfo ci) {
         if (player == null) return;
         if (player.getPose() == Pose.SLEEPING) return;
