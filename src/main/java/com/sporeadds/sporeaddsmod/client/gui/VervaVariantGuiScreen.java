@@ -120,8 +120,7 @@ public class VervaVariantGuiScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)  {
 
         double scaleFactor = getScaleFactor();
         PoseStack pose = graphics.pose();
@@ -165,7 +164,7 @@ public class VervaVariantGuiScreen extends Screen {
                 int scale = 15;
                 if (cacheEntities[i].getBbHeight() > 2.0f) scale = 8;
 
-                InventoryScreen.renderEntityInInventoryFollowsMouse(
+                com.sporeadds.sporeaddsmod.util.EntityPreview.renderFollowsMouse(
                         graphics,
                         x + 25,
                         y + 45,
@@ -248,10 +247,10 @@ public class VervaVariantGuiScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         double adjX = adjustMouseX(mouseX);
         double adjY = adjustMouseY(mouseY);
-        return super.mouseScrolled(adjX, adjY, delta);
+        return super.mouseScrolled(adjX, adjY, scrollX, scrollY);
     }
 
     @Override

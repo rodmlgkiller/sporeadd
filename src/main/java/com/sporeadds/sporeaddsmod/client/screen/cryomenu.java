@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class cryomenu extends AbstractContainerMenu {
@@ -23,7 +22,7 @@ public class cryomenu extends AbstractContainerMenu {
 
         // 1. Slots del Bloque (3 filas x 9 columnas)
         // Usamos el IItemHandler de la BlockEntity
-        ForgeCapabilities.ITEM_HANDLER.get(this.blockEntity).ifPresent(handler -> {
+        java.util.Optional.of(this.blockEntity.getItemHandler()).ifPresent(handler -> {
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 9; col++) {
                     this.addSlot(new SlotItemHandler(handler, col + row * 9, 8 + col * 18, 18 + row * 18));

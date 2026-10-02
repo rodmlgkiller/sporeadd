@@ -6,6 +6,8 @@ my %imp = (
   Holder => "net.minecraft.core.Holder",
   BuiltInRegistries => "net.minecraft.core.registries.BuiltInRegistries",
   SubscribeEvent => "net.neoforged.bus.api.SubscribeEvent",
+  EventBusSubscriber => "net.neoforged.fml.common.EventBusSubscriber",
+  LivingDamageEvent => "net.neoforged.neoforge.event.entity.living.LivingDamageEvent",
 );
 for my $f (@ARGV) {
   open(my $fh, '<:encoding(UTF-8)', $f) or die; local $/; my $src = <$fh>; close $fh;

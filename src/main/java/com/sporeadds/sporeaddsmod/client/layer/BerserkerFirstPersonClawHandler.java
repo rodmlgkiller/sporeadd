@@ -34,7 +34,7 @@ public final class BerserkerFirstPersonClawHandler {
         PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
         HumanoidArm arm = event.getArm();
         ModelPart armPart = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
-        boolean slim = "slim".equals(player.getModelName());
+        boolean slim = player.getSkin().model() == net.minecraft.client.resources.PlayerSkin.Model.SLIM;
 
         BerserkerClawRenderer.renderSingleHand(
                 event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight(), armPart, arm, slim);

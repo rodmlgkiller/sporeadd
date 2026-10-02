@@ -61,7 +61,7 @@ public class CustomBossBarRenderer {
         int frameIndex = Math.max(0, Math.min(maxFrameIndex, (int) ((1.0f - progress) * maxFrameIndex)));
         int vOffset = frameIndex * FRAME_HEIGHT;
 
-        int screenWidth = event.getWindow().getGuiScaledWidth();
+        int screenWidth = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int screenX = (screenWidth / 2) - (FRAME_WIDTH / 2);
         int screenY = event.getY();
 

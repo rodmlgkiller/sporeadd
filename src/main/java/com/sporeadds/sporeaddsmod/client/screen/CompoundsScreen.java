@@ -45,8 +45,7 @@ public class CompoundsScreen extends AbstractContainerScreen<CompoundsMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)  {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }

@@ -42,8 +42,8 @@ public final class AbilityCooldownHudOverlay {
         Minecraft mc = Minecraft.getInstance();
         GuiGraphics graphics = event.getGuiGraphics();
 
-        int screenWidth = event.getWindow().getGuiScaledWidth();
-        int screenHeight = event.getWindow().getGuiScaledHeight();
+        int screenWidth = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int screenHeight = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         int centerX = screenWidth / 2;
         int baseY = screenHeight - 60;

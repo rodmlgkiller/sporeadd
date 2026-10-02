@@ -256,9 +256,7 @@ public class ClientXRayHandler {
         vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
 
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
-
-        buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
         for (Map.Entry<BlockPos, float[]> entry : KNOWN_BLOCKS.entrySet()) {
             BlockPos pos = entry.getKey();
@@ -283,7 +281,7 @@ public class ClientXRayHandler {
         }
 
         vertexBuffer.bind();
-        vertexBuffer.upload(buffer.end());
+        vertexBuffer.upload(buffer.buildOrThrow());
         VertexBuffer.unbind();
     }
 
@@ -300,41 +298,41 @@ public class ClientXRayHandler {
         double maxY = box.maxY;
         double maxZ = box.maxZ;
 
-        buffer.vertex(minX, maxY, minZ).color(r, g, b, a).endVertex();
-        buffer.vertex(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) minX, (float) maxY, (float) minZ).setColor(r, g, b, a);
+        buffer.addVertex((float) maxX, (float) maxY, (float) minZ).setColor(r, g, b, a);
 
-        buffer.vertex(maxX, maxY, minZ).color(r, g, b, a).endVertex();
-        buffer.vertex(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) maxX, (float) maxY, (float) minZ).setColor(r, g, b, a);
+        buffer.addVertex((float) maxX, (float) maxY, (float) maxZ).setColor(r, g, b, a);
 
-        buffer.vertex(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
-        buffer.vertex(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) maxX, (float) maxY, (float) maxZ).setColor(r, g, b, a);
+        buffer.addVertex((float) minX, (float) maxY, (float) maxZ).setColor(r, g, b, a);
 
-        buffer.vertex(minX, maxY, maxZ).color(r, g, b, a).endVertex();
-        buffer.vertex(minX, maxY, minZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) minX, (float) maxY, (float) maxZ).setColor(r, g, b, a);
+        buffer.addVertex((float) minX, (float) maxY, (float) minZ).setColor(r, g, b, a);
 
-        buffer.vertex(maxX, minY, minZ).color(r, g, b, a).endVertex();
-        buffer.vertex(maxX, minY, maxZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) maxX, (float) minY, (float) minZ).setColor(r, g, b, a);
+        buffer.addVertex((float) maxX, (float) minY, (float) maxZ).setColor(r, g, b, a);
 
-        buffer.vertex(maxX, minY, maxZ).color(r, g, b, a).endVertex();
-        buffer.vertex(minX, minY, maxZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) maxX, (float) minY, (float) maxZ).setColor(r, g, b, a);
+        buffer.addVertex((float) minX, (float) minY, (float) maxZ).setColor(r, g, b, a);
 
-        buffer.vertex(minX, minY, maxZ).color(r, g, b, a).endVertex();
-        buffer.vertex(minX, minY, minZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) minX, (float) minY, (float) maxZ).setColor(r, g, b, a);
+        buffer.addVertex((float) minX, (float) minY, (float) minZ).setColor(r, g, b, a);
 
-        buffer.vertex(minX, minY, minZ).color(r, g, b, a).endVertex();
-        buffer.vertex(maxX, minY, minZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) minX, (float) minY, (float) minZ).setColor(r, g, b, a);
+        buffer.addVertex((float) maxX, (float) minY, (float) minZ).setColor(r, g, b, a);
 
-        buffer.vertex(maxX, minY, maxZ).color(r, g, b, a).endVertex();
-        buffer.vertex(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) maxX, (float) minY, (float) maxZ).setColor(r, g, b, a);
+        buffer.addVertex((float) maxX, (float) maxY, (float) maxZ).setColor(r, g, b, a);
 
-        buffer.vertex(maxX, minY, minZ).color(r, g, b, a).endVertex();
-        buffer.vertex(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) maxX, (float) minY, (float) minZ).setColor(r, g, b, a);
+        buffer.addVertex((float) maxX, (float) maxY, (float) minZ).setColor(r, g, b, a);
 
-        buffer.vertex(minX, minY, maxZ).color(r, g, b, a).endVertex();
-        buffer.vertex(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) minX, (float) minY, (float) maxZ).setColor(r, g, b, a);
+        buffer.addVertex((float) minX, (float) maxY, (float) maxZ).setColor(r, g, b, a);
 
-        buffer.vertex(minX, minY, minZ).color(r, g, b, a).endVertex();
-        buffer.vertex(minX, maxY, minZ).color(r, g, b, a).endVertex();
+        buffer.addVertex((float) minX, (float) minY, (float) minZ).setColor(r, g, b, a);
+        buffer.addVertex((float) minX, (float) maxY, (float) minZ).setColor(r, g, b, a);
     }
 
     @SubscribeEvent
@@ -377,10 +375,9 @@ public class ClientXRayHandler {
 
         if (!KNOWN_PLAYERS.isEmpty()) {
             Tesselator tessellator = Tesselator.getInstance();
-            BufferBuilder buffer = tessellator.getBuilder();
-            buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
 
-            float partialTick = event.getPartialTick();
+            float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
 
             for (Map.Entry<Integer, PlayerOutlineData> entry : KNOWN_PLAYERS.entrySet()) {
                 if (!(mc.level.getEntity(entry.getKey()) instanceof Player target)) {
@@ -408,7 +405,7 @@ public class ClientXRayHandler {
                 addBoxOutline(buffer, interpolatedBox, entry.getValue().color());
             }
 
-            BufferBuilder.RenderedBuffer renderedBuffer = buffer.end();
+            com.mojang.blaze3d.vertex.MeshData renderedBuffer = buffer.buildOrThrow();
             BufferUploader.drawWithShader(renderedBuffer);
         }
 

@@ -266,13 +266,13 @@ public class ChainProjectileRenderer extends EntityRenderer<ChainProjectileEntit
                         float x, float y, float z,
                         float u, float v, int light,
                         float nx, float ny, float nz) {
-        vc.vertex(matrix.pose(), x, y, z)
-                .color(255, 255, 255, 255)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(matrix.normal(), nx, ny, nz)
-                .endVertex();
+        vc.addVertex(matrix.pose(), x, y, z)
+                .setColor(255, 255, 255, 255)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(matrix, nx, ny, nz)
+                ;
     }
 
     @Override

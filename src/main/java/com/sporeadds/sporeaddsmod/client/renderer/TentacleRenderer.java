@@ -208,46 +208,46 @@ public class TentacleRenderer extends EntityRenderer<Tentacle> {
         float z0 = 0.0F;
         float z1 = length;
 
-        addVertex(consumer, matrix, normal, light, -hw,  hw, z0, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light,  hw,  hw, z0, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light,  hw,  hw, z1, 1.0F, 1.0F, 0.0F, 1.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light, -hw,  hw, z1, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw,  hw, z0, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw,  hw, z0, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw,  hw, z1, 1.0F, 1.0F, 0.0F, 1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw,  hw, z1, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F);
 
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z1, 0.0F, 1.0F, 0.0F, -1.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light,  hw, -hw, z1, 1.0F, 1.0F, 0.0F, -1.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light,  hw, -hw, z0, 1.0F, 0.0F, 0.0F, -1.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z0, 0.0F, 0.0F, 0.0F, -1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z1, 0.0F, 1.0F, 0.0F, -1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw, -hw, z1, 1.0F, 1.0F, 0.0F, -1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw, -hw, z0, 1.0F, 0.0F, 0.0F, -1.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z0, 0.0F, 0.0F, 0.0F, -1.0F, 0.0F);
 
-        addVertex(consumer, matrix, normal, light,  hw,  hw, z0, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light,  hw, -hw, z0, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light,  hw, -hw, z1, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light,  hw,  hw, z1, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw,  hw, z0, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw, -hw, z0, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw, -hw, z1, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light,  hw,  hw, z1, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F);
 
-        addVertex(consumer, matrix, normal, light, -hw,  hw, z1, 0.0F, 1.0F, -1.0F, 0.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z1, 1.0F, 1.0F, -1.0F, 0.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z0, 1.0F, 0.0F, -1.0F, 0.0F, 0.0F);
-        addVertex(consumer, matrix, normal, light, -hw,  hw, z0, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw,  hw, z1, 0.0F, 1.0F, -1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z1, 1.0F, 1.0F, -1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z0, 1.0F, 0.0F, -1.0F, 0.0F, 0.0F);
+        addVertex(consumer, pose, normal, light, -hw,  hw, z0, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F);
 
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z0, 0.0F, 0.0F, 0.0F, 0.0F, -1.0F);
-        addVertex(consumer, matrix, normal, light,  hw, -hw, z0, 1.0F, 0.0F, 0.0F, 0.0F, -1.0F);
-        addVertex(consumer, matrix, normal, light,  hw,  hw, z0, 1.0F, 1.0F, 0.0F, 0.0F, -1.0F);
-        addVertex(consumer, matrix, normal, light, -hw,  hw, z0, 0.0F, 1.0F, 0.0F, 0.0F, -1.0F);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z0, 0.0F, 0.0F, 0.0F, 0.0F, -1.0F);
+        addVertex(consumer, pose, normal, light,  hw, -hw, z0, 1.0F, 0.0F, 0.0F, 0.0F, -1.0F);
+        addVertex(consumer, pose, normal, light,  hw,  hw, z0, 1.0F, 1.0F, 0.0F, 0.0F, -1.0F);
+        addVertex(consumer, pose, normal, light, -hw,  hw, z0, 0.0F, 1.0F, 0.0F, 0.0F, -1.0F);
 
-        addVertex(consumer, matrix, normal, light, -hw,  hw, z1, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F);
-        addVertex(consumer, matrix, normal, light,  hw,  hw, z1, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F);
-        addVertex(consumer, matrix, normal, light,  hw, -hw, z1, 1.0F, 0.0F, 0.0F, 0.0F, 1.0F);
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z1, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F);
+        addVertex(consumer, pose, normal, light, -hw,  hw, z1, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F);
+        addVertex(consumer, pose, normal, light,  hw,  hw, z1, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F);
+        addVertex(consumer, pose, normal, light,  hw, -hw, z1, 1.0F, 0.0F, 0.0F, 0.0F, 1.0F);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z1, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F);
     }
 
-    private void addVertex(VertexConsumer consumer, Matrix4f pose, Matrix3f normal, int light,
+    private void addVertex(VertexConsumer consumer, PoseStack.Pose pose, Matrix3f normal, int light,
                            float x, float y, float z, float u, float v, float nx, float ny, float nz) {
-        consumer.vertex(pose, x, y, z)
-                .color(255, 255, 255, 255)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normal, nx, ny, nz)
-                .endVertex();
+        consumer.addVertex(pose, x, y, z)
+                .setColor(255, 255, 255, 255)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, nx, ny, nz)
+                ;
     }
 
     @Override

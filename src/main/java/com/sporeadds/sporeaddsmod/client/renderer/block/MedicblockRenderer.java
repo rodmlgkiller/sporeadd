@@ -70,7 +70,7 @@ public class MedicblockRenderer implements BlockEntityRenderer<MedicBlockEntity>
 
 		VertexConsumer builder = renderer.getBuffer(RenderType.entityCutout(texture));
 		model.setupBlockEntityAnim(blockEntity, blockEntity.getLevel().getGameTime() + partialTick);
-		model.renderToBuffer(poseStack, builder, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+		model.renderToBuffer(poseStack, builder, light, OverlayTexture.NO_OVERLAY, -1);
 		poseStack.popPose();
 		if (blockEntity.getLevel().isClientSide()) {blockEntity.animationState2.animateWhen(!blockEntity.getPersistentData().getBoolean("open") && blockEntity.isCrafting() && !blockEntity.animationState1.isStarted(), getTickCount());}
 	}

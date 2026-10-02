@@ -175,8 +175,7 @@ public class SelfDefibrillateScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)  {
 
         for (int i = 0; i < icons.size(); i++) {
             IconSlot slot = icons.get(i);

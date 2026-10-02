@@ -81,8 +81,7 @@ public class GasSphereRenderer {
         RenderSystem.depthMask(false);
 
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
-        buffer.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX_COLOR);
+        BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX_COLOR);
 
         for (ClientGasSphereData.RenderSphere sphere : spheres) {
             if (sphere.radius >= 1.0F) {
@@ -90,7 +89,7 @@ public class GasSphereRenderer {
             }
         }
 
-        tesselator.end();
+        com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
@@ -139,7 +138,7 @@ public class GasSphereRenderer {
     }
 
     private static void vertex(BufferBuilder buffer, Matrix4f matrix, Vector3f pos, float u, float v) {
-        buffer.vertex(matrix, pos.x(), pos.y(), pos.z()).uv(u, v).color(COLOR_R, COLOR_G, COLOR_B, COLOR_A).endVertex();
+        buffer.addVertex(matrix, pos.x(), pos.y(), pos.z()).setUv(u, v).setColor(COLOR_R, COLOR_G, COLOR_B, COLOR_A);
     }
 
     @SubscribeEvent
@@ -155,7 +154,7 @@ public class GasSphereRenderer {
 
         int color = (OVERLAY_A << 24) | (OVERLAY_R << 16) | (OVERLAY_G << 8) | OVERLAY_B;
         event.getGuiGraphics().fill(
-                0, 0, event.getWindow().getGuiScaledWidth(), event.getWindow().getGuiScaledHeight(), color
+                0, 0, net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledWidth(), net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledHeight(), color
         );
     }
 

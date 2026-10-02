@@ -2,11 +2,13 @@ package com.sporeadds.sporeaddsmod.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 public class VervaCountdownOverlay {
 
-    public static final IGuiOverlay OVERLAY = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+    public static final net.minecraft.client.gui.LayeredDraw.Layer OVERLAY = (guiGraphics, deltaTracker) -> {
+        float partialTick = deltaTracker.getGameTimeDeltaPartialTick(false);
+        int screenWidth = guiGraphics.guiWidth();
+        int screenHeight = guiGraphics.guiHeight();
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 

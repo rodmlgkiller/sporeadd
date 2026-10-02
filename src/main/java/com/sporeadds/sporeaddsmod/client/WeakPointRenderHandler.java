@@ -45,10 +45,9 @@ public final class WeakPointRenderHandler {
         com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
         com.mojang.blaze3d.systems.RenderSystem.disableDepthTest();
         com.mojang.blaze3d.systems.RenderSystem.disableCull();
-        com.mojang.blaze3d.systems.RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionColorTexShader);
+        com.mojang.blaze3d.systems.RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionTexColorShader);
 
-        com.mojang.blaze3d.vertex.BufferBuilder bufferBuilder =
-                com.mojang.blaze3d.vertex.Tesselator.getInstance().getBuilder();
+        com.mojang.blaze3d.vertex.Tesselator tesselator = com.mojang.blaze3d.vertex.Tesselator.getInstance();
 
         for (Map.Entry<Integer, Vec3> entry : allWeakPoints.entrySet()) {
             int entityId = entry.getKey();
@@ -69,7 +68,7 @@ public final class WeakPointRenderHandler {
             com.mojang.blaze3d.systems.RenderSystem.setShaderTexture(0, texture);
 
             Vec3 offset = entry.getValue();
-            Vec3 worldPos = entity.getPosition(event.getPartialTick()).add(offset);
+            Vec3 worldPos = entity.getPosition(event.getPartialTick().getGameTimeDeltaPartialTick(false)).add(offset);
 
             poseStack.pushPose();
             poseStack.translate(worldPos.x - camPos.x, worldPos.y - camPos.y, worldPos.z - camPos.z);
@@ -78,15 +77,15 @@ public final class WeakPointRenderHandler {
             float half = MARKER_SIZE / 2.0F;
             var matrix = poseStack.last().pose();
 
-            bufferBuilder.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
-                    com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR_TEX);
+            com.mojang.blaze3d.vertex.BufferBuilder bufferBuilder = tesselator.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
+                    com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX_COLOR);
 
-            bufferBuilder.vertex(matrix, -half, -half, 0).color(255, 255, 255, 255).uv(0, 1).endVertex();
-            bufferBuilder.vertex(matrix, half, -half, 0).color(255, 255, 255, 255).uv(1, 1).endVertex();
-            bufferBuilder.vertex(matrix, half, half, 0).color(255, 255, 255, 255).uv(1, 0).endVertex();
-            bufferBuilder.vertex(matrix, -half, half, 0).color(255, 255, 255, 255).uv(0, 0).endVertex();
+            bufferBuilder.addVertex(matrix, -half, -half, 0).setColor(255, 255, 255, 255).setUv(0, 1);
+            bufferBuilder.addVertex(matrix, half, -half, 0).setColor(255, 255, 255, 255).setUv(1, 1);
+            bufferBuilder.addVertex(matrix, half, half, 0).setColor(255, 255, 255, 255).setUv(1, 0);
+            bufferBuilder.addVertex(matrix, -half, half, 0).setColor(255, 255, 255, 255).setUv(0, 0);
 
-            com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(bufferBuilder.end());
+            com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
 
             poseStack.popPose();
         }

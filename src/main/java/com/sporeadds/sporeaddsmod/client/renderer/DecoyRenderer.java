@@ -36,7 +36,7 @@ public class DecoyRenderer extends EntityRenderer<DecoyEntity> {
         poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(180F));
 
         bushModel.applyRestPose();
-        bushModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        bushModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
 
         poseStack.popPose();
 

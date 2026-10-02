@@ -293,7 +293,7 @@ public class HiveCinematicScreen extends Screen {
     // ------------------------------------------------------------------ render
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)  {
         int alpha = (int) (darkness * 255.0F) & 0xFF;
         graphics.fill(0, 0, this.width, this.height, alpha << 24);
 

@@ -1,3 +1,5 @@
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;

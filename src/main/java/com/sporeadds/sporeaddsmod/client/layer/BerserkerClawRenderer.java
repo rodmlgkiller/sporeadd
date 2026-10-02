@@ -109,12 +109,12 @@ public final class BerserkerClawRenderer {
 
     private static void vertex(VertexConsumer vc, PoseStack.Pose pose, int light, float nx,
                                float x, float y, float z, float u, float v) {
-        vc.vertex(pose.pose(), x, y, z)
-                .color(255, 255, 255, 255)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(pose.normal(), nx, 0.0F, 0.0F)
-                .endVertex();
+        vc.addVertex(pose.pose(), x, y, z)
+                .setColor(255, 255, 255, 255)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, nx, 0.0F, 0.0F)
+                ;
     }
 }

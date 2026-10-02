@@ -18,7 +18,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,18 +30,22 @@ public class ClientModEvents {
     public static class ModEvents {
 
         @SubscribeEvent
+        public static void onRegisterScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenuTypes.MEDIC_BLOCK_MENU.get(), MedicBlockScreen::new);
+        event.register(ModMenuTypes.IMPLANT_MENU.get(), ImplantScreen::new);
+        event.register(ModMenuTypes.COMPOUNDS_MENU.get(), CompoundsScreen::new);
+        event.register(ModMenuTypes.MEDIC_BLOCK_CONSTRUCTOR_MENU.get(), MedicBlockContructorScreen::new);
+        event.register(ModMenuTypes.SCIENTIST_MENU.get(), ScientistScreen::new);
+        event.register(ModMenuTypes.CRYO_MENU.get(), cryoscreen::new);
+        event.register(ModMenuTypes.MOUND_TERRARIUM_MENU.get(), MoundTerrariumScreen::new);
+        event.register(ModMenuTypes.RAID_CONTROLER.get(), RaidControlerScreen::new);
+        }
+
+        @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
-                MenuScreens.register(ModMenuTypes.MEDIC_BLOCK_MENU.get(), MedicBlockScreen::new);
-                MenuScreens.register(ModMenuTypes.IMPLANT_MENU.get(), ImplantScreen::new);
-                MenuScreens.register(ModMenuTypes.COMPOUNDS_MENU.get(), CompoundsScreen::new);
                 EntityRenderers.register(ModEntities.COCOON.get(), SporeeggRenderer::new);
                 EntityRenderers.register(ModEntities.TENTACLE.get(), TentacleRenderer::new);
-                MenuScreens.register(ModMenuTypes.MEDIC_BLOCK_CONSTRUCTOR_MENU.get(), MedicBlockContructorScreen::new);
-                MenuScreens.register(ModMenuTypes.SCIENTIST_MENU.get(), ScientistScreen::new);
-                MenuScreens.register(ModMenuTypes.CRYO_MENU.get(), cryoscreen::new);
-                MenuScreens.register(ModMenuTypes.MOUND_TERRARIUM_MENU.get(), MoundTerrariumScreen::new);
-                MenuScreens.register(ModMenuTypes.RAID_CONTROLER.get(), RaidControlerScreen::new);
 
                 ItemBlockRenderTypes.setRenderLayer(modblocks.MOUND_TERRARIUM.get(), RenderType.translucent());
             });
@@ -55,9 +60,9 @@ public class ClientModEvents {
         }
 
         @SubscribeEvent
-        public static void registerOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAboveAll("radar_scan_hud", ClientRadarHUD.HUD_RADAR);
-            event.registerAboveAll("verva_countdown", VervaCountdownOverlay.OVERLAY);
+        public static void registerOverlays(RegisterGuiLayersEvent event) {
+            event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "radar_scan_hud"), ClientRadarHUD.HUD_RADAR);
+            event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "verva_countdown"), VervaCountdownOverlay.OVERLAY);
         }
     }
 }

@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@EventBusSubscriber(modid = "sporeadd", bus = Bus.FORGE)
+@EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class ArenaTendrilJammerHandler {
 
     private static final int JAMMER_CHECK_INTERVAL = 150;

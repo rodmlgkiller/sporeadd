@@ -23,7 +23,7 @@ public class BerserkerClawLayer extends RenderLayer<AbstractClientPlayer, Player
         if (!BerserkerClawRenderState.isActive(player.getId())) return;
 
         PlayerModel<AbstractClientPlayer> model = this.getParentModel();
-        boolean slim = "slim".equals(player.getModelName());
+        boolean slim = player.getSkin().model() == net.minecraft.client.resources.PlayerSkin.Model.SLIM;
         BerserkerClawRenderer.renderBothHands(poseStack, buffer, packedLight, model.rightArm, model.leftArm, slim);
     }
 }

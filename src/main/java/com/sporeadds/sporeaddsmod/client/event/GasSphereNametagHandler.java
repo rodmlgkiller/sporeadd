@@ -29,7 +29,7 @@ public class GasSphereNametagHandler {
         }
 
         if (ClientGasSphereData.isInsideAny(entity.position())) {
-            event.setResult(Event.Result.DENY);
+            event.setCanRender(net.neoforged.neoforge.common.util.TriState.FALSE);
         }
     }
 }

@@ -252,8 +252,7 @@ public class RaidControlerScreen extends AbstractContainerScreen<RaidControlerMe
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)  {
         super.render(graphics, mouseX, mouseY, partialTicks);
 
         int x = (this.width - this.imageWidth) / 2;

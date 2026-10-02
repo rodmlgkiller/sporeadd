@@ -100,7 +100,7 @@ public class GhostCamouflageLayer extends RenderLayer<AbstractClientPlayer, Play
             bushModel.applyRestPose();
         }
 
-        bushModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        bushModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
 
         poseStack.popPose();
     }

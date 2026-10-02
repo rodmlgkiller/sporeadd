@@ -47,7 +47,7 @@ public final class BerserkerHudOverlay {
         Minecraft mc = Minecraft.getInstance();
         GuiGraphics graphics = event.getGuiGraphics();
 
-        int screenHeight = event.getWindow().getGuiScaledHeight();
+        int screenHeight = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledHeight();
         int x0 = BAR_X;
         int y0 = (screenHeight - BAR_H) / 2;
         int x1 = x0 + BAR_W;

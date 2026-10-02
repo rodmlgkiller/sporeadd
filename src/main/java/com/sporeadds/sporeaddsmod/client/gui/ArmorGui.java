@@ -12,13 +12,15 @@ import com.sporeadds.sporeaddsmod.util.SporeClassUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 public class ArmorGui {
     private static final ResourceLocation ARMOR_TEXTURE =
             ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/gui/spore_armor.png");
 
-    public static final IGuiOverlay ARMOR_BAR = (gui, poseStack, partialTick, screenWidth, screenHeight) -> {
+    public static final net.minecraft.client.gui.LayeredDraw.Layer ARMOR_BAR = (poseStack, deltaTracker) -> {
+        float partialTick = deltaTracker.getGameTimeDeltaPartialTick(false);
+        int screenWidth = poseStack.guiWidth();
+        int screenHeight = poseStack.guiHeight();
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 

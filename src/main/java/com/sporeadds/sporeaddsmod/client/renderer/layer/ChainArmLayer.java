@@ -56,7 +56,7 @@ public class ChainArmLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
         ModelPart armPart = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
         armPart.translateAndRotate(poseStack);
 
-        boolean slim = "slim".equals(player.getModelName());
+        boolean slim = player.getSkin().model() == net.minecraft.client.resources.PlayerSkin.Model.SLIM;
 
         float torsoOffset = slim ? 0.0925F : 0.10F;
         poseStack.translate(arm == HumanoidArm.RIGHT ? -torsoOffset : torsoOffset, 0.0F, 0.0F);
@@ -97,14 +97,14 @@ public class ChainArmLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
         float length = (radius * 2.0F) + 0.08F;
         float startX = -length / 2.0F;
 
-        vc.vertex(matrix.pose(), startX, 0.0F, -w).color(255, 255, 255, 255).uv(0.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 1.0F, 0.0F).endVertex();
-        vc.vertex(matrix.pose(), startX + length, 0.0F, -w).color(255, 255, 255, 255).uv(2.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 1.0F, 0.0F).endVertex();
-        vc.vertex(matrix.pose(), startX + length, 0.0F, w).color(255, 255, 255, 255).uv(2.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 1.0F, 0.0F).endVertex();
-        vc.vertex(matrix.pose(), startX, 0.0F, w).color(255, 255, 255, 255).uv(0.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 1.0F, 0.0F).endVertex();
+        vc.addVertex(matrix.pose(), startX, 0.0F, -w).setColor(255, 255, 255, 255).setUv(0.0F, 0.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 1.0F, 0.0F);
+        vc.addVertex(matrix.pose(), startX + length, 0.0F, -w).setColor(255, 255, 255, 255).setUv(2.0F, 0.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 1.0F, 0.0F);
+        vc.addVertex(matrix.pose(), startX + length, 0.0F, w).setColor(255, 255, 255, 255).setUv(2.0F, 1.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 1.0F, 0.0F);
+        vc.addVertex(matrix.pose(), startX, 0.0F, w).setColor(255, 255, 255, 255).setUv(0.0F, 1.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 1.0F, 0.0F);
 
-        vc.vertex(matrix.pose(), startX, -w, 0.0F).color(255, 255, 255, 255).uv(0.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 0.0F, 1.0F).endVertex();
-        vc.vertex(matrix.pose(), startX + length, -w, 0.0F).color(255, 255, 255, 255).uv(2.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 0.0F, 1.0F).endVertex();
-        vc.vertex(matrix.pose(), startX + length, w, 0.0F).color(255, 255, 255, 255).uv(2.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 0.0F, 1.0F).endVertex();
-        vc.vertex(matrix.pose(), startX, w, 0.0F).color(255, 255, 255, 255).uv(0.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLight).normal(matrix.normal(), 0.0F, 0.0F, 1.0F).endVertex();
+        vc.addVertex(matrix.pose(), startX, -w, 0.0F).setColor(255, 255, 255, 255).setUv(0.0F, 0.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 0.0F, 1.0F);
+        vc.addVertex(matrix.pose(), startX + length, -w, 0.0F).setColor(255, 255, 255, 255).setUv(2.0F, 0.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 0.0F, 1.0F);
+        vc.addVertex(matrix.pose(), startX + length, w, 0.0F).setColor(255, 255, 255, 255).setUv(2.0F, 1.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 0.0F, 1.0F);
+        vc.addVertex(matrix.pose(), startX, w, 0.0F).setColor(255, 255, 255, 255).setUv(0.0F, 1.0F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(matrix, 0.0F, 0.0F, 1.0F);
     }
 }

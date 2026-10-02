@@ -49,7 +49,7 @@ public final class PunishmentOverlay {
         int tier = Mth.clamp(inst.getAmplifier(), 0, 2);
 
         // Pulso sincronizado con el latido del audio; base alta para que el borde no desaparezca.
-        float beat = PunishmentClientHandler.beatIntensity(event.getPartialTick());
+        float beat = PunishmentClientHandler.beatIntensity(event.getPartialTick().getGameTimeDeltaPartialTick(false));
         float pulse = 0.66F + 0.34F * beat;
 
         int peak = Math.min(ALPHA_MAX, Math.round(TIER_BASE_ALPHA[tier] * pulse));
@@ -58,8 +58,8 @@ public final class PunishmentOverlay {
         int rgb = TIER_RGB[tier] & 0xFFFFFF;
 
         GuiGraphics g = event.getGuiGraphics();
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
+        int w = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int h = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         int band = Math.max(24, Math.round(Math.min(w, h) * TIER_SIZE[tier]));
 

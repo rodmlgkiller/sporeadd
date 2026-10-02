@@ -112,7 +112,6 @@ public class KommandantSpriteLayer extends RenderLayer<AbstractClientPlayer, Pla
 
             PoseStack.Pose pose = stack.last();
             Matrix4f poseMatrix = pose.pose();
-            Matrix3f normalMatrix = pose.normal();
 
             float minX = -0.5F;
             float maxX = 0.5F;
@@ -124,15 +123,15 @@ public class KommandantSpriteLayer extends RenderLayer<AbstractClientPlayer, Pla
             ResourceLocation chosenTexture = TEXTURES[pellet.textureIndex];
             VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(chosenTexture));
 
-            consumer.vertex(poseMatrix, minX, minY, frontZ).color(255, 255, 255, 255).uv(0.0F, 1.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-            consumer.vertex(poseMatrix, maxX, minY, frontZ).color(255, 255, 255, 255).uv(1.0F, 1.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-            consumer.vertex(poseMatrix, maxX, maxY, frontZ).color(255, 255, 255, 255).uv(1.0F, 0.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-            consumer.vertex(poseMatrix, minX, maxY, frontZ).color(255, 255, 255, 255).uv(0.0F, 0.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+            consumer.addVertex(poseMatrix, minX, minY, frontZ).setColor(255, 255, 255, 255).setUv(0.0F, 1.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, 1);
+            consumer.addVertex(poseMatrix, maxX, minY, frontZ).setColor(255, 255, 255, 255).setUv(1.0F, 1.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, 1);
+            consumer.addVertex(poseMatrix, maxX, maxY, frontZ).setColor(255, 255, 255, 255).setUv(1.0F, 0.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, 1);
+            consumer.addVertex(poseMatrix, minX, maxY, frontZ).setColor(255, 255, 255, 255).setUv(0.0F, 0.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, 1);
 
-            consumer.vertex(poseMatrix, minX, maxY, backZ).color(255, 255, 255, 255).uv(0.0F, 0.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, -1).endVertex();
-            consumer.vertex(poseMatrix, maxX, maxY, backZ).color(255, 255, 255, 255).uv(1.0F, 0.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, -1).endVertex();
-            consumer.vertex(poseMatrix, maxX, minY, backZ).color(255, 255, 255, 255).uv(1.0F, 1.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, -1).endVertex();
-            consumer.vertex(poseMatrix, minX, minY, backZ).color(255, 255, 255, 255).uv(0.0F, 1.0F).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, -1).endVertex();
+            consumer.addVertex(poseMatrix, minX, maxY, backZ).setColor(255, 255, 255, 255).setUv(0.0F, 0.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, -1);
+            consumer.addVertex(poseMatrix, maxX, maxY, backZ).setColor(255, 255, 255, 255).setUv(1.0F, 0.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, -1);
+            consumer.addVertex(poseMatrix, maxX, minY, backZ).setColor(255, 255, 255, 255).setUv(1.0F, 1.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, -1);
+            consumer.addVertex(poseMatrix, minX, minY, backZ).setColor(255, 255, 255, 255).setUv(0.0F, 1.0F).setOverlay(overlay).setLight(packedLight).setNormal(pose, 0, 0, -1);
 
             stack.popPose();
         }

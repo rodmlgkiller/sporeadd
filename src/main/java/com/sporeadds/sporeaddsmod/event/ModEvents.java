@@ -11,21 +11,20 @@ import com.sporeadds.sporeaddsmod.network.Poder5UsePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModEvents {
 
     @SubscribeEvent
-    public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerAboveAll("spore_bar", SporeBarGui.SPORE_BAR);
-        event.registerAboveAll("spore_armor_bar", ArmorGui.ARMOR_BAR);
-        event.registerAboveAll("ability_charge_bar", AbilityChargeBarGui.ABILITY_CHARGE_BAR);
+    public static void onRegisterGuiOverlays(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "spore_bar"), SporeBarGui.SPORE_BAR);
+        event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "spore_armor_bar"), ArmorGui.ARMOR_BAR);
+        event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("sporeadd", "ability_charge_bar"), AbilityChargeBarGui.ABILITY_CHARGE_BAR);
     }
 
     // Colega: ¡esto es para solo keymaps y overlays!
@@ -48,13 +47,5 @@ public class ModEvents {
                 // }
             }
         }
-    }
-
-    public ModEvents() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-    }
-
-    private void setup(final FMLCommonSetupEvent event) {
-        // Tu código de configuración inicial aquí
     }
 }

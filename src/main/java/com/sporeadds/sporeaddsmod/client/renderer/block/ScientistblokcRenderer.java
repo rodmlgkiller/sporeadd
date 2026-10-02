@@ -53,7 +53,7 @@ public class ScientistblokcRenderer implements BlockEntityRenderer<ScientistBloc
         poseStack.translate(0, -1, 0);
         VertexConsumer builder = renderer.getBuffer(RenderType.entityCutout(texture));
         model.setupBlockEntityAnim(blockEntity, blockEntity.getLevel().getGameTime() + partialTick);
-        model.renderToBuffer(poseStack, builder, light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        model.renderToBuffer(poseStack, builder, light, OverlayTexture.NO_OVERLAY, -1);
         poseStack.popPose();
     }
 

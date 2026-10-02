@@ -44,23 +44,23 @@ public class VariantVomitRenderer extends EntityRenderer<VariantVomitProjectile>
         Matrix4f matrix4f = pose.pose();
         Matrix3f matrix3f = pose.normal();
 
-        vertex(vertexconsumer, matrix4f, matrix3f, packedLight, 0.0F, 0, 0, 1);
-        vertex(vertexconsumer, matrix4f, matrix3f, packedLight, 1.0F, 0, 1, 1);
-        vertex(vertexconsumer, matrix4f, matrix3f, packedLight, 1.0F, 1, 1, 0);
-        vertex(vertexconsumer, matrix4f, matrix3f, packedLight, 0.0F, 1, 0, 0);
+        vertex(vertexconsumer, pose, matrix3f, packedLight, 0.0F, 0, 0, 1);
+        vertex(vertexconsumer, pose, matrix3f, packedLight, 1.0F, 0, 1, 1);
+        vertex(vertexconsumer, pose, matrix3f, packedLight, 1.0F, 1, 1, 0);
+        vertex(vertexconsumer, pose, matrix3f, packedLight, 0.0F, 1, 0, 0);
 
         poseStack.popPose();
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
     }
 
-    private static void vertex(VertexConsumer consumer, Matrix4f pose, Matrix3f normal, int light, float x, float y, int u, int v) {
-        consumer.vertex(pose, x - 0.5F, y - 0.25F, 0.0F)
-                .color(255, 255, 255, 255)
-                .uv((float) u, (float) v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normal, 0.0F, 1.0F, 0.0F)
-                .endVertex();
+    private static void vertex(VertexConsumer consumer, PoseStack.Pose pose, Matrix3f normal, int light, float x, float y, int u, int v) {
+        consumer.addVertex(pose, x - 0.5F, y - 0.25F, 0.0F)
+                .setColor(255, 255, 255, 255)
+                .setUv((float) u, (float) v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, 0.0F, 1.0F, 0.0F)
+                ;
     }
 
     @Override

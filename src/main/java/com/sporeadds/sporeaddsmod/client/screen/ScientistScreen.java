@@ -73,8 +73,7 @@ public class ScientistScreen extends AbstractContainerScreen<ScientistMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        renderBackground(guiGraphics);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta)  {
         super.render(guiGraphics, mouseX, mouseY, delta);
 
         // Renderizar número de biomasa en cian

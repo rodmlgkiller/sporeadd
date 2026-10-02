@@ -7,7 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.scores.PlayerTeam;
 
-public class CamouflagedEffect extends MobEffect {
+public class CamouflagedEffect extends MobEffect implements com.sporeadds.sporeaddsmod.effects.EffectRemovalEvents.RemovalAware {
     public CamouflagedEffect() {
         super(MobEffectCategory.BENEFICIAL, 0xA3C1B0);
     }
@@ -37,8 +37,7 @@ public class CamouflagedEffect extends MobEffect {
     // bebe leche o muere. Por eso también mantenemos la lógica en el TickEvent como respaldo.
     // Pero si se llama, devolvemos el equipo.
     @Override
-    public void removeAttributeModifiers(net.minecraft.world.entity.ai.attributes.AttributeMap attributeMap) {
-        super.removeAttributeModifiers(attributeMap);
+    public void onRemovedFrom(net.minecraft.world.entity.LivingEntity entity) {
 
         if (!(entity instanceof ServerPlayer player)) return;
 

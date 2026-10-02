@@ -300,8 +300,7 @@ public class TrainingBookClassDetailScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)  {
 
         graphics.blit(TrainingBookScreen.BOOK_TEXTURE, leftPos, topPos, 0, 0,
                 TrainingBookScreen.IMAGE_WIDTH, TrainingBookScreen.IMAGE_HEIGHT);

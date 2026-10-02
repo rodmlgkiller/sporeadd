@@ -117,8 +117,7 @@ public class FieldResearchBookScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)  {
 
         double scaleFactor = getScaleFactor();
         PoseStack pose = graphics.pose();
@@ -221,7 +220,7 @@ public class FieldResearchBookScreen extends Screen {
             int baseScale = entry.entity.getBbHeight() > 2.0f ? 12 : 20;
             int finalScale = TrackedEntities.isHalfScaleRender(entry.id) ? baseScale / 2 : baseScale;
 
-            InventoryScreen.renderEntityInInventoryFollowsMouse(
+            com.sporeadds.sporeaddsmod.util.EntityPreview.renderFollowsMouse(
                     graphics,
                     renderCenterX,
                     renderCenterY,
@@ -316,10 +315,10 @@ public class FieldResearchBookScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         double adjX = adjustMouseX(mouseX);
         double adjY = adjustMouseY(mouseY);
-        return super.mouseScrolled(adjX, adjY, delta);
+        return super.mouseScrolled(adjX, adjY, scrollX, scrollY);
     }
 
     @Override

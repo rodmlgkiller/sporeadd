@@ -7,7 +7,6 @@ import com.sporeadds.sporeaddsmod.client.ClientGluttonousFragmentsState;
 import com.sporeadds.sporeaddsmod.config.SporeAddsClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 import java.util.List;
 
@@ -47,7 +46,10 @@ public class AbilityChargeBarGui {
     private static final int GLUTTONOUS_U_BONE = 10;
     private static final int FRAGMENT_EMPTY = 0xFF555555;
 
-    public static final IGuiOverlay ABILITY_CHARGE_BAR = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+    public static final net.minecraft.client.gui.LayeredDraw.Layer ABILITY_CHARGE_BAR = (guiGraphics, deltaTracker) -> {
+        float partialTick = deltaTracker.getGameTimeDeltaPartialTick(false);
+        int screenWidth = guiGraphics.guiWidth();
+        int screenHeight = guiGraphics.guiHeight();
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 

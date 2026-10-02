@@ -78,15 +78,15 @@ public class gluttonousCrosshairLayer extends RenderLayer<AbstractClientPlayer, 
         float maxV = (float) (frameIndex + 1) / TOTAL_SPRITES;
 
         Matrix4f matrix4f = poseStack.last().pose();
-        Matrix3f matrix3f = poseStack.last().normal();
+        PoseStack.Pose normalPose = poseStack.last();
 
         int fullBright = LightTexture.pack(15, 15);
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(CROSSHAIR_TEXTURE));
 
-        vertexConsumer.vertex(matrix4f, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(fullBright).normal(matrix3f, 0, 0, 1).endVertex();
-        vertexConsumer.vertex(matrix4f, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(fullBright).normal(matrix3f, 0, 0, 1).endVertex();
-        vertexConsumer.vertex(matrix4f, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(fullBright).normal(matrix3f, 0, 0, 1).endVertex();
-        vertexConsumer.vertex(matrix4f, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(fullBright).normal(matrix3f, 0, 0, 1).endVertex();
+        vertexConsumer.addVertex(matrix4f, -0.5f, -0.5f, 0).setColor(255, 255, 255, 255).setUv(maxU, maxV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(fullBright).setNormal(normalPose, 0, 0, 1);
+        vertexConsumer.addVertex(matrix4f, 0.5f, -0.5f, 0).setColor(255, 255, 255, 255).setUv(minU, maxV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(fullBright).setNormal(normalPose, 0, 0, 1);
+        vertexConsumer.addVertex(matrix4f, 0.5f, 0.5f, 0).setColor(255, 255, 255, 255).setUv(minU, minV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(fullBright).setNormal(normalPose, 0, 0, 1);
+        vertexConsumer.addVertex(matrix4f, -0.5f, 0.5f, 0).setColor(255, 255, 255, 255).setUv(maxU, minV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(fullBright).setNormal(normalPose, 0, 0, 1);
 
         poseStack.popPose();
     }
@@ -130,7 +130,7 @@ public class gluttonousCrosshairLayer extends RenderLayer<AbstractClientPlayer, 
             return mc.crosshairPickEntity != null;
         }
 
-        float partialTicks = mc.getFrameTime();
+        float partialTicks = mc.getTimer().getGameTimeDeltaPartialTick(false);
         Vec3 eyePos = player.getEyePosition(partialTicks);
         Vec3 lookVec = player.getViewVector(partialTicks);
         double range = 4.0D;

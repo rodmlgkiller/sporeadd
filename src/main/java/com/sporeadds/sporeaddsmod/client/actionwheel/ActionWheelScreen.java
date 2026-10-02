@@ -23,7 +23,7 @@ public class ActionWheelScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)  {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 

@@ -47,7 +47,7 @@ public class MedicBlockContructorScreen extends AbstractContainerScreen<MedicBlo
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)  {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         renderTooltip(guiGraphics, mouseX, mouseY);
 

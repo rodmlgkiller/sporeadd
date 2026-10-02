@@ -922,7 +922,7 @@ public class SporeAbilitySelector extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
         float currentGuiScale = (float) mc.getWindow().getGuiScale();
 

@@ -51,9 +51,9 @@ public final class PunishmentFinalWordsOverlay {
         String text = Component.translatable("overlay.sporeadd.punishment.final_words").getString();
         Font font = mc.font;
         GuiGraphics g = event.getGuiGraphics();
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-        float time = mc.player.tickCount + event.getPartialTick();
+        int w = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int h = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        float time = mc.player.tickCount + event.getPartialTick().getGameTimeDeltaPartialTick(false);
 
         for (float[] slot : SLOTS) {
             float cycle = ((time / slot[3]) + slot[4]) % 1.0F;

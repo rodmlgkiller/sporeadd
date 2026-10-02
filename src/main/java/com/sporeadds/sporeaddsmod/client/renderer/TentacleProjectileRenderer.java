@@ -270,25 +270,25 @@ public class TentacleProjectileRenderer extends EntityRenderer<TentacleProjectil
         float z0 = 0.0F;
         float z1 = length;
 
-        addVertex(consumer, matrix, normal, light, -hw, hw, z0, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, hw, hw, z0, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, hw, hw, z1, 1.0F, 1.0F, 0.0F, 1.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, -hw, hw, z1, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, hw, z0, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, hw, z0, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, hw, z1, 1.0F, 1.0F, 0.0F, 1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, hw, z1, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F, alpha);
 
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z1, 0.0F, 1.0F, 0.0F, -1.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, hw, -hw, z1, 1.0F, 1.0F, 0.0F, -1.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, hw, -hw, z0, 1.0F, 0.0F, 0.0F, -1.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z0, 0.0F, 0.0F, 0.0F, -1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z1, 0.0F, 1.0F, 0.0F, -1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, -hw, z1, 1.0F, 1.0F, 0.0F, -1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, -hw, z0, 1.0F, 0.0F, 0.0F, -1.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z0, 0.0F, 0.0F, 0.0F, -1.0F, 0.0F, alpha);
 
-        addVertex(consumer, matrix, normal, light, hw, hw, z0, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, hw, -hw, z0, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, hw, -hw, z1, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, hw, hw, z1, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, hw, z0, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, -hw, z0, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, -hw, z1, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, hw, hw, z1, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
 
-        addVertex(consumer, matrix, normal, light, -hw, hw, z1, 0.0F, 1.0F, -1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z1, 1.0F, 1.0F, -1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, -hw, -hw, z0, 1.0F, 0.0F, -1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, -hw, hw, z0, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, hw, z1, 0.0F, 1.0F, -1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z1, 1.0F, 1.0F, -1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, -hw, z0, 1.0F, 0.0F, -1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, -hw, hw, z0, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F, alpha);
     }
 
     private void renderCrossedSprite(PoseStack poseStack, VertexConsumer consumer, int light, float alpha) {
@@ -308,22 +308,22 @@ public class TentacleProjectileRenderer extends EntityRenderer<TentacleProjectil
         float back = -0.5F;
         float front = 0.5F;
 
-        addVertex(consumer, matrix, normal, light, 0.0F, -halfWidth, back, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, 0.0F, halfWidth, back, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, 0.0F, halfWidth, front, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
-        addVertex(consumer, matrix, normal, light, 0.0F, -halfWidth, front, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, 0.0F, -halfWidth, back, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, 0.0F, halfWidth, back, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, 0.0F, halfWidth, front, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
+        addVertex(consumer, pose, normal, light, 0.0F, -halfWidth, front, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, alpha);
     }
 
-    private void addVertex(VertexConsumer consumer, Matrix4f pose, Matrix3f normal, int light,
+    private void addVertex(VertexConsumer consumer, PoseStack.Pose pose, Matrix3f normal, int light,
                            float x, float y, float z, float u, float v, float nx, float ny, float nz, float alpha) {
         int alphaInt = (int) (alpha * 255.0F);
-        consumer.vertex(pose, x, y, z)
-                .color(255, 255, 255, alphaInt)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normal, nx, ny, nz)
-                .endVertex();
+        consumer.addVertex(pose, x, y, z)
+                .setColor(255, 255, 255, alphaInt)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(pose, nx, ny, nz)
+                ;
     }
 
     @Override

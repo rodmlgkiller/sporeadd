@@ -9,7 +9,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -27,8 +28,8 @@ public final class ResearchPopupOverlay {
     }
 
     @SubscribeEvent
-    public static void onRenderOverlay(RenderGuiOverlayEvent.Post event) {
-        if (!event.getOverlay().id().toString().equals("minecraft:hotbar")) {
+    public static void onRenderOverlay(RenderGuiLayerEvent.Post event) {
+        if (!event.getName().equals(VanillaGuiLayers.HOTBAR)) {
             return;
         }
 

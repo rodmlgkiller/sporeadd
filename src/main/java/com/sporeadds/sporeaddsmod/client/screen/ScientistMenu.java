@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 
@@ -37,7 +36,7 @@ public class ScientistMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        ForgeCapabilities.ITEM_HANDLER.get(this.blockEntity).ifPresent(iItemHandler -> {
+        java.util.Optional.of(this.blockEntity.getItemHandler()).ifPresent(iItemHandler -> {
             // Slot azul (biomasa)
             this.addSlot(new SlotItemHandler(iItemHandler, 0, 11, 20));
             // Slot papel

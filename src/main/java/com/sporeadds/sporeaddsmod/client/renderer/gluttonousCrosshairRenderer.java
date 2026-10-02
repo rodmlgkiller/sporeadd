@@ -12,8 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -22,12 +22,12 @@ public class gluttonousCrosshairRenderer {
 
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        PlayerRenderer defaultRenderer = event.getSkin("default");
+        PlayerRenderer defaultRenderer = event.getSkin(net.minecraft.client.resources.PlayerSkin.Model.WIDE);
         if (defaultRenderer != null) {
             defaultRenderer.addLayer(new gluttonousCrosshairLayer(defaultRenderer));
         }
 
-        PlayerRenderer slimRenderer = event.getSkin("slim");
+        PlayerRenderer slimRenderer = event.getSkin(net.minecraft.client.resources.PlayerSkin.Model.SLIM);
         if (slimRenderer != null) {
             slimRenderer.addLayer(new gluttonousCrosshairLayer(slimRenderer));
         }
@@ -63,8 +63,8 @@ class gluttonousCrosshairEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderCrosshair(RenderGuiOverlayEvent.Pre event) {
-        if (!event.getOverlay().id().equals(VanillaGuiOverlay.CROSSHAIR.id())) return;
+    public static void onRenderCrosshair(RenderGuiLayerEvent.Pre event) {
+        if (!event.getName().equals(VanillaGuiLayers.CROSSHAIR)) return;
 
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
@@ -75,8 +75,8 @@ class gluttonousCrosshairEvents {
         if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return;
 
         GuiGraphics graphics = event.getGuiGraphics();
-        int screenWidth = event.getWindow().getGuiScaledWidth();
-        int screenHeight = event.getWindow().getGuiScaledHeight();
+        int screenWidth = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int screenHeight = net.minecraft.client.Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         int x = (screenWidth - SPRITE_SIZE) / 2;
         int y = (screenHeight - SPRITE_SIZE) / 2;

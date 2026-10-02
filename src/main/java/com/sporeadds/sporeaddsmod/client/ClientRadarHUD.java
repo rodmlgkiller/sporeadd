@@ -7,7 +7,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -27,7 +26,10 @@ public class ClientRadarHUD {
     }
 
     // El HUD Overlay que dibuja en pantalla
-    public static final IGuiOverlay HUD_RADAR = (gui, graphics, partialTick, width, height) -> {
+    public static final net.minecraft.client.gui.LayeredDraw.Layer HUD_RADAR = (graphics, deltaTracker) -> {
+        float partialTick = deltaTracker.getGameTimeDeltaPartialTick(false);
+        int width = graphics.guiWidth();
+        int height = graphics.guiHeight();
         if (displayTimer > 0 && !reportLines.isEmpty()) {
             Minecraft mc = Minecraft.getInstance();
             int fontHeight = mc.font.lineHeight;

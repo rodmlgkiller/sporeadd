@@ -17,7 +17,7 @@ public class ClientRenderLayers {
 
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        for (String skin : event.getSkins()) {
+        for (net.minecraft.client.resources.PlayerSkin.Model skin : event.getSkins()) {
             LivingEntityRenderer<AbstractClientPlayer, ?> renderer = event.getSkin(skin);
 
             if (renderer instanceof PlayerRenderer playerRenderer) {
