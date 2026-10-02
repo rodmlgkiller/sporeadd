@@ -174,8 +174,14 @@ public class SelfDefibrillateScreen extends Screen {
         super.onClose();
     }
 
+    /** The vanilla blur would be drawn over everything these screens paint before super.render(). */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)  {
+        this.renderTransparentBackground(graphics);
 
         for (int i = 0; i < icons.size(); i++) {
             IconSlot slot = icons.get(i);

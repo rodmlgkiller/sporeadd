@@ -90,8 +90,14 @@ public class TrainingBookScreen extends Screen {
         return topPos + TEXT_TOP_OFFSET + 16 + index * LINE_HEIGHT;
     }
 
+    /** The vanilla blur would be drawn over everything these screens paint before super.render(). */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)  {
+        this.renderTransparentBackground(graphics);
 
         graphics.blit(BOOK_TEXTURE, this.leftPos, this.topPos, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 

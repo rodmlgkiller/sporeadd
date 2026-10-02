@@ -270,4 +270,17 @@ public class StaticEntity extends Organoid {
             this.spawnAtLocation(new ItemStack(armorFragment, fragmentCount));
         }
     }
+
+    /**
+     * 1.20.1 seated passengers at 0.75 * height - 1.0. In 1.21 the default attachment is the top of the hitbox,
+     * so the same lowering is expressed here as an offset from that point.
+     */
+    private static final double PASSENGER_DROP = 1.0D;
+
+    @Override
+    protected Vec3 getPassengerAttachmentPoint(net.minecraft.world.entity.Entity passenger,
+                                               net.minecraft.world.entity.EntityDimensions dimensions, float scale) {
+        return super.getPassengerAttachmentPoint(passenger, dimensions, scale)
+                .add(0.0D, -(dimensions.height() * 0.25D + PASSENGER_DROP) * scale, 0.0D);
+    }
 }

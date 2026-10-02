@@ -46,7 +46,7 @@ classes), `tools/evcheck.pl` and `tools/subscribers.pl` (event subscriber sanity
 * **Enchanting-table rules** for the Portable Air Purifier and Reinforced Combat Chains are now expressed through the
   `minecraft:enchantable/durability` item tag, so an anvil handler (`PurifierEnchantRestriction`) keeps the Purifier to Unbreaking only.
 * Tentacle's "arthropod" / "breathes underwater" behaviour is now an entity-type tag (`data/minecraft/tags/entity_type`).
-* `StaticEntity` lost its passenger riding offset override (removed in 1.21; needs a visual check).
+* `StaticEntity` passengers are lowered through `getPassengerAttachmentPoint` (`PASSENGER_DROP`); tweak that constant if it still looks off.
 * `Unbreakable` and gas mask attributes/lore/name use data components instead of NBT (`util/GasMaskFactory`).
 * Data folders were renamed to the 1.21 singular names (`recipe`, `loot_table`, `tags/block`, `tags/item`) and recipes were
   converted (`neoforge:conditions`, `neoforge:components` ingredients, `id`/`components` results).

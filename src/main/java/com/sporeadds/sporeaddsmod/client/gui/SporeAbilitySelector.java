@@ -920,9 +920,14 @@ public class SporeAbilitySelector extends Screen {
         return count;
     }
 
+    /** The vanilla blur would be drawn over everything these screens paint before super.render(). */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTransparentBackground(guiGraphics);
 
         float currentGuiScale = (float) mc.getWindow().getGuiScale();
 

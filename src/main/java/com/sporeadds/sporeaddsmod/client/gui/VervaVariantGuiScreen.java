@@ -119,8 +119,14 @@ public class VervaVariantGuiScreen extends Screen {
         }
     }
 
+    /** The vanilla blur would be drawn over everything these screens paint before super.render(). */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)  {
+        this.renderTransparentBackground(graphics);
 
         double scaleFactor = getScaleFactor();
         PoseStack pose = graphics.pose();
