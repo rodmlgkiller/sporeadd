@@ -1,8 +1,5 @@
 {
   "exhaustion": 0.1,
   "message_id": "terminal",
-  "scaling": "when_caused_by_living_non_player",
-  "effects": {
-    "bypasses_armor": true
-  }
+  "scaling": "when_caused_by_living_non_player"
 }
