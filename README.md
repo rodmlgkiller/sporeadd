@@ -2,7 +2,9 @@
 
 A mod that allows the player to play as a spore infected miniboss or choose 4 diferent survivor classes with different skills to fight the infection. Each class is a strong gamechanger originally balanced for pvp so have that in account.
 
-SporeAdds is an addon for the **Spore** mod. Minecraft 1.20.1, Forge 47.4.0+.
+SporeAdds is an addon for the **Spore** mod. Minecraft **1.21.1**, **NeoForge** 21.1.x.
+
+> This is the `1.21.1` branch. The Minecraft 1.20.1 (Forge) version lives on the `main` branch and is maintained in parallel; see [PORTING.md](PORTING.md) for what changed in the port.
 
 ## Classes
 
@@ -22,29 +24,27 @@ An in-game **Training Book** describes every class in detail, and most systems a
 
 | Mod | Version | Notes |
 |-----|---------|-------|
-| Minecraft Forge | 47.4.0+ (1.20.1) | required |
-| Spore | 2.2.0j | required |
-| Pehkui | 3.8.2 | required |
-| Origins (Forge port) | 1.10.0.9 | optional |
-| JEI | 15.20.0.111 | optional |
+| NeoForge | 21.1.212+ (Minecraft 1.21.1) | required |
+| Spore | 2.2.0j (NeoForge 1.21.1 build) | required |
+| Pehkui | 3.8.3 (NeoForge 1.21) | required |
+| JEI | 19.57+ | optional |
 
-**Origins is optional.** If installed, picking an Origin and picking a class stay in sync. This sync is written against the Forge/Architectury port of Origins (`io.github.edwinmindcraft.origins`). Other implementations that register the `origins` mod id (for example the Fabric version running through Sinytra Connector) will load without errors, but the sync does nothing.
+**Origins:** the Origins integration of the 1.20.1 version needs the Forge port of Origins, which does not exist for NeoForge 1.21.1. On this branch the integration is a no-op stub (`OriginApiBridge`) and the class/origin sync stays disabled until an Origins build for 1.21.1 is available.
 
 ## Building
 
-Requires **JDK 17**.
+Requires **JDK 21**.
 
 1. Clone the repository.
 2. Create a `libs/` folder in the project root and put these jars in it. They are not included in the repository because they belong to their authors (and Spore alone is over GitHub's file size limit):
-   - `spore_1.20.1_2.2.0j.jar`
-   - `Pehkui-3.8.2+1.20.1-forge.jar`
-   - `origins-forge-1.20.1-1.10.0.9-all.jar`
-   - `jei-1.20.1-forge-15.20.0.111.jar`
+   - `spore_1.21.1_2.2.0j_neo.jar`
+   - `Pehkui-3.8.3+1.21-neoforge.jar`
+   - `jei-1.21.1-neoforge-19.57.0.450.jar` (optional, only needed to compile the JEI plugin)
 3. Build:
    ```bash
    ./gradlew build
    ```
-   The mod jar is written to `build/libs/sporeadd-<version>.jar`.
+   The mod jar is written to `build/libs/sporeadd-1.21.1-<version>.jar`.
 
 To run a development client: `./gradlew runClient`.
 
