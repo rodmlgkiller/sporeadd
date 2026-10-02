@@ -47,7 +47,7 @@ public class Poder4 {
         player.addEffect(new MobEffectInstance(MobEffects.SATURATION, saturationTicks, 0));
 
         player.addEffect(new MobEffectInstance(
-                effects.EXQUISITE_CUISINE.get(),
+                effects.EXQUISITE_CUISINE,
                 60 * 20,
                 0,
                 false,

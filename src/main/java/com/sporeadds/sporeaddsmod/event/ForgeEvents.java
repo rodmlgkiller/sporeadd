@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -45,7 +47,6 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -80,18 +81,18 @@ public class ForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
-        if (event.getEntity().hasEffect(effects.VULNERABLE.get())) {
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
+        if (event.getEntity().hasEffect(effects.VULNERABLE)) {
             event.setAmount(event.getAmount() * 1.25f);
         }
     }
 
     @SubscribeEvent
-    public static void onAbyssalRiptideHurt(LivingHurtEvent event) {
+    public static void onAbyssalRiptideHurt(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide()) return;
         if (!(event.getSource().getEntity() instanceof Player player)) return;
 
-        var subjugation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation"));
+        var subjugation = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation")).orElse(null);
         if (subjugation == null || !player.hasEffect(subjugation)) return;
 
         ItemStack mainHand = player.getMainHandItem();
@@ -382,7 +383,7 @@ public class ForgeEvents {
                 });
             }
 
-            var subjugation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation"));
+            var subjugation = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation")).orElse(null);
             if (subjugation != null && player.hasEffect(subjugation)) {
                 final int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get() / 2;
 
@@ -397,7 +398,7 @@ public class ForgeEvents {
                 player.removeEffect(subjugation);
             }
 
-            var anticipation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "anticipation"));
+            var anticipation = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "anticipation")).orElse(null);
             if (anticipation != null && player.hasEffect(anticipation)) {
                 int levelsToLose = SporeAddsConfig.NUKE_LEVEL_PENALTY.get();
 

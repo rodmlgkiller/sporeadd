@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers.bile;
 
+import net.minecraft.core.Holder;
+
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,7 +25,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
@@ -77,7 +80,7 @@ public class gluttonousDamageHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
         Entity direct = event.getSource().getDirectEntity();
         if (!(direct instanceof Projectile projectile)) return;
 
@@ -138,7 +141,7 @@ public class gluttonousDamageHandler {
         }
 
         if (shouldApplygluttonousd) {
-            MobEffect gluttonousdEffect = BuiltInRegistries.MOB_EFFECT.get(gluttonousD_EFFECT_ID);
+            Holder<MobEffect> gluttonousdEffect = BuiltInRegistries.MOB_EFFECT.getHolder(gluttonousD_EFFECT_ID).orElse(null);
             if (gluttonousdEffect != null) {
                 int playerLevel = 0;
 
@@ -155,7 +158,7 @@ public class gluttonousDamageHandler {
 
         // Efecto y partículas únicas de Gore
         if (isGoreProjectile) {
-            MobEffect seasonedEffect = BuiltInRegistries.MOB_EFFECT.get(SEASONED_EFFECT_ID);
+            Holder<MobEffect> seasonedEffect = BuiltInRegistries.MOB_EFFECT.getHolder(SEASONED_EFFECT_ID).orElse(null);
             if (seasonedEffect != null) {
                 // 300 ticks = 15 segundos. Ambient = false, ShowParticles = true.
                 target.addEffect(new MobEffectInstance(seasonedEffect, 300, 0, false, true));

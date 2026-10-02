@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.Harbinger.Spore.Sentities.EvolvedInfected.Protector;
@@ -7,7 +9,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class SporeTeamProtectionEvent {
 
     @SubscribeEvent
-    public static void onPlayerHurt(LivingHurtEvent event) {
+    public static void onPlayerHurt(LivingDamageEvent.Pre event) {
         // 1. Verificamos si quien recibe el daño es un Jugador
         if (event.getEntity() instanceof Player victim) {
 

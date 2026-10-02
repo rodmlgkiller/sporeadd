@@ -105,7 +105,7 @@ public class BucketOfRemainsItem extends Item {
             if (canUse) {
                 // USO NORMAL DEL ITEM (600 ticks = 30 segundos)
                 sp.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                        effects.CAMOUFLAGED.get(), 600, 0));
+                        effects.CAMOUFLAGED, 600, 0));
 
                 clearPursuers(sp);
 

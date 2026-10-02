@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,7 +30,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
@@ -42,7 +43,7 @@ public class Poder2 {
     private static final ResourceLocation BLOOD_PARTICLE_ID = ResourceLocation.fromNamespaceAndPath("spore", "blood_particle");
 
     @SubscribeEvent
-    public static void applyMyceliumOnHit(LivingHurtEvent event) {
+    public static void applyMyceliumOnHit(LivingDamageEvent.Pre event) {
         DamageSource source = event.getSource();
 
         if (source.getEntity() instanceof Player player) {
@@ -59,7 +60,7 @@ public class Poder2 {
                                 LivingEntity target = event.getEntity();
 
                                 if (target != null && target != player) {
-                                    var effect = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EFFECT_ID);
+                                    var effect = BuiltInRegistries.MOB_EFFECT.getHolder(MYCELIUM_EFFECT_ID).orElse(null);
                                     if (effect != null) {
                                         target.addEffect(new MobEffectInstance(effect, durationSeconds * 20, amplifier, false, true));
                                     }

@@ -20,8 +20,8 @@ public class DehydrationCureEvents {
 
         var item = event.getItem().getItem();
         if (item == Items.POTION || item == Items.HONEY_BOTTLE || item == Items.MILK_BUCKET) {
-            if (event.getEntity().hasEffect(effects.DEHYDRATION.get())) {
-                event.getEntity().removeEffect(effects.DEHYDRATION.get());
+            if (event.getEntity().hasEffect(effects.DEHYDRATION)) {
+                event.getEntity().removeEffect(effects.DEHYDRATION);
             }
         }
     }
@@ -33,8 +33,8 @@ public class DehydrationCureEvents {
         if (event.getProjectile() instanceof ThrownPotion thrownPotion) {
             if (event.getRayTraceResult() instanceof EntityHitResult entityHit) {
                 if (entityHit.getEntity() instanceof net.minecraft.world.entity.LivingEntity living) {
-                    if (living.hasEffect(effects.DEHYDRATION.get())) {
-                        living.removeEffect(effects.DEHYDRATION.get());
+                    if (living.hasEffect(effects.DEHYDRATION)) {
+                        living.removeEffect(effects.DEHYDRATION);
                     }
                 }
             } else {
@@ -44,8 +44,8 @@ public class DehydrationCureEvents {
                 );
 
                 for (var living : entities) {
-                    if (living.hasEffect(effects.DEHYDRATION.get())) {
-                        living.removeEffect(effects.DEHYDRATION.get());
+                    if (living.hasEffect(effects.DEHYDRATION)) {
+                        living.removeEffect(effects.DEHYDRATION);
                     }
                 }
             }

@@ -202,9 +202,9 @@ public class ChainProjectileEntity extends ThrowableProjectile {
 
         this.attachTicks++;
 
-        ownerPlayer.addEffect(new MobEffectInstance(effects.ENCHAINED.get(), 5, 0, false, false, true));
+        ownerPlayer.addEffect(new MobEffectInstance(effects.ENCHAINED, 5, 0, false, false, true));
         if (target instanceof LivingEntity livingTarget) {
-            livingTarget.addEffect(new MobEffectInstance(effects.ENCHAINED.get(), 5, 0, false, false, true));
+            livingTarget.addEffect(new MobEffectInstance(effects.ENCHAINED, 5, 0, false, false, true));
         }
 
         ItemStack offhandStack = ownerPlayer.getOffhandItem();

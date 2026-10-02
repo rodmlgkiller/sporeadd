@@ -86,7 +86,7 @@ public final class ConductorReplacementHandler {
         copyArmor(player, conductor);
 
         conductor.addEffect(new MobEffectInstance(
-                effects.DELAYED_DEFIBRILLATION.get(),
+                effects.DELAYED_DEFIBRILLATION,
                 CONDUCTOR_DEFIBRILLATION_DURATION_TICKS,
                 0,
                 false,

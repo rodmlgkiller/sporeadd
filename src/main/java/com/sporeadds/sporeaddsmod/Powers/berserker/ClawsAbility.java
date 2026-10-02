@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -26,7 +28,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
@@ -78,7 +79,7 @@ public final class ClawsAbility {
     private static final UUID WEAKNESS_BYPASS_UUID = UUID.fromString("6c3f1b0a-1f2e-4c3d-8a11-9b7c5d4e2f10");
     private static final double WEAKNESS_BYPASS_AMOUNT = 1024.0D;
 
-    // Crit desarmado pendiente (multiplicador) a consumir en el proximo LivingHurtEvent.
+    // Crit desarmado pendiente (multiplicador) a consumir en el proximo LivingIncomingDamageEvent.
     private static final Map<UUID, Float> CRIT_PENDING = new HashMap<>();
     // Empuje extra pendiente por calcified: id del objetivo -> multiplicador / tick del golpe.
     private static final Map<UUID, Float> PENDING_KB = new HashMap<>();
@@ -189,7 +190,7 @@ public final class ClawsAbility {
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
         if (!ACTIVE.contains(player.getUUID())) return;
         if (event.getSource().getDirectEntity() != player) return;   // solo golpe directo
@@ -254,7 +255,7 @@ public final class ClawsAbility {
                 WEAKNESS_BYPASS_AMOUNT, AttributeModifier.Operation.ADDITION));
     }
 
-    /** Crit desarmado con el modo Claws activo: guarda el multiplicador para el LivingHurtEvent. */
+    /** Crit desarmado con el modo Claws activo: guarda el multiplicador para el LivingIncomingDamageEvent. */
     @SubscribeEvent
     public static void onCriticalHit(CriticalHitEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
@@ -281,7 +282,7 @@ public final class ClawsAbility {
 
     /** reinforced: reduce el daño recibido mientras el modo Claws está activo. */
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onBerserkerHurt(LivingHurtEvent event) {
+    public static void onBerserkerHurt(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!ACTIVE.contains(player.getUUID())) return;
         if (!SporeClassUtil.hasClass(player, "berserker")) return;

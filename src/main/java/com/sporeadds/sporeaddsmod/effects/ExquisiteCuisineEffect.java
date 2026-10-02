@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.world.effect.MobEffect;
@@ -9,7 +11,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -41,9 +42,9 @@ public class ExquisiteCuisineEffect extends MobEffect {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
-        if (event.getEntity().hasEffect(effects.EXQUISITE_CUISINE.get())) {
-            event.setAmount(event.getAmount() * 0.8F);
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
+        if (event.getEntity().hasEffect(effects.EXQUISITE_CUISINE)) {
+            event.setNewDamage(event.getNewDamage() * 0.8F);
         }
     }
 }

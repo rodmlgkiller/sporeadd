@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -13,7 +17,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -21,7 +24,7 @@ import net.neoforged.fml.common.Mod;
 public class SporeDefenseHandler {
 
     @SubscribeEvent
-    public static void onPlayerAttacked(LivingAttackEvent event) {
+    public static void onPlayerAttacked(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide) return;
 
         // Comprobar que el que recibe el golpe es un jugador (Defensor)
@@ -31,7 +34,7 @@ public class SporeDefenseHandler {
         if (!(event.getSource().getEntity() instanceof Player attacker)) return;
 
         // Verificar si el atacante tiene "spore:uneasy"
-        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "uneasy"));
+        Holder<MobEffect> uneasy = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "uneasy")).orElse(null);
         if (uneasy == null || !attacker.hasEffect(uneasy)) return;
 
         // Verificar que el defensor está en el equipo "spore"

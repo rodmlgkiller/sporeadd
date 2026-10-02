@@ -265,7 +265,7 @@ public class Poder6 {
     }
 
     static MobEffect getDissolutionEffect() {
-        return BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
+        return BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")).orElse(null);
     }
 
     static boolean usesEvolutionKillCost(Entity entity) {

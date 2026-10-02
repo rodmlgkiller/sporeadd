@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -9,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -34,9 +35,9 @@ public final class PunishmentEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
         if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
-        MobEffectInstance inst = attacker.getEffect(effects.PUNISHMENT.get());
+        MobEffectInstance inst = attacker.getEffect(effects.PUNISHMENT);
         if (inst == null) return;
 
         // Amplifier 2 (nivel 3): el castigado no inflige ningún daño.
@@ -54,7 +55,7 @@ public final class PunishmentEventHandler {
     @SubscribeEvent
     public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.getEffect(effects.PUNISHMENT.get()) == null) return;
+        if (entity.getEffect(effects.PUNISHMENT) == null) return;
 
         double keepY = Math.min(0.0D, entity.getDeltaMovement().y);   // deja caer, nunca subir
         entity.setDeltaMovement(0.0D, keepY, 0.0D);
@@ -72,7 +73,7 @@ public final class PunishmentEventHandler {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
 
         Player player = event.getEntity();
-        if (player.getEffect(effects.PUNISHMENT.get()) == null) return;
+        if (player.getEffect(effects.PUNISHMENT) == null) return;
         if (player.isPassenger() || player.isInWater() || player.onClimbable()
                 || player.isFallFlying() || player.getAbilities().flying) {
             return;

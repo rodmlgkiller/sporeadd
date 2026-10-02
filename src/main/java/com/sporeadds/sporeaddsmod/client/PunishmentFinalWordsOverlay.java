@@ -45,7 +45,7 @@ public final class PunishmentFinalWordsOverlay {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui) return;
 
-        MobEffectInstance inst = mc.player.getEffect(effects.PUNISHMENT.get());
+        MobEffectInstance inst = mc.player.getEffect(effects.PUNISHMENT);
         if (inst == null || inst.getAmplifier() < 2) return;
 
         String text = Component.translatable("overlay.sporeadd.punishment.final_words").getString();

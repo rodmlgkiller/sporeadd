@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -96,7 +98,7 @@ public class TerminaEffect extends MobEffect {
 
             // Las náuseas y el daño pasivo aplican a TODOS (jugadores y mobs)
             if (RAND.nextDouble() < 0.05) {
-                var nausea = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "nausea"));
+                var nausea = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "nausea")).orElse(null);
                 if (nausea != null) {
                     entity.addEffect(new MobEffectInstance(nausea, 20 * 5, 0));
                 }
@@ -134,7 +136,7 @@ public class TerminaEffect extends MobEffect {
             }
 
             // ---- Ejecución letal ----
-            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
+            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef")).orElse(null);
             if (myceliumEffect != null) {
                 entity.addEffect(new MobEffectInstance(myceliumEffect, 20 * 30, 0));
             }
@@ -190,7 +192,7 @@ public class TerminaEffect extends MobEffect {
         if (event.getSource().is(MYCELIUM_OVERTAKE)) {
 
             // Asegúrate de que tu modid sea correcto ("sporeadd" o "sporeadds")
-            MobEffect termina = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadds", "termina"));
+            Holder<MobEffect> termina = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadds", "termina")).orElse(null);
             if (termina == null) return;
 
             MobEffectInstance currentEffect = entity.getEffect(termina);

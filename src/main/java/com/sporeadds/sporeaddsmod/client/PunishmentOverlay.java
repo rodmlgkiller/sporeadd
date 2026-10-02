@@ -43,7 +43,7 @@ public final class PunishmentOverlay {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui) return;
 
-        MobEffectInstance inst = mc.player.getEffect(effects.PUNISHMENT.get());
+        MobEffectInstance inst = mc.player.getEffect(effects.PUNISHMENT);
         if (inst == null) return;
 
         int tier = Mth.clamp(inst.getAmplifier(), 0, 2);

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.abilities;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
@@ -8,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -28,7 +29,7 @@ public class GhostCamouflageAbility {
                 .orElse(false);
     }
 
-    private static ServerPlayer resolveAttacker(LivingHurtEvent event) {
+    private static ServerPlayer resolveAttacker(LivingDamageEvent.Pre event) {
         Entity source = event.getSource().getEntity();
 
         if (source instanceof ServerPlayer player) {
@@ -45,7 +46,7 @@ public class GhostCamouflageAbility {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onLivingHurtRangedBonus(LivingHurtEvent event) {
+    public static void onLivingHurtRangedBonus(LivingDamageEvent.Pre event) {
         if (event.isCanceled()) {
             return;
         }
@@ -67,6 +68,6 @@ public class GhostCamouflageAbility {
             return;
         }
 
-        event.setAmount(event.getAmount() * RANGED_DAMAGE_MULTIPLIER);
+        event.setNewDamage(event.getNewDamage() * RANGED_DAMAGE_MULTIPLIER);
     }
 }

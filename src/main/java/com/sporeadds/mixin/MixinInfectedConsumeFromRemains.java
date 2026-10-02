@@ -78,10 +78,10 @@ public abstract class MixinInfectedConsumeFromRemains {
             target.setBiomass(newBiomass);
 
             this.infected.setHunger(0);
-            this.infected.removeEffect(Seffects.STARVATION.get());
+            this.infected.removeEffect(Seffects.STARVATION);
 
             this.infected.addEffect(new MobEffectInstance(
-                    effects.EXQUISITE_CUISINE.get(),
+                    effects.EXQUISITE_CUISINE,
                     12000,
                     0,
                     false,

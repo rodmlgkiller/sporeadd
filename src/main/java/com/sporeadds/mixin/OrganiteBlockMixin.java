@@ -51,7 +51,7 @@ public class OrganiteBlockMixin {
                         Utilities.helmetList().contains(entity.getItemBySlot(EquipmentSlot.HEAD).getItem());
 
                 if (!isProtected) {
-                    entity.addEffect(new MobEffectInstance(Seffects.MARKER.get(), 400, 0));
+                    entity.addEffect(new MobEffectInstance(Seffects.MARKER, 400, 0));
                 }
             }
         }

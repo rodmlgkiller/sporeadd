@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
@@ -76,7 +78,7 @@ public abstract class HowlerMixin {
         if (buffs.isEmpty()) return;
 
         String randomBuff = buffs.get(origin.level().random.nextInt(buffs.size()));
-        MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(randomBuff));
+        Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(randomBuff)).orElse(null);
 
         if (effect != null) {
             for (Entity ally : allies) {

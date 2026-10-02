@@ -81,7 +81,7 @@ public class Poder13Variants {
 
         LockedItemHandler.giveTemporaryLockedItem(player, trident, ABYSSAL_DURATION);
 
-        var subjugation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation"));
+        var subjugation = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "subjugation")).orElse(null);
         if (subjugation != null) {
             player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                     subjugation,
@@ -207,7 +207,7 @@ public class Poder13Variants {
             AABB searchArea = player.getBoundingBox().inflate(200.0);
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, searchArea, LivingEntity::isAlive);
 
-            var mycelium = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
+            var mycelium = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef")).orElse(null);
             if (mycelium == null) return;
 
             for (LivingEntity entity : nearby) {
@@ -270,10 +270,10 @@ public class Poder13Variants {
                 String[] mobs = {"spore:inf_drowned", "spore:naiad", "spore:bloater"};
                 String selectedMob = mobs[RANDOM.nextInt(mobs.length)];
 
-                var resistance = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "resistance"));
-                var speed = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "speed"));
-                var strength = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "strength"));
-                var marker = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
+                var resistance = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "resistance")).orElse(null);
+                var speed = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "speed")).orElse(null);
+                var strength = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "strength")).orElse(null);
+                var marker = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "marker")).orElse(null);
 
                 EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(selectedMob));
                 if (type != null) {
@@ -318,7 +318,7 @@ public class Poder13Variants {
             }
         }
 
-        var famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
+        var famined = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined")).orElse(null);
         if (famined != null && player.hasEffect(famined)) {
             return;
         }
@@ -346,7 +346,7 @@ public class Poder13Variants {
             });
         }
 
-        var weakness = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "weakness"));
+        var weakness = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "weakness")).orElse(null);
         var calamityIncoming = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.fromNamespaceAndPath("spore", "calamity_incoming"));
 
         AABB area = player.getBoundingBox().inflate(100.0D);
@@ -689,8 +689,8 @@ public class Poder13Variants {
                     .inflate(radius, 10.0, radius);
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAlive);
 
-            var dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
-            var corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
+            var dissolution = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")).orElse(null);
+            var corrosion = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "corrosion")).orElse(null);
 
             for (LivingEntity entity : nearby) {
                 double dx = entity.getX() - lastX;

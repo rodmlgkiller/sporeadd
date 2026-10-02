@@ -15,7 +15,7 @@ public class TeleportBlockEvents {
     public static void onEnderPearlTeleport(EntityTeleportEvent.EnderPearl event) {
         Entity entity = event.getEntity();
 
-        if (entity instanceof LivingEntity living && living.hasEffect(effects.ENCHAINED.get())) {
+        if (entity instanceof LivingEntity living && living.hasEffect(effects.ENCHAINED)) {
             event.setCanceled(true);
         }
     }

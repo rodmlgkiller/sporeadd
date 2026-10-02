@@ -19,7 +19,7 @@ public class MangledEffectHandler {
         LivingEntity entity = event.getEntity();
         if (entity == null) return;
 
-        MobEffectInstance mangled = entity.getEffect(effects.MANGLED.get());
+        MobEffectInstance mangled = entity.getEffect(effects.MANGLED);
         if (mangled == null) return;
 
         int amplifier = Math.min(mangled.getAmplifier(), MAX_EFFECTIVE_AMPLIFIER);

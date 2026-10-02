@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.client.renderer;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -211,8 +213,8 @@ public class ClientXRayHandler {
             return;
         }
 
-        MobEffect markerEffect = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
-        MobEffect uneasyEffect = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);
+        Holder<MobEffect> markerEffect = BuiltInRegistries.MOB_EFFECT.getHolder(MARKER_EFFECT_ID).orElse(null);
+        Holder<MobEffect> uneasyEffect = BuiltInRegistries.MOB_EFFECT.getHolder(UNEASY_EFFECT_ID).orElse(null);
         Vec3 viewerPos = viewer.position();
 
         for (Player target : viewer.level().players()) {

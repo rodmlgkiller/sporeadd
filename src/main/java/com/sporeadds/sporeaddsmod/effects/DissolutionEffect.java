@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.core.Holder;
+
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,7 +34,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
@@ -111,13 +114,13 @@ public class DissolutionEffect extends MobEffect {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
         LivingEntity victim = event.getEntity();
         Level level = victim.level();
 
         if (level.isClientSide) return;
 
-        MobEffect dissolution = BuiltInRegistries.MOB_EFFECT.get(DISSOLUTION_ID);
+        Holder<MobEffect> dissolution = BuiltInRegistries.MOB_EFFECT.getHolder(DISSOLUTION_ID).orElse(null);
         if (dissolution == null) return;
 
         MobEffectInstance victimDissolution = victim.getEffect(dissolution);
@@ -243,7 +246,7 @@ public class DissolutionEffect extends MobEffect {
             MobEffectInstance attackerDissolution = livingAttacker.getEffect(dissolution);
 
             if (attackerDissolution != null && !isOnSporeTeam(victim)) {
-                MobEffect corrosion = BuiltInRegistries.MOB_EFFECT.get(CORROSION_ID);
+                Holder<MobEffect> corrosion = BuiltInRegistries.MOB_EFFECT.getHolder(CORROSION_ID).orElse(null);
                 if (corrosion != null) {
                     victim.addEffect(new MobEffectInstance(corrosion, 20 * 20, 2, false, true));
                 }
@@ -256,7 +259,7 @@ public class DissolutionEffect extends MobEffect {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide) return;
 
-        MobEffect dissolution = BuiltInRegistries.MOB_EFFECT.get(DISSOLUTION_ID);
+        Holder<MobEffect> dissolution = BuiltInRegistries.MOB_EFFECT.getHolder(DISSOLUTION_ID).orElse(null);
         if (dissolution == null) return;
 
         if (entity.hasEffect(dissolution) && entity.getRandom().nextFloat() < 0.05f) {

@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -12,7 +16,6 @@ import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -26,7 +29,7 @@ public class StarvationHandler {
     }
 
     @SubscribeEvent
-    public static void onStarveDamage(LivingAttackEvent event) {
+    public static void onStarveDamage(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!hasKommandantClass(player)) return;
 
@@ -42,7 +45,7 @@ public class StarvationHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!hasKommandantClass(player)) return;
 
-        MobEffect starvationEffect = BuiltInRegistries.MOB_EFFECT
+        Holder<MobEffect> starvationEffect = BuiltInRegistries.MOB_EFFECT
                 .getValue(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("spore", "starvation"));
         if (starvationEffect == null) return;
 

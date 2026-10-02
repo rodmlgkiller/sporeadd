@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -16,7 +20,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -68,7 +71,7 @@ public class SporeIdentifierEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
         Entity sourceEntity = event.getSource().getDirectEntity();
 
         if (sourceEntity instanceof AssassinBullet bullet) {
@@ -81,7 +84,7 @@ public class SporeIdentifierEvents {
                 int durationSeconds = 10 + chargeLevels;
                 int durationTicks = durationSeconds * 20;
 
-                MobEffect corrosion = BuiltInRegistries.MOB_EFFECT
+                Holder<MobEffect> corrosion = BuiltInRegistries.MOB_EFFECT
                         .getValue(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
 
                 if (corrosion != null) {

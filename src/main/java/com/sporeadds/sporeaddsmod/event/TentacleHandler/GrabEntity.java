@@ -90,7 +90,7 @@ public class GrabEntity {
             }
 
             if (isOnSporeTeam(attachedLiving)) {
-                attachedLiving.removeEffect(effects.CONSTRICTION.get());
+                attachedLiving.removeEffect(effects.CONSTRICTION);
 
                 TentacleProjectile projectile = findProjectileFor(sporeAttacker, attachedLiving);
                 if (projectile != null && projectile.isAlive()) {
@@ -132,7 +132,7 @@ public class GrabEntity {
 
         if (entity.tickCount % CONSTRICTION_REAPPLY_INTERVAL == 0) {
             attachedLiving.addEffect(new MobEffectInstance(
-                    effects.CONSTRICTION.get(),
+                    effects.CONSTRICTION,
                     CONSTRICTION_DURATION,
                     0,
                     false,

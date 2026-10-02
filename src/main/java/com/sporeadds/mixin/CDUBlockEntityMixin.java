@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.SBlockEntities.CDUBlockEntity;
@@ -32,7 +34,7 @@ public class CDUBlockEntityMixin {
 
         if (level == null || level.isClientSide()) return;
 
-        MobEffect frostbiteEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "frostbite"));
+        Holder<MobEffect> frostbiteEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "frostbite")).orElse(null);
         if (frostbiteEffect == null) return;
 
         AABB aabb = AABB.ofSize(

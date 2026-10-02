@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.core.Sentities;
@@ -105,7 +107,7 @@ public class Poder8 extends PowerBase {
         EntityType<?> naiadType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "naiad"));
         if (naiadType == null) return;
 
-        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
+        Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "marker")).orElse(null);
 
         int protoCount = getProtoCountAcrossDimensions(player);
         int totalNaiads = 2 + (protoCount * 2);

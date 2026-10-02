@@ -5,7 +5,6 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class SporePowerHandler {
@@ -13,7 +12,7 @@ public class SporePowerHandler {
     private static final ResourceLocation MYCELIUM_EFFECT_ID = ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef");
 
     @SubscribeEvent
-    public void onPlayerMeleeDamage(LivingHurtEvent event) {
+    public void onPlayerMeleeDamage(LivingDamageEvent.Pre event) {
         DamageSource source = event.getSource();
 
         if (source.getEntity() instanceof Player player) {
@@ -30,7 +29,7 @@ public class SporePowerHandler {
                         LivingEntity target = event.getEntity();
 
                         if (target != null && target != player) {
-                            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EFFECT_ID);
+                            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.getHolder(MYCELIUM_EFFECT_ID).orElse(null);
 
                             if (myceliumEffect != null) {
                                 target.addEffect(new MobEffectInstance(myceliumEffect, durationSeconds * 20, amplifier, false, true));

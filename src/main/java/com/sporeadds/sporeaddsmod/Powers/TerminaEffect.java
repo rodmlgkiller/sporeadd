@@ -74,7 +74,7 @@ public class TerminaEffect extends MobEffect {
             }
             // 5% chance: náusea
             if (RAND.nextDouble() < 0.05) {
-                var nausea = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "nausea"));
+                var nausea = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "nausea")).orElse(null);
                 if (nausea != null) {
                     player.addEffect(new MobEffectInstance(nausea, 20 * 5, 0));
                 }
@@ -103,7 +103,7 @@ public class TerminaEffect extends MobEffect {
                 return;
             }
             // ---- Resto del código mortal habitual ----
-            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
+            var myceliumEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef")).orElse(null);
             if (myceliumEffect != null) {
                 player.addEffect(new MobEffectInstance(myceliumEffect, 20 * 30, 0));
             }

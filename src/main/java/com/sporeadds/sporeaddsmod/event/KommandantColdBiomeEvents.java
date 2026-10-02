@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -53,7 +55,7 @@ public class KommandantColdBiomeEvents {
 
         applyColdHungerPenalty(player);
 
-        MobEffect frostbiteEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "frostbite"));
+        Holder<MobEffect> frostbiteEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "frostbite")).orElse(null);
         if (frostbiteEffect == null) return;
 
         MobEffectInstance currentEffect = player.getEffect(frostbiteEffect);

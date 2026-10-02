@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -11,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -94,7 +95,7 @@ public class ImplantBuffEvents {
 
     // ← EVENTO PARA DAÑO RECIBIDO (TORSO)
     @SubscribeEvent
-    public static void onPlayerHurt(LivingHurtEvent event) {
+    public static void onPlayerHurt(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {
@@ -108,7 +109,7 @@ public class ImplantBuffEvents {
 
     // ← EVENTO PARA DAÑO CAUSADO (RIGHT ARM + LEFT ARM)
     @SubscribeEvent
-    public static void onPlayerAttack(LivingHurtEvent event) {
+    public static void onPlayerAttack(LivingIncomingDamageEvent event) {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
 
         PlayerImplantsCapability.PLAYER_IMPLANTS.get(player).ifPresent(implants -> {

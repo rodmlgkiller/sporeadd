@@ -16,7 +16,7 @@ public class ClippedWingsEffectHandler {
             return;
         }
 
-        if (!player.hasEffect(effects.CLIPPED_WINGS.get())) {
+        if (!player.hasEffect(effects.CLIPPED_WINGS)) {
             return;
         }
 

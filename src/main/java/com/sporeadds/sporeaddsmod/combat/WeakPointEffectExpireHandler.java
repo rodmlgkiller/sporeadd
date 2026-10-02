@@ -33,7 +33,7 @@ public final class WeakPointEffectExpireHandler {
                 continue;
             }
 
-            if (!entity.hasEffect(com.sporeadds.sporeaddsmod.effects.effects.EXPOSED_WEAKNESS.get())) {
+            if (!entity.hasEffect(com.sporeadds.sporeaddsmod.effects.effects.EXPOSED_WEAKNESS)) {
                 WeakPointManager.remove(id);
 
                 com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(

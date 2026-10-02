@@ -57,7 +57,7 @@ public final class PunishmentSoundDamper {
         Minecraft mc = Minecraft.getInstance();
         float target = 1.0F;
         if (mc.player != null) {
-            MobEffectInstance inst = mc.player.getEffect(effects.PUNISHMENT.get());
+            MobEffectInstance inst = mc.player.getEffect(effects.PUNISHMENT);
             if (inst != null) {
                 int level = inst.getAmplifier() + 1;
                 float reduction = Math.min(PunishmentEffect.SOUND_REDUCTION_MAX,

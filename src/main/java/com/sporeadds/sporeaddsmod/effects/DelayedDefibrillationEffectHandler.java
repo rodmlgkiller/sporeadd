@@ -53,7 +53,7 @@ public final class DelayedDefibrillationEffectHandler {
             return;
         }
 
-        MobEffectInstance effect = entity.getEffect(effects.DELAYED_DEFIBRILLATION.get());
+        MobEffectInstance effect = entity.getEffect(effects.DELAYED_DEFIBRILLATION);
 
         if (effect == null) {
             NEXT_PARTICLE_TICK.remove(entity.getUUID());
@@ -174,7 +174,7 @@ public final class DelayedDefibrillationEffectHandler {
         LivingEntity entity = event.getEntity();
         if (!(entity.level() instanceof ServerLevel serverLevel)) return;
 
-        MobEffectInstance effect = entity.getEffect(effects.DELAYED_DEFIBRILLATION.get());
+        MobEffectInstance effect = entity.getEffect(effects.DELAYED_DEFIBRILLATION);
         if (effect == null) return;
 
         if (event.getAmount() < entity.getHealth()) return;
@@ -250,7 +250,7 @@ public final class DelayedDefibrillationEffectHandler {
     }
 
     public static void forceRevive(ServerLevel level, LivingEntity entity) {
-        entity.removeEffect(effects.DELAYED_DEFIBRILLATION.get());
+        entity.removeEffect(effects.DELAYED_DEFIBRILLATION);
         NEXT_PARTICLE_TICK.remove(entity.getUUID());
         NEXT_SOUND_TICK.remove(entity.getUUID());
 
@@ -281,7 +281,7 @@ public final class DelayedDefibrillationEffectHandler {
 
     private static void applyPostmortem(LivingEntity entity) {
         entity.addEffect(new MobEffectInstance(
-                effects.POSTMORTEM.get(),
+                effects.POSTMORTEM,
                 POSTMORTEM_DURATION_TICKS,
                 0,
                 false,

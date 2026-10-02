@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,7 +31,7 @@ public class SporeUneasyParticleHandler {
         if (entity.tickCount % 5 != 0) return;
 
         // Verificar si la entidad tiene el efecto spore:uneasy
-        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "uneasy"));
+        Holder<MobEffect> uneasy = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "uneasy")).orElse(null);
         if (uneasy == null || !entity.hasEffect(uneasy)) return;
 
         ServerLevel level = (ServerLevel) entity.level();

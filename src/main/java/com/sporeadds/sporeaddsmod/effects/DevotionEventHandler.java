@@ -1,10 +1,11 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -21,12 +22,12 @@ public final class DevotionEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
         LivingEntity victim = event.getEntity();
-        MobEffectInstance inst = victim.getEffect(effects.DEVOTION.get());
+        MobEffectInstance inst = victim.getEffect(effects.DEVOTION);
         if (inst == null) return;
 
         float reduction = DevotionEffect.INCOMING_DAMAGE_REDUCTION_PER_LEVEL * (inst.getAmplifier() + 1);
-        event.setAmount(Math.max(0.0F, event.getAmount() * (1.0F - reduction)));
+        event.setNewDamage(Math.max(0.0F, event.getNewDamage() * (1.0F - reduction)));
     }
 }

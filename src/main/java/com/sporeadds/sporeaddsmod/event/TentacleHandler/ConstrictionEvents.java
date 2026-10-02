@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event.TentacleHandler;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.effects.effects;
@@ -11,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -32,7 +33,7 @@ public class ConstrictionEvents {
             return;
         }
 
-        if (!entity.hasEffect(effects.CONSTRICTION.get())) {
+        if (!entity.hasEffect(effects.CONSTRICTION)) {
             clearConstrictionTags(entity);
             return;
         }
@@ -76,7 +77,7 @@ public class ConstrictionEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
         LivingEntity victim = event.getEntity();
         DamageSource source = event.getSource();
         Entity attacker = source.getEntity();
@@ -88,7 +89,7 @@ public class ConstrictionEvents {
             }
         }
 
-        if (victim.hasEffect(effects.CONSTRICTION.get())
+        if (victim.hasEffect(effects.CONSTRICTION)
                 && source.is(DamageTypes.DROWN)
                 && victim.getPersistentData().getBoolean(CONSTRICTION_DROWN_TAG)) {
             float minDamage = victim.getMaxHealth() * MIN_DROWN_DAMAGE_HEALTH_RATIO;
@@ -99,7 +100,7 @@ public class ConstrictionEvents {
             return;
         }
 
-        if (attacker instanceof LivingEntity livingAttacker && livingAttacker.hasEffect(effects.CONSTRICTION.get())) {
+        if (attacker instanceof LivingEntity livingAttacker && livingAttacker.hasEffect(effects.CONSTRICTION)) {
             if (!source.is(DamageTypes.DROWN)) {
                 event.setAmount(event.getAmount() * OUTGOING_DAMAGE_MULTIPLIER);
             }
@@ -111,7 +112,7 @@ public class ConstrictionEvents {
         LivingEntity victim = event.getEntity();
         DamageSource source = event.getSource();
 
-        if (!victim.hasEffect(effects.CONSTRICTION.get())) {
+        if (!victim.hasEffect(effects.CONSTRICTION)) {
             return;
         }
 
@@ -170,7 +171,7 @@ public class ConstrictionEvents {
             return false;
         }
 
-        trappedLiving.removeEffect(effects.CONSTRICTION.get());
+        trappedLiving.removeEffect(effects.CONSTRICTION);
 
         TentacleProjectile projectile = findProjectileFor(attacker, trappedLiving);
         if (projectile != null && projectile.isAlive()) {

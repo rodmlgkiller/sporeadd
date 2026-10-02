@@ -5,7 +5,7 @@
     import net.minecraft.sounds.SoundEvent;
     import net.minecraft.sounds.SoundSource;
     import net.minecraft.world.entity.LivingEntity;
-    import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+    import net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Pre;
     import net.neoforged.bus.api.SubscribeEvent;
     import net.neoforged.fml.common.Mod;
 
@@ -16,7 +16,7 @@
         }
 
         @SubscribeEvent
-        public static void onLivingHurt(LivingHurtEvent event) {
+        public static void onLivingHurt(LivingDamageEvent.Pre event) {
             if (!(event.getSource().getEntity() instanceof ServerPlayer attacker)) {
                 return;
             }
@@ -27,7 +27,7 @@
                 return;
             }
 
-            if (!target.hasEffect(com.sporeadds.sporeaddsmod.effects.effects.EXPOSED_WEAKNESS.get())) {
+            if (!target.hasEffect(com.sporeadds.sporeaddsmod.effects.effects.EXPOSED_WEAKNESS)) {
                 WeakPointManager.remove(target.getId());
                 syncRemoval(target);
                 return;
@@ -37,7 +37,7 @@
 
             if (hit) {
                 float bonus = WeakPointManager.getDamageBonus(target.getId());
-                event.setAmount(event.getAmount() + bonus);
+                event.setNewDamage(event.getNewDamage() + bonus);
 
                 WeakPointKillTracker.recordHit(target.getId(), attacker.getUUID(), target.level().getGameTime());
 

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
@@ -20,7 +22,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -51,7 +52,7 @@ public final class BackstabEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
         if (event.isCanceled()) {
             return;
         }
@@ -97,8 +98,8 @@ public final class BackstabEventHandler {
             totalMultiplier *= CAMOUFLAGE_BONUS_MULTIPLIER;
         }
 
-        float newAmount = event.getAmount() * (float) totalMultiplier;
-        event.setAmount(newAmount);
+        float newAmount = event.getNewDamage() * (float) totalMultiplier;
+        event.setNewDamage(newAmount);
 
         if (!(target.level() instanceof ServerLevel serverLevel)) {
             return;
@@ -109,7 +110,7 @@ public final class BackstabEventHandler {
 
         if (bushAbilityActive) {
             target.addEffect(new MobEffectInstance(
-                    effects.CRITICAL_WOUND.get(),
+                    effects.CRITICAL_WOUND,
                     CRITICAL_WOUND_DURATION_TICKS,
                     0,
                     false,

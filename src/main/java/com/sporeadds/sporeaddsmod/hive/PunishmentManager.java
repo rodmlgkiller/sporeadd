@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -31,7 +33,6 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -123,7 +124,7 @@ public final class PunishmentManager {
     // ------------------------------------------------------------------ infracción 1: golpear
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onKommandantHitsHive(LivingHurtEvent event) {
+    public static void onKommandantHitsHive(LivingDamageEvent.Pre event) {
         if (!SporeAddsConfig.PUNISHMENT_EVENT_ENABLED.get()) return;
         if (!(event.getSource().getEntity() instanceof ServerPlayer attacker)) return;
         if (!SporeClassUtil.hasClass(attacker, "kommandant")) return;
@@ -282,7 +283,7 @@ public final class PunishmentManager {
                 continue;
             }
 
-            boolean timeUp = now >= deadline || player.getEffect(effects.PUNISHMENT.get()) == null;
+            boolean timeUp = now >= deadline || player.getEffect(effects.PUNISHMENT) == null;
             float drain = Math.max(0.25F, player.getMaxHealth() / 160.0F);
             float next = player.getHealth() - drain;
 
@@ -346,7 +347,7 @@ public final class PunishmentManager {
         player.invulnerableTime = 0;
         player.hurt(Damagetypes2.punishment(player), 1_000_000.0F);
         if (player.isAlive()) {
-            // Último recurso si algo canceló el LivingHurtEvent/LivingDeathEvent.
+            // Último recurso si algo canceló el LivingDamageEvent.Pre/LivingDeathEvent.
             player.setHealth(0.0F);
             player.die(Damagetypes2.punishment(player));
         }

@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
@@ -23,7 +25,7 @@ public class PlayerFrostbiteMixin {
         if (player.getTeam() == null) return;
         if (!"spore".equalsIgnoreCase(player.getTeam().getName())) return;
 
-        MobEffect frostbite = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "frostbite"));
+        Holder<MobEffect> frostbite = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "frostbite")).orElse(null);
         if (frostbite == null) return;
 
         MobEffectInstance effect = player.getEffect(frostbite);

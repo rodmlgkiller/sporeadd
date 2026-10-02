@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.world.item.Item;
@@ -92,7 +94,7 @@ public class VaccineItem extends Item {
             other.getPersistentData().putBoolean("VaccineBypassTermina", true);
 
             ResourceLocation termina = ResourceLocation.fromNamespaceAndPath("sporeadd", "termina");
-            MobEffect terminaEffect = BuiltInRegistries.MOB_EFFECT.get(termina);
+            Holder<MobEffect> terminaEffect = BuiltInRegistries.MOB_EFFECT.getHolder(termina).orElse(null);
             if (terminaEffect != null) {
                 other.removeEffect(terminaEffect);
             }
@@ -150,7 +152,7 @@ public class VaccineItem extends Item {
                 sp.getPersistentData().putBoolean("VaccineBypassTermina", true);
 
                 ResourceLocation termina = ResourceLocation.fromNamespaceAndPath("sporeadd", "termina");
-                MobEffect terminaEffect = BuiltInRegistries.MOB_EFFECT.get(termina);
+                Holder<MobEffect> terminaEffect = BuiltInRegistries.MOB_EFFECT.getHolder(termina).orElse(null);
                 if (terminaEffect != null) {
                     sp.removeEffect(terminaEffect);
                 }

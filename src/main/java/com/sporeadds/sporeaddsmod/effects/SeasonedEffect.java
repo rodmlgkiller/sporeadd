@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
@@ -35,7 +37,7 @@ public class SeasonedEffect extends MobEffect {
     public void applyEffectTick(LivingEntity living, int amplifier) {
         if (living.level().isClientSide) return;
 
-        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_ID);
+        Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(MARKER_ID).orElse(null);
         if (marker != null) {
             living.addEffect(new MobEffectInstance(marker, 100, 5, false, false));
         }

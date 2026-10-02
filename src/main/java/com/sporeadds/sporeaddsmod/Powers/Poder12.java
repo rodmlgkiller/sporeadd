@@ -1,5 +1,9 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.Holder;
+
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -36,7 +40,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -59,7 +62,7 @@ public class Poder12 {
     private static final Map<UUID, Long> gluttonous_HELM_RESTORE_TIMERS = new HashMap<>();
     private static final Map<UUID, Boolean> gluttonous_CRITICAL_TRIGGERED = new HashMap<>();
 
-    private static ItemStack getDamageableWeapon(LivingHurtEvent event) {
+    private static ItemStack getDamageableWeapon(LivingIncomingDamageEvent event) {
         Entity attacker = event.getSource().getEntity();
         Entity directEntity = event.getSource().getDirectEntity();
 
@@ -79,7 +82,7 @@ public class Poder12 {
         return weapon;
     }
 
-    private static boolean shouldSuppressRedParticles(ServerPlayer player, LivingHurtEvent event) {
+    private static boolean shouldSuppressRedParticles(ServerPlayer player, LivingIncomingDamageEvent event) {
         if (!Poder12Variants.isCaustic(player)) return false;
         return !getDamageableWeapon(event).isEmpty();
     }
@@ -248,7 +251,7 @@ public class Poder12 {
     }
 
     @SubscribeEvent
-    public static void onPlayerDamage(LivingHurtEvent event) {
+    public static void onPlayerDamage(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (event.getSource().equals(player.level().damageSources().starve())) return;
         // El daño que ignora invulnerabilidad (/kill, vacío, castigo del Proto...) no lo absorbe la armadura.
@@ -302,7 +305,7 @@ public class Poder12 {
 
             float dmg = event.getAmount();
 
-            if (player.hasEffect(effects.EXQUISITE_CUISINE.get())) {
+            if (player.hasEffect(effects.EXQUISITE_CUISINE)) {
                 dmg *= 0.8F;
             }
 
@@ -475,7 +478,7 @@ public class Poder12 {
 
                         Poder12Variants.breakgluttonousHelmet(serverPlayer, gluttonous_HELM_BROKEN, gluttonous_HELM_RESTORE_TIMERS, true);
 
-                        MobEffect famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
+                        Holder<MobEffect> famined = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined")).orElse(null);
                         boolean canTriggerPower13 = famined == null || !serverPlayer.hasEffect(famined);
 
                         if (canTriggerPower13) {
@@ -513,7 +516,7 @@ public class Poder12 {
                 }
 
                 if (serverPlayer.tickCount % 20 == 0) {
-                    MobEffect starvation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "starvation"));
+                    Holder<MobEffect> starvation = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "starvation")).orElse(null);
                     boolean hasStarvation = starvation != null && serverPlayer.hasEffect(starvation);
 
                     int healAmount = Poder12Variants.getVariantHealPerSecond(serverPlayer, currentHp, hasStarvation);

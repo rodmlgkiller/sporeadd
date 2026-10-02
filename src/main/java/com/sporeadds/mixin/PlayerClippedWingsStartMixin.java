@@ -14,7 +14,7 @@ public abstract class PlayerClippedWingsStartMixin {
     private void sporeadd$cancelStartFallFlying(CallbackInfo ci) {
         Player self = (Player) (Object) this;
 
-        if (self.hasEffect(effects.CLIPPED_WINGS.get())) {
+        if (self.hasEffect(effects.CLIPPED_WINGS)) {
             ci.cancel();
         }
     }

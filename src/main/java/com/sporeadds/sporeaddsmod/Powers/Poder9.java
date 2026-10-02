@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.Sentities.FoliageSpread;
@@ -124,8 +126,8 @@ public class Poder9 extends PowerBase {
         );
         List<LivingEntity> entitiesInArea = level.getEntitiesOfClass(LivingEntity.class, effectArea);
 
-        MobEffect myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore",    "mycelium_ef"));
-        MobEffect exposedEffect  = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed"));
+        Holder<MobEffect> myceliumEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore",    "mycelium_ef")).orElse(null);
+        Holder<MobEffect> exposedEffect  = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed")).orElse(null);
 
         for (LivingEntity target : entitiesInArea) {
             if (target == player) continue;

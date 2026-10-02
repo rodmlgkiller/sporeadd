@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -275,7 +277,7 @@ public class Poder11 extends PowerBase {
 
             runKommandantScan(entity, level, currentRadius);
 
-            MobEffect markerEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
+            Holder<MobEffect> markerEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "marker")).orElse(null);
             AABB scanBox = entity.getBoundingBox().inflate(currentRadius);
 
             List<LivingEntity> targets = level.getEntitiesOfClass(

@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.entity;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,7 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -172,7 +173,7 @@ public class StaticEntity extends Organoid {
      * (Antes vivía en Poder1 acoplado a sus mapas; es comportamiento intrínseco de la entidad.)
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onPassengerHurt(LivingHurtEvent event) {
+    public static void onPassengerHurt(LivingIncomingDamageEvent event) {
         LivingEntity victim = event.getEntity();
         if (victim.level().isClientSide()) return;
         if (!(victim.getVehicle() instanceof StaticEntity cocoon) || !cocoon.isAlive()) return;

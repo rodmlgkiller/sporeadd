@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -46,7 +48,7 @@ public class gluttonousBiteAttackHandler {
             return;
         }
 
-        MobEffect faminedEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
+        Holder<MobEffect> faminedEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined")).orElse(null);
         if (faminedEffect == null || !player.hasEffect(faminedEffect)) {
             return;
         }
@@ -120,7 +122,7 @@ public class gluttonousBiteAttackHandler {
                     level.playSound(null, player.getX(), player.getY(), player.getZ(), biteSound, SoundSource.PLAYERS, 1.5F, pitch);
                 }
 
-                MobEffect mangledEffect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "mangled"));
+                Holder<MobEffect> mangledEffect = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "mangled")).orElse(null);
                 int currentMangledLevel = 0;
                 if (mangledEffect != null) {
                     MobEffectInstance currentEffect = livingTarget.getEffect(mangledEffect);

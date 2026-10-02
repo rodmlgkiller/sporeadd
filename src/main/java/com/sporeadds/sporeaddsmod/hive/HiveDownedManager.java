@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
@@ -123,7 +125,7 @@ public final class HiveDownedManager {
     public static boolean wouldEnterDowned(ServerPlayer player) {
         if (player == null || player.level().isClientSide()) return false;
         if (DOWNED.containsKey(player.getUUID())) return true;
-        if (player.getEffect(effects.CALL_OF_THE_HIVE.get()) == null) return false;
+        if (player.getEffect(effects.CALL_OF_THE_HIVE) == null) return false;
         if (SporeAddsConfig.CALL_OF_THE_HIVE_PERSISTS_WITHOUT_PROTO.get()) return true;
         return ProtoProximity.isProtoWithin(
                 player.level(), player.position(), CallOfTheHiveHandler.PROXIMITY_RADIUS);
@@ -189,8 +191,8 @@ public final class HiveDownedManager {
 
         player.getPersistentData().putString(HIVE_PENDING_TAG, force ? PENDING_SURRENDER : PENDING_PERISH);
         player.setHealth(1.0F);
-        if (player.getEffect(effects.CALL_OF_THE_HIVE.get()) == null) {
-            player.addEffect(new MobEffectInstance(effects.CALL_OF_THE_HIVE.get(), MARK_REFRESH_TICKS, 0, false, false, true));
+        if (player.getEffect(effects.CALL_OF_THE_HIVE) == null) {
+            player.addEffect(new MobEffectInstance(effects.CALL_OF_THE_HIVE, MARK_REFRESH_TICKS, 0, false, false, true));
         }
 
         applyRoot(player);
@@ -259,9 +261,9 @@ public final class HiveDownedManager {
         player.getPersistentData().remove(HIVE_PENDING_TAG);
         clearRoot(player);
         clearForcedPose(player);
-        player.removeEffect(effects.CALL_OF_THE_HIVE.get());
+        player.removeEffect(effects.CALL_OF_THE_HIVE);
 
-        MobEffect mycelium = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EF_ID);
+        Holder<MobEffect> mycelium = BuiltInRegistries.MOB_EFFECT.getHolder(MYCELIUM_EF_ID).orElse(null);
         if (mycelium != null) {
             player.addEffect(new MobEffectInstance(mycelium, 600, 0, false, true));
         }
@@ -376,8 +378,8 @@ public final class HiveDownedManager {
             if (now % ROOT_REAPPLY_TICKS == 0) {
                 applyRoot(player);
             }
-            if (player.getEffect(effects.CALL_OF_THE_HIVE.get()) == null) {
-                player.addEffect(new MobEffectInstance(effects.CALL_OF_THE_HIVE.get(), MARK_REFRESH_TICKS, 0, false, false, true));
+            if (player.getEffect(effects.CALL_OF_THE_HIVE) == null) {
+                player.addEffect(new MobEffectInstance(effects.CALL_OF_THE_HIVE, MARK_REFRESH_TICKS, 0, false, false, true));
             }
             player.setDeltaMovement(player.getDeltaMovement().multiply(0.0D, 1.0D, 0.0D));
             player.setSprinting(false);
@@ -453,8 +455,8 @@ public final class HiveDownedManager {
         if (server == null) return;
         server.execute(() -> {
             if (!player.isAlive()) return;
-            player.removeEffect(effects.CALL_OF_THE_HIVE.get());
-            MobEffect mycelium = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EF_ID);
+            player.removeEffect(effects.CALL_OF_THE_HIVE);
+            Holder<MobEffect> mycelium = BuiltInRegistries.MOB_EFFECT.getHolder(MYCELIUM_EF_ID).orElse(null);
             if (mycelium != null) {
                 player.addEffect(new MobEffectInstance(mycelium, 600, 0, false, true));
             }

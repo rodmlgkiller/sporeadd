@@ -15,7 +15,7 @@ public class EnchainedEffect extends MobEffect {
     public void applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide) {
             entity.addEffect(new MobEffectInstance(
-                    effects.CLIPPED_WINGS.get(),
+                    effects.CLIPPED_WINGS,
                     2,
                     0,
                     false,

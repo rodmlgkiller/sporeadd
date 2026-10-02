@@ -58,7 +58,7 @@ public final class PunishmentClientHandler {
     public static void onClientTick(ClientTickEvent.Post event) {
 
         Minecraft mc = Minecraft.getInstance();
-        MobEffectInstance inst = mc.player == null ? null : mc.player.getEffect(effects.PUNISHMENT.get());
+        MobEffectInstance inst = mc.player == null ? null : mc.player.getEffect(effects.PUNISHMENT);
 
         if (inst == null) {
             if (active) stop(mc);

@@ -18,7 +18,7 @@ public abstract class PlayerClippedWingsMixin {
             )
     )
     private boolean sporeadd$blockElytraStart(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
-        if (entity instanceof Player player && player.hasEffect(effects.CLIPPED_WINGS.get())) {
+        if (entity instanceof Player player && player.hasEffect(effects.CLIPPED_WINGS)) {
             return false;
         }
 

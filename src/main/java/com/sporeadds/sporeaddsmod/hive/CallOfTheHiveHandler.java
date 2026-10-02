@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.hive;
 
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -11,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -39,12 +40,12 @@ public final class CallOfTheHiveHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer victim)) return;
         if (victim.level().isClientSide()) return;
 
         if (HiveDownedManager.isDowned(victim.getUUID())) return;
-        if (victim.getEffect(effects.CALL_OF_THE_HIVE.get()) != null) return;
+        if (victim.getEffect(effects.CALL_OF_THE_HIVE) != null) return;
 
         Entity rawAttacker = event.getSource().getEntity();
         if (!(rawAttacker instanceof LivingEntity attacker)) return;
@@ -63,7 +64,7 @@ public final class CallOfTheHiveHandler {
         }
 
         victim.addEffect(new MobEffectInstance(
-                effects.CALL_OF_THE_HIVE.get(),
+                effects.CALL_OF_THE_HIVE,
                 HiveDownedManager.MARK_REFRESH_TICKS,
                 0, false, false, true));
     }
@@ -73,18 +74,18 @@ public final class CallOfTheHiveHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.tickCount % PROXIMITY_CHECK_INTERVAL != 0) return;
 
-        if (player.getEffect(effects.CALL_OF_THE_HIVE.get()) == null) return;
+        if (player.getEffect(effects.CALL_OF_THE_HIVE) == null) return;
         if (HiveDownedManager.isDowned(player.getUUID())) return;
 
         if (!SporeAddsConfig.CALL_OF_THE_HIVE_PERSISTS_WITHOUT_PROTO.get()
                 && !ProtoProximity.isProtoWithin(player.level(), player.position(), PROXIMITY_RADIUS)) {
-            player.removeEffect(effects.CALL_OF_THE_HIVE.get());
+            player.removeEffect(effects.CALL_OF_THE_HIVE);
             return;
         }
 
         // El efecto se mantiene: refrescar para que no expire.
         player.addEffect(new MobEffectInstance(
-                effects.CALL_OF_THE_HIVE.get(),
+                effects.CALL_OF_THE_HIVE,
                 HiveDownedManager.MARK_REFRESH_TICKS,
                 0, false, false, true));
     }

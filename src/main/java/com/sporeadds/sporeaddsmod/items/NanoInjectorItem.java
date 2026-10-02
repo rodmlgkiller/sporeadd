@@ -149,7 +149,7 @@ public class NanoInjectorItem extends Item {
         if (target != null) {
             if (target.getTeam() != null && "spore".equalsIgnoreCase(target.getTeam().getName())) {
                 target.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * 20, 0));
-                target.addEffect(new MobEffectInstance(effects.VULNERABLE.get(), 20 * 20, 0));
+                target.addEffect(new MobEffectInstance(effects.VULNERABLE, 20 * 20, 0));
                 target.setTicksFrozen(Math.max(target.getTicksFrozen(), FREEZE_TICKS));
 
                 player.displayClientMessage(

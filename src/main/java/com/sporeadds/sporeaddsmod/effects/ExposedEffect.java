@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.core.particles.DustParticleOptions;
@@ -46,7 +48,7 @@ public class ExposedEffect extends MobEffect {
                     // Marca que ya se disparó
                     entity.getPersistentData().putBoolean(TRIGGERED_TAG, true);
 
-                    MobEffect myceliumEffect = BuiltInRegistries.MOB_EFFECT.get(MYCELIUM_EFFECT_ID);
+                    Holder<MobEffect> myceliumEffect = BuiltInRegistries.MOB_EFFECT.getHolder(MYCELIUM_EFFECT_ID).orElse(null);
 
                     // Paso 1: Aplica el efecto de mycelium siempre
                     if (myceliumEffect != null) {

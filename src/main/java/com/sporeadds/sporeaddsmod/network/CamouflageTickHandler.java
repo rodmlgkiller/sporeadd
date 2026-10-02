@@ -61,7 +61,7 @@ public final class CamouflageTickHandler {
 
                 if (damagedByOtherEntity) {
                     player.addEffect(new MobEffectInstance(
-                            effects.AMBUSHED.get(),
+                            effects.AMBUSHED,
                             AMBUSHED_DURATION_TICKS,
                             0,
                             false,

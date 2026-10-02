@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.modblocksentity;
@@ -394,7 +396,7 @@ public class FreezerBlockEntity extends BlockEntity {
 
             Vec3 centerPos = Vec3.atCenterOf(pos);
 
-            MobEffect frostbite = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "frostbite"));
+            Holder<MobEffect> frostbite = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "frostbite")).orElse(null);
 
             if (frostbite != null) {
                 for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, fullArea)) {

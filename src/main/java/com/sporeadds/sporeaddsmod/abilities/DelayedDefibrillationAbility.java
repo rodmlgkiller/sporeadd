@@ -136,7 +136,7 @@ public final class DelayedDefibrillationAbility {
 
     private static void applyEffect(ServerLevel level, LivingEntity target) {
         target.addEffect(new MobEffectInstance(
-                effects.DELAYED_DEFIBRILLATION.get(),
+                effects.DELAYED_DEFIBRILLATION,
                 EFFECT_DURATION_TICKS,
                 0,
                 false,

@@ -141,7 +141,7 @@ public class ExposeWeaknessPacket {
                     }
 
                     entity.addEffect(new MobEffectInstance(
-                            effects.EXPOSED_WEAKNESS.get(),
+                            effects.EXPOSED_WEAKNESS,
                             EFFECT_DURATION_TICKS,
                             0
                     ));

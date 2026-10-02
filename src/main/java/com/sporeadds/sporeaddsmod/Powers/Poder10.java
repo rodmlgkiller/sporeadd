@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -311,9 +313,9 @@ public class Poder10 extends PowerBase {
     }
 
     private static void applyEffectsToTarget(ServerPlayer target, ServerLevel serverLevel) {
-        MobEffect glowing = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "glowing"));
-        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "marker"));
-        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "uneasy"));
+        Holder<MobEffect> glowing = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "glowing")).orElse(null);
+        Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "marker")).orElse(null);
+        Holder<MobEffect> uneasy = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "uneasy")).orElse(null);
 
         if (glowing != null) {
             target.addEffect(new MobEffectInstance(glowing, 2400, 0, false, true));

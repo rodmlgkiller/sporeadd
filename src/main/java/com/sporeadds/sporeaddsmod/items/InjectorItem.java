@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,7 +30,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -275,7 +276,7 @@ public class InjectorItem extends Item implements ActionWheelProvider {
     public static class InjectorHandlers {
 
         @SubscribeEvent
-        public static void onLivingAttack(LivingAttackEvent event) {
+        public static void onLivingAttack(LivingIncomingDamageEvent event) {
             if (!(event.getSource().getEntity() instanceof ServerPlayer sp)) {
                 return;
             }

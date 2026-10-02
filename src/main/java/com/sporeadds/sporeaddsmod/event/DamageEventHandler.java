@@ -18,15 +18,15 @@ public class DamageEventHandler {
         LivingEntity target = event.getEntity();
         LivingEntity attacker = event.getSource().getEntity() instanceof LivingEntity le ? le : null;
 
-        if (target.hasEffect(effects.AMBUSHED.get())) {
+        if (target.hasEffect(effects.AMBUSHED)) {
             event.setAmount(event.getAmount() * AmbushedEffect.INCOMING_DAMAGE_MULTIPLIER);
         }
 
-        if (attacker != null && attacker.hasEffect(effects.AMBUSHED.get())) {
+        if (attacker != null && attacker.hasEffect(effects.AMBUSHED)) {
             event.setAmount(event.getAmount() * AmbushedEffect.OUTGOING_DAMAGE_MULTIPLIER);
         }
 
-        if (attacker != null && attacker.hasEffect(effects.CRITICAL_WOUND.get())) {
+        if (attacker != null && attacker.hasEffect(effects.CRITICAL_WOUND)) {
             event.setAmount(event.getAmount() * CriticalWoundEffect.OUTGOING_DAMAGE_MULTIPLIER);
         }
     }

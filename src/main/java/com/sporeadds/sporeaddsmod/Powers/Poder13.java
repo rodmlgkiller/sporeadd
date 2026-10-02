@@ -62,7 +62,7 @@ public class Poder13 {
         }
 
         if (Poder13Variants.isgluttonous(player)) {
-            var famined = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined"));
+            var famined = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "famined")).orElse(null);
             if (famined != null && player.hasEffect(famined)) {
                 return;
             }
@@ -128,12 +128,12 @@ public class Poder13 {
                         7.0F, 1.0F
                 );
 
-                var resistance = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("minecraft", "resistance"));
+                var resistance = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "resistance")).orElse(null);
                 if (resistance != null) {
                     player.addEffect(new net.minecraft.world.effect.MobEffectInstance(resistance, 300, 224, false, true));
                 }
 
-                var anticipation = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "anticipation"));
+                var anticipation = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "anticipation")).orElse(null);
                 if (anticipation != null) {
                     player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                             anticipation,
@@ -260,10 +260,10 @@ public class Poder13 {
                 AABB cloudArea = new AABB(x, y, z, x, y, z).inflate(currentRadius, 10.0, currentRadius);
                 List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, cloudArea, LivingEntity::isAlive);
 
-                var exposed = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed"));
-                var dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
-                var mycelium = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
-                var corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
+                var exposed = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed")).orElse(null);
+                var dissolution = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")).orElse(null);
+                var mycelium = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef")).orElse(null);
+                var corrosion = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "corrosion")).orElse(null);
 
                 int exposedLevel = SporeAddsConfig.NUKE_EXPOSED_LEVEL.get();
                 int myceliumLevel = SporeAddsConfig.NUKE_MYCELIUM_LEVEL.get();
@@ -328,10 +328,10 @@ public class Poder13 {
         AABB effectArea = new AABB(ex, ey, ez, ex, ey, ez).inflate(damageRadius);
         List<LivingEntity> affected = level.getEntitiesOfClass(LivingEntity.class, effectArea, LivingEntity::isAlive);
 
-        var mycelium = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef"));
-        var termina = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "termina"));
-        var dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
-        var corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
+        var mycelium = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "mycelium_ef")).orElse(null);
+        var termina = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "termina")).orElse(null);
+        var dissolution = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")).orElse(null);
+        var corrosion = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "corrosion")).orElse(null);
 
         int minTermina = SporeAddsConfig.TERMINA_DURATION_MIN.get();
         int maxTermina = SporeAddsConfig.TERMINA_DURATION_MAX.get();

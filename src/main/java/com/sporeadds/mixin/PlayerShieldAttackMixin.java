@@ -1,5 +1,7 @@
 package com.sporeadds.mixin;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +26,7 @@ public abstract class PlayerShieldAttackMixin {
             )
     )
     private boolean sporeadd$preventFaminedShieldDisable(ItemStack weaponStack, ItemStack shieldStack, LivingEntity defender, LivingEntity attacker) {
-        MobEffect famined = BuiltInRegistries.MOB_EFFECT.get(FAMINED_ID);
+        Holder<MobEffect> famined = BuiltInRegistries.MOB_EFFECT.getHolder(FAMINED_ID).orElse(null);
 
         if (famined != null && attacker instanceof Player player && player.hasEffect(famined)) {
             return false;

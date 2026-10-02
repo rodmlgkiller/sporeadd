@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -54,7 +56,7 @@ public class SeasonedDeathEvent {
         LivingEntity victim = event.getEntity();
         if (victim.level().isClientSide) return;
 
-        MobEffect seasoned = BuiltInRegistries.MOB_EFFECT.get(SEASONED_ID);
+        Holder<MobEffect> seasoned = BuiltInRegistries.MOB_EFFECT.getHolder(SEASONED_ID).orElse(null);
         if (seasoned == null || !victim.hasEffect(seasoned)) return;
 
         Entity killer = resolveTrueKiller(event);
@@ -62,7 +64,7 @@ public class SeasonedDeathEvent {
         if (killer instanceof Player playerKiller) {
             if (isSporePlayer(playerKiller)) {
                 playerKiller.addEffect(new MobEffectInstance(
-                        effects.EXQUISITE_CUISINE.get(),
+                        effects.EXQUISITE_CUISINE,
                         30 * 20,
                         0,
                         false,

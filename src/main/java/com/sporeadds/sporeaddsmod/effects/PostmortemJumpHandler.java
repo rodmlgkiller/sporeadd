@@ -23,7 +23,7 @@ public final class PostmortemJumpHandler {
         LivingEntity entity = event.getEntity();
         if (entity == null) return;
 
-        MobEffectInstance postmortem = entity.getEffect(effects.POSTMORTEM.get());
+        MobEffectInstance postmortem = entity.getEffect(effects.POSTMORTEM);
         if (postmortem == null) return;
 
         double verticalMultiplier = Math.max(0.10D, 1.0D - JUMP_REDUCTION);

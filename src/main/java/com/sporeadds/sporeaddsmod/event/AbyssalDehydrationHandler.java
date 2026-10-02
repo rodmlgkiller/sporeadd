@@ -68,9 +68,9 @@ public class AbyssalDehydrationHandler {
 
         if (hasArmorHpActive) {
             clearAllTimers(playerId);
-            MobEffectInstance current = player.getEffect(effects.DEHYDRATION.get());
+            MobEffectInstance current = player.getEffect(effects.DEHYDRATION);
             if (current != null) {
-                player.removeEffect(effects.DEHYDRATION.get());
+                player.removeEffect(effects.DEHYDRATION);
             }
             return;
         }
@@ -96,14 +96,14 @@ public class AbyssalDehydrationHandler {
         // Si toca agua fuente real, lluvia o calderos
         if (inRain || inCauldron || inWaterSource) {
             clearAllTimers(playerId);
-            MobEffectInstance current = player.getEffect(effects.DEHYDRATION.get());
+            MobEffectInstance current = player.getEffect(effects.DEHYDRATION);
 
             if (current != null) {
                 // Sólo seca el bloque si es agua fuente Y el jugador tenía el efecto
                 if (inWaterSource && sourcePosToConsume != null) {
                     level.setBlock(sourcePosToConsume, Blocks.AIR.defaultBlockState(), 3);
                 }
-                player.removeEffect(effects.DEHYDRATION.get());
+                player.removeEffect(effects.DEHYDRATION);
             }
             return;
         }
@@ -123,7 +123,7 @@ public class AbyssalDehydrationHandler {
         } else if (ticksOutside == TICKS_FOR_AMP_1) {
             applyDehydration(player, 1);
         } else if (ticksOutside >= TICKS_FOR_AMP_2) {
-            MobEffectInstance current = player.getEffect(effects.DEHYDRATION.get());
+            MobEffectInstance current = player.getEffect(effects.DEHYDRATION);
             if (current == null || current.getAmplifier() < 2 || current.getDuration() <= 20) {
                 applyDehydration(player, 2);
             }
@@ -170,7 +170,7 @@ public class AbyssalDehydrationHandler {
 
     private static void applyDehydration(Player player, int amplifier) {
         UUID playerId = player.getUUID();
-        MobEffectInstance current = player.getEffect(effects.DEHYDRATION.get());
+        MobEffectInstance current = player.getEffect(effects.DEHYDRATION);
 
         if (current != null) {
             int currentAmp = current.getAmplifier();
@@ -186,11 +186,11 @@ public class AbyssalDehydrationHandler {
 
             INTERNAL_REAPPLY.add(playerId);
             DehydrationEffect.markNextRemovalSilent(player);
-            player.removeEffect(effects.DEHYDRATION.get());
+            player.removeEffect(effects.DEHYDRATION);
         }
 
         player.addEffect(new MobEffectInstance(
-                effects.DEHYDRATION.get(),
+                effects.DEHYDRATION,
                 EFFECT_DURATION,
                 amplifier,
                 false,

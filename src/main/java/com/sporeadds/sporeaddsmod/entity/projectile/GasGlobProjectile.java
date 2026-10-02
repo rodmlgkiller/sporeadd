@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.entity.projectile;
 
+import net.minecraft.core.Holder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.core.BlockPos;
@@ -161,7 +163,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
     }
 
     private void applyStackingDissolution(LivingEntity target) {
-        MobEffect dissolution = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution"));
+        Holder<MobEffect> dissolution = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")).orElse(null);
         if (dissolution == null) return;
 
         MobEffectInstance existing = target.getEffect(dissolution);
@@ -170,7 +172,7 @@ public class GasGlobProjectile extends ThrowableProjectile {
     }
 
     private void applyCorrosion(LivingEntity target) {
-        MobEffect corrosion = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.fromNamespaceAndPath("spore", "corrosion"));
+        Holder<MobEffect> corrosion = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "corrosion")).orElse(null);
         if (corrosion == null) return;
 
         target.addEffect(new MobEffectInstance(corrosion, CORROSION_DURATION_TICKS, CORROSION_AMPLIFIER, false, true, true));

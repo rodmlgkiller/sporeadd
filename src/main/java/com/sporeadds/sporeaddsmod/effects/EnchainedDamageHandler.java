@@ -15,7 +15,7 @@ public class EnchainedDamageHandler {
     public static void onLivingDamage(LivingDamageEvent event) {
         Entity source = event.getSource().getEntity();
         if (source instanceof LivingEntity attacker) {
-            if (attacker.hasEffect(effects.ENCHAINED.get())) {
+            if (attacker.hasEffect(effects.ENCHAINED)) {
                 float damage = event.getAmount();
 
                 if (attacker instanceof Player) {

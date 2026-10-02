@@ -41,7 +41,7 @@ public class HandlerEvents_DefenseBypassMixin {
         if (attacker.getCooldowns().isOnCooldown(pci)) return;
 
         // Si todavía tiene armadura del Poder12, NO hacer nada aquí.
-        // Poder12 ya lo resuelve en LivingHurtEvent.
+        // Poder12 ya lo resuelve en LivingDamageEvent.Pre.
         if (target instanceof ServerPlayer serverTarget) {
             var opt = PlayerDataProvider.PLAYER_DATA.get(serverTarget).resolve();
             if (opt.isPresent() && opt.get().getArmorHp() > 0) {
@@ -63,7 +63,7 @@ public class HandlerEvents_DefenseBypassMixin {
         float finalDamage = chargesToUse * PCI_DAMAGE_PER_CHARGE;
         finalDamage = Math.min(finalDamage, maxAllowedDamage);
 
-        event.setAmount(finalDamage);
+        event.setNewDamage(finalDamage);
         pci.setCharge(weapon, charge - chargesToUse);
 
         target.setTicksFrozen(600);

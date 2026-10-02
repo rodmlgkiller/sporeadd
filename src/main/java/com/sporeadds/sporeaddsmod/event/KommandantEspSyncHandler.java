@@ -1,5 +1,7 @@
 package com.sporeadds.sporeaddsmod.event;
 
+import net.minecraft.core.Holder;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -47,9 +49,9 @@ public class KommandantEspSyncHandler {
         if (event.getEntity().level().isClientSide()) return;
         if (!(event.getEntity() instanceof ServerPlayer target)) return;
 
-        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
-        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);
-        MobEffect seasoned = BuiltInRegistries.MOB_EFFECT.get(SEASONED_EFFECT_ID);
+        Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(MARKER_EFFECT_ID).orElse(null);
+        Holder<MobEffect> uneasy = BuiltInRegistries.MOB_EFFECT.getHolder(UNEASY_EFFECT_ID).orElse(null);
+        Holder<MobEffect> seasoned = BuiltInRegistries.MOB_EFFECT.getHolder(SEASONED_EFFECT_ID).orElse(null);
 
         MobEffectInstance markerInstance = marker != null ? target.getEffect(marker) : null;
         boolean hasMarker = markerInstance != null;
@@ -85,9 +87,9 @@ public class KommandantEspSyncHandler {
         if (event.getLevel().isClientSide()) return;
         if (!(event.getLevel() instanceof ServerLevel level)) return;
 
-        MobEffect marker = BuiltInRegistries.MOB_EFFECT.get(MARKER_EFFECT_ID);
-        MobEffect uneasy = BuiltInRegistries.MOB_EFFECT.get(UNEASY_EFFECT_ID);
-        MobEffect seasoned = BuiltInRegistries.MOB_EFFECT.get(SEASONED_EFFECT_ID);
+        Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(MARKER_EFFECT_ID).orElse(null);
+        Holder<MobEffect> uneasy = BuiltInRegistries.MOB_EFFECT.getHolder(UNEASY_EFFECT_ID).orElse(null);
+        Holder<MobEffect> seasoned = BuiltInRegistries.MOB_EFFECT.getHolder(SEASONED_EFFECT_ID).orElse(null);
 
         if (marker == null && uneasy == null && seasoned == null) return;
 
