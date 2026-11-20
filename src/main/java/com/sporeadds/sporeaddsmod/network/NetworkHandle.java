@@ -101,6 +101,7 @@ public class NetworkHandle {
         reg(r, CausticShotScalePacket.class, CausticShotScalePacket::encode, CausticShotScalePacket::decode, CausticShotScalePacket::handle, Dir.TO_CLIENT);
         reg(r, CausticSprayModePacket.class, CausticSprayModePacket::encode, CausticSprayModePacket::decode, CausticSprayModePacket::handle, Dir.TO_CLIENT);
         reg(r, FireCausticSprayShotPacket.class, FireCausticSprayShotPacket::encode, FireCausticSprayShotPacket::decode, FireCausticSprayShotPacket::handle, Dir.TO_SERVER);
+        reg(r, RequestSwitchSyncPacket.class, RequestSwitchSyncPacket::encode, RequestSwitchSyncPacket::decode, RequestSwitchSyncPacket::handle, Dir.TO_SERVER);
     }
 
     private static String idFor(Class<?> cls) {

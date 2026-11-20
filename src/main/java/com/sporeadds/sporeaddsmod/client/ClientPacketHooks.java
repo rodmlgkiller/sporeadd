@@ -54,6 +54,9 @@ public final class ClientPacketHooks {
     }
 
     public static void serverToData(String value) {
+        if (Minecraft.getInstance().player == null) {
+            return;
+        }
         PlayerDataProvider.PLAYER_DATA.get(Minecraft.getInstance().player).ifPresent(cap -> cap.setSwitch(value));
     }
 

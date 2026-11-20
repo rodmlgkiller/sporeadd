@@ -135,6 +135,9 @@ public class SporeAddsConfig {
     public static final ModConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_LETHAL;
     public static final ModConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_NO_RESPAWN;
 
+    public static final ModConfigSpec.BooleanValue ABILITY_TOGGLES_PERSIST_ON_LOGIN;
+    public static final ModConfigSpec.BooleanValue BIOMASS_CORE_ACTION_WHEEL;
+
     public static final ModConfigSpec.BooleanValue DEVOTION_EVENT_ENABLED;
     public static final ModConfigSpec.DoubleValue DEVOTION_REWARD_RADIUS;
     public static final ModConfigSpec.IntValue DEVOTION_DURATION_TICKS;
@@ -827,6 +830,37 @@ public class SporeAddsConfig {
         TRAINING_BOOK_SLOTS_BERSERKER = builder.defineInRange("berserker", 1, -1, 100000);
 
         builder.pop();
+
+        builder.push("ability_toggles");
+
+        ABILITY_TOGGLES_PERSIST_ON_LOGIN = builder
+                .comment("If true, the ON/OFF toggles of the ability selector are kept when a player logs out and back in.",
+                        "If false (default, the historic behaviour) every toggle starts OFF at login.",
+                        "Dying, respawning and changing dimension always keep the toggles, and the ability selector",
+                        "always shows the state the server really has.")
+                .define("persist_on_login", false);
+
+        builder.pop();
+
+        builder.push("biomass_core");
+
+        BIOMASS_CORE_ACTION_WHEEL = builder
+                .comment("If true, using the Biomass Core opens an action wheel to choose which weapon to create.",
+                        "If false (default) the Biomass Core behaves as it always did.")
+                .define("action_wheel_enabled", false);
+
+        builder.pop();
+
+        // Per-domain settings live in their own classes (one per class / system) to keep this file manageable.
+        GhostConfig.define(builder);
+        MedicConfig.define(builder);
+        ScientistConfig.define(builder);
+        BerserkerConfig.define(builder);
+        KommandantPowersConfig.define(builder);
+        KommandantAdvancedConfig.define(builder);
+        LocatorConfig.define(builder);
+        ImplantConfig.define(builder);
+        StartingGearConfig.define(builder);
 
         SPEC = builder.build();
     }
