@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
+import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncBerserkerCooldownPacket;
 import com.sporeadds.sporeaddsmod.util.SporeClassUtil;
@@ -40,14 +41,13 @@ import java.util.UUID;
  *  - cuerpo a cuerpo: devuelve el 50% del daño al atacante.
  *  - proyectil: lo redirige de vuelta al que lo disparó a la misma rapidez.
  * Si expira sin golpe -> falla, cooldown de 5 s. Si repele algo -> cooldown = daño/4 segundos.
+ * (Todos esos numeros son los valores por defecto de la config, berserker.counter.* en BerserkerConfig.)
  */
 @Mod.EventBusSubscriber(modid = "sporeadd")
 public final class CounterAbility {
 
-    private static final int WINDOW_TICKS = 10;               // 0.5 s
-    private static final int FAIL_COOLDOWN_TICKS = 100;       // 5 s
-    private static final int MIN_SUCCESS_COOLDOWN_TICKS = 20; // 1 s
-    private static final float MELEE_REFLECT = 0.5F;
+    // Ventana (0.5 s), cooldown al fallar (5 s), cooldown minimo al acertar (1 s), daño/4 s, reflejo cuerpo a
+    // cuerpo (50%) y reflejo de proyectiles: ver BerserkerConfig (berserker.counter.*).
 
     private static final Map<UUID, Long> WINDOW_UNTIL = new HashMap<>();
     private static final Map<UUID, Long> COOLDOWN_UNTIL = new HashMap<>();
@@ -65,7 +65,7 @@ public final class CounterAbility {
         Long cd = COOLDOWN_UNTIL.get(id);
         if (cd != null && now < cd) return;
 
-        WINDOW_UNTIL.put(id, now + WINDOW_TICKS);
+        WINDOW_UNTIL.put(id, now + BerserkerConfig.counterWindowTicks());
         activationFx(player);
         player.displayClientMessage(
                 Component.translatable("message.sporeadd.berserker.counter.activated").withStyle(ChatFormatting.GOLD), true);
@@ -90,7 +90,7 @@ public final class CounterAbility {
         event.setCanceled(true);
 
         float amount = Math.max(0.0F, event.getAmount());
-        attacker.hurt(player.damageSources().thorns(player), amount * MELEE_REFLECT);
+        attacker.hurt(player.damageSources().thorns(player), amount * BerserkerConfig.counterMeleeReflect());
         onCounterSuccess(player, amount);
     }
 
@@ -99,6 +99,7 @@ public final class CounterAbility {
         if (!(event.getRayTraceResult() instanceof EntityHitResult hit)) return;
         if (!(hit.getEntity() instanceof ServerPlayer player)) return;
         if (!isWindowActive(player)) return;
+        if (!BerserkerConfig.counterReflectProjectiles()) return;   // config: el counter solo vale contra cuerpo a cuerpo
 
         Projectile proj = event.getProjectile();
         event.setCanceled(true);   // el proyectil atraviesa sin dañar
@@ -111,7 +112,7 @@ public final class CounterAbility {
 
         Vec3 dir = shooter != null ? shooter.getEyePosition().subtract(proj.position()) : vel.reverse();
         if (dir.lengthSqr() < 1.0E-4D) dir = vel.reverse();
-        Vec3 back = dir.normalize().scale(speed);
+        Vec3 back = dir.normalize().scale(speed * BerserkerConfig.counterProjectileSpeedMultiplier());
 
         proj.setDeltaMovement(back);
         proj.hasImpulse = true;
@@ -129,7 +130,8 @@ public final class CounterAbility {
         WINDOW_UNTIL.remove(id);
 
         long now = player.level().getGameTime();
-        int cdTicks = Math.max(MIN_SUCCESS_COOLDOWN_TICKS, Mth.ceil(hitDamage / 4.0F) * 20);
+        int cdTicks = Math.max(BerserkerConfig.counterMinSuccessCooldownTicks(),
+                Mth.ceil(hitDamage / BerserkerConfig.counterDamagePerCooldownSecond()) * 20);
         COOLDOWN_UNTIL.put(id, now + cdTicks);
         sendCooldown(player, cdTicks);
 
@@ -155,8 +157,9 @@ public final class CounterAbility {
             }
             if (player.level().getGameTime() > entry.getValue()) {
                 it.remove();
-                COOLDOWN_UNTIL.put(entry.getKey(), player.level().getGameTime() + FAIL_COOLDOWN_TICKS);
-                sendCooldown(player, FAIL_COOLDOWN_TICKS);
+                int failCooldown = BerserkerConfig.counterFailCooldownTicks();
+                COOLDOWN_UNTIL.put(entry.getKey(), player.level().getGameTime() + failCooldown);
+                sendCooldown(player, failCooldown);
                 player.displayClientMessage(
                         Component.translatable("message.sporeadd.berserker.counter.failed").withStyle(ChatFormatting.GRAY), true);
             }

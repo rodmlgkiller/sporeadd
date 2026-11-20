@@ -16,6 +16,7 @@ public class PowerEntityInteractResolver {
     public enum InteractPower {
         POWER2,
         POWER4,
+        POWER5,
         POWER6,
         POWER7
     }
@@ -23,6 +24,7 @@ public class PowerEntityInteractResolver {
     /*
      * Orden configurable:
      * - POWER2: ejecución
+     * - POWER5: alimentar un mound con biomasa (solo si power_5_manipulation.feed_mounds está activo)
      * - POWER4: cosecha biomasa
      * - POWER6: evolución forzada
      * - POWER7: montar entidad
@@ -31,6 +33,7 @@ public class PowerEntityInteractResolver {
      */
     private static final List<InteractPower> PRIORITY_ORDER = List.of(
             InteractPower.POWER2,
+            InteractPower.POWER5,
             InteractPower.POWER6,
             InteractPower.POWER7,
             InteractPower.POWER4
@@ -51,6 +54,7 @@ public class PowerEntityInteractResolver {
             boolean consumed = switch (power) {
                 case POWER2 -> Poder2.tryExecute(player, target);
                 case POWER4 -> Poder4.tryHarvestEntity(player, target);
+                case POWER5 -> Poder5.tryFeedMound(player, target);
                 case POWER6 -> Poder6.tryForceEvolve(player, target);
                 case POWER7 -> Poder7.tryMount(player, target);
             };

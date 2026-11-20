@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.abilities;
 
+import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,9 +24,7 @@ import java.util.UUID;
 
 public final class DelayedDefibrillationAbility {
 
-    public static final int COOLDOWN_TICKS = 20 * 80;
-    private static final double SEARCH_RADIUS = 4.0D;
-    private static final int EFFECT_DURATION_TICKS = 300;
+    // Cooldown, search radius and mark duration: see MedicConfig (medic.defibrillate.*).
 
     private static final Map<UUID, Long> COOLDOWN_UNTIL_TICK = new HashMap<>();
 
@@ -61,11 +60,12 @@ public final class DelayedDefibrillationAbility {
 
         applyEffect(serverLevel, target);
 
-        long cooldownUntil = player.level().getGameTime() + COOLDOWN_TICKS;
+        int cooldownTicks = MedicConfig.defibrillateCooldownTicks();
+        long cooldownUntil = player.level().getGameTime() + cooldownTicks;
         COOLDOWN_UNTIL_TICK.put(uuid, cooldownUntil);
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
-                new com.sporeadds.sporeaddsmod.network.SyncDelayedDefibrillationCooldownPacket(COOLDOWN_TICKS),
+                new com.sporeadds.sporeaddsmod.network.SyncDelayedDefibrillationCooldownPacket(cooldownTicks),
                 player.connection.connection,
                 NetworkDirection.PLAY_TO_CLIENT
         );
@@ -74,11 +74,12 @@ public final class DelayedDefibrillationAbility {
     }
 
     private static LivingEntity findTarget(ServerLevel level, ServerPlayer user) {
-        AABB searchBox = user.getBoundingBox().inflate(SEARCH_RADIUS);
+        final double searchRadius = MedicConfig.defibrillateSearchRadius();
+        AABB searchBox = user.getBoundingBox().inflate(searchRadius);
         List<LivingEntity> nearby = level.getEntitiesOfClass(
                 LivingEntity.class,
                 searchBox,
-                entity -> entity != user && isWithinRadius(user, entity, SEARCH_RADIUS)
+                entity -> entity != user && isWithinRadius(user, entity, searchRadius)
         );
 
         ServerPlayer bestPlayer = null;
@@ -136,7 +137,7 @@ public final class DelayedDefibrillationAbility {
     private static void applyEffect(ServerLevel level, LivingEntity target) {
         target.addEffect(new MobEffectInstance(
                 effects.DELAYED_DEFIBRILLATION.get(),
-                EFFECT_DURATION_TICKS,
+                MedicConfig.defibrillateMarkDurationTicks(),
                 0,
                 false,
                 true,

@@ -1,5 +1,6 @@
     package com.sporeadds.sporeaddsmod.combat;
 
+    import com.sporeadds.sporeaddsmod.config.ScientistConfig;
     import net.minecraft.server.level.ServerLevel;
     import net.minecraft.server.level.ServerPlayer;
     import net.minecraft.sounds.SoundEvent;
@@ -33,11 +34,11 @@
                 return;
             }
 
-            boolean hit = WeakPointManager.tryHit(target, attacker);
+            int hitIndex = WeakPointManager.findHitIndex(target, attacker);
 
-            if (hit) {
+            if (hitIndex >= 0) {
                 float bonus = WeakPointManager.getDamageBonus(target.getId());
-                event.setAmount(event.getAmount() + bonus);
+                event.setAmount(WeakPointManager.applyBonus(event.getAmount(), bonus));
 
                 WeakPointKillTracker.recordHit(target.getId(), attacker.getUUID(), target.level().getGameTime());
 
@@ -53,17 +54,23 @@
                     );
                 }
 
-                WeakPointManager.relocate(target);
-                syncMarker(target);
+                // scientist.weak_points.max_critical_hits (0 = unlimited): after that many critical hits the effect is used up.
+                int maxCriticalHits = ScientistConfig.weakPointMaxCriticalHits();
+                if (maxCriticalHits > 0 && WeakPointManager.recordCriticalHit(target.getId()) >= maxCriticalHits) {
+                    target.removeEffect(com.sporeadds.sporeaddsmod.effects.effects.EXPOSED_WEAKNESS.get());
+                    WeakPointManager.remove(target.getId());
+                    syncRemoval(target);
+                } else {
+                    WeakPointManager.relocate(target, hitIndex);
+                    syncMarker(target);
+                }
             }
         }
 
         private static void syncMarker(LivingEntity target) {
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
                     net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY.with(() -> target),
-                    new com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket(
-                            target.getId(), true, WeakPointManager.getOffset(target.getId())
-                    )
+                    WeakPointManager.syncPacketFor(target.getId())
             );
         }
 

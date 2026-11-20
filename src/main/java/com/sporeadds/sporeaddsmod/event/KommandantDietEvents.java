@@ -2,7 +2,9 @@ package com.sporeadds.sporeaddsmod.event;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
+import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -335,6 +337,8 @@ public class KommandantDietEvents {
 
     private static boolean isForbiddenFood(Player player, ItemStack stack) {
         if (!SporeAddsConfig.KOMMANDANT_DIET_RESTRICTION.get()) return false;
+        // biomass_from_eating.food_to_biomass: every food may be eaten (and gives biomass), the whitelist is not used.
+        if (KommandantPowersConfig.FOOD_BIOMASS_ENABLED.get()) return false;
 
         if (isSubclassgluttonous(player)) return false;
 
@@ -490,11 +494,28 @@ public class KommandantDietEvents {
         }
     }
 
+    /** biomass_from_eating.food_to_biomass: fills the biomass bar with what the food restored. */
+    private static void grantFoodBiomass(ServerPlayer player, ItemStack stack) {
+        net.minecraft.world.food.FoodProperties food = stack.getItem().getFoodProperties();
+        if (food == null) return;
+
+        double saturationPoints = food.getNutrition() * (double) food.getSaturationModifier() * 2.0D;
+        double amount = food.getNutrition() * KommandantPowersConfig.FOOD_BIOMASS_PER_HUNGER.get()
+                + saturationPoints * KommandantPowersConfig.FOOD_BIOMASS_PER_SATURATION.get();
+        if (amount <= 0.0D) return;
+
+        player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> spore.addBiomass(amount));
+    }
+
     @SubscribeEvent
     public static void onUseItemFinish(LivingEntityUseItemEvent.Finish event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         ItemStack stack = event.getItem();
+
+        if (isKommandant(player) && KommandantPowersConfig.FOOD_BIOMASS_ENABLED.get() && stack.isEdible()) {
+            grantFoodBiomass(player, stack);
+        }
 
         if (isKommandant(player) && isSubclassgluttonous(player)) {
             if (stack.isEdible() || isBiomass(stack)) {

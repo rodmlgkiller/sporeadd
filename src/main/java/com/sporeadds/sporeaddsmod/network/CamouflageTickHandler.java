@@ -1,6 +1,7 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,7 +16,6 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 @Mod.EventBusSubscriber(modid = "sporeadd")
 public final class CamouflageTickHandler {
 
-    private static final int AMBUSHED_DURATION_TICKS = 200;
     private static final int PULSE_INTERVAL_TICKS = 10;
 
     private CamouflageTickHandler() {
@@ -40,6 +40,13 @@ public final class CamouflageTickHandler {
                 if (shouldPulse && data.isCamouflaged()) {
                     CamouflageLogic.applyInvisibilityPulse(player);
                 }
+
+                if (data.isCamouflaged()) {
+                    int maxDurationTicks = GhostConfig.disguiseMaxDurationTicks();
+                    if (maxDurationTicks > 0 && CamouflageLogic.activeTicks(player, gameTime) >= maxDurationTicks) {
+                        CamouflageLogic.deactivate(player, data);
+                    }
+                }
             });
         }
     }
@@ -57,10 +64,12 @@ public final class CamouflageTickHandler {
                 boolean damagedByOtherEntity = event.getSource().getEntity() instanceof LivingEntity attacker
                         && attacker != player;
 
-                if (damagedByOtherEntity) {
+                int ambushedDurationTicks = GhostConfig.ambushedDurationTicks();
+
+                if (damagedByOtherEntity && ambushedDurationTicks > 0) {
                     player.addEffect(new MobEffectInstance(
                             effects.AMBUSHED.get(),
-                            AMBUSHED_DURATION_TICKS,
+                            ambushedDurationTicks,
                             0,
                             false,
                             true,

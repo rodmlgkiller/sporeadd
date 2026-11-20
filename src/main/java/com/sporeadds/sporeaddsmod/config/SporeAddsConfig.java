@@ -561,7 +561,7 @@ public class SporeAddsConfig {
         builder.push("call_of_the_hive");
 
         CALL_OF_THE_HIVE_CHANCE = builder
-                .comment("Chance (0.0 - 1.0) that a player hit by a spore-team entity, while within 300 blocks",
+                .comment("Chance (0.0 - 1.0) that a player hit by a spore-team entity, while within the Proto call radius (kommandant_abilities.class_gain.proto_call_radius, default 300 blocks)",
                         "of a spore:proto, gains the 'Call of the Hive' effect, when a player dies with this effect they will face a choice to become infected or die.")
                 .defineInRange("call_of_the_hive_chance", 0.05D, 0.0D, 1.0D);
 

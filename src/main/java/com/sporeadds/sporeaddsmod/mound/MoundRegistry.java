@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.mound;
 
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -19,9 +20,19 @@ public class MoundRegistry {
     private final LinkedList<UUID> moundUUIDs = new LinkedList<>();
     private final Map<UUID, String> moundNames = new HashMap<>();
     private final Map<UUID, MoundLocation> moundLocations = new HashMap<>();
-    private static final int MAX_SIZE = 10;
+    /** Used only when the config is not readable yet; the real limit is kommandant_abilities.power_3_mounds.max_mounds. */
+    private static final int DEFAULT_MAX_SIZE = 10;
 
     private UUID preferredMound = null;
+
+    /** How many mounds one Kommandant can keep registered (power_3_mounds.max_mounds, default 10). */
+    public static int maxSize() {
+        try {
+            return KommandantPowersConfig.MAX_MOUNDS.get();
+        } catch (RuntimeException e) {
+            return DEFAULT_MAX_SIZE;
+        }
+    }
 
     public static class MoundLocation {
         private final String dimension;
@@ -61,7 +72,8 @@ public class MoundRegistry {
         if (!moundUUIDs.contains(uuid)) {
             moundUUIDs.addLast(uuid);
 
-            if (moundUUIDs.size() > MAX_SIZE) {
+            int maxSize = maxSize();
+            while (moundUUIDs.size() > maxSize) {
                 UUID removed = moundUUIDs.removeFirst();
                 if (removed != null) {
                     moundNames.remove(removed);

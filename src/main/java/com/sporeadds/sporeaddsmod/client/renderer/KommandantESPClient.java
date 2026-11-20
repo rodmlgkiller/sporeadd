@@ -1,6 +1,8 @@
 package com.sporeadds.sporeaddsmod.client.renderer;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
+import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -8,38 +10,93 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class KommandantESPClient {
 
-    private static final int COLOR_MARKER = 0xFF7373;
-    private static final int COLOR_UNEASY = 0xA865C9;
-    private static final int COLOR_WATER = 0x00FFFF;
-    private static final int COLOR_SEASONED = 0xAA0000;
-    private static final int COLOR_FALLBACK = 0x00FF00;
+    // The Kommandant colours and ranges are kommandant_abilities.highlights (read from this client's own config file).
     private static final int COLOR_MEDIC_HEALTHY = 0x90EE90;
     private static final int COLOR_MEDIC_MEDIUM = 0xFFA500;
     private static final int COLOR_MEDIC_CRITICAL = 0xFF6666;
 
-    private static final double MEDIC_RANGE = 32.0D;
-    private static final double MEDIC_RANGE_SQR = MEDIC_RANGE * MEDIC_RANGE;
-    private static final double UNEASY_RANGE = 64.0D;
-    private static final double UNEASY_RANGE_SQR = UNEASY_RANGE * UNEASY_RANGE;
-
-    private static final double WATER_PLAYER_RANGE = 64.0D;
-    private static final double WATER_PLAYER_RANGE_SQR = WATER_PLAYER_RANGE * WATER_PLAYER_RANGE;
-
-    private static final double SEASONED_RANGE = 42.0D;
-    private static final double SEASONED_RANGE_SQR = SEASONED_RANGE * SEASONED_RANGE;
-
     private static final Map<Integer, SyncedEffectState> SYNCED_EFFECTS = new ConcurrentHashMap<>();
+
+    /** Entities allowed to glow this tick when highlights.entity_limit is set (the nearest ones). */
+    private static final Set<Integer> LIMITED_GLOW = new HashSet<>();
+    private static long limitedGlowTick = Long.MIN_VALUE;
 
     private KommandantESPClient() {
     }
 
+    private static int colorMarker() {
+        return KommandantPowersConfig.colorRgb(KommandantPowersConfig.ESP_COLOR_ENTITY_MARKER, 0xFF7373);
+    }
+
+    private static int colorUneasy() {
+        return KommandantPowersConfig.colorRgb(KommandantPowersConfig.ESP_COLOR_ENTITY_UNEASY, 0xA865C9);
+    }
+
+    private static int colorWater() {
+        return KommandantPowersConfig.colorRgb(KommandantPowersConfig.ESP_COLOR_ENTITY_WATER, 0x00FFFF);
+    }
+
+    private static int colorSeasoned() {
+        return KommandantPowersConfig.colorRgb(KommandantPowersConfig.ESP_COLOR_ENTITY_SEASONED, 0xAA0000);
+    }
+
+    private static int colorFallback() {
+        return KommandantPowersConfig.colorRgb(KommandantPowersConfig.ESP_COLOR_ENTITY_FALLBACK, 0x00FF00);
+    }
+
+    private static double squared(double value) {
+        return value * value;
+    }
+
     public static boolean shouldGlow(Entity entity) {
+        if (!shouldGlowUnlimited(entity)) {
+            return false;
+        }
+
+        int limit = KommandantPowersConfig.ESP_ENTITY_LIMIT.get();
+        if (limit <= 0) {
+            return true;
+        }
+
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null || client.level == null || !isKommandant(client.player)) {
+            return true;
+        }
+
+        // highlights.entity_limit: only the nearest `limit` entities glow; the choice is made once per game tick.
+        long tick = client.level.getGameTime();
+        if (tick != limitedGlowTick) {
+            limitedGlowTick = tick;
+            LIMITED_GLOW.clear();
+
+            List<Entity> candidates = new ArrayList<>();
+            for (Entity other : client.level.entitiesForRendering()) {
+                if (shouldGlowUnlimited(other)) {
+                    candidates.add(other);
+                }
+            }
+
+            Player viewer = client.player;
+            candidates.sort(Comparator.comparingDouble((Entity e) -> viewer.distanceToSqr(e)));
+            for (int i = 0; i < Math.min(limit, candidates.size()); i++) {
+                LIMITED_GLOW.add(candidates.get(i).getId());
+            }
+        }
+
+        return LIMITED_GLOW.contains(entity.getId());
+    }
+
+    private static boolean shouldGlowUnlimited(Entity entity) {
         if (entity == null) {
             return false;
         }
@@ -71,7 +128,8 @@ public final class KommandantESPClient {
 
         if (state != null) {
             double distanceSqr = viewer.distanceToSqr(entity);
-            seasonedReveal = state.hasSeasoned() && distanceSqr <= SEASONED_RANGE_SQR;
+            seasonedReveal = state.hasSeasoned()
+                    && distanceSqr <= squared(KommandantPowersConfig.ESP_SEASONED_RANGE.get());
         }
 
         if (seasonedReveal) {
@@ -86,7 +144,7 @@ public final class KommandantESPClient {
         if (entity instanceof Player targetPlayer) {
             waterReveal = isAbyssal(viewer)
                     && targetPlayer.isInWater()
-                    && targetPlayer.distanceToSqr(viewer) <= WATER_PLAYER_RANGE_SQR;
+                    && targetPlayer.distanceToSqr(viewer) <= squared(KommandantPowersConfig.ESP_WATER_RANGE.get());
         }
 
         boolean uneasyReveal = false;
@@ -95,10 +153,12 @@ public final class KommandantESPClient {
         if (state != null) {
             double distanceSqr = viewer.distanceToSqr(entity);
 
-            uneasyReveal = state.hasUneasy() && distanceSqr <= UNEASY_RANGE_SQR;
+            uneasyReveal = state.hasUneasy()
+                    && distanceSqr <= squared(KommandantPowersConfig.ESP_UNEASY_RANGE.get());
 
             if (state.hasMarker()) {
-                double markerRange = 24.0D + (12.0D * state.markerAmplifier());
+                double markerRange = KommandantPowersConfig.ESP_MARKER_BASE_RANGE.get()
+                        + (KommandantPowersConfig.ESP_MARKER_RANGE_PER_AMPLIFIER.get() * state.markerAmplifier());
                 double markerRangeSqr = markerRange * markerRange;
                 markerReveal = distanceSqr <= markerRangeSqr;
             }
@@ -120,8 +180,10 @@ public final class KommandantESPClient {
             return null;
         }
 
+        // Triage range and health thresholds: medic.triage.* (read from this client's own config file).
+        double triageRange = MedicConfig.triageRange();
         double distanceSqr = viewer.distanceToSqr(living);
-        if (distanceSqr > MEDIC_RANGE_SQR) {
+        if (distanceSqr > triageRange * triageRange) {
             return null;
         }
 
@@ -132,11 +194,15 @@ public final class KommandantESPClient {
 
         float healthPct = living.getHealth() / maxHealth;
 
-        if (healthPct <= 0.90F && healthPct >= 0.60F) {
+        float showBelow = MedicConfig.triageShowBelow();
+        float mediumBelow = MedicConfig.triageMediumBelow();
+        float criticalBelow = MedicConfig.triageCriticalBelow();
+
+        if (healthPct <= showBelow && healthPct >= mediumBelow) {
             return COLOR_MEDIC_HEALTHY;
-        } else if (healthPct < 0.60F && healthPct >= 0.30F) {
+        } else if (healthPct < mediumBelow && healthPct >= criticalBelow) {
             return COLOR_MEDIC_MEDIUM;
-        } else if (healthPct < 0.30F) {
+        } else if (healthPct < criticalBelow) {
             return COLOR_MEDIC_CRITICAL;
         }
 
@@ -145,17 +211,17 @@ public final class KommandantESPClient {
 
     public static int getOutlineColor(Entity entity) {
         if (entity == null) {
-            return COLOR_FALLBACK;
+            return colorFallback();
         }
 
         Minecraft client = Minecraft.getInstance();
         if (client == null || client.player == null || client.level == null) {
-            return COLOR_FALLBACK;
+            return colorFallback();
         }
 
         Player viewer = client.player;
         if (entity == viewer) {
-            return COLOR_FALLBACK;
+            return colorFallback();
         }
 
         Integer medicColor = getMedicHealthColor(entity, viewer);
@@ -164,11 +230,11 @@ public final class KommandantESPClient {
         }
 
         if (!isKommandant(viewer)) {
-            return COLOR_FALLBACK;
+            return colorFallback();
         }
 
         if (entity instanceof Player targetPlayer && isKommandant(targetPlayer)) {
-            return COLOR_FALLBACK;
+            return colorFallback();
         }
 
         SyncedEffectState state = SYNCED_EFFECTS.get(entity.getId());
@@ -176,22 +242,23 @@ public final class KommandantESPClient {
 
         if (state != null) {
             double distanceSqr = viewer.distanceToSqr(entity);
-            seasonedReveal = state.hasSeasoned() && distanceSqr <= SEASONED_RANGE_SQR;
+            seasonedReveal = state.hasSeasoned()
+                    && distanceSqr <= squared(KommandantPowersConfig.ESP_SEASONED_RANGE.get());
         }
 
         if (seasonedReveal) {
-            return COLOR_SEASONED;
+            return colorSeasoned();
         }
 
         if (!isAllowedEspTarget(entity)) {
-            return COLOR_FALLBACK;
+            return colorFallback();
         }
 
         boolean waterReveal = false;
         if (entity instanceof Player targetPlayer) {
             waterReveal = isAbyssal(viewer)
                     && targetPlayer.isInWater()
-                    && targetPlayer.distanceToSqr(viewer) <= WATER_PLAYER_RANGE_SQR;
+                    && targetPlayer.distanceToSqr(viewer) <= squared(KommandantPowersConfig.ESP_WATER_RANGE.get());
         }
 
         boolean uneasyReveal = false;
@@ -200,28 +267,30 @@ public final class KommandantESPClient {
         if (state != null) {
             double distanceSqr = viewer.distanceToSqr(entity);
 
-            uneasyReveal = state.hasUneasy() && distanceSqr <= UNEASY_RANGE_SQR;
+            uneasyReveal = state.hasUneasy()
+                    && distanceSqr <= squared(KommandantPowersConfig.ESP_UNEASY_RANGE.get());
 
             if (state.hasMarker()) {
-                double markerRange = 24.0D + (12.0D * state.markerAmplifier());
+                double markerRange = KommandantPowersConfig.ESP_MARKER_BASE_RANGE.get()
+                        + (KommandantPowersConfig.ESP_MARKER_RANGE_PER_AMPLIFIER.get() * state.markerAmplifier());
                 double markerRangeSqr = markerRange * markerRange;
                 markerReveal = distanceSqr <= markerRangeSqr;
             }
         }
 
         if (uneasyReveal) {
-            return COLOR_UNEASY;
+            return colorUneasy();
         }
 
         if (markerReveal) {
-            return COLOR_MARKER;
+            return colorMarker();
         }
 
         if (waterReveal) {
-            return COLOR_WATER;
+            return colorWater();
         }
 
-        return COLOR_FALLBACK;
+        return colorFallback();
     }
 
     public static void updatePlayerEffects(int entityId, boolean hasMarker, int markerAmplifier, boolean hasUneasy, boolean hasSeasoned) {

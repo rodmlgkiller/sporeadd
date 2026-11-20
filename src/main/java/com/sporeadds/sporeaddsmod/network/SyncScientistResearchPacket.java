@@ -1,6 +1,7 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.client.FieldResearchClientData;
+import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
@@ -17,15 +18,23 @@ public class SyncScientistResearchPacket {
 
     private final Map<String, Integer> kills;
     private final Map<String, Integer> data;
+    /** Prestige requirements, weak point damage rules and field research cooldown of the server that sent this. */
+    private final ScientistConfig.ResearchRules rules;
 
     public SyncScientistResearchPacket(Map<String, Integer> kills, Map<String, Integer> data) {
+        this(kills, data, ScientistConfig.ResearchRules.current());
+    }
+
+    public SyncScientistResearchPacket(Map<String, Integer> kills, Map<String, Integer> data, ScientistConfig.ResearchRules rules) {
         this.kills = kills;
         this.data = data;
+        this.rules = rules;
     }
 
     public SyncScientistResearchPacket(FriendlyByteBuf buf) {
         this.kills = readMap(buf);
         this.data = readMap(buf);
+        this.rules = ScientistConfig.ResearchRules.read(buf);
     }
 
     private static Map<String, Integer> readMap(FriendlyByteBuf buf) {
@@ -50,20 +59,23 @@ public class SyncScientistResearchPacket {
     public void toBytes(FriendlyByteBuf buf) {
         writeMap(buf, kills);
         writeMap(buf, data);
+        rules.write(buf);
     }
 
     public static void handle(SyncScientistResearchPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> onClient(packet.kills, packet.data));
+        context.enqueueWork(() -> onClient(packet.kills, packet.data, packet.rules));
         context.setPacketHandled(true);
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void onClient(Map<String, Integer> kills, Map<String, Integer> data) {
+    private static void onClient(Map<String, Integer> kills, Map<String, Integer> data, ScientistConfig.ResearchRules rules) {
         playFirstKillSoundsIfApplicable(kills);
 
         FieldResearchClientData.setKills(kills);
         FieldResearchClientData.setDataAmounts(data);
+        FieldResearchClientData.setRules(rules);
+        com.sporeadds.sporeaddsmod.client.FieldResearchCooldownClientState.setCooldown(rules.fieldResearchCooldownTicks);
         FieldResearchClientData.openBookWhenReady();
     }
 

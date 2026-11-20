@@ -2,6 +2,8 @@ package com.sporeadds.sporeaddsmod.Powers;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.ConfigEffects;
+import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.event.LockedItemHandler;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
@@ -48,7 +50,6 @@ import java.util.Random;
 public class Poder13Variants {
 
     private static final Random RANDOM = new Random();
-    private static final int ABYSSAL_DURATION = 3600;
 
     // Pure pacing delay before the gas cloud starts, independent of the mound's own (unmodified,
     // vanilla) emerge animation - lets the shake/dig sound play out for a bit first.
@@ -65,6 +66,8 @@ public class Poder13Variants {
     }
 
     public static void activateAbyssal(ServerLevel level, Player player) {
+        // Duration of the storm (and of the temporary trident / subjugation): configurable, 3600 ticks by default.
+        final int ABYSSAL_DURATION = KommandantAdvancedConfig.STORM_DURATION_TICKS.get();
         level.setWeatherParameters(0, ABYSSAL_DURATION, true, true);
 
         ItemStack trident = new ItemStack(Items.TRIDENT);
@@ -206,8 +209,9 @@ public class Poder13Variants {
             AABB searchArea = player.getBoundingBox().inflate(200.0);
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, searchArea, LivingEntity::isAlive);
 
-            var mycelium = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "mycelium_ef"));
-            if (mycelium == null) return;
+            // Mycelium Infection VI for 30 s by default; the list is configurable (power_13_nuke.abyssal_storm.rain_effects).
+            List<ConfigEffects.Entry> rainEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.STORM_RAIN_EFFECTS);
+            if (rainEffects.isEmpty()) return;
 
             for (LivingEntity entity : nearby) {
                 Team team = entity.getTeam();
@@ -215,12 +219,12 @@ public class Poder13Variants {
 
                 if (!level.canSeeSky(entity.blockPosition())) continue;
 
-                entity.addEffect(new MobEffectInstance(mycelium, 600, 5, false, true, true));
+                ConfigEffects.apply(entity, rainEffects);
             }
         }
 
         private void strikeLightningOnTargets() {
-            AABB searchArea = player.getBoundingBox().inflate(15.0);
+            AABB searchArea = player.getBoundingBox().inflate(KommandantAdvancedConfig.STORM_LIGHTNING_RADIUS.get());
             List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, searchArea, e -> {
                 if (e == player || !e.isAlive()) return false;
                 Team team = e.getTeam();
@@ -241,7 +245,7 @@ public class Poder13Variants {
             if (lightning != null) {
                 lightning.moveTo(target.getX(), target.getY(), target.getZ());
                 lightning.setVisualOnly(false);
-                lightning.setDamage(50.0F);
+                lightning.setDamage(KommandantAdvancedConfig.STORM_LIGHTNING_DAMAGE.get().floatValue());
                 level.addFreshEntity(lightning);
             }
         }
@@ -325,7 +329,7 @@ public class Poder13Variants {
         if (famined != null) {
             player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                     famined,
-                    2000,
+                    KommandantAdvancedConfig.GLUTTONOUS_NUKE_FAMINED_TICKS.get(),
                     0,
                     false,
                     true,
@@ -345,23 +349,15 @@ public class Poder13Variants {
             });
         }
 
-        var weakness = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("minecraft", "weakness"));
+        List<ConfigEffects.Entry> warningEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.GLUTTONOUS_NUKE_EFFECTS);
         var calamityIncoming = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "calamity_incoming"));
 
-        AABB area = player.getBoundingBox().inflate(100.0D);
+        AABB area = player.getBoundingBox().inflate(KommandantAdvancedConfig.GLUTTONOUS_NUKE_RADIUS.get());
         List<Player> nearbyPlayers = level.getEntitiesOfClass(Player.class, area, p -> p.isAlive());
 
         for (Player nearby : nearbyPlayers) {
-            if (weakness != null) {
-                nearby.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                        weakness,
-                        200,
-                        0,
-                        false,
-                        true,
-                        true
-                ));
-            }
+            // Weakness for 10 s by default; the list is configurable (power_13_nuke.gluttonous.warning_effects).
+            ConfigEffects.apply(nearby, warningEffects);
 
             if (calamityIncoming != null) {
                 level.playSound(
@@ -425,7 +421,7 @@ public class Poder13Variants {
         net.minecraft.world.entity.ai.attributes.AttributeInstance maxHealthAttribute =
                 mound.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
         if (maxHealthAttribute != null) {
-            maxHealthAttribute.setBaseValue(200.0D);
+            maxHealthAttribute.setBaseValue(KommandantAdvancedConfig.DOME_MOUND_HEALTH.get());
         }
         mound.setHealth((float) mound.getMaxHealth());
 
@@ -499,17 +495,19 @@ public class Poder13Variants {
     public static class CausticGasBombTracker {
         private static final List<CausticGasBombTracker> ACTIVE = new ArrayList<>();
 
-        private static final int GROW_DURATION_TICKS = 400;
-        private static final float MAX_RADIUS = 50.0F;
-        private static final int SHRINK_TICKS_PER_BLOCK = 100;
+        // Growth time, max radius and shrink speed are configurable (power_13_nuke.caustic_dome); they are read
+        // when the dome is created, i.e. at runtime, so they are instance fields (declaration order matters).
+        private final int GROW_DURATION_TICKS = KommandantAdvancedConfig.DOME_GROW_TICKS.get();
+        private final float MAX_RADIUS = KommandantAdvancedConfig.DOME_MAX_RADIUS.get().floatValue();
+        private final int SHRINK_TICKS_PER_BLOCK = KommandantAdvancedConfig.DOME_SHRINK_TICKS_PER_BLOCK.get();
         private static final int ACID_POOL_INTERVAL_TICKS = 200;
 
         // If the mound dies before the dome fades out on its own, the dome is kept alive (anchored to
         // the mound's last known position) but shrinks this many times faster than its normal rate.
         private static final float DEATH_SHRINK_MULTIPLIER = 5.0F;
 
-        private static final float GROWTH_PER_TICK = MAX_RADIUS / GROW_DURATION_TICKS;
-        private static final float SHRINK_PER_TICK = 1.0F / SHRINK_TICKS_PER_BLOCK;
+        private final float GROWTH_PER_TICK = MAX_RADIUS / GROW_DURATION_TICKS;
+        private final float SHRINK_PER_TICK = 1.0F / SHRINK_TICKS_PER_BLOCK;
 
         private final ServerLevel level;
         private final net.minecraft.world.entity.Mob mound;
@@ -643,7 +641,8 @@ public class Poder13Variants {
 
             BlockPos center = BlockPos.containing(lastX, lastY, lastZ);
             int r = (int) radius;
-            int attempts = (int) (Math.PI * r * r * 0.10);
+            // Fraction of the circle that gets a placement attempt: power_13_nuke.cloud.acid_density (default 0.10).
+            int attempts = (int) (Math.PI * r * r * KommandantAdvancedConfig.NUKE_CLOUD_ACID_DENSITY.get());
 
             for (int i = 0; i < attempts; i++) {
                 int dx = RANDOM.nextInt(r * 2 + 1) - r;
@@ -689,8 +688,8 @@ public class Poder13Variants {
                     .inflate(radius, 10.0, radius);
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAlive);
 
-            var dissolution = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "dissolution"));
-            var corrosion = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "corrosion"));
+            // Dissolution II and Corrosion VI for 30 s by default; the list is configurable (caustic_dome.effects).
+            List<ConfigEffects.Entry> domeEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.DOME_EFFECTS);
 
             for (LivingEntity entity : nearby) {
                 double dx = entity.getX() - lastX;
@@ -701,12 +700,7 @@ public class Poder13Variants {
                     entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, true, true));
                 }
 
-                if (dissolution != null) {
-                    entity.addEffect(new MobEffectInstance(dissolution, 600, 1, false, true, true));
-                }
-                if (corrosion != null) {
-                    entity.addEffect(new MobEffectInstance(corrosion, 600, 5, false, true, true));
-                }
+                ConfigEffects.apply(entity, domeEffects);
             }
         }
 

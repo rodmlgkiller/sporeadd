@@ -2,6 +2,7 @@ package com.sporeadds.sporeaddsmod.abilities;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,9 +14,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = "sporeadd")
 public class GhostCamouflageAbility {
-
-    private static final float RANGED_DAMAGE_MULTIPLIER = 1.5F;
-    private static final double RANGED_DISTANCE_THRESHOLD = 7.0D;
 
     private GhostCamouflageAbility() {
     }
@@ -61,10 +59,10 @@ public class GhostCamouflageAbility {
         LivingEntity target = event.getEntity();
         double distance = attacker.distanceTo(target);
 
-        if (distance <= RANGED_DISTANCE_THRESHOLD) {
+        if (distance <= GhostConfig.disguiseRangedMinDistance()) {
             return;
         }
 
-        event.setAmount(event.getAmount() * RANGED_DAMAGE_MULTIPLIER);
+        event.setAmount(event.getAmount() * GhostConfig.disguiseRangedDamageMultiplier());
     }
 }

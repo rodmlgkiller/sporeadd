@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.data.MoundSavedData;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncMoundCountPacket;
@@ -33,18 +34,32 @@ public class Poder3 extends PowerBase {
 
     @Override
     public void use(ServerPlayer player) {
+        if (!PowerUnlocks.checkOrWarn(player, 3)) {
+            return;
+        }
+
         player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
             int currentSpore = spore.getSpore();
+            int moundCost = KommandantPowersConfig.MOUND_BIOMASS_COST.get();
 
-            if (currentSpore < 15) {
+            if (KommandantPowersConfig.MOUND_REFUSE_WHEN_FULL.get()
+                    && spore.getMoundRegistry().getList().size() >= KommandantPowersConfig.MAX_MOUNDS.get()) {
+                player.sendSystemMessage(Component.translatableWithFallback(
+                        "message.sporeadd.power3.mound_limit",
+                        "You already have the maximum of %s core mounds. Remove one with /mound <slot|name> remove first.",
+                        KommandantPowersConfig.MAX_MOUNDS.get()));
+                return;
+            }
+
+            if (currentSpore < moundCost) {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.not_enough_biomass"));
                 return;
             }
 
-            spore.setSpore(currentSpore - 15);
+            spore.setSpore(currentSpore - moundCost);
 
             ServerLevel level = player.serverLevel();
-            double alcance = 20.0D;
+            double alcance = KommandantPowersConfig.MOUND_PLACEMENT_RANGE.get();
             Vec3 startVec = player.getEyePosition();
             Vec3 lookVec = player.getLookAngle();
             Vec3 endVec = startVec.add(lookVec.x * alcance, lookVec.y * alcance, lookVec.z * alcance);

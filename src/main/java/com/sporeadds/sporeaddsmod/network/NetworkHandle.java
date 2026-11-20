@@ -6,7 +6,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandle {
 
-    private static final String PROTOCOL_VERSION = "1.0";
+    private static final String PROTOCOL_VERSION = "1.1";
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation("sporeadd", "main"),
@@ -651,6 +651,24 @@ public class NetworkHandle {
                 RequestSwitchSyncPacket::encode,
                 RequestSwitchSyncPacket::decode,
                 RequestSwitchSyncPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+        );
+
+        INSTANCE.registerMessage(
+                nextId(),
+                OpenBiomassWheelPacket.class,
+                OpenBiomassWheelPacket::encode,
+                OpenBiomassWheelPacket::decode,
+                OpenBiomassWheelPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
+        );
+
+        INSTANCE.registerMessage(
+                nextId(),
+                BiomassCoreMoldPacket.class,
+                BiomassCoreMoldPacket::encode,
+                BiomassCoreMoldPacket::decode,
+                BiomassCoreMoldPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 

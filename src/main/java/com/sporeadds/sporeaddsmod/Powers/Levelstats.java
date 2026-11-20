@@ -1,6 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
@@ -58,6 +59,14 @@ public class Levelstats {
 
         tickPlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(level -> {
             int currentLevel = level.getLevel();
+
+            // kommandant_abilities.general.max_evolution_level was lowered below this player's level: bring them down to it.
+            int maxLevel = KommandantPowersConfig.maxEvolutionLevel();
+            if (currentLevel > maxLevel) {
+                level.setLevel(maxLevel);
+                currentLevel = level.getLevel();
+            }
+
             int lastLevel = lastLevelMap.getOrDefault(tickPlayer.getUUID(), -1);
 
             if (currentLevel != lastLevel) {

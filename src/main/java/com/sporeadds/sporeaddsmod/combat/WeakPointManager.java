@@ -1,11 +1,15 @@
 package com.sporeadds.sporeaddsmod.combat;
 
+import com.sporeadds.sporeaddsmod.config.ScientistConfig;
+import com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -13,14 +17,16 @@ import java.util.Set;
 public final class WeakPointManager {
 
     private static final Random RANDOM = new Random();
-    private static final double MARKER_HIT_RADIUS = 0.3D;
 
-    private static final int SOFTCAP_BLOCK_SIZE = 200;
-    private static final float PLAYER_TARGET_MAX_BONUS_DAMAGE = 15.0F;
+    // Weak point size (hit radius), amount, damage formula (soft cap, data per point, player cap, flat/percent) and
+    // the critical hit limit are configurable: see ScientistConfig (scientist.weak_points.*).
 
-    private static final Map<Integer, Vec3> offsets = new HashMap<>();
+    /** Weak points of each exposed entity (offset from the entity position), one list per entity id. */
+    private static final Map<Integer, List<Vec3>> offsets = new HashMap<>();
     private static final Map<Integer, Integer> bonusValues = new HashMap<>();
     private static final Map<Integer, Boolean> isPlayerTarget = new HashMap<>();
+    /** Critical hits landed on each exposed entity since it was last exposed (for scientist.weak_points.max_critical_hits). */
+    private static final Map<Integer, Integer> criticalHitCounts = new HashMap<>();
 
     private static final net.minecraft.resources.ResourceLocation[] TIER_TEXTURES = {
             new net.minecraft.resources.ResourceLocation("sporeadd", "textures/particle/weak_point.png"),
@@ -71,27 +77,74 @@ public final class WeakPointManager {
 
     public static void registerOrRefresh(LivingEntity entity, int bonusValue, boolean isPlayer) {
         int id = entity.getId();
-        offsets.put(id, randomOffset(entity));
+        int amount = ScientistConfig.weakPointAmount();
+        List<Vec3> points = new ArrayList<>(amount);
+        for (int i = 0; i < amount; i++) {
+            points.add(randomOffset(entity));
+        }
+        offsets.put(id, points);
         bonusValues.put(id, bonusValue);
         isPlayerTarget.put(id, isPlayer);
+        criticalHitCounts.remove(id);
     }
 
+    /** Moves every weak point of the entity to a new random spot. */
     public static void relocate(LivingEntity entity) {
-        offsets.put(entity.getId(), randomOffset(entity));
+        List<Vec3> old = offsets.get(entity.getId());
+        int count = old != null && !old.isEmpty() ? old.size() : ScientistConfig.weakPointAmount();
+        List<Vec3> points = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            points.add(randomOffset(entity));
+        }
+        offsets.put(entity.getId(), points);
+    }
+
+    /** Moves only the weak point at {@code index} (the one that was just hit) to a new random spot. */
+    public static void relocate(LivingEntity entity, int index) {
+        List<Vec3> points = offsets.get(entity.getId());
+        if (points == null || index < 0 || index >= points.size()) {
+            return;
+        }
+        points.set(index, randomOffset(entity));
     }
 
     public static void remove(int entityId) {
         offsets.remove(entityId);
         bonusValues.remove(entityId);
         isPlayerTarget.remove(entityId);
+        criticalHitCounts.remove(entityId);
     }
 
     public static boolean hasWeakPoint(int entityId) {
         return offsets.containsKey(entityId);
     }
 
+    /** The first weak point of the entity (offset from its position), or null if it has none. */
     public static Vec3 getOffset(int entityId) {
-        return offsets.get(entityId);
+        List<Vec3> points = offsets.get(entityId);
+        return points == null || points.isEmpty() ? null : points.get(0);
+    }
+
+    /** Every weak point of the entity (copy), empty if it has none. */
+    public static List<Vec3> getOffsets(int entityId) {
+        List<Vec3> points = offsets.get(entityId);
+        return points == null ? List.of() : List.copyOf(points);
+    }
+
+    /** Counts one more critical hit on the entity and returns how many it has taken since it was exposed. */
+    public static int recordCriticalHit(int entityId) {
+        return criticalHitCounts.merge(entityId, 1, Integer::sum);
+    }
+
+    /** The packet that tells the clients where this entity's weak points are, how tough they look (tier) and their size. */
+    public static SyncWeakPointPacket syncPacketFor(int entityId) {
+        return new SyncWeakPointPacket(
+                entityId,
+                true,
+                getOffsets(entityId),
+                getTier(entityId),
+                (float) ScientistConfig.weakPointHitRadius()
+        );
     }
 
     public static int getBonusValue(int entityId) {
@@ -113,63 +166,106 @@ public final class WeakPointManager {
     }
 
     public static boolean tryHit(LivingEntity target, ServerPlayer attacker) {
+        return findHitIndex(target, attacker) >= 0;
+    }
+
+    /**
+     * Index of the weak point of {@code target} that the attacker's line of sight passes closest to (within the weak
+     * point size, scientist.weak_points.hit_radius), or -1 if the attacker is not hitting any.
+     */
+    public static int findHitIndex(LivingEntity target, ServerPlayer attacker) {
         int id = target.getId();
-        Vec3 offset = offsets.get(id);
-        if (offset == null) {
-            return false;
+        List<Vec3> points = offsets.get(id);
+        if (points == null || points.isEmpty()) {
+            return -1;
         }
 
         if (target.isBlocking()) {
-            return false;
+            return -1;
         }
-
-        Vec3 markerWorldPos = target.position().add(offset);
 
         Vec3 eyePos = attacker.getEyePosition();
         Vec3 lookVec = attacker.getLookAngle();
+        double hitRadius = ScientistConfig.weakPointHitRadius();
 
-        Vec3 toMarker = markerWorldPos.subtract(eyePos);
-        double distanceAlongLook = toMarker.dot(lookVec);
+        int bestIndex = -1;
+        double bestDistance = Double.MAX_VALUE;
 
-        if (distanceAlongLook < 0) {
-            return false;
+        for (int i = 0; i < points.size(); i++) {
+            Vec3 markerWorldPos = target.position().add(points.get(i));
+
+            Vec3 toMarker = markerWorldPos.subtract(eyePos);
+            double distanceAlongLook = toMarker.dot(lookVec);
+
+            if (distanceAlongLook < 0) {
+                continue;
+            }
+
+            Vec3 closestPointOnRay = eyePos.add(lookVec.scale(distanceAlongLook));
+            double distance = closestPointOnRay.distanceTo(markerWorldPos);
+
+            if (distance <= hitRadius && distance < bestDistance) {
+                bestIndex = i;
+                bestDistance = distance;
+            }
         }
 
-        Vec3 closestPointOnRay = eyePos.add(lookVec.scale(distanceAlongLook));
-        double distance = closestPointOnRay.distanceTo(markerWorldPos);
-
-        return distance <= MARKER_HIT_RADIUS;
+        return bestIndex;
     }
 
-    private static float applySoftCap(int rawValue) {
+    private static float applySoftCap(int rawValue, ScientistConfig.ResearchRules rules) {
         if (rawValue <= 0) {
             return 0.0F;
         }
 
         double result = 0.0D;
         int remaining = rawValue;
-        int blockIndex = 0;
+        double weight = 1.0D;
 
         while (remaining > 0) {
-            int blockAmount = Math.min(remaining, SOFTCAP_BLOCK_SIZE);
-            double weight = 1.0D / Math.pow(2, blockIndex);
+            int blockAmount = Math.min(remaining, rules.softCapBlockSize);
             result += blockAmount * weight;
             remaining -= blockAmount;
-            blockIndex++;
+            weight *= rules.softCapDecay;
+            if (weight == 0.0D) {
+                break;
+            }
         }
 
         return (float) result;
     }
 
     public static float getDamageBonusFromRaw(int rawValue, boolean isPlayer) {
-        float softCappedValue = applySoftCap(rawValue);
-        float damageBonus = softCappedValue / 20.0F;
+        return getDamageBonusFromRaw(rawValue, isPlayer, ScientistConfig.ResearchRules.current());
+    }
+
+    /** Bonus points for a raw value (Data + kills * kill value), with the rules of a given snapshot (the book passes the server's). */
+    public static float getDamageBonusFromRaw(int rawValue, boolean isPlayer, ScientistConfig.ResearchRules rules) {
+        float softCappedValue = applySoftCap(rawValue, rules);
+        float damageBonus = softCappedValue / (float) rules.dataPerDamagePoint;
 
         if (isPlayer) {
-            damageBonus = Math.min(damageBonus, PLAYER_TARGET_MAX_BONUS_DAMAGE);
+            damageBonus = Math.min(damageBonus, rules.maxBonusVsPlayers);
         }
 
         return damageBonus;
+    }
+
+    /**
+     * Adds a weak point bonus (in points) to the damage of a hit: flat (damage + points, the original rule) or, with
+     * scientist.weak_points.damage.mode = PERCENT, as a percentage of the hit.
+     */
+    public static float applyBonus(float damage, float bonusPoints) {
+        if (ScientistConfig.DAMAGE_MODE.get() == ScientistConfig.DamageMode.PERCENT) {
+            float percentPerPoint = ScientistConfig.DAMAGE_PERCENT_PER_POINT.get().floatValue();
+            return damage * (1.0F + bonusPoints * percentPerPoint / 100.0F);
+        }
+        return damage + bonusPoints;
+    }
+
+    /** The bonus as the book shows it: the points themselves in FLAT mode, the percentage they are worth in PERCENT mode. */
+    public static float displayBonus(float bonusPoints, ScientistConfig.ResearchRules rules) {
+        return rules.percentMode ? bonusPoints * rules.percentPerPoint : bonusPoints;
     }
 
     public static float getDamageBonus(int entityId) {

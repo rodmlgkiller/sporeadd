@@ -1,6 +1,7 @@
 package com.sporeadds.sporeaddsmod.Powers.Poder4things;
 
 import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.resources.ResourceLocation;
@@ -33,9 +34,8 @@ public final class gluttonousHarvestLogic {
 
     private static final String ANTIFARM_TAG = "antifarm";
 
-    /** Per-player cooldown between successful harvests (0.2s), so rapid-fire eating of stacked corpses can't chain-trigger biomass rewards in the same instant. */
+    /** Per-player cooldown between successful harvests (kommandant_abilities.power_4_devour.entity_cooldown_ticks, default 4 = 0.2s), so rapid-fire eating of stacked corpses can't chain-trigger biomass rewards in the same instant. */
     private static final Map<UUID, Long> LAST_HARVEST_TICK = new ConcurrentHashMap<>();
-    private static final long HARVEST_COOLDOWN_TICKS = 4L;
 
     private gluttonousHarvestLogic() {
     }
@@ -46,7 +46,7 @@ public final class gluttonousHarvestLogic {
 
         long now = player.level().getGameTime();
         Long lastHarvest = LAST_HARVEST_TICK.get(player.getUUID());
-        if (lastHarvest != null && now - lastHarvest < HARVEST_COOLDOWN_TICKS) {
+        if (lastHarvest != null && now - lastHarvest < (long) KommandantPowersConfig.DEVOUR_COOLDOWN_TICKS.get()) {
             return false;
         }
 
@@ -67,10 +67,12 @@ public final class gluttonousHarvestLogic {
         boolean isAntifarm = target.getTags().contains(ANTIFARM_TAG);
 
         int naturalBiomassReward = isBasic
-                ? player.getRandom().nextIntBetweenInclusive(2, 3)
-                : player.getRandom().nextIntBetweenInclusive(3, 4);
+                ? KommandantPowersConfig.rollRange(player.getRandom(),
+                KommandantPowersConfig.DEVOUR_BASIC_MIN.get(), KommandantPowersConfig.DEVOUR_BASIC_MAX.get())
+                : KommandantPowersConfig.rollRange(player.getRandom(),
+                KommandantPowersConfig.DEVOUR_STRONG_MIN.get(), KommandantPowersConfig.DEVOUR_STRONG_MAX.get());
 
-        final int biomassReward = isAntifarm ? 1 : naturalBiomassReward;
+        final int biomassReward = isAntifarm ? KommandantPowersConfig.DEVOUR_ANTIFARM_BIOMASS.get() : naturalBiomassReward;
         final int genericFoodReward = naturalBiomassReward;
 
         int boneReward = isBasic

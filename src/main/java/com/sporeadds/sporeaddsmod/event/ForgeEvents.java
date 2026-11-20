@@ -77,7 +77,8 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         if (event.getEntity().hasEffect(effects.VULNERABLE.get())) {
-            event.setAmount(event.getAmount() * 1.25f);
+            // scientist.nano_injector.vulnerable_damage_multiplier (default 1.25)
+            event.setAmount(event.getAmount() * com.sporeadds.sporeaddsmod.config.ScientistConfig.vulnerableDamageMultiplier());
         }
     }
 
@@ -557,11 +558,18 @@ public class ForgeEvents {
 
                 if (player.getPersistentData().getBoolean("SporeCocoonInterrupted")) {
                     player.sendSystemMessage(Component.translatable("message.sporeadd.power1.cocoon_interrupted"));
-                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 20, 1));
+                    if (com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_TICKS.get() > 0) {
+                        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+                                com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_TICKS.get(),
+                                com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_AMPLIFIER.get()));
+                    }
 
                     player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
-                        if (levelCap.getLevel() >= 9) {
-                            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 20, 2));
+                        if (levelCap.getLevel() >= com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.maxEvolutionLevel()
+                                && com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_TICKS.get() > 0) {
+                            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
+                                    com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_TICKS.get(),
+                                    com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_AMPLIFIER.get()));
                         }
                     });
 

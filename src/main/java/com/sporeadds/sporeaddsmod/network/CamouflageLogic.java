@@ -1,6 +1,8 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
+import com.sporeadds.sporeaddsmod.abilities.GhostDisguiseStacks;
+import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,15 +14,34 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public final class CamouflageLogic {
 
     public static final int INVISIBILITY_PULSE_TICKS = 20;
 
+    /** Game time at which each currently disguised player's disguise started (server side, only used for the optional max duration). */
+    private static final Map<UUID, Long> ACTIVE_SINCE = new HashMap<>();
+
     private CamouflageLogic() {
+    }
+
+    /** Ticks the player's current disguise has been on, measured against {@code now}. Starts counting if it was not being tracked. */
+    public static long activeTicks(ServerPlayer player, long now) {
+        Long since = ACTIVE_SINCE.get(player.getUUID());
+        if (since == null) {
+            ACTIVE_SINCE.put(player.getUUID(), now);
+            return 0L;
+        }
+        return now - since;
     }
 
     public static void activate(ServerPlayer player, SporeIdentifierData data) {
         data.setCamouflaged(true);
+        ACTIVE_SINCE.put(player.getUUID(), player.level().getGameTime());
+        GhostDisguiseStacks.onDisguiseStart(player);
 
         applyInvisibilityPulse(player);
 
@@ -58,8 +79,12 @@ public final class CamouflageLogic {
     }
 
     public static void deactivate(ServerPlayer player, SporeIdentifierData data) {
+        int cooldownTicks = GhostConfig.disguiseCooldownTicks();
+
         data.setCamouflaged(false);
-        data.setCamouflageCooldown(ActivateCamouflagePacket.CAMOUFLAGE_COOLDOWN_TICKS);
+        data.setCamouflageCooldown(cooldownTicks);
+        ACTIVE_SINCE.remove(player.getUUID());
+        GhostDisguiseStacks.onDisguiseEnd(player);
 
         player.removeEffect(MobEffects.INVISIBILITY);
 
@@ -86,12 +111,14 @@ public final class CamouflageLogic {
 
         NetworkHandle.INSTANCE.send(
                 PacketDistributor.PLAYER.with(() -> player),
-                new SyncCamouflageCooldownPacket(ActivateCamouflagePacket.CAMOUFLAGE_COOLDOWN_TICKS)
+                new SyncCamouflageCooldownPacket(cooldownTicks)
         );
     }
 
     public static void deactivateSilently(ServerPlayer player, SporeIdentifierData data) {
         data.setCamouflaged(false);
+        ACTIVE_SINCE.remove(player.getUUID());
+        GhostDisguiseStacks.onDisguiseEnd(player);
         player.removeEffect(MobEffects.INVISIBILITY);
     }
 }

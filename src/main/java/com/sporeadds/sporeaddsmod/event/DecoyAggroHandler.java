@@ -2,6 +2,7 @@ package com.sporeadds.sporeaddsmod.event;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.abilities.DecoyAbility;
+import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import com.sporeadds.sporeaddsmod.entity.DecoyEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,11 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber(modid = "sporeadd")
 public class DecoyAggroHandler {
-
-    private static final double MAX_RANGE = 20.0D;
-    private static final double MAX_RANGE_SQR = MAX_RANGE * MAX_RANGE;
-    private static final double ATTACK_RANGE_SQR = 3.0D * 3.0D;
-    private static final double MOVE_SPEED = 1.0D;
 
     private static final Map<UUID, UUID> HOOKED_MOBS = new ConcurrentHashMap<>();
 
@@ -63,7 +59,7 @@ public class DecoyAggroHandler {
             return;
         }
 
-        AABB searchBox = decoy.getBoundingBox().inflate(MAX_RANGE);
+        AABB searchBox = decoy.getBoundingBox().inflate(GhostConfig.decoyAggroRange());
 
         List<Mob> nearbyMobs = decoy.level().getEntitiesOfClass(
                 Mob.class,
@@ -84,6 +80,12 @@ public class DecoyAggroHandler {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server == null) return;
 
+        double maxRange = GhostConfig.decoyAggroRange();
+        double maxRangeSqr = maxRange * maxRange;
+        double attackRange = GhostConfig.decoyAttackRange();
+        double attackRangeSqr = attackRange * attackRange;
+        double moveSpeed = GhostConfig.decoyMoveSpeed();
+
         for (Map.Entry<UUID, UUID> entry : HOOKED_MOBS.entrySet()) {
             UUID mobUUID = entry.getKey();
             UUID decoyUUID = entry.getValue();
@@ -98,7 +100,7 @@ public class DecoyAggroHandler {
 
             double distanceSqr = mob.distanceToSqr(decoy);
 
-            if (distanceSqr > MAX_RANGE_SQR) {
+            if (distanceSqr > maxRangeSqr) {
                 HOOKED_MOBS.remove(mobUUID);
                 continue;
             }
@@ -106,8 +108,8 @@ public class DecoyAggroHandler {
             mob.setTarget(decoy);
             mob.setLastHurtByMob(decoy);
 
-            if (distanceSqr > ATTACK_RANGE_SQR) {
-                mob.getNavigation().moveTo(decoy, MOVE_SPEED);
+            if (distanceSqr > attackRangeSqr) {
+                mob.getNavigation().moveTo(decoy, moveSpeed);
                 mob.getLookControl().setLookAt(decoy, 30.0F, 30.0F);
             } else {
                 mob.getLookControl().setLookAt(decoy, 30.0F, 30.0F);
@@ -137,7 +139,8 @@ public class DecoyAggroHandler {
         }
 
         DecoyEntity closestDecoy = null;
-        double closestDistanceSqr = MAX_RANGE_SQR;
+        double maxRange = GhostConfig.decoyAggroRange();
+        double closestDistanceSqr = maxRange * maxRange;
 
         for (DecoyEntity decoy : DecoyAbility.getAllActiveDecoys()) {
             if (!decoy.isAlive()) continue;

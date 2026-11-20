@@ -1,6 +1,7 @@
 package com.sporeadds.sporeaddsmod.util;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +21,11 @@ public class KommandantFoodHelper {
     public static boolean isAllowedKommandantFood(ItemStack stack) {
         if (stack.isEmpty() || !stack.isEdible()) {
             return false;
+        }
+
+        // biomass_from_eating.food_to_biomass: every food is allowed.
+        if (KommandantPowersConfig.FOOD_BIOMASS_ENABLED.get()) {
+            return true;
         }
 
         ResourceLocation key = ForgeRegistries.ITEMS.getKey(stack.getItem());

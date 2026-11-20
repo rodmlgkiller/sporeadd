@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.effects;
 
+import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -39,6 +40,28 @@ public class PostmortemMobEffect extends MobEffect {
                 STEP_HEIGHT_ADDITION,
                 AttributeModifier.Operation.ADDITION
         );
+    }
+
+    /**
+     * The three modifiers above are registered with the original amounts but their real value is read from the
+     * config each time the effect is applied (medic.defibrillate.postmortem.*), so the config can change them.
+     */
+    @Override
+    public double getAttributeModifierValue(int amplifier, AttributeModifier modifier) {
+        UUID id = modifier.getId();
+        double configured;
+
+        if (SPEED_MODIFIER_UUID.equals(id)) {
+            configured = -MedicConfig.postmortemSpeedReduction();
+        } else if (ATTACK_DAMAGE_MODIFIER_UUID.equals(id)) {
+            configured = -MedicConfig.postmortemAttackDamageReduction();
+        } else if (STEP_HEIGHT_MODIFIER_UUID.equals(id)) {
+            configured = MedicConfig.postmortemStepHeightBonus();
+        } else {
+            return super.getAttributeModifierValue(amplifier, modifier);
+        }
+
+        return configured * (double) (amplifier + 1);
     }
 
     @Override

@@ -120,7 +120,8 @@ public class MoundSavedData extends SavedData {
                 chunkPos.z
         ));
 
-        while (list.size() > 10) {
+        int maxMounds = com.sporeadds.sporeaddsmod.mound.MoundRegistry.maxSize();
+        while (list.size() > maxMounds) {
             list.removeFirst();
         }
 

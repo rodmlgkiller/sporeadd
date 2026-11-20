@@ -4,11 +4,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.sporeadds.sporeaddsmod.ModItems;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.Powers.Levelstats;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
+import com.sporeadds.sporeaddsmod.util.ClassStartingGear;
 import com.sporeadds.sporeaddsmod.util.OriginSyncUtil;
 import com.sporeadds.sporeaddsmod.util.SporeIdentifierUtil;
 import net.minecraft.commands.CommandSourceStack;
@@ -98,8 +98,8 @@ public class ClassCommand {
                 Levelstats.forceReapplyStats(targetPlayer);
 
                 assignTeamByClass(targetPlayer, requestedIdentifier);
-                handleMedicItem(targetPlayer, previousIdentifier, requestedIdentifier);
-                handleScientistItem(targetPlayer, previousIdentifier, requestedIdentifier);
+                // Starting gear (Medic kit, Scientist scalpel, ...) is configurable: see StartingGearConfig.
+                ClassStartingGear.onClassChanged(targetPlayer, previousIdentifier, requestedIdentifier);
                 OriginSyncUtil.applyForIdentifier(targetPlayer, requestedIdentifier);
 
                 String displayName = subclass.equalsIgnoreCase("none")
@@ -155,55 +155,6 @@ public class ClassCommand {
         scoreboard.addPlayerToTeam(player.getScoreboardName(), team);
     }
 
-    private static void handleMedicItem(ServerPlayer player, String previousIdentifier, String newIdentifier) {
-        boolean wasMedic = "medic".equalsIgnoreCase(previousIdentifier);
-        boolean isMedic = "medic".equalsIgnoreCase(newIdentifier);
-
-        if (isMedic && !wasMedic) {
-            giveMedicItems(player);
-        } else if (!isMedic && wasMedic) {
-            removeMedicItems(player);
-        }
-    }
-
-    private static void handleScientistItem(ServerPlayer player, String previousIdentifier, String newIdentifier) {
-        boolean wasScientist = "scientist".equalsIgnoreCase(previousIdentifier);
-        boolean isScientist = "scientist".equalsIgnoreCase(newIdentifier);
-
-        if (isScientist && !wasScientist) {
-            giveScalpel(player);
-        } else if (!isScientist && wasScientist) {
-            removeScalpel(player);
-        }
-    }
-
-    private static void giveScalpel(ServerPlayer player) {
-        boolean alreadyHasScalpel = player.getInventory().items.stream()
-                .anyMatch(stack -> stack.getItem() == ModItems.SCALPEL.get())
-                || player.getInventory().offhand.stream()
-                .anyMatch(stack -> stack.getItem() == ModItems.SCALPEL.get());
-
-        if (!alreadyHasScalpel) {
-            ItemStack scalpel = new ItemStack(ModItems.SCALPEL.get());
-            player.getInventory().add(scalpel);
-        }
-    }
-
-    private static void removeScalpel(ServerPlayer player) {
-        player.getInventory().items.removeIf(stack -> stack.getItem() == ModItems.SCALPEL.get());
-        player.getInventory().offhand.removeIf(stack -> stack.getItem() == ModItems.SCALPEL.get());
-    }
-
-    private static void giveMedicItems(ServerPlayer player) {
-        equipMedicMask(player);
-
-        ItemStack injector = new ItemStack(ModItems.INJECTOR.get());
-        player.getInventory().add(injector);
-
-        ItemStack bandages = new ItemStack(ModItems.THROWABLE_BANDAGES.get(), 16);
-        player.getInventory().add(bandages);
-    }
-
     public static void equipMedicMask(ServerPlayer player) {
         Item gasMaskItem = ForgeRegistries.ITEMS.getValue(GAS_MASK_ID);
 
@@ -244,19 +195,6 @@ public class ClassCommand {
     /** Igual, pero sobre lo que el jugador lleve puesto en la cabeza (si es una máscara de gas). */
     public static void syncGasMaskCurseOfBinding(ServerPlayer player) {
         syncGasMaskCurseOfBinding(player.getItemBySlot(EquipmentSlot.HEAD));
-    }
-
-    private static void removeMedicItems(ServerPlayer player) {
-        ItemStack headItem = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (headItem.getItem() == ForgeRegistries.ITEMS.getValue(GAS_MASK_ID)) {
-            player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-        }
-
-        player.getInventory().items.removeIf(stack ->
-                stack.getItem() == ModItems.INJECTOR.get() || stack.getItem() == ModItems.THROWABLE_BANDAGES.get());
-
-        player.getInventory().offhand.removeIf(stack ->
-                stack.getItem() == ModItems.INJECTOR.get() || stack.getItem() == ModItems.THROWABLE_BANDAGES.get());
     }
 
     private static CompoundTag buildGasMaskNbt() {

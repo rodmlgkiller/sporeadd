@@ -78,6 +78,12 @@ public class SporeAddsMod {
         public static void registerClientEvents() {
             IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
             modEventBus.addListener(SporeKeyMapping::register);
+
+            // Mods -> SporeAdds -> Config: Forge 1.20.1 has no generic config screen, so the mod brings its own.
+            ModLoadingContext.get().registerExtensionPoint(
+                    net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class,
+                    () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory(
+                            (mc, parent) -> new com.sporeadds.sporeaddsmod.client.config.SporeConfigScreen(parent)));
         }
     }
 }

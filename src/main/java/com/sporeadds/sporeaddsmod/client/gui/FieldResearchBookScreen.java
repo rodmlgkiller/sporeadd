@@ -3,6 +3,7 @@ package com.sporeadds.sporeaddsmod.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.sporeadds.sporeaddsmod.client.FieldResearchClientData;
+import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import com.sporeadds.sporeaddsmod.research.TrackedEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -104,7 +105,7 @@ public class FieldResearchBookScreen extends Screen {
         }).bounds(centerX - 100, bottomY, 40, 20).build();
 
         nextButton = Button.builder(Component.literal(">"), b -> {
-            if ((currentPage + 1) * 2 < entries.size()) {
+            if ((currentPage + 1) * 2 * entriesPerPage() < entries.size()) {
                 currentPage++;
                 playPageTurnSound();
             }
@@ -137,18 +138,82 @@ public class FieldResearchBookScreen extends Screen {
         int pageWidth = 130;
         int pageHeight = 170;
 
-        int firstIndex = currentPage * 2;
+        int perPage = entriesPerPage();
+        int perSpread = perPage * 2;
 
-        renderPageBackground(graphics, leftPageX, pageTop, pageWidth, pageHeight, firstIndex);
-        renderPageBackground(graphics, rightPageX, pageTop, pageWidth, pageHeight, firstIndex + 1);
+        // The config can change while the book is open: keep the current page inside the book.
+        int lastPage = Math.max(0, (entries.size() - 1) / perSpread);
+        if (currentPage > lastPage) {
+            currentPage = lastPage;
+        }
 
-        renderEntry(graphics, leftPageX, pageTop, pageWidth, pageHeight, adjustedMouseX, adjustedMouseY, partialTick, firstIndex);
-        renderEntry(graphics, rightPageX, pageTop, pageWidth, pageHeight, adjustedMouseX, adjustedMouseY, partialTick, firstIndex + 1);
+        int firstIndex = currentPage * perSpread;
+
+        if (perPage == 1) {
+            // Original layout: one entry per page.
+            renderPageBackground(graphics, leftPageX, pageTop, pageWidth, pageHeight, firstIndex);
+            renderPageBackground(graphics, rightPageX, pageTop, pageWidth, pageHeight, firstIndex + 1);
+
+            renderEntry(graphics, leftPageX, pageTop, pageWidth, pageHeight, adjustedMouseX, adjustedMouseY, partialTick, firstIndex);
+            renderEntry(graphics, rightPageX, pageTop, pageWidth, pageHeight, adjustedMouseX, adjustedMouseY, partialTick, firstIndex + 1);
+        } else {
+            renderPageGrid(graphics, leftPageX, pageTop, pageWidth, pageHeight, adjustedMouseX, adjustedMouseY, partialTick, firstIndex, perPage);
+            renderPageGrid(graphics, rightPageX, pageTop, pageWidth, pageHeight, adjustedMouseX, adjustedMouseY, partialTick, firstIndex + perPage, perPage);
+        }
 
         prevButton.active = currentPage > 0;
-        nextButton.active = (currentPage + 1) * 2 < entries.size();
+        nextButton.active = (currentPage + 1) * perSpread < entries.size();
 
         pose.popPose();
+    }
+
+    /**
+     * scientist.field_research.entries_per_page (CLIENT side config): how many entries each page shows. 1 = the original
+     * big entry per page; more entries are drawn as smaller cards in a grid.
+     */
+    private int entriesPerPage() {
+        return Math.max(1, ScientistConfig.fieldResearchEntriesPerPage());
+    }
+
+    /**
+     * Draws {@code perPage} entries (starting at {@code firstIndex}) as a grid of scaled-down cards inside one page area.
+     * Each card is the normal full-size entry (same drawing code) scaled to fit its cell.
+     */
+    private void renderPageGrid(GuiGraphics graphics, int pageX, int pageY, int pageWidth, int pageHeight,
+                                int mouseX, int mouseY, float partialTick, int firstIndex, int perPage) {
+        int cols = (int) Math.ceil(Math.sqrt(perPage));
+        int rows = (int) Math.ceil((double) perPage / cols);
+
+        float cellWidth = (float) pageWidth / cols;
+        float cellHeight = (float) pageHeight / rows;
+        float scale = Math.min(cellWidth / pageWidth, cellHeight / pageHeight);
+
+        PoseStack pose = graphics.pose();
+
+        for (int i = 0; i < perPage; i++) {
+            int index = firstIndex + i;
+            if (index >= entries.size()) {
+                break;
+            }
+
+            int col = i % cols;
+            int row = i / cols;
+
+            float cellX = pageX + col * cellWidth + (cellWidth - pageWidth * scale) / 2.0F;
+            float cellY = pageY + row * cellHeight + (cellHeight - pageHeight * scale) / 2.0F;
+
+            int localMouseX = (int) ((mouseX - cellX) / scale);
+            int localMouseY = (int) ((mouseY - cellY) / scale);
+
+            pose.pushPose();
+            pose.translate(cellX, cellY, 0.0F);
+            pose.scale(scale, scale, 1.0F);
+
+            renderPageBackground(graphics, 0, 0, pageWidth, pageHeight, index);
+            renderEntry(graphics, 0, 0, pageWidth, pageHeight, localMouseX, localMouseY, partialTick, index);
+
+            pose.popPose();
+        }
     }
 
     private void renderPageBackground(GuiGraphics graphics, int x, int y, int width, int height, int index) {
@@ -171,7 +236,8 @@ public class FieldResearchBookScreen extends Screen {
     private boolean isPrestiged(String entityId) {
         int kills = FieldResearchClientData.getKillCount(entityId);
         int data = FieldResearchClientData.getDataAmount(entityId);
-        return com.sporeadds.sporeaddsmod.research.PrestigeManager.isPrestigedByValues(entityId, kills, data);
+        return com.sporeadds.sporeaddsmod.research.PrestigeManager.isPrestigedByValues(
+                entityId, kills, data, FieldResearchClientData.getRules());
     }
 
     private void renderEntry(GuiGraphics graphics, int x, int y, int width, int height, int mouseX, int mouseY, float partialTick, int index) {
@@ -264,16 +330,21 @@ public class FieldResearchBookScreen extends Screen {
 
     private void renderWeakPointInfo(GuiGraphics graphics, String entityId, int killCount, int dataAmount, int centerX, int lineY) {
         boolean isPlayerEntry = TrackedEntities.isKommandantPlayerEntry(entityId);
-        int rawValue = dataAmount + (killCount * 20);
 
-        float damageBonus = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getDamageBonusFromRaw(rawValue, isPlayerEntry);
+        // The numbers behind the bonus come from the server (sent with the book data): kill value, soft cap, flat/percent...
+        ScientistConfig.ResearchRules rules = FieldResearchClientData.getRules();
+        int rawValue = dataAmount + (killCount * rules.killValueInData);
+
+        float damageBonus = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getDamageBonusFromRaw(rawValue, isPlayerEntry, rules);
         int tier = com.sporeadds.sporeaddsmod.combat.WeakPointManager.computeTier(damageBonus);
         int tierColor = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getTierColor(tier);
         ResourceLocation sprite = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getTierTexture(tier);
 
+        // FLAT: "+3.5 dmg on crit". PERCENT mode: the same line with the percentage: "+35% dmg on crit".
+        float shownBonus = com.sporeadds.sporeaddsmod.combat.WeakPointManager.displayBonus(damageBonus, rules);
         Component damageText = Component.translatable(
                 "gui.sporeadds.field_research.weak_point_damage",
-                String.format("%.1f", damageBonus)
+                rules.percentMode ? String.format("%.0f%%", shownBonus) : String.format("%.1f", shownBonus)
         );
 
         int textWidth = this.font.width(damageText);
@@ -283,7 +354,7 @@ public class FieldResearchBookScreen extends Screen {
         graphics.drawString(this.font, damageText, startX, lineY, tierColor, false);
         graphics.blit(sprite, startX + textWidth + 2, lineY - 1, 0, 0, WEAK_POINT_SPRITE_SIZE, WEAK_POINT_SPRITE_SIZE, WEAK_POINT_SPRITE_SIZE, WEAK_POINT_SPRITE_SIZE);
 
-        boolean prestiged = com.sporeadds.sporeaddsmod.research.PrestigeManager.isPrestigedByValues(entityId, killCount, dataAmount);
+        boolean prestiged = com.sporeadds.sporeaddsmod.research.PrestigeManager.isPrestigedByValues(entityId, killCount, dataAmount, rules);
         if (prestiged) {
             Component prestigeText = Component.translatable("gui.sporeadds.field_research.prestige_bonus");
             graphics.drawCenteredString(this.font, prestigeText, centerX, lineY + 10, 0xFFD700);

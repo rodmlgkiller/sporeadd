@@ -237,7 +237,7 @@ public class AbilityKeyHandler {
                     playerLevel.set(lvl.getLevel());
                 });
 
-                if (playerLevel.get() >= 4) {
+                if (com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(playerLevel.get(), 8)) {
                     NetworkHandle.INSTANCE.sendToServer(new RequestVervaGuiPacket());
                 } else {
                     mc.player.displayClientMessage(
@@ -259,7 +259,7 @@ public class AbilityKeyHandler {
             sporeLevel.set(lvl.getLevel() + 4);
         });
 
-        boolean isUnlocked = (abilityNumber == 13) ? (sporeLevel.get() >= 13) : (sporeLevel.get() >= abilityNumber);
+        boolean isUnlocked = com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(sporeLevel.get() - 4, abilityNumber);
 
         if (!isUnlocked) return;
 

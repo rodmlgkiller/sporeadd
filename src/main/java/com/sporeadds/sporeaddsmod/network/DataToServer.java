@@ -1,6 +1,7 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
+import com.sporeadds.sporeaddsmod.Powers.PowerUnlocks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -37,6 +38,20 @@ public class DataToServer{
         return true;
     }
 
+    /**
+     * A toggle (abilities 2, 4, 5, 6 and 7) of an ability whose unlock level the player has not reached
+     * (kommandant_abilities.unlock_levels) is switched off: the client only offers unlocked abilities.
+     */
+    private static String withoutLockedToggles(ServerPlayer player, String requested) {
+        char[] chars = requested.toCharArray();
+        for (int power : new int[]{2, 4, 5, 6, 7}) {
+            if (power < chars.length && chars[power] == '1' && !PowerUnlocks.isUnlocked(player, power)) {
+                chars[power] = '0';
+            }
+        }
+        return new String(chars);
+    }
+
     public static void handle(DataToServer msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
@@ -49,7 +64,7 @@ public class DataToServer{
                 return;
             }
             player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(cap -> {
-                cap.setSwitch(msg.data);
+                cap.setSwitch(withoutLockedToggles(player, msg.data));
                 // Echo with the server -> client packet (this class is only the client -> server direction).
                 ServerToData.syncTo(player);
             });

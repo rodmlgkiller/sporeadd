@@ -189,16 +189,21 @@ public class VervaTransportTask {
             }
 
             if (data.state == 0) {
+                // Countdown length and the "stay inside the circle" radius are configurable
+                // (power_8_horde.transport in the config; defaults 500 ticks and 5 blocks).
+                int waitTicks = com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.TRANSPORT_WAIT_TICKS.get();
+                double stayRadius = com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.TRANSPORT_STAY_RADIUS.get();
+
                 if (!data.appliedWaitingGlow) {
-                    player.addEffect(new MobEffectInstance(MobEffects.GLOWING, 520, 0, false, false, true));
+                    player.addEffect(new MobEffectInstance(MobEffects.GLOWING, waitTicks + 20, 0, false, false, true));
                     data.appliedWaitingGlow = true;
                 }
 
                 if (data.ticksElapsed % 5 == 0) {
-                    spawnCircleParticles(data.originLevel, data.startPos, 5.0);
+                    spawnCircleParticles(data.originLevel, data.startPos, stayRadius);
                 }
 
-                int ticksRemaining = 500 - data.ticksElapsed;
+                int ticksRemaining = waitTicks - data.ticksElapsed;
                 int secondsRemaining = (int) Math.ceil(ticksRemaining / 20.0);
 
                 if (secondsRemaining > 0 && secondsRemaining != data.lastCountdownSecond) {
@@ -206,12 +211,12 @@ public class VervaTransportTask {
                     sendCountdown(player, data, secondsRemaining, true);
                 }
 
-                if (data.ticksElapsed >= 500) {
+                if (data.ticksElapsed >= waitTicks) {
                     player.removeEffect(MobEffects.GLOWING);
                     data.appliedWaitingGlow = false;
                     sendCountdown(player, data, 0, false);
 
-                    if (player.distanceToSqr(data.startPos) > 25.0) {
+                    if (player.distanceToSqr(data.startPos) > stayRadius * stayRadius) {
                         cancelTransport(data, iterator, Component.translatable("message.sporeadds.verva_transport.cancelled_outside_area").withStyle(net.minecraft.ChatFormatting.DARK_RED));
                         continue;
                     }

@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.items;
 
+import com.sporeadds.sporeaddsmod.config.LocatorConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -41,7 +42,11 @@ public class CoreMoundLocatorItem extends Item {
             tooltip.add(Component.translatable("tooltip.sporeadds.core_locator.desc2").withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.literal(""));
             tooltip.add(Component.translatable("tooltip.sporeadds.core_locator.range").withStyle(ChatFormatting.AQUA));
-            tooltip.add(Component.translatable("tooltip.sporeadds.core_locator.cost").withStyle(ChatFormatting.RED));
+            tooltip.add(LocatorSupport.costLine(LocatorConfig.coreMoundCost(), LocatorConfig.CORE_MOUND_CONSUME_COST.get(),
+                    "tooltip.sporeadds.core_locator.cost", Items.REDSTONE_BLOCK, 30));
+            if (LocatorConfig.coreMoundCooldownTicks() > 0) {
+                tooltip.add(LocatorSupport.cooldownLine(LocatorConfig.coreMoundCooldownTicks()));
+            }
             tooltip.add(Component.translatable("tooltip.sporeadds.core_locator.usage").withStyle(ChatFormatting.YELLOW));
         } else {
             tooltip.add(Component.translatable("tooltip.sporeadds.hold_shift").withStyle(ChatFormatting.DARK_GRAY));
@@ -66,34 +71,15 @@ public class CoreMoundLocatorItem extends Item {
             }
 
             if (canUse) {
-                int totalRedstone = 0;
-                for (ItemStack invStack : player.getInventory().items) {
-                    if (invStack.getItem() == Items.REDSTONE_BLOCK) {
-                        totalRedstone += invStack.getCount();
-                    }
-                }
-
-                if (totalRedstone < 30) {
-                    sp.displayClientMessage(
-                            Component.translatable("message.sporeadds.core_locator.not_enough_redstone", 30)
-                                    .withStyle(ChatFormatting.RED),
-                            true
-                    );
+                // Cost (default: 30 redstone blocks, consumed) and cooldown (default: none) come from LocatorConfig.
+                if (!LocatorSupport.tryPay(sp, LocatorConfig.coreMoundCost(), LocatorConfig.CORE_MOUND_CONSUME_COST.get(),
+                        "message.sporeadds.core_locator.not_enough_redstone")) {
                     return InteractionResultHolder.sidedSuccess(stack, false);
                 }
 
-                int redstoneToRemove = 30;
-                for (ItemStack invStack : player.getInventory().items) {
-                    if (invStack.getItem() == Items.REDSTONE_BLOCK && redstoneToRemove > 0) {
-                        int count = invStack.getCount();
-                        if (count > redstoneToRemove) {
-                            invStack.shrink(redstoneToRemove);
-                            redstoneToRemove = 0;
-                        } else {
-                            redstoneToRemove -= count;
-                            invStack.setCount(0);
-                        }
-                    }
+                int cooldownTicks = LocatorConfig.coreMoundCooldownTicks();
+                if (cooldownTicks > 0) {
+                    player.getCooldowns().addCooldown(this, cooldownTicks);
                 }
 
                 ResourceLocation soundId = new ResourceLocation("spore", "signal");

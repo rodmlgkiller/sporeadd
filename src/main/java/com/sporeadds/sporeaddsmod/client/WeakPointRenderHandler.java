@@ -31,7 +31,7 @@ public final class WeakPointRenderHandler {
             return;
         }
 
-        Map<Integer, Vec3> allWeakPoints = WeakPointClientState.getAll();
+        Map<Integer, WeakPointClientState.Marker> allWeakPoints = WeakPointClientState.getAll();
         if (allWeakPoints.isEmpty()) {
             return;
         }
@@ -48,7 +48,7 @@ public final class WeakPointRenderHandler {
         com.mojang.blaze3d.vertex.BufferBuilder bufferBuilder =
                 com.mojang.blaze3d.vertex.Tesselator.getInstance().getBuilder();
 
-        for (Map.Entry<Integer, Vec3> entry : allWeakPoints.entrySet()) {
+        for (Map.Entry<Integer, WeakPointClientState.Marker> entry : allWeakPoints.entrySet()) {
             int entityId = entry.getKey();
             Entity entity = mc.level.getEntity(entityId);
             if (entity == null) {
@@ -63,30 +63,35 @@ public final class WeakPointRenderHandler {
                 continue;
             }
 
-            var texture = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getTexture(entityId);
+            WeakPointClientState.Marker marker = entry.getValue();
+
+            // The tier (sprite) and the size come from the server with each sync.
+            var texture = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getTierTexture(marker.tier());
             com.mojang.blaze3d.systems.RenderSystem.setShaderTexture(0, texture);
 
-            Vec3 offset = entry.getValue();
-            Vec3 worldPos = entity.getPosition(event.getPartialTick()).add(offset);
+            float half = (MARKER_SIZE / 2.0F) * (marker.radius() / com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket.DEFAULT_RADIUS);
 
-            poseStack.pushPose();
-            poseStack.translate(worldPos.x - camPos.x, worldPos.y - camPos.y, worldPos.z - camPos.z);
-            poseStack.mulPose(mc.getEntityRenderDispatcher().camera.rotation());
+            for (Vec3 offset : marker.offsets()) {
+                Vec3 worldPos = entity.getPosition(event.getPartialTick()).add(offset);
 
-            float half = MARKER_SIZE / 2.0F;
-            var matrix = poseStack.last().pose();
+                poseStack.pushPose();
+                poseStack.translate(worldPos.x - camPos.x, worldPos.y - camPos.y, worldPos.z - camPos.z);
+                poseStack.mulPose(mc.getEntityRenderDispatcher().camera.rotation());
 
-            bufferBuilder.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
-                    com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR_TEX);
+                var matrix = poseStack.last().pose();
 
-            bufferBuilder.vertex(matrix, -half, -half, 0).color(255, 255, 255, 255).uv(0, 1).endVertex();
-            bufferBuilder.vertex(matrix, half, -half, 0).color(255, 255, 255, 255).uv(1, 1).endVertex();
-            bufferBuilder.vertex(matrix, half, half, 0).color(255, 255, 255, 255).uv(1, 0).endVertex();
-            bufferBuilder.vertex(matrix, -half, half, 0).color(255, 255, 255, 255).uv(0, 0).endVertex();
+                bufferBuilder.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
+                        com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR_TEX);
 
-            com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(bufferBuilder.end());
+                bufferBuilder.vertex(matrix, -half, -half, 0).color(255, 255, 255, 255).uv(0, 1).endVertex();
+                bufferBuilder.vertex(matrix, half, -half, 0).color(255, 255, 255, 255).uv(1, 1).endVertex();
+                bufferBuilder.vertex(matrix, half, half, 0).color(255, 255, 255, 255).uv(1, 0).endVertex();
+                bufferBuilder.vertex(matrix, -half, half, 0).color(255, 255, 255, 255).uv(0, 0).endVertex();
 
-            poseStack.popPose();
+                com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(bufferBuilder.end());
+
+                poseStack.popPose();
+            }
         }
 
         com.mojang.blaze3d.systems.RenderSystem.enableDepthTest();

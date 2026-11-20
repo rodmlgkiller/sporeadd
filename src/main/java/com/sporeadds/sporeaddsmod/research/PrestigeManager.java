@@ -1,6 +1,7 @@
 package com.sporeadds.sporeaddsmod.research;
 
 import com.sporeadds.sporeaddsmod.PlayerData.ScientistResearchProvider;
+import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import net.minecraft.server.level.ServerPlayer;
 
 public final class PrestigeManager {
@@ -11,14 +12,20 @@ public final class PrestigeManager {
     public record Requirement(int kills, int data) {
     }
 
+    /** Requirements of that rarity (1-4) from this side's config (scientist.prestige.rarity_N). */
     public static Requirement getRequirement(int rarity) {
-        return switch (rarity) {
-            case 1 -> new Requirement(20, 500);
-            case 2 -> new Requirement(10, 250);
-            case 3 -> new Requirement(5, 125);
-            case 4 -> new Requirement(2, 50);
-            default -> new Requirement(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        };
+        if (rarity < 1 || rarity > ScientistConfig.PRESTIGE_RARITIES) {
+            return new Requirement(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        }
+        return new Requirement(
+                ScientistConfig.PRESTIGE_KILLS[rarity - 1].get(),
+                ScientistConfig.PRESTIGE_DATA[rarity - 1].get()
+        );
+    }
+
+    /** Same, but from a rules snapshot (what the Field Research book uses: the numbers the server sent). */
+    public static Requirement getRequirement(int rarity, ScientistConfig.ResearchRules rules) {
+        return new Requirement(rules.prestigeKills(rarity), rules.prestigeData(rarity));
     }
 
     public static boolean isPrestiged(ServerPlayer player, String entityId) {
@@ -34,6 +41,13 @@ public final class PrestigeManager {
     public static boolean isPrestigedByValues(String entityId, int kills, int data) {
         int rarity = TrackedEntities.getRarity(entityId);
         Requirement req = getRequirement(rarity);
+        return kills >= req.kills() && data >= req.data();
+    }
+
+    /** Same, using a rules snapshot instead of this side's config (used by the Field Research book). */
+    public static boolean isPrestigedByValues(String entityId, int kills, int data, ScientistConfig.ResearchRules rules) {
+        int rarity = TrackedEntities.getRarity(entityId);
+        Requirement req = getRequirement(rarity, rules);
         return kills >= req.kills() && data >= req.data();
     }
 
