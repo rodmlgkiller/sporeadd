@@ -7,7 +7,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.entity.StaticEntity;
+import com.sporeadds.sporeaddsmod.hive.ProtoProximity;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundItem;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundVariant;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
@@ -67,17 +69,31 @@ public class Poder1 extends PowerBase {
         PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
             int curLevel = levelCap.getLevel();
             int curKnowledge = levelCap.getKnowledgeLevel();
+            int maxLevel = KommandantPowersConfig.maxEvolutionLevel();
 
-            if (curLevel > 9) {
+            if (!PowerUnlocks.checkOrWarn(player, 1)) {
+                return;
+            }
+
+            if (curLevel > maxLevel) {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.max_evolution"));
+                return;
+            }
+
+            // Optional extra requirement: evolving into a high level needs a living Proto (Protobrain) close by.
+            int protoFromLevel = KommandantPowersConfig.EVOLUTION_REQUIRES_PROTO_FROM_LEVEL.get();
+            if (protoFromLevel > 0 && curLevel < maxLevel && curLevel + 1 >= protoFromLevel
+                    && !ProtoProximity.isProtoWithin(player.level(), player.position(),
+                    KommandantPowersConfig.EVOLUTION_PROTO_RADIUS.get())) {
+                player.sendSystemMessage(Component.translatable("message.sporeadd.power1.needs_protohive"));
                 return;
             }
 
             PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
                 int phaseCost;
 
-                if (curLevel >= 9) {
-                    phaseCost = 10;
+                if (curLevel >= maxLevel) {
+                    phaseCost = KommandantPowersConfig.COCOON_MAX_LEVEL_BIOMASS_COST.get();
                 } else {
                     int nextLevel = curLevel + 1;
                     String configString = getEvolutionCostString(nextLevel);
@@ -95,6 +111,9 @@ public class Poder1 extends PowerBase {
                         }
                     }
                 }
+
+                // A cost above the bar maximum could never be paid: with a full bar it is.
+                phaseCost = Math.min(phaseCost, spore.getMaxSpore());
 
                 int curPhase = spore.getSpore();
                 if (curPhase < phaseCost) {
@@ -121,7 +140,7 @@ public class Poder1 extends PowerBase {
                             .withStyle(getEvolutionColor(consumedVariant)));
                 } else {
                     player.sendSystemMessage(Component.translatable(
-                            curLevel >= 9
+                            curLevel >= maxLevel
                                     ? "message.sporeadd.power1.entering_cocoon"
                                     : "message.sporeadd.power1.starting_evolution"
                     ));
@@ -291,7 +310,8 @@ public class Poder1 extends PowerBase {
     private static void spawnMoundAndStartTimer(ServerPlayer player, com.sporeadds.sporeaddsmod.level.PlayerLevel level, int curLevel) {
         ServerLevel serverLevel = (ServerLevel) player.level();
 
-        boolean maxLevelNoVariant = curLevel >= 9 && !pendingVariantMap.containsKey(player.getUUID());
+        int maxLevel = KommandantPowersConfig.maxEvolutionLevel();
+        boolean maxLevelNoVariant = curLevel >= maxLevel && !pendingVariantMap.containsKey(player.getUUID());
 
         EntityType<?> moundType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("sporeadd", "cocoon"));
         if (moundType != null) {
@@ -308,7 +328,7 @@ public class Poder1 extends PowerBase {
                 }
 
                 if (moundEntity instanceof LivingEntity livingCocoon) {
-                    double nuevaVida = maxLevelNoVariant ? 300.0 : (curLevel + 1) * 100.0;
+                    double nuevaVida = KommandantPowersConfig.cocoonHp(curLevel, maxLevelNoVariant);
                     if (livingCocoon.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH) != null) {
                         livingCocoon.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(nuevaVida);
                         livingCocoon.setHealth((float) nuevaVida);
@@ -330,13 +350,13 @@ public class Poder1 extends PowerBase {
                     cocoon.beginClosing();
                 }
 
-                int durationSeconds = maxLevelNoVariant ? 30 : 30 + (30 * (curLevel / 3));
+                int durationSeconds = KommandantPowersConfig.cocoonSeconds(curLevel, maxLevelNoVariant);
                 int duration = durationSeconds * 20;
 
                 timers.put(player.getUUID(), duration);
                 mountingMap.put(player.getUUID(), moundEntity);
 
-                if (curLevel < 9) {
+                if (curLevel < maxLevel) {
                     for (ServerPlayer target : serverLevel.getServer().getPlayerList().getPlayers()) {
                         if (!target.getUUID().equals(player.getUUID())) {
                             target.sendSystemMessage(Component.translatable("message.sporeadd.power1.evolving_broadcast"));
@@ -384,8 +404,9 @@ public class Poder1 extends PowerBase {
         if (moundEntity instanceof LivingEntity livingCocoon) {
             var maxHpAttr = livingCocoon.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
             if (maxHpAttr != null) {
-                maxHpAttr.setBaseValue(300.0D);
-                livingCocoon.setHealth(300.0F);
+                double surrenderHp = KommandantPowersConfig.SURRENDER_COCOON_HP.get();
+                maxHpAttr.setBaseValue(surrenderHp);
+                livingCocoon.setHealth((float) surrenderHp);
             }
         }
 
@@ -456,7 +477,7 @@ public class Poder1 extends PowerBase {
             }
 
             PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
-                if (levelCap.getLevel() >= 9 && timeLeft % 40 == 0) {
+                if (levelCap.getLevel() >= KommandantPowersConfig.maxEvolutionLevel() && timeLeft % 40 == 0) {
                     player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 1, false, false, true));
                 }
             });
@@ -466,11 +487,18 @@ public class Poder1 extends PowerBase {
             if (cancel) {
                 PLAIN_COCOONS.remove(uuid);
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.cocoon_interrupted"));
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 20, 1));
+                if (KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_TICKS.get() > 0) {
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+                            KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_TICKS.get(),
+                            KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_AMPLIFIER.get()));
+                }
 
                 PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
-                    if (levelCap.getLevel() >= 9) {
-                        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 20, 2));
+                    if (levelCap.getLevel() >= KommandantPowersConfig.maxEvolutionLevel()
+                            && KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_TICKS.get() > 0) {
+                        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
+                                KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_TICKS.get(),
+                                KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_AMPLIFIER.get()));
                     }
                 });
 
@@ -550,7 +578,10 @@ public class Poder1 extends PowerBase {
                     }
 
                     // Al emerger convertido en Kommandant (rendición ante la colmena): Regeneración V, 10 s.
-                    player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 4, false, true, true));
+                    int regenTicks = KommandantPowersConfig.SURRENDER_REGENERATION_TICKS.get();
+                    if (regenTicks > 0) {
+                        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, regenTicks, 4, false, true, true));
+                    }
 
                     it.remove();
                     mountingMap.remove(uuid);
@@ -559,12 +590,13 @@ public class Poder1 extends PowerBase {
 
                 PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                     int currentLevel = levelCap.getLevel();
+                    int maxLevel = KommandantPowersConfig.maxEvolutionLevel();
 
-                    if (currentLevel < 9) {
+                    if (currentLevel < maxLevel) {
                         levelCap.addLevel(1);
                         player.sendSystemMessage(Component.translatable("message.sporeadd.power1.evolution_stage_completed", levelCap.getLevel()));
 
-                        if (levelCap.getLevel() == 9 && player.level() instanceof ServerLevel lvl) {
+                        if (levelCap.getLevel() == maxLevel && player.level() instanceof ServerLevel lvl) {
                             for (ServerPlayer pl : lvl.getServer().getPlayerList().getPlayers()) {
                                 pl.sendSystemMessage(Component.translatable("message.sporeadd.power1.evolution_fully_completed"));
                                 lvl.playSound(
@@ -578,7 +610,11 @@ public class Poder1 extends PowerBase {
                         }
                     } else {
                         player.sendSystemMessage(Component.translatable("message.sporeadd.power1.cocoon_completed"));
-                        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 1, false, true, true));
+                        int resistanceTicks = KommandantPowersConfig.COCOON_COMPLETED_RESISTANCE_TICKS.get();
+                        if (resistanceTicks > 0) {
+                            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, resistanceTicks,
+                                    KommandantPowersConfig.COCOON_COMPLETED_RESISTANCE_AMPLIFIER.get(), false, true, true));
+                        }
                     }
                 });
 

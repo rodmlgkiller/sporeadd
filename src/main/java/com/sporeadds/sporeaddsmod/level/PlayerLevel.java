@@ -1,12 +1,19 @@
 package com.sporeadds.sporeaddsmod.level;
 
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import net.minecraft.nbt.CompoundTag;
 
 public class PlayerLevel {
     private int SporeLevel;
     private int knowledge_level; // NUEVA VARIABLE
     private final int MIN_LEVEL = 0;
+    /** Hard cap of the knowledge level and of every level table (the configurable level cap is {@link #levelCap()}). */
     private final int MAX_LEVEL = 9;
+
+    /** Highest evolution level allowed right now (kommandant_abilities.general.max_evolution_level, default 9). */
+    private static int levelCap() {
+        return KommandantPowersConfig.maxEvolutionLevel();
+    }
 
     public int getLevel() {
         return SporeLevel;
@@ -17,18 +24,19 @@ public class PlayerLevel {
     }
 
     public void addLevel(int add) {
-        this.SporeLevel = Math.min(SporeLevel + add, MAX_LEVEL);
+        this.SporeLevel = Math.min(SporeLevel + add, levelCap());
         updateKnowledgeLevel();
     }
 
     public void subLevel(int sub) {
         // CORRECCIÓN: Antes era Math.min, debía ser Math.max para no bajar de MIN_LEVEL
-        this.SporeLevel = Math.max(SporeLevel - sub, MIN_LEVEL);
+        // (a level left above a lowered cap counts as the cap, so losing levels starts from the cap).
+        this.SporeLevel = Math.max(Math.min(SporeLevel, levelCap()) - sub, MIN_LEVEL);
     }
 
     public void setLevel(int value) {
         // Mantiene el nivel dentro de los límites permitidos
-        this.SporeLevel = Math.max(MIN_LEVEL, Math.min(value, MAX_LEVEL));
+        this.SporeLevel = Math.max(MIN_LEVEL, Math.min(value, levelCap()));
         updateKnowledgeLevel();
     }
 

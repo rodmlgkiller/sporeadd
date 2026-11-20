@@ -9,6 +9,7 @@ import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.Harbinger.Spore.Sentities.BaseEntities.UtilityEntity;
 import com.Harbinger.Spore.Sentities.Calamities.Verfalldrachen;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.entity.StaticEntity;
 import net.minecraft.ChatFormatting;
@@ -36,35 +37,8 @@ public class Poder7 {
 
     private static final Map<Integer, Integer> ticksSinceJump = new HashMap<>();
 
-    private static final double MOVEMENT_STRENGTH = 0.35;
-    private static final double JUMP_STRENGTH = 1.0;
-
-    private static final Set<String> FLYING_MOBS = Set.of(
-            "spore:busser",
-            "spore:hindenburg",
-            "spore:gargoyle",
-            "spore:verfalldrachen"
-    );
-
-    private static final Set<String> AQUATIC_MOBS = Set.of(
-            "spore:inf_drowned",
-            "spore:bloater",
-            "spore:naiad",
-            "spore:leviathan",
-            "spore:kraken"
-    );
-
-    private static final Set<String> BLACKLISTED_MOBS = Set.of(
-            "spore:arena_tendril",
-            "spore:corpse_piece",
-            "spore:illusion",
-            "spore:tendril",
-            "spore:claw",
-            "spore:nuke",
-            "spore:scent",
-            "spore:wave",
-            "spore:hohlfresser"
-    );
+    // Speeds, jump, resistance tiers and the flying / aquatic / blacklisted mob lists are in
+    // kommandant_abilities.power_7_second_authority (the defaults are the values that used to be constants here).
 
     private static boolean canBeControlledAsFlying(LivingEntity mob) {
         if (mob instanceof Verfalldrachen dragon) {
@@ -72,7 +46,18 @@ public class Poder7 {
         }
 
         ResourceLocation mobId = mob.getType().builtInRegistryHolder().key().location();
-        return FLYING_MOBS.contains(mobId.toString());
+        return KommandantPowersConfig.isFlyingMount(mobId.toString());
+    }
+
+    private static boolean isAquaticMount(LivingEntity mob) {
+        ResourceLocation mobId = mob.getType().builtInRegistryHolder().key().location();
+        return KommandantPowersConfig.isAquaticMount(mobId.toString());
+    }
+
+    /** Ability 7 is toggled on (switch bit 7) and the player has reached its unlock level. */
+    private static boolean isPower7Active(Player player, com.sporeadds.sporeaddsmod.PlayerData.PlayerData data) {
+        return data.getSwitch().length() > 7 && data.getSwitch().charAt(7) == '1'
+                && PowerUnlocks.isUnlocked(player, 7);
     }
 
     private static boolean isCocoon(Entity entity) {
@@ -85,7 +70,7 @@ public class Poder7 {
 
         AtomicBoolean enabled = new AtomicBoolean(false);
         PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
-            if (data.getSwitch().length() > 7 && data.getSwitch().charAt(7) == '1') {
+            if (isPower7Active(player, data)) {
                 enabled.set(true);
             }
         });
@@ -97,7 +82,7 @@ public class Poder7 {
         }
 
         ResourceLocation targetId = target.getType().builtInRegistryHolder().key().location();
-        if (BLACKLISTED_MOBS.contains(targetId.toString())) {
+        if (KommandantPowersConfig.isBlacklistedMount(targetId.toString())) {
             player.displayClientMessage(
                     Component.translatable("message.sporeadd.general.not_good_idea")
                             .withStyle(ChatFormatting.DARK_RED),
@@ -135,17 +120,13 @@ public class Poder7 {
                 playerLevel.set(levelData.getLevel());
             });
 
-            int resistanceAmplifier = 0;
-            if (playerLevel.get() >= 8) {
-                resistanceAmplifier = 2;
-            } else if (playerLevel.get() > 6) {
-                resistanceAmplifier = 1;
-            }
+            int resistanceAmplifier = KommandantPowersConfig.mountResistanceAmplifier(playerLevel.get());
 
             MobEffectInstance resistance = riddenMob.getEffect(MobEffects.DAMAGE_RESISTANCE);
-            if (resistance == null
+            if (KommandantPowersConfig.MOUNT_GRANTS_RESISTANCE.get()
+                    && (resistance == null
                     || resistance.getAmplifier() < resistanceAmplifier
-                    || resistance.getDuration() < 5) {
+                    || resistance.getDuration() < 5)) {
                 riddenMob.addEffect(new MobEffectInstance(
                         MobEffects.DAMAGE_RESISTANCE,
                         20,
@@ -155,9 +136,8 @@ public class Poder7 {
                 ));
             }
 
-            ResourceLocation mobId = riddenMob.getType().builtInRegistryHolder().key().location();
             boolean isFlyer = canBeControlledAsFlying(riddenMob);
-            boolean isAquatic = AQUATIC_MOBS.contains(mobId.toString());
+            boolean isAquatic = isAquaticMount(riddenMob);
 
             if (!isFlyer && !(isAquatic && riddenMob.isInWater())) {
                 int id = riddenMob.getId();
@@ -192,7 +172,7 @@ public class Poder7 {
         if (player.level().isClientSide()) return;
 
         PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
-            if (data.getSwitch().length() > 7 && data.getSwitch().charAt(7) == '1') {
+            if (isPower7Active(player, data)) {
 
                 mob.setYRot(player.getYRot());
                 mob.setXRot(player.getXRot() * 0.5f);
@@ -230,10 +210,12 @@ public class Poder7 {
                     Vec3 currentDelta = mob.getDeltaMovement();
                     mob.setDeltaMovement(currentDelta.x * 0.1, currentDelta.y, currentDelta.z * 0.1);
                 } else {
-                    ResourceLocation mobId = mob.getType().builtInRegistryHolder().key().location();
-                    boolean isAquatic = AQUATIC_MOBS.contains(mobId.toString());
+                    boolean isAquatic = isAquaticMount(mob);
                     boolean isInWater = mob.isInWater();
-                    double currentStrength = (isAquatic && isInWater) ? (MOVEMENT_STRENGTH * 1.25) : MOVEMENT_STRENGTH;
+                    double movementStrength = KommandantPowersConfig.MOUNT_MOVEMENT_STRENGTH.get();
+                    double currentStrength = (isAquatic && isInWater)
+                            ? (movementStrength * KommandantPowersConfig.MOUNT_AQUATIC_MULTIPLIER.get())
+                            : movementStrength;
 
                     MobEffectInstance slowness = mob.getEffect(MobEffects.MOVEMENT_SLOWDOWN);
                     if (slowness != null) {
@@ -288,16 +270,14 @@ public class Poder7 {
         if (player.level().isClientSide()) return;
 
         PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
-            if (data.getSwitch().length() > 7 && data.getSwitch().charAt(7) == '1') {
+            if (isPower7Active(player, data)) {
 
                 if (isCocoon(mob)) {
                     return;
                 }
 
-                ResourceLocation mobId = mob.getType().builtInRegistryHolder().key().location();
-
                 boolean isFlyer = canBeControlledAsFlying(mob);
-                boolean isAquatic = AQUATIC_MOBS.contains(mobId.toString());
+                boolean isAquatic = isAquaticMount(mob);
                 boolean isInWater = mob.isInWater();
                 boolean isOnGround = mob.onGround();
 
@@ -326,7 +306,7 @@ public class Poder7 {
                     int ticksAirborne = ticksSinceJump.getOrDefault(mob.getId(), 0);
 
                     if (isAscending && isFirstPress && isOnGround && ticksAirborne == 0) {
-                        mob.setDeltaMovement(new Vec3(currentX, JUMP_STRENGTH, currentZ));
+                        mob.setDeltaMovement(new Vec3(currentX, KommandantPowersConfig.MOUNT_JUMP_STRENGTH.get(), currentZ));
                         mob.hasImpulse = true;
                         mob.hurtMarked = true;
 

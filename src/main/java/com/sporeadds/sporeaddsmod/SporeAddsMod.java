@@ -65,6 +65,7 @@ public class SporeAddsMod {
         modEventBus.addListener(this::commonSetup);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> ClientInit.registerClientEvents(modEventBus));
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> ClientInit.registerConfigScreen(container));
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -80,6 +81,14 @@ public class SporeAddsMod {
     public static class ClientInit {
         public static void registerClientEvents(IEventBus modEventBus) {
             modEventBus.addListener(SporeKeyMapping::register);
+        }
+
+        /** Mods -> SporeAdds -> Config: NeoForge's generic configuration screen with readable option names. */
+        public static void registerConfigScreen(ModContainer container) {
+            container.registerExtensionPoint(net.neoforged.neoforge.client.gui.IConfigScreenFactory.class,
+                    (modContainer, parent) -> new net.neoforged.neoforge.client.gui.ConfigurationScreen(modContainer, parent,
+                            (screen, type, modConfig, title) ->
+                                    new com.sporeadds.sporeaddsmod.client.config.SporeConfigSectionScreen(screen, type, modConfig, title)));
         }
     }
 }

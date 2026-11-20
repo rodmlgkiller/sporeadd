@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.entity;
 
+import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -71,6 +72,18 @@ public class DecoyEntity extends ArmorStand {
     @Override
     public boolean isAffectedByPotions() {
         return true;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level().isClientSide()) {
+            int lifetimeTicks = GhostConfig.decoyLifetimeTicks();
+            if (lifetimeTicks > 0 && this.tickCount >= lifetimeTicks) {
+                this.discard();
+            }
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.sporeadds.sporeaddsmod.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncMoundCountPacket;
 import com.sporeadds.sporeaddsmod.spore.PlayerSpore;
@@ -11,7 +12,11 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
 import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.List;
@@ -114,6 +119,12 @@ public class MoundCommand {
             if (player.getServer() != null) {
                 com.sporeadds.sporeaddsmod.data.MoundSavedData worldData =
                         com.sporeadds.sporeaddsmod.data.MoundSavedData.get(player.getServer());
+
+                // power_3_mounds.remove_command_destroys_mound: the mound itself goes away too (default: it stays in the world).
+                if (KommandantPowersConfig.MOUND_REMOVE_DESTROYS.get()) {
+                    destroyMound(player.getServer(), worldData, player.getUUID(), chosenMound);
+                }
+
                 worldData.removeMound(player.getUUID(), chosenMound);
                 worldData.persistNow(player.getServer());
             }
@@ -169,6 +180,27 @@ public class MoundCommand {
         });
 
         return 1;
+    }
+
+    /** Removes the mound entity from the world and frees the chunk the mod keeps loaded for it. Call BEFORE the saved-data entry is removed. */
+    private static void destroyMound(MinecraftServer server, com.sporeadds.sporeaddsmod.data.MoundSavedData worldData,
+                                     UUID ownerUUID, UUID moundUUID) {
+        ServerLevel savedLevel = worldData.getMoundLevel(server, ownerUUID, moundUUID);
+        ChunkPos savedChunk = worldData.getMoundChunk(ownerUUID, moundUUID);
+
+        for (ServerLevel level : server.getAllLevels()) {
+            Entity mound = level.getEntity(moundUUID);
+            if (mound != null) {
+                ChunkPos where = new ChunkPos(mound.blockPosition());
+                mound.discard();
+                level.setChunkForced(where.x, where.z, false);
+                break;
+            }
+        }
+
+        if (savedLevel != null && savedChunk != null) {
+            savedLevel.setChunkForced(savedChunk.x, savedChunk.z, false);
+        }
     }
 
     private static UUID resolveTarget(PlayerSpore spore, String target) {

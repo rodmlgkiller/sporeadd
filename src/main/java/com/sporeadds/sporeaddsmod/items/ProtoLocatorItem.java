@@ -4,6 +4,8 @@ import com.sporeadds.sporeaddsmod.util.ItemNbt;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
+import com.sporeadds.sporeaddsmod.config.ConfigItems;
+import com.sporeadds.sporeaddsmod.config.LocatorConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -31,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProtoLocatorItem extends Item {
-    private static final long COOLDOWN_DURATION = 30 * 60 * 1000;
-    private static final int GLOWING_DURATION = 5 * 60 * 20;
+    // The cooldown (default 30 minutes, real time) and the glowing time (default 5 minutes) are read from
+    // LocatorConfig at use time; the cooldown timer itself ("lastUsed") is stored per item, as it always was.
 
     public ProtoLocatorItem(Properties properties) {
         super(properties);
@@ -57,17 +59,18 @@ public class ProtoLocatorItem extends Item {
 
             if (canUse) {
                 CompoundTag nbt = ItemNbt.getOrCreateTag(stack);
+                long cooldownMillis = LocatorConfig.protoCooldownMillis();
                 long currentTime = System.currentTimeMillis();
                 long lastUsed = nbt.getLong("lastUsed");
-                long timeLeft = (lastUsed + COOLDOWN_DURATION) - currentTime;
+                long timeLeft = (lastUsed + cooldownMillis) - currentTime;
 
-                if (timeLeft > 0) {
-                    int minutesLeft = (int) (timeLeft / (60 * 1000)) + 1;
-                    sp.displayClientMessage(
-                            Component.translatable("message.sporeadds.proto_locator.cooldown", minutesLeft)
-                                    .withStyle(ChatFormatting.RED),
-                            true
-                    );
+                if (cooldownMillis > 0 && timeLeft > 0) {
+                    sp.displayClientMessage(LocatorSupport.protoCooldownMessage(timeLeft, cooldownMillis), true);
+                    return InteractionResultHolder.sidedSuccess(stack, false);
+                }
+
+                // Optional item cost (default: none). Checked before the cooldown starts so a failed payment costs nothing.
+                if (!LocatorSupport.tryPay(sp, LocatorConfig.protoCost(), LocatorConfig.PROTO_CONSUME_COST.get(), null)) {
                     return InteractionResultHolder.sidedSuccess(stack, false);
                 }
 
@@ -121,11 +124,10 @@ public class ProtoLocatorItem extends Item {
                                     .withStyle(ChatFormatting.RED),
                             false
                     );
-                    sp.displayClientMessage(
-                            Component.translatable("message.sporeadds.proto_locator.ready_in_30")
-                                    .withStyle(ChatFormatting.GRAY),
-                            true
-                    );
+                    Component readyAgain = LocatorSupport.protoReadyAgain(LocatorConfig.protoCooldownTicks());
+                    if (readyAgain != null) {
+                        sp.displayClientMessage(readyAgain, true);
+                    }
                 } else {
                     sp.displayClientMessage(
                             Component.translatable("message.sporeadds.proto_locator.report_marked")
@@ -139,7 +141,7 @@ public class ProtoLocatorItem extends Item {
 
                         proto.addEffect(new MobEffectInstance(
                                 MobEffects.GLOWING,
-                                GLOWING_DURATION,
+                                LocatorConfig.protoMarkedDurationTicks(),
                                 0,
                                 false,
                                 true
@@ -157,11 +159,10 @@ public class ProtoLocatorItem extends Item {
                         );
                     }
 
-                    sp.displayClientMessage(
-                            Component.translatable("message.sporeadds.proto_locator.ready_in_30")
-                                    .withStyle(ChatFormatting.GRAY),
-                            true
-                    );
+                    Component readyAgain = LocatorSupport.protoReadyAgain(LocatorConfig.protoCooldownTicks());
+                    if (readyAgain != null) {
+                        sp.displayClientMessage(readyAgain, true);
+                    }
                 }
 
             } else {
@@ -182,10 +183,11 @@ public class ProtoLocatorItem extends Item {
     public boolean isFoil(ItemStack stack) {
         CompoundTag nbt = ItemNbt.getTag(stack);
         if (nbt != null && nbt.contains("lastUsed")) {
+            long cooldownMillis = LocatorConfig.protoCooldownMillis();
             long currentTime = System.currentTimeMillis();
             long lastUsed = nbt.getLong("lastUsed");
-            long timeLeft = (lastUsed + COOLDOWN_DURATION) - currentTime;
-            return timeLeft > 0;
+            long timeLeft = (lastUsed + cooldownMillis) - currentTime;
+            return cooldownMillis > 0 && timeLeft > 0;
         }
         return false;
     }
@@ -197,13 +199,13 @@ public class ProtoLocatorItem extends Item {
 
         CompoundTag nbt = ItemNbt.getTag(stack);
         if (nbt != null && nbt.contains("lastUsed")) {
+            long cooldownMillis = LocatorConfig.protoCooldownMillis();
             long currentTime = System.currentTimeMillis();
             long lastUsed = nbt.getLong("lastUsed");
-            long timeLeft = (lastUsed + COOLDOWN_DURATION) - currentTime;
+            long timeLeft = (lastUsed + cooldownMillis) - currentTime;
 
-            if (timeLeft > 0) {
-                int minutesLeft = (int) (timeLeft / (60 * 1000)) + 1;
-                tooltip.add(Component.translatable("tooltip.sporeadds.proto_locator.cooldown", minutesLeft).withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+            if (cooldownMillis > 0 && timeLeft > 0) {
+                tooltip.add(LocatorSupport.protoCooldownTooltip(timeLeft, cooldownMillis));
                 tooltip.add(Component.literal(""));
             } else {
                 tooltip.add(Component.translatable("tooltip.sporeadds.proto_locator.ready").withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD));
@@ -219,8 +221,15 @@ public class ProtoLocatorItem extends Item {
             tooltip.add(Component.translatable("tooltip.sporeadds.proto_locator.desc2").withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.literal(""));
             tooltip.add(Component.translatable("tooltip.sporeadds.proto_locator.range").withStyle(ChatFormatting.AQUA));
-            tooltip.add(Component.translatable("tooltip.sporeadds.proto_locator.duration").withStyle(ChatFormatting.GREEN));
-            tooltip.add(Component.translatable("tooltip.sporeadds.proto_locator.cost").withStyle(ChatFormatting.RED));
+            tooltip.add(LocatorSupport.protoMarkedLine(LocatorConfig.protoMarkedDurationTicks()));
+            Component drawback = LocatorSupport.protoDrawbackLine(LocatorConfig.protoCooldownTicks());
+            if (drawback != null) {
+                tooltip.add(drawback);
+            }
+            List<ConfigItems.Entry> protoCost = LocatorConfig.protoCost();
+            if (!protoCost.isEmpty()) {
+                tooltip.add(LocatorSupport.customCostLine(protoCost, LocatorConfig.PROTO_CONSUME_COST.get()));
+            }
             tooltip.add(Component.translatable("tooltip.sporeadds.proto_locator.usage").withStyle(ChatFormatting.YELLOW));
         } else {
             tooltip.add(Component.translatable("tooltip.sporeadds.hold_shift").withStyle(ChatFormatting.DARK_GRAY));

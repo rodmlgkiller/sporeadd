@@ -36,7 +36,10 @@ public class ArmorGui {
             int armorHp = PlayerDataClient.getClientArmorHp();
 
             // Obtenemos el máximo de armadura específico de este jugador
-            int maxArmorHp = Poder12Variants.getMaxArmor(mc.player);
+            // Preferably the max the SERVER sent (the Armor HP values are configurable); our own calculation otherwise.
+            int maxArmorHp = PlayerDataClient.getClientMaxArmorHp() > 0
+                    ? PlayerDataClient.getClientMaxArmorHp()
+                    : Poder12Variants.getMaxArmor(mc.player);
 
             // SOLUCIÓN AL ERROR: Creamos una variable inmutable que asegura que no haya división por cero
             // Al hacerla aquí afuera y no modificarla, Java la considera 'effectively final'
@@ -54,7 +57,7 @@ public class ArmorGui {
             float alpha = SporeAddsClientConfig.ARMOR_BAR_OPACITY.get().floatValue();
 
             PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(level -> {
-                if (level.getLevel() >= 8 || armorHp > 0) {
+                if (com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(level.getLevel(), 12) || armorHp > 0) {
                     RenderSystem.enableBlend();
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderTexture(0, ARMOR_TEXTURE);

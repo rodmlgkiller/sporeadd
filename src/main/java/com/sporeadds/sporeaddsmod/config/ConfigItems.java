@@ -79,15 +79,22 @@ public final class ConfigItems {
 
     /** How many of {@code item} the player carries (main inventory + offhand). */
     public static int count(Player player, Item item) {
+        return count(player, item, true);
+    }
+
+    /** How many of {@code item} the player carries: the main inventory (hotbar included) and, optionally, the offhand. */
+    public static int count(Player player, Item item, boolean includeOffhand) {
         int n = 0;
         for (ItemStack s : player.getInventory().items) {
             if (s.is(item)) {
                 n += s.getCount();
             }
         }
-        for (ItemStack s : player.getInventory().offhand) {
-            if (s.is(item)) {
-                n += s.getCount();
+        if (includeOffhand) {
+            for (ItemStack s : player.getInventory().offhand) {
+                if (s.is(item)) {
+                    n += s.getCount();
+                }
             }
         }
         return n;
@@ -95,6 +102,11 @@ public final class ConfigItems {
 
     /** True when the player carries every entry (several entries of the same item add up). */
     public static boolean has(Player player, List<Entry> cost) {
+        return has(player, cost, true);
+    }
+
+    /** Like {@link #has(Player, List)} but the offhand only counts when {@code includeOffhand} is true. */
+    public static boolean has(Player player, List<Entry> cost, boolean includeOffhand) {
         for (Entry e : cost) {
             int needed = 0;
             for (Entry other : cost) {
@@ -102,7 +114,7 @@ public final class ConfigItems {
                     needed += other.count();
                 }
             }
-            if (count(player, e.item()) < needed) {
+            if (count(player, e.item(), includeOffhand) < needed) {
                 return false;
             }
         }
@@ -111,6 +123,11 @@ public final class ConfigItems {
 
     /** Removes the entries from the player's inventory. Check {@link #has} first. */
     public static void take(Player player, List<Entry> cost) {
+        take(player, cost, true);
+    }
+
+    /** Like {@link #take(Player, List)} but the offhand is only used when {@code includeOffhand} is true. */
+    public static void take(Player player, List<Entry> cost, boolean includeOffhand) {
         for (Entry e : cost) {
             int left = e.count();
             for (ItemStack s : player.getInventory().items) {
@@ -122,6 +139,9 @@ public final class ConfigItems {
                     s.shrink(t);
                     left -= t;
                 }
+            }
+            if (!includeOffhand) {
+                continue;
             }
             for (ItemStack s : player.getInventory().offhand) {
                 if (left <= 0) {

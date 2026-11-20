@@ -5,6 +5,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -46,6 +47,11 @@ public class KommandantTooltipEvents {
 
     private static boolean isNormallyForbiddenFood(ItemStack stack) {
         if (!SporeAddsConfig.KOMMANDANT_DIET_RESTRICTION.get()) {
+            return false;
+        }
+
+        // biomass_from_eating.food_to_biomass: every food is allowed.
+        if (KommandantPowersConfig.FOOD_BIOMASS_ENABLED.get()) {
             return false;
         }
 

@@ -57,7 +57,7 @@ public class PlayerData {
         armorHp = Math.max(0, value);
         if (player != null && !player.level().isClientSide) {
             NetworkHandlerArmorHp.getChannel().sendTo(
-                    new ArmorHpSyncPacket(armorHp),
+                    new ArmorHpSyncPacket(armorHp, com.sporeadds.sporeaddsmod.Powers.Poder12Variants.getMaxArmor(player)),
                     player.connection.getConnection(),
                     NetworkDirection.PLAY_TO_CLIENT
             );

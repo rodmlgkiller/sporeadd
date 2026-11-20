@@ -76,7 +76,8 @@ public class KommandantDeathLootHandler {
         int amount = min == max ? min : player.getRandom().nextIntBetweenInclusive(min, max);
 
         if (doubled) {
-            amount *= 2;
+            // scientist.prestige.loot_multiplier (default 2.0 = double loot)
+            amount = (int) Math.round(amount * com.sporeadds.sporeaddsmod.config.ScientistConfig.prestigeLootMultiplier());
         }
 
         if (amount <= 0) return;

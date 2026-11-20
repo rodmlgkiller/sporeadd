@@ -19,4 +19,15 @@
         public static int getClientArmorHp() {
             return armorHp;
         }
+
+        /** Max Armor HP as computed by the server (-1 until the server has sent it). */
+        private static int maxArmorHp = -1;
+
+        public static void setClientMaxArmorHp(int value) {
+            maxArmorHp = value;
+        }
+
+        public static int getClientMaxArmorHp() {
+            return maxArmorHp;
+        }
     }

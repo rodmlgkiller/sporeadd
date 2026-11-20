@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.Infected;
 import com.Harbinger.Spore.Sentities.BaseEntities.UtilityEntity;
+import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
@@ -54,13 +55,26 @@ public class BucketOfRemainsItem extends Item {
             tooltip.add(Component.translatable("tooltip.sporeadds.remains.desc1").withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.translatable("tooltip.sporeadds.remains.desc2").withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.literal(""));
-            tooltip.add(Component.translatable("tooltip.sporeadds.remains.duration").withStyle(ChatFormatting.GREEN));
+            int durationTicks = GhostConfig.bucketDurationTicks();
+            if (durationTicks == GhostConfig.DEFAULT_BUCKET_DURATION_TICKS) {
+                tooltip.add(Component.translatable("tooltip.sporeadds.remains.duration").withStyle(ChatFormatting.GREEN));
+            } else {
+                tooltip.add(Component.translatable("tooltip.sporeadds.remains.duration_custom", formatSeconds(durationTicks)).withStyle(ChatFormatting.GREEN));
+            }
             tooltip.add(Component.translatable("tooltip.sporeadds.remains.usage").withStyle(ChatFormatting.YELLOW));
         } else {
             tooltip.add(Component.translatable("tooltip.sporeadds.hold_shift").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
     // ---------------------------------
+
+    /** Ticks as a seconds string for the tooltip: "45" for whole seconds, "12.5" otherwise. */
+    private static String formatSeconds(int ticks) {
+        if (ticks % 20 == 0) {
+            return Integer.toString(ticks / 20);
+        }
+        return String.format(java.util.Locale.ROOT, "%.1f", ticks / 20.0D);
+    }
 
     // --- NUEVO: COMPROBACIÓN DE CLASE GHOST ---
 
@@ -74,10 +88,8 @@ public class BucketOfRemainsItem extends Item {
     // --- NUEVO: quita el aggro de infectados/utility entities que ya iban tras el jugador ---
     // La IA de estas entidades base (mod Spore) mantiene el target una vez adquirido aunque
     // el jugador cambie de equipo, así que hay que limpiarlo explícitamente al camuflarse.
-    private static final double PURSUER_CLEAR_RADIUS = 48.0D;
-
     private static void clearPursuers(ServerPlayer player) {
-        AABB bounds = player.getBoundingBox().inflate(PURSUER_CLEAR_RADIUS);
+        AABB bounds = player.getBoundingBox().inflate(GhostConfig.bucketPursuerClearRadius());
         List<LivingEntity> nearby = player.level().getEntitiesOfClass(
                 LivingEntity.class,
                 bounds,
@@ -104,9 +116,9 @@ public class BucketOfRemainsItem extends Item {
             }
 
             if (canUse) {
-                // USO NORMAL DEL ITEM (600 ticks = 30 segundos)
+                // USO NORMAL DEL ITEM (duracion configurable, por defecto 600 ticks = 30 segundos)
                 sp.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                        effects.CAMOUFLAGED, 600, 0));
+                        effects.CAMOUFLAGED, GhostConfig.bucketDurationTicks(), 0));
 
                 clearPursuers(sp);
 

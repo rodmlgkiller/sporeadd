@@ -4,6 +4,8 @@ import net.minecraft.core.Holder;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 
+import com.sporeadds.sporeaddsmod.config.ConfigEffects;
+import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -36,9 +38,6 @@ import java.util.Set;
 
 public class Poder10 extends PowerBase {
 
-    private static final int PHASE_COST = 25;
-    private static final int MIN_VIGIL_DISTANCE = 15;
-    private static final int MAX_VIGIL_DISTANCE = 28;
     private static final int MAX_SPAWN_ATTEMPTS = 32;
     private static final int[] VALID_VIGIL_VARIANTS = {0, 1, 2};
 
@@ -82,12 +81,13 @@ public class Poder10 extends PowerBase {
 
         PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
-            if (currentPhase < PHASE_COST) {
+            int phaseCost = KommandantAdvancedConfig.SONAR_BIOMASS_COST.get();
+            if (currentPhase < phaseCost) {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.not_enough_biomass").withStyle(ChatFormatting.DARK_RED));
                 return;
             }
 
-            spore.setSpore(currentPhase - PHASE_COST);
+            spore.setSpore(currentPhase - phaseCost);
 
             playServerSound(serverLevel, player, ResourceLocation.fromNamespaceAndPath("spore", "calamity_spawn"), 5.0f, 0.5f);
 
@@ -119,21 +119,23 @@ public class Poder10 extends PowerBase {
 
                 applyEffectsToTarget(nearestEnemy, nearestEnemy.serverLevel());
 
-                boolean spawnedVigil = spawnIndividualScanVigil(nearestEnemy);
-                if (spawnedVigil) {
-                    player.sendSystemMessage(
-                            Component.translatable(
-                                    "message.sporeadd.power10.vigil_spawned_near",
-                                    nearestEnemy.getName()
-                            ).withStyle(ChatFormatting.DARK_RED)
-                    );
-                } else {
-                    player.sendSystemMessage(
-                            Component.translatable(
-                                    "message.sporeadd.power10.vigil_spawn_failed_near",
-                                    nearestEnemy.getName()
-                            ).withStyle(ChatFormatting.DARK_RED)
-                    );
+                if (KommandantAdvancedConfig.SONAR_SPAWN_VIGIL.get()) {
+                    boolean spawnedVigil = spawnIndividualScanVigil(nearestEnemy);
+                    if (spawnedVigil) {
+                        player.sendSystemMessage(
+                                Component.translatable(
+                                        "message.sporeadd.power10.vigil_spawned_near",
+                                        nearestEnemy.getName()
+                                ).withStyle(ChatFormatting.DARK_RED)
+                        );
+                    } else {
+                        player.sendSystemMessage(
+                                Component.translatable(
+                                        "message.sporeadd.power10.vigil_spawn_failed_near",
+                                        nearestEnemy.getName()
+                                ).withStyle(ChatFormatting.DARK_RED)
+                        );
+                    }
                 }
             } else {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power10.no_players").withStyle(ChatFormatting.DARK_RED));
@@ -157,7 +159,8 @@ public class Poder10 extends PowerBase {
                 }
 
                 protoCount = protoEntities.size();
-                protoScanRange = 250.0 + protoCount * 50.0;
+                protoScanRange = KommandantAdvancedConfig.SONAR_PROTO_BASE_RANGE.get()
+                        + protoCount * KommandantAdvancedConfig.SONAR_PROTO_RANGE_PER_PROTO.get();
 
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power10.proto_signals", protoCount).withStyle(ChatFormatting.DARK_RED));
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power10.scan_radius", protoScanRange).withStyle(ChatFormatting.DARK_RED));
@@ -221,7 +224,9 @@ public class Poder10 extends PowerBase {
         EntityType<?> vigilType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "vigil"));
         if (vigilType == null) return false;
 
-        Optional<BlockPos> spawnPosOpt = findValidVigilSpawn(level, target.blockPosition(), MIN_VIGIL_DISTANCE, MAX_VIGIL_DISTANCE);
+        int minVigilDistance = KommandantAdvancedConfig.SONAR_VIGIL_MIN_DISTANCE.get();
+        int maxVigilDistance = Math.max(minVigilDistance, KommandantAdvancedConfig.SONAR_VIGIL_MAX_DISTANCE.get());
+        Optional<BlockPos> spawnPosOpt = findValidVigilSpawn(level, target.blockPosition(), minVigilDistance, maxVigilDistance);
         if (spawnPosOpt.isEmpty()) return false;
 
         Entity entity = vigilType.create(level);
@@ -311,21 +316,8 @@ public class Poder10 extends PowerBase {
     }
 
     private static void applyEffectsToTarget(ServerPlayer target, ServerLevel serverLevel) {
-        Holder<MobEffect> glowing = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "glowing")).orElse(null);
-        Holder<MobEffect> marker = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "marker")).orElse(null);
-        Holder<MobEffect> uneasy = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("spore", "uneasy")).orElse(null);
-
-        if (glowing != null) {
-            target.addEffect(new MobEffectInstance(glowing, 2400, 0, false, true));
-        }
-
-        if (marker != null) {
-            target.addEffect(new MobEffectInstance(marker, 2400, 2, false, true));
-        }
-
-        if (uneasy != null) {
-            target.addEffect(new MobEffectInstance(uneasy, 6000, 0, false, true));
-        }
+        // Glowing, Marker and Uneasy by default; the list is configurable (power_10_proto_tracking.target_effects).
+        ConfigEffects.apply(target, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.SONAR_TARGET_EFFECTS));
 
         target.connection.send(new ClientboundSetTitlesAnimationPacket(20, 100, 20));
         target.connection.send(new ClientboundSetTitleTextPacket(

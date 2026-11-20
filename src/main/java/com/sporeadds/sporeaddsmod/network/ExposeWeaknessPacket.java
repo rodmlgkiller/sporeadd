@@ -2,6 +2,7 @@ package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.PlayerData.ScientistResearchProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
+import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,10 +21,7 @@ import java.util.function.Supplier;
 
 public class ExposeWeaknessPacket {
 
-    private static final double RANGE = 32.0D;
-    private static final int EFFECT_DURATION_TICKS = 20 * 30;
-
-    private static final long COOLDOWN_TICKS_SERVER = 20L * 15L;
+    // Radius, effect duration and cooldown: see ScientistConfig (scientist.expose_weakness.*).
     private static final java.util.Map<java.util.UUID, Long> lastUseGameTime = new java.util.HashMap<>();
 
     private static final int WAVE_RING_COUNT = 3;
@@ -44,6 +42,7 @@ public class ExposeWeaknessPacket {
 
     private static int computeAggregatedValue(net.minecraft.server.MinecraftServer server, String entityId) {
         int total = 0;
+        int killValue = ScientistConfig.DAMAGE_KILL_VALUE_IN_DATA.get();
 
         for (ServerPlayer online : server.getPlayerList().getPlayers()) {
             if (!isScientist(online)) {
@@ -55,7 +54,7 @@ public class ExposeWeaknessPacket {
                 continue;
             }
 
-            total += research.getDataAmount(entityId) + (research.getKillCount(entityId) * 20);
+            total += research.getDataAmount(entityId) + (research.getKillCount(entityId) * killValue);
         }
 
         return total;
@@ -63,6 +62,7 @@ public class ExposeWeaknessPacket {
 
     private static int computePlayerAggregatedValue(net.minecraft.server.MinecraftServer server) {
         int total = 0;
+        int killValue = ScientistConfig.DAMAGE_KILL_VALUE_IN_DATA.get();
 
         for (ServerPlayer online : server.getPlayerList().getPlayers()) {
             if (!isScientist(online)) {
@@ -75,7 +75,7 @@ public class ExposeWeaknessPacket {
             }
 
             for (int value : research.getAllKills().values()) {
-                total += value * 20;
+                total += value * killValue;
             }
 
             total += research.getAllKills().keySet().stream()
@@ -107,10 +107,14 @@ public class ExposeWeaknessPacket {
                 return;
             }
 
+            final long cooldownTicks = ScientistConfig.exposeWeaknessCooldownTicks();
+            final double range = ScientistConfig.exposeWeaknessRadius();
+            final int effectDurationTicks = ScientistConfig.exposeWeaknessDurationTicks();
+
             long now = player.level().getGameTime();
             Long lastUse = lastUseGameTime.get(player.getUUID());
 
-            if (lastUse != null && (now - lastUse) < COOLDOWN_TICKS_SERVER) {
+            if (lastUse != null && (now - lastUse) < cooldownTicks) {
                 return;
             }
 
@@ -119,7 +123,7 @@ public class ExposeWeaknessPacket {
             ScientistResearchProvider.SCIENTIST_RESEARCH.get(player).ifPresent(research -> {
                 Map<String, Integer> kills = research.getAllKills();
 
-                AABB searchBox = player.getBoundingBox().inflate(RANGE);
+                AABB searchBox = player.getBoundingBox().inflate(range);
                 List<LivingEntity> nearby = player.level().getEntitiesOfClass(LivingEntity.class, searchBox);
 
                 for (LivingEntity entity : nearby) {
@@ -134,7 +138,7 @@ public class ExposeWeaknessPacket {
                     boolean hasKilledBefore = kills.getOrDefault(entityId, 0) > 0;
 
                     boolean shouldApply = (hasKilledBefore || isTargetKommandantPlayer)
-                            && player.distanceTo(entity) <= RANGE;
+                            && player.distanceTo(entity) <= range;
 
                     if (!shouldApply) {
                         continue;
@@ -142,7 +146,7 @@ public class ExposeWeaknessPacket {
 
                     entity.addEffect(new MobEffectInstance(
                             effects.EXPOSED_WEAKNESS,
-                            EFFECT_DURATION_TICKS,
+                            effectDurationTicks,
                             0
                     ));
 
@@ -156,10 +160,7 @@ public class ExposeWeaknessPacket {
 
                     com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.send(
                             com.sporeadds.sporeaddsmod.network.PacketDistributor.TRACKING_ENTITY.with(() -> entity),
-                            new SyncWeakPointPacket(
-                                    entity.getId(), true,
-                                    com.sporeadds.sporeaddsmod.combat.WeakPointManager.getOffset(entity.getId())
-                            )
+                            com.sporeadds.sporeaddsmod.combat.WeakPointManager.syncPacketFor(entity.getId())
                     );
                 }
             });
@@ -178,7 +179,7 @@ public class ExposeWeaknessPacket {
             spawnWaveParticles(player);
 
             com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
-                    new SyncExposeWeaknessCooldownPacket((int) COOLDOWN_TICKS_SERVER),
+                    new SyncExposeWeaknessCooldownPacket((int) cooldownTicks),
                     player.connection.getConnection(),
                     com.sporeadds.sporeaddsmod.network.NetworkDirection.PLAY_TO_CLIENT
             );

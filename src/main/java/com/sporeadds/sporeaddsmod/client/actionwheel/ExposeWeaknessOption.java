@@ -2,6 +2,7 @@ package com.sporeadds.sporeaddsmod.client.actionwheel;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,7 +18,8 @@ public final class ExposeWeaknessOption {
     private static final ResourceLocation ICON_TEXTURE =
             ResourceLocation.fromNamespaceAndPath("sporeadd", "textures/mob_effect/expose_weakness.png");
 
-    private static final long COOLDOWN_TICKS = 20L * 15L;
+    // Cooldown: scientist.expose_weakness.cooldown_ticks (this client-side option is not used by the action wheel at the
+    // moment; the server enforces the real cooldown).
 
     private static final Map<UUID, Long> lastUseTick = new HashMap<>();
 
@@ -48,7 +50,7 @@ public final class ExposeWeaknessOption {
     private static boolean isOnCooldown(UUID playerId) {
         long now = Minecraft.getInstance().level != null ? Minecraft.getInstance().level.getGameTime() : 0L;
         Long last = lastUseTick.get(playerId);
-        return last != null && (now - last) < COOLDOWN_TICKS;
+        return last != null && (now - last) < ScientistConfig.exposeWeaknessCooldownTicks();
     }
 
     private static void onSelect() {

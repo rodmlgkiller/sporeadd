@@ -6,6 +6,7 @@ import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousBlockHarvestLogic;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousHarvestLogic;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousPowerHelper;
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.entity.MeatAbomination;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -41,7 +42,8 @@ public class Poder4 {
 
         meatAbomination.setBiomass(meatAbomination.getBiomass() - 1.0F);
 
-        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> spore.addSpore(1));
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore ->
+                spore.addSpore(KommandantPowersConfig.DEVOUR_MEAT_ABOMINATION_BIOMASS.get()));
 
         int saturationTicks = 8;
         player.addEffect(new MobEffectInstance(MobEffects.SATURATION, saturationTicks, 0));

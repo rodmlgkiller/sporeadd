@@ -3,6 +3,7 @@ package com.sporeadds.sporeaddsmod.client.actionwheel;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SubmitSelfDefibrillateChoicePacket;
 import net.minecraft.client.Minecraft;
@@ -26,33 +27,72 @@ public class SelfDefibrillateScreen extends Screen {
     private static final ResourceLocation DETECTION_SOUND =
             ResourceLocation.fromNamespaceAndPath("sporeadd", "detection");
 
-    private static final int TOTAL_ICONS = 75;
-    private static final int ICON_SIZE = 50;
-    private static final int DURATION_TICKS = 60;
-
     private static final int FORCED_GUI_SCALE = 2;
+
+    // Minigame rules. The server sends them when it opens the screen (medic.self_defibrillate.minigame.*).
+    private final int totalIcons;
+    private final int iconSize;
+    private final int durationTicks;
+    private final boolean iconsMove;
+    private final double iconSpeed;
 
     private final List<IconSlot> icons = new ArrayList<>();
     private int correctIndex;
-    private int ticksRemaining = DURATION_TICKS;
+    private int ticksRemaining;
     private boolean resolved = false;
     private int lastSecondPlayed = -1;
 
     private int originalGuiScale = -1;
     private boolean guiScaleOverridden = false;
 
+    /** Uses the minigame settings of this client's own config file (normally the server sends its own instead). */
     public SelfDefibrillateScreen() {
-        super(Component.literal("Self Defibrillate"));
+        this(MedicConfig.selfDefibrillateTimeLimitTicks(),
+                MedicConfig.selfDefibrillateIconCount(),
+                MedicConfig.selfDefibrillateIconSize(),
+                MedicConfig.selfDefibrillateIconsMove(),
+                MedicConfig.selfDefibrillateIconSpeed());
     }
 
-    private record IconSlot(int x, int y) {
+    /**
+     * @param durationTicks time to click the real icon, in ticks
+     * @param totalIcons    icons on screen (1 real + fakes)
+     * @param iconSize      icon side in GUI pixels
+     * @param iconsMove     true = icons drift around and bounce off the screen edges
+     * @param iconSpeed     speed of the drifting icons, in GUI pixels per tick
+     */
+    public SelfDefibrillateScreen(int durationTicks, int totalIcons, int iconSize, boolean iconsMove, float iconSpeed) {
+        super(Component.literal("Self Defibrillate"));
+        this.durationTicks = Math.max(1, durationTicks);
+        this.totalIcons = Math.max(1, totalIcons);
+        this.iconSize = Math.max(1, iconSize);
+        this.iconsMove = iconsMove && iconSpeed > 0.0F;
+        this.iconSpeed = iconSpeed;
+        this.ticksRemaining = this.durationTicks;
+    }
+
+    /** One icon: its position (GUI pixels, top left corner) and, when icons move, its velocity per tick. */
+    private static final class IconSlot {
+        double x;
+        double y;
+        double prevX;
+        double prevY;
+        double vx;
+        double vy;
+
+        IconSlot(double x, double y) {
+            this.x = x;
+            this.y = y;
+            this.prevX = x;
+            this.prevY = y;
+        }
     }
 
     @Override
     protected void init() {
         icons.clear();
         resolved = false;
-        ticksRemaining = DURATION_TICKS;
+        ticksRemaining = durationTicks;
         lastSecondPlayed = -1;
 
         forceGuiScale();
@@ -61,15 +101,15 @@ public class SelfDefibrillateScreen extends Screen {
         int attempts = 0;
         int maxAttempts = 20000;
 
-        while (icons.size() < TOTAL_ICONS && attempts < maxAttempts) {
+        while (icons.size() < totalIcons && attempts < maxAttempts) {
             attempts++;
 
-            int x = random.nextInt(Math.max(1, this.width - ICON_SIZE));
-            int y = random.nextInt(Math.max(1, this.height - ICON_SIZE));
+            int x = random.nextInt(Math.max(1, this.width - iconSize));
+            int y = random.nextInt(Math.max(1, this.height - iconSize));
 
             boolean overlaps = false;
             for (IconSlot existing : icons) {
-                if (Math.abs(existing.x() - x) < ICON_SIZE && Math.abs(existing.y() - y) < ICON_SIZE) {
+                if (Math.abs(existing.x - x) < iconSize && Math.abs(existing.y - y) < iconSize) {
                     overlaps = true;
                     break;
                 }
@@ -80,9 +120,50 @@ public class SelfDefibrillateScreen extends Screen {
             }
         }
 
+        if (iconsMove) {
+            for (IconSlot slot : icons) {
+                double angle = random.nextDouble() * Math.PI * 2.0D;
+                slot.vx = Math.cos(angle) * iconSpeed;
+                slot.vy = Math.sin(angle) * iconSpeed;
+            }
+        }
+
         correctIndex = icons.isEmpty() ? -1 : new Random().nextInt(icons.size());
 
         AmbientSoundDamper.beginDuck();
+    }
+
+    /** Moves every icon one tick and bounces it off the screen edges (only called when icons move). */
+    private void moveIcons() {
+        double maxX = Math.max(0, this.width - iconSize);
+        double maxY = Math.max(0, this.height - iconSize);
+
+        for (IconSlot slot : icons) {
+            slot.prevX = slot.x;
+            slot.prevY = slot.y;
+
+            slot.x += slot.vx;
+            slot.y += slot.vy;
+
+            if (slot.x < 0.0D) {
+                slot.x = -slot.x;
+                slot.vx = -slot.vx;
+            } else if (slot.x > maxX) {
+                slot.x = 2.0D * maxX - slot.x;
+                slot.vx = -slot.vx;
+            }
+
+            if (slot.y < 0.0D) {
+                slot.y = -slot.y;
+                slot.vy = -slot.vy;
+            } else if (slot.y > maxY) {
+                slot.y = 2.0D * maxY - slot.y;
+                slot.vy = -slot.vy;
+            }
+
+            slot.x = Math.max(0.0D, Math.min(maxX, slot.x));
+            slot.y = Math.max(0.0D, Math.min(maxY, slot.y));
+        }
     }
 
     private void forceGuiScale() {
@@ -117,6 +198,10 @@ public class SelfDefibrillateScreen extends Screen {
 
         if (resolved) return;
 
+        if (iconsMove) {
+            moveIcons();
+        }
+
         ticksRemaining--;
 
         int secondsLeft = (int) Math.ceil(ticksRemaining / 20.0D);
@@ -149,11 +234,12 @@ public class SelfDefibrillateScreen extends Screen {
         if (resolved) return true;
         if (button != 0) return true;
 
-        for (int i = 0; i < icons.size(); i++) {
+        // Last to first: the icon drawn on top gets the click when moving icons overlap.
+        for (int i = icons.size() - 1; i >= 0; i--) {
             IconSlot slot = icons.get(i);
 
-            if (mouseX >= slot.x() && mouseX <= slot.x() + ICON_SIZE
-                    && mouseY >= slot.y() && mouseY <= slot.y() + ICON_SIZE) {
+            if (mouseX >= slot.x && mouseX <= slot.x + iconSize
+                    && mouseY >= slot.y && mouseY <= slot.y + iconSize) {
 
                 resolved = true;
                 boolean success = (i == correctIndex);
@@ -187,13 +273,16 @@ public class SelfDefibrillateScreen extends Screen {
             IconSlot slot = icons.get(i);
             ResourceLocation texture = (i == correctIndex) ? TRUE_TEXTURE : FALSE_TEXTURE;
 
+            double drawX = slot.prevX + (slot.x - slot.prevX) * partialTick;
+            double drawY = slot.prevY + (slot.y - slot.prevY) * partialTick;
+
             RenderSystem.setShaderTexture(0, texture);
             graphics.blit(
                     texture,
-                    slot.x(), slot.y(),
+                    (int) Math.round(drawX), (int) Math.round(drawY),
                     0, 0,
-                    ICON_SIZE, ICON_SIZE,
-                    ICON_SIZE, ICON_SIZE
+                    iconSize, iconSize,
+                    iconSize, iconSize
             );
         }
 

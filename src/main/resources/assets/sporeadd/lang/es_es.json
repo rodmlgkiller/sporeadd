@@ -349,6 +349,7 @@
   "tooltip.sporeadds.remains.desc1": "Cúbrete con estos restos para volverte",
   "tooltip.sporeadds.remains.desc2": "indistinguible de una criatura de espora.",
   "tooltip.sporeadds.remains.duration": "Duración del camuflaje: 30 segundos",
+  "tooltip.sporeadds.remains.duration_custom": "Duración del camuflaje: %s segundos",
   "tooltip.sporeadds.remains.usage": "Uso: Clic derecho para aplicar",
 
   "message.sporeadds.remains.disgust": "No pienso hacer eso...",
@@ -609,6 +610,7 @@
   "tooltip.sporeadds.biomass_core.current_mode": "Modo actual: %s",
   "tooltip.sporeadds.biomass_core.change_mode": "Shift + Clic derecho para cambiar de modo.",
   "tooltip.sporeadds.biomass_core.use": "Clic derecho para moldear.",
+  "tooltip.sporeadds.biomass_core.wheel_use": "Clic derecho para elegir qué moldear.",
   "tooltip.sporeadds.biomass_core.mode.weapon": "ARMA",
   "tooltip.sporeadds.biomass_core.mode.pickaxe": "PICO",
   "tooltip.sporeadds.biomass_core.mode.shovel": "PALA",
@@ -619,6 +621,14 @@
   "message.sporeadds.biomass_core.mode_changed": "Modo de moldeado cambiado a: %s",
   "message.sporeadds.biomass_core.failed": "Fallo al moldear el objeto.",
   "message.sporeadds.biomass_core.molded": "Has moldeado la biomasa...",
+  "message.sporeadd.power.locked": "Esta habilidad se desbloquea en el nivel de evolución %s.",
+  "message.sporeadd.training_book.error.missing_items": "No llevas lo que la colmena exige a un nuevo Kommandant.",
+  "message.sporeadd.training_book.error.missing_xp": "Necesitas %s niveles de experiencia para convertirte en Kommandant.",
+  "message.sporeadd.power2.extra.success": "Le arrancaste %s.",
+  "message.sporeadd.power2.extra.fail": "La extracción no dio nada.",
+  "message.sporeadd.power3.mound_limit": "Ya tienes el máximo de %s montículos núcleo. Elimina uno antes con /mound <ranura|nombre> remove.",
+  "message.sporeadd.power5.mound_full": "Este montículo no puede crecer más.",
+  "message.sporeadd.power5.mound_fed": "El montículo se alimenta de tu biomasa y crece (etapa %s de %s).",
 
   "message.sporeadds.core_locator.not_enough_redstone": "No hay suficiente redstone (se necesitan %s bloques)",
   "message.sporeadds.core_locator.report_header": "[Escáner de montículo núcleo] Informe:",
@@ -1080,6 +1090,8 @@
 
   "ability.sporeadds.ghost.decoy_cooldown": "Señuelo listo en %s s",
 
+  "ability.sporeadds.ghost.disguise_stacks": "Cargas de disfraz: %1$s/%2$s",
+
   "entity.sporeadd.decoy": "Señuelo",
 
   "power.sporeadd.field_research": "Investigación de campo",
@@ -1169,13 +1181,13 @@
   "ability.sporeadds.berserker.counter_cooldown": "Contraataque: %ds",
   "ability.sporeadds.berserker.claws": "Garras de brutalidad",
   "ability.sporeadds.berserker.claws_cooldown": "Garras de brutalidad: %ds",
-  "ability.sporeadds.berserker.claw_counter": "Brutalidad %s / 200",
+  "ability.sporeadds.berserker.claw_counter": "Brutalidad %s / %s",
   "message.sporeadd.berserker.counter.activated": "Te preparas para contraatacar...",
   "message.sporeadd.berserker.counter.repelled": "¡Ataque devuelto!",
   "message.sporeadd.berserker.counter.failed": "El contraataque falló.",
   "message.sporeadd.berserker.claws.activated": "¡Garras de brutalidad desatadas!",
   "message.sporeadd.berserker.claws.cooldown": "Las Garras de brutalidad todavía se están recuperando.",
-  "message.sporeadd.berserker.claws.not_ready": "No hay suficiente Brutalidad (se necesitan 200).",
+  "message.sporeadd.berserker.claws.not_ready": "No hay suficiente Brutalidad (se necesitan %s).",
   "message.sporeadd.berserker.claws.stopped": "Garras de brutalidad retiradas.",
   "ability.sporeadds.berserker.compounds": "Compuestos",
   "message.sporeadd.berserker.compounds.wrong_class": "Solo un Berserker puede llevar Compuestos.",

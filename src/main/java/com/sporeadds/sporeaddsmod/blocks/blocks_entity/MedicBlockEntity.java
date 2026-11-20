@@ -4,6 +4,7 @@ import com.sporeadds.sporeaddsmod.util.ItemNbt;
 
 import com.sporeadds.sporeaddsmod.blocks.medicblock;
 import com.sporeadds.sporeaddsmod.client.screen.MedicBlockMenu;
+import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -137,6 +138,10 @@ public class MedicBlockEntity extends BlockEntity implements MenuProvider {
 
     /*** MÉTODOS DE PROGRESO Y RECETA ***/
     public void tick(Level plevel, BlockPos ppos, BlockState pstate) {
+        // Analysis time comes from the config (medic.medic_block.analysis_ticks, default 5000). maxProgress is what the
+        // GUI progress bar is scaled by, so keeping it up to date here also keeps the bar right.
+        maxProgress = MedicConfig.medicBlockAnalysisTicks();
+
         if(hasRecipe()) {
             increaseCraftingProgress();
             setChanged(plevel, ppos, pstate);

@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
 import com.sporeadds.sporeaddsmod.client.actionwheel.ActionWheelOption;
 import com.sporeadds.sporeaddsmod.client.actionwheel.ActionWheelProvider;
+import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SetInjectorModePacket;
@@ -100,18 +101,19 @@ public class InjectorItem extends Item implements ActionWheelProvider {
         ItemNbt.getOrCreateTag(stack).putInt(NBT_EFFECT_INDEX, index);
     }
 
-    private static void applyInjectorEffect(ItemStack stack, LivingEntity target, ServerPlayer sp) {
+    /** Applies the selected mode to {@code target}. Returns true if an injection really happened (and charge was spent). */
+    private static boolean applyInjectorEffect(ItemStack stack, LivingEntity target, ServerPlayer sp) {
         boolean canUse = !SporeAddsConfig.INJECTOR_REQUIRES_ORIGIN.get() || hasMedicClass(sp);
 
         if (!canUse) {
             sp.displayClientMessage(Component.translatable("message.sporeadds.injector.unknown_usage").withStyle(ChatFormatting.GRAY), true);
-            return;
+            return false;
         }
 
         int damage = stack.getDamageValue();
         if (damage >= stack.getMaxDamage()) {
             sp.displayClientMessage(Component.translatable("message.sporeadds.injector.empty").withStyle(ChatFormatting.RED), true);
-            return;
+            return false;
         }
 
         int index = ItemNbt.getOrCreateTag(stack).getInt(NBT_EFFECT_INDEX);
@@ -146,10 +148,15 @@ public class InjectorItem extends Item implements ActionWheelProvider {
             }
             sp.displayClientMessage(Component.translatable("message.sporeadds.injector.removed_negative").withStyle(ChatFormatting.GREEN), true);
         } else {
-            target.addEffect(new MobEffectInstance(eff.effect, eff.duration, eff.amplifier));
+            // Level and duration of each mode come from the config (medic.injector.effects.*).
+            target.addEffect(new MobEffectInstance(
+                    eff.effect,
+                    MedicConfig.injectorEffectDurationTicks(index, eff.duration),
+                    MedicConfig.injectorEffectAmplifier(index, eff.amplifier)
+            ));
         }
 
-        stack.setDamageValue(Math.min(damage + 5, stack.getMaxDamage()));
+        stack.setDamageValue(Math.min(damage + MedicConfig.injectorChargeCost(), stack.getMaxDamage()));
 
         ResourceLocation soundId = ResourceLocation.fromNamespaceAndPath("spore", "pci_inject");
         if (BuiltInRegistries.SOUND_EVENT.containsKey(soundId)) {
@@ -162,6 +169,40 @@ public class InjectorItem extends Item implements ActionWheelProvider {
                     2.0f
             );
         }
+
+        return true;
+    }
+
+    /**
+     * Self injection (medic.injector.allow_self_injection, off by default): right click with the Injector to apply the
+     * selected mode to yourself. Decided on the server only.
+     */
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (level.isClientSide || !(player instanceof ServerPlayer sp)) {
+            return InteractionResultHolder.pass(stack);
+        }
+
+        if (!MedicConfig.injectorAllowSelfInjection()) {
+            return InteractionResultHolder.pass(stack);
+        }
+
+        if (MedicConfig.injectorSelfInjectionRequiresSneak() && !sp.isCrouching()) {
+            return InteractionResultHolder.pass(stack);
+        }
+
+        if (!applyInjectorEffect(stack, sp, sp)) {
+            return InteractionResultHolder.fail(stack);
+        }
+
+        int cooldownTicks = MedicConfig.injectorSelfInjectionCooldownTicks();
+        if (cooldownTicks > 0) {
+            sp.getCooldowns().addCooldown(this, cooldownTicks);
+        }
+
+        return InteractionResultHolder.success(stack);
     }
 
     @Override
@@ -298,15 +339,20 @@ public class InjectorItem extends Item implements ActionWheelProvider {
         public static void onXpPickup(PlayerXpEvent.PickupXp event) {
             Player player = event.getEntity();
 
+            int refill = MedicConfig.injectorXpRefill();
+            if (refill <= 0) {
+                return;
+            }
+
             ItemStack offhand = player.getOffhandItem();
             if (offhand.getItem() instanceof InjectorItem && offhand.getDamageValue() > 0) {
-                offhand.setDamageValue(offhand.getDamageValue() - 1);
+                offhand.setDamageValue(Math.max(0, offhand.getDamageValue() - refill));
                 return;
             }
 
             for (ItemStack stack : player.getInventory().items) {
                 if (stack.getItem() instanceof InjectorItem && stack.getDamageValue() > 0) {
-                    stack.setDamageValue(stack.getDamageValue() - 1);
+                    stack.setDamageValue(Math.max(0, stack.getDamageValue() - refill));
                     return;
                 }
             }

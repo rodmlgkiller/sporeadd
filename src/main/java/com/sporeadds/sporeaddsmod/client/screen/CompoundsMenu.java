@@ -2,6 +2,7 @@ package com.sporeadds.sporeaddsmod.client.screen;
 
 import com.sporeadds.sporeaddsmod.Powers.berserker.CompoundType;
 import com.sporeadds.sporeaddsmod.capabilities.CompoundsCapability;
+import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -110,7 +111,8 @@ public class CompoundsMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(@Nonnull ItemStack stack) {
-            return CompoundType.isSyringe(stack);
+            // Syringe valida + limites de la config (berserker.blood_samples): ver CompoundsInventory.isItemValid.
+            return CompoundType.isSyringe(stack) && super.mayPlace(stack);
         }
 
         @Override
@@ -135,7 +137,21 @@ public class CompoundsMenu extends AbstractContainerMenu {
 
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return CompoundType.isSyringe(stack);
+            CompoundType type = stack.isEmpty() ? null : CompoundType.fromItem(stack.getItem());
+            if (type == null) return false;
+
+            // Limites de la config: se cuentan las OTRAS ranuras, asi que cambiar la syringe de esta ranura sigue
+            // siendo posible aunque el total / el tipo este en su limite.
+            int total = 0;
+            int sameKind = 0;
+            for (int i = 0; i < getSlots(); i++) {
+                if (i == slot) continue;
+                CompoundType other = CompoundType.fromItem(getStackInSlot(i).getItem());
+                if (other == null) continue;
+                total++;
+                if (other == type) sameKind++;
+            }
+            return total < BerserkerConfig.sampleMaxTotal() && sameKind < type.maxCount();
         }
 
         private void loadFromPlayer() {

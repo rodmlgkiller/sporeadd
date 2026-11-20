@@ -6,6 +6,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousEntityLists;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousHarvestLogic;
+import com.sporeadds.sporeaddsmod.config.ConfigEffects;
+import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSpore;
 import net.minecraft.core.BlockPos;
@@ -46,18 +48,23 @@ import java.util.UUID;
 
 public class Poder9Variants {
 
-    private static final double EFFECT_RADIUS_ABYSSAL = 15.0;
-    private static final double EFFECT_RADIUS_gluttonous = 42.0;
-    private static final double gluttonous_DEBUFF_RADIUS = 12.0;
-    private static final int gluttonous_MAX_TARGETS = 4;
-    private static final int gluttonous_WEAKNESS_DURATION = 5 * 20;
-    private static final int gluttonous_WEAKNESS_AMPLIFIER = 2;
+    // Radii are configurable (read when the ability runs, never at class load).
+    private static double abyssalRadius() {
+        return KommandantAdvancedConfig.VORTEX_RADIUS.get();
+    }
+
+    private static double gluttonousCallRadius() {
+        return KommandantAdvancedConfig.CALL_RADIUS.get();
+    }
+
+    private static double gluttonousDebuffRadius() {
+        return KommandantAdvancedConfig.CALL_DEBUFF_RADIUS.get();
+    }
 
     private static final ResourceLocation HOWLER_GROWL_ID = ResourceLocation.fromNamespaceAndPath("spore", "howler_growl");
     private static final ResourceLocation MUTATION_ESSENCE_ID = ResourceLocation.fromNamespaceAndPath("sporeadd", "mutation_essence");
     private static final ResourceLocation BLOOD_PARTICLE_ID = ResourceLocation.fromNamespaceAndPath("spore", "blood_particle");
 
-    private static final int ABYSSAL_SWIM_SLOW_DURATION = 250;
     private static final ResourceLocation ABYSSAL_SWIM_SLOW_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder9variants_abyssal_swim_slow_uuid");
     private static final String ABYSSAL_VORTEX_MARK = "sporeadd_abyssal_vortex_mark";
 
@@ -65,7 +72,7 @@ public class Poder9Variants {
     private static final String gluttonous_CALL_OWNER_TAG = "sporeadd_gluttonous_call_owner";
 
     public static void executegluttonousCall(ServerPlayer player, ServerLevel serverLevel, PlayerSpore spore) {
-        spore.addSpore(-Poder9.PHASE_COST);
+        spore.addSpore(-Poder9.phaseCost());
         PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvl ->
                 NeoForge.EVENT_BUS.register(new gluttonousCallTask(player, serverLevel))
         );
@@ -73,7 +80,7 @@ public class Poder9Variants {
 
     public static void executeAbyssalVortex(ServerPlayer player, ServerLevel serverLevel, PlayerSpore spore) {
         if (!player.isInWater()) return;
-        spore.addSpore(-Poder9.PHASE_COST);
+        spore.addSpore(-Poder9.phaseCost());
         PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(lvl ->
                 NeoForge.EVENT_BUS.register(new AbyssalVortexTask(player, serverLevel, lvl.getLevel()))
         );
@@ -95,9 +102,10 @@ public class Poder9Variants {
 
     private static class gluttonousCallTask {
 
-        private static final int MAX_TICKS = 10 * 20;
+        // Duration and walking speed come from the config; they are read once when the call starts.
+        private final int MAX_TICKS = KommandantAdvancedConfig.CALL_DURATION_TICKS.get();
         private static final double ATTRACT_DIST = 2.0D;
-        private static final double MOVE_SPEED = 1.4D;
+        private final double MOVE_SPEED = KommandantAdvancedConfig.CALL_MOVE_SPEED.get();
         private static final int GOAL_PRIORITY = 0;
 
         private final ServerPlayer player;
@@ -158,9 +166,10 @@ public class Poder9Variants {
             playgluttonousCallStartEffects(level, player);
             applyOpeningWeakness();
 
+            double callRadius = gluttonousCallRadius();
             AABB area = new AABB(
-                    player.getX() - EFFECT_RADIUS_gluttonous, player.getY() - EFFECT_RADIUS_gluttonous, player.getZ() - EFFECT_RADIUS_gluttonous,
-                    player.getX() + EFFECT_RADIUS_gluttonous, player.getY() + EFFECT_RADIUS_gluttonous, player.getZ() + EFFECT_RADIUS_gluttonous
+                    player.getX() - callRadius, player.getY() - callRadius, player.getZ() - callRadius,
+                    player.getX() + callRadius, player.getY() + callRadius, player.getZ() + callRadius
             );
 
             List<LivingEntity> candidates = level.getEntitiesOfClass(
@@ -171,7 +180,7 @@ public class Poder9Variants {
 
             candidates.sort(Comparator.comparingDouble(entity -> entity.distanceToSqr(player)));
 
-            int max = Math.min(gluttonous_MAX_TARGETS, candidates.size());
+            int max = Math.min(KommandantAdvancedConfig.CALL_MAX_TARGETS.get(), candidates.size());
             for (int i = 0; i < max; i++) {
                 LivingEntity entity = candidates.get(i);
                 markgluttonousCallClaim(entity, player);
@@ -181,26 +190,21 @@ public class Poder9Variants {
         }
 
         private void applyOpeningWeakness() {
+            double debuffRadius = gluttonousDebuffRadius();
             AABB debuffArea = new AABB(
-                    player.getX() - gluttonous_DEBUFF_RADIUS, player.getY() - gluttonous_DEBUFF_RADIUS, player.getZ() - gluttonous_DEBUFF_RADIUS,
-                    player.getX() + gluttonous_DEBUFF_RADIUS, player.getY() + gluttonous_DEBUFF_RADIUS, player.getZ() + gluttonous_DEBUFF_RADIUS
+                    player.getX() - debuffRadius, player.getY() - debuffRadius, player.getZ() - debuffRadius,
+                    player.getX() + debuffRadius, player.getY() + debuffRadius, player.getZ() + debuffRadius
             );
 
             List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, debuffArea, entity -> entity != player);
+            List<ConfigEffects.Entry> debuffEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.CALL_WEAKNESS_EFFECTS);
 
             for (LivingEntity entity : nearby) {
                 if (entity.getTeam() != null && "spore".equalsIgnoreCase(entity.getTeam().getName())) {
                     continue;
                 }
 
-                entity.addEffect(new MobEffectInstance(
-                        MobEffects.WEAKNESS,
-                        gluttonous_WEAKNESS_DURATION,
-                        gluttonous_WEAKNESS_AMPLIFIER,
-                        false,
-                        true,
-                        true
-                ));
+                ConfigEffects.apply(entity, debuffEffects);
             }
         }
 
@@ -412,7 +416,7 @@ public class Poder9Variants {
     }
 
     private static void maybeDropMutationEssence(ServerLevel level, LivingEntity entity) {
-        if (level.random.nextFloat() >= 0.05F) return;
+        if (level.random.nextFloat() >= (float) KommandantAdvancedConfig.CALL_ESSENCE_CHANCE.get().doubleValue()) return;
 
         Item mutationEssence = BuiltInRegistries.ITEM.get(MUTATION_ESSENCE_ID);
         if (mutationEssence == null || mutationEssence == Items.AIR) return;
@@ -480,7 +484,7 @@ public class Poder9Variants {
                 );
             }
 
-            double currentRadius = EFFECT_RADIUS_ABYSSAL * (1.0 - (ticksElapsed / (double) MAX_TICKS));
+            double currentRadius = abyssalRadius() * (1.0 - (ticksElapsed / (double) MAX_TICKS));
 
             for (int i = 0; i < 80; i++) {
                 double theta = level.random.nextDouble() * 2 * Math.PI;
@@ -551,8 +555,8 @@ public class Poder9Variants {
         spawnAbyssalVortexParticles(level, player, bottomY, topY, surfaceY);
 
         AABB area = new AABB(
-                player.getX() - EFFECT_RADIUS_ABYSSAL, bottomY, player.getZ() - EFFECT_RADIUS_ABYSSAL,
-                player.getX() + EFFECT_RADIUS_ABYSSAL, topY, player.getZ() + EFFECT_RADIUS_ABYSSAL
+                player.getX() - abyssalRadius(), bottomY, player.getZ() - abyssalRadius(),
+                player.getX() + abyssalRadius(), topY, player.getZ() + abyssalRadius()
         );
 
         List<Entity> entities = level.getEntities(player, area, entity -> entity != player);
@@ -572,9 +576,9 @@ public class Poder9Variants {
                 if (attr != null) {
                     attr.removeModifier(ABYSSAL_SWIM_SLOW_UUID);
 
-                    double swimPenalty = -0.5D;
+                    double swimPenalty = -KommandantAdvancedConfig.VORTEX_SLOW_BASE.get();
                     if (playerLevel > 5) {
-                        swimPenalty -= 0.1D * (playerLevel - 5);
+                        swimPenalty -= KommandantAdvancedConfig.VORTEX_SLOW_PER_LEVEL.get() * (playerLevel - 5);
                     }
 
                     attr.addTransientModifier(new AttributeModifier(
@@ -584,7 +588,7 @@ public class Poder9Variants {
                     ));
 
                     NeoForge.EVENT_BUS.register(
-                            new RemoveSwimSpeedModifierTask(living, level, ABYSSAL_SWIM_SLOW_UUID, ABYSSAL_SWIM_SLOW_DURATION)
+                            new RemoveSwimSpeedModifierTask(living, level, ABYSSAL_SWIM_SLOW_UUID, KommandantAdvancedConfig.VORTEX_SLOW_TICKS.get())
                     );
                 }
 
@@ -626,7 +630,7 @@ public class Poder9Variants {
                 continue;
             }
 
-            double radius = 1.0D + ((double) (y - bottomY) / Math.max(1.0D, (topY - bottomY))) * EFFECT_RADIUS_ABYSSAL;
+            double radius = 1.0D + ((double) (y - bottomY) / Math.max(1.0D, (topY - bottomY))) * abyssalRadius();
 
             for (int i = 0; i < 35; i++) {
                 double angle = (i / 35.0D) * (Math.PI * 2.0D) + (level.random.nextDouble() * 0.2D);
@@ -649,7 +653,7 @@ public class Poder9Variants {
         if (surfaceY > bottomY && surfaceY <= topY + 1) {
             for (int i = 0; i < 300; i++) {
                 double angle = level.random.nextDouble() * Math.PI * 2.0D;
-                double r = Math.sqrt(level.random.nextDouble()) * EFFECT_RADIUS_ABYSSAL;
+                double r = Math.sqrt(level.random.nextDouble()) * abyssalRadius();
 
                 double px = x + Math.cos(angle) * r;
                 double pz = z + Math.sin(angle) * r;

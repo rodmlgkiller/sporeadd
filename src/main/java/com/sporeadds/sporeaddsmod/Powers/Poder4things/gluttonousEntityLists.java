@@ -1,5 +1,6 @@
 package com.sporeadds.sporeaddsmod.Powers.Poder4things;
 
+import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Set;
@@ -70,12 +71,14 @@ public final class gluttonousEntityLists {
     private gluttonousEntityLists() {
     }
 
+    /** Reads kommandant_abilities.power_4_devour.basic_entities (the default list equals {@link #BASIC_ENTITIES}). */
     public static boolean isBasicEntity(ResourceLocation id) {
-        return BASIC_ENTITIES.contains(id);
+        return KommandantPowersConfig.isBasicDevourEntity(id);
     }
 
+    /** Reads kommandant_abilities.power_4_devour.strong_entities (the default list equals {@link #STRONG_ENTITIES}). */
     public static boolean isStrongEntity(ResourceLocation id) {
-        return STRONG_ENTITIES.contains(id);
+        return KommandantPowersConfig.isStrongDevourEntity(id);
     }
 
     public static boolean isHarvestableEntity(ResourceLocation id) {

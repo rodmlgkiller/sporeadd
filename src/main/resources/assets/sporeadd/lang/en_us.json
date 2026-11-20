@@ -349,6 +349,7 @@
   "tooltip.sporeadds.remains.desc1": "Cover yourself in these remains to become",
   "tooltip.sporeadds.remains.desc2": "indistinguishable from a Spore creature.",
   "tooltip.sporeadds.remains.duration": "Camouflage Duration: 30 Seconds",
+  "tooltip.sporeadds.remains.duration_custom": "Camouflage Duration: %s Seconds",
   "tooltip.sporeadds.remains.usage": "Use: Right Click to apply",
 
   "message.sporeadds.remains.disgust": "I'm not doing that...",
@@ -609,6 +610,7 @@
   "tooltip.sporeadds.biomass_core.current_mode": "Current Mode: %s",
   "tooltip.sporeadds.biomass_core.change_mode": "Shift + Right Click to change mode.",
   "tooltip.sporeadds.biomass_core.use": "Right Click to mold.",
+  "tooltip.sporeadds.biomass_core.wheel_use": "Right Click to choose what to mold.",
   "tooltip.sporeadds.biomass_core.mode.weapon": "WEAPON",
   "tooltip.sporeadds.biomass_core.mode.pickaxe": "PICKAXE",
   "tooltip.sporeadds.biomass_core.mode.shovel": "SHOVEL",
@@ -619,6 +621,14 @@
   "message.sporeadds.biomass_core.mode_changed": "Mold Mode changed to: %s",
   "message.sporeadds.biomass_core.failed": "Failed to mold the item.",
   "message.sporeadds.biomass_core.molded": "You molded the biomass...",
+  "message.sporeadd.power.locked": "This ability unlocks at evolution level %s.",
+  "message.sporeadd.training_book.error.missing_items": "You do not carry what the hive demands of a new Kommandant.",
+  "message.sporeadd.training_book.error.missing_xp": "You need %s experience levels to become a Kommandant.",
+  "message.sporeadd.power2.extra.success": "You tore %s out of it.",
+  "message.sporeadd.power2.extra.fail": "The extraction yielded nothing.",
+  "message.sporeadd.power3.mound_limit": "You already have the maximum of %s core mounds. Remove one with /mound <slot|name> remove first.",
+  "message.sporeadd.power5.mound_full": "This mound cannot grow any further.",
+  "message.sporeadd.power5.mound_fed": "The mound feeds on your biomass and grows (stage %s of %s).",
 
   "message.sporeadds.core_locator.not_enough_redstone": "Not enough Redstone (%s Blocks needed)",
   "message.sporeadds.core_locator.report_header": "[Core Mound Scanner] Report:",
@@ -1080,6 +1090,8 @@
 
   "ability.sporeadds.ghost.decoy_cooldown": "Decoy ready in %s s",
 
+  "ability.sporeadds.ghost.disguise_stacks": "Disguise stacks: %1$s/%2$s",
+
   "entity.sporeadd.decoy": "Decoy",
 
   "power.sporeadd.field_research": "Field Research",
@@ -1102,6 +1114,7 @@
   "effect.sporeadd.exposed_weakness": "Exposed weakness",
 
   "ability.sporeadds.scientist.expose_weakness_cooldown": "Expose weakness: %s s",
+  "ability.sporeadds.scientist.field_research_cooldown": "Field research: %s s",
 
   "gui.sporeadds.field_research.weak_point_damage": "+%s dmg on crit",
   "gui.sporeadds.field_research.prestige_bonus": "Prestige x2 loot on crit",
@@ -1169,13 +1182,13 @@
   "ability.sporeadds.berserker.counter_cooldown": "Counter: %ds",
   "ability.sporeadds.berserker.claws": "Claws of Brutality",
   "ability.sporeadds.berserker.claws_cooldown": "Claws of Brutality: %ds",
-  "ability.sporeadds.berserker.claw_counter": "Brutality %s / 200",
+  "ability.sporeadds.berserker.claw_counter": "Brutality %s / %s",
   "message.sporeadd.berserker.counter.activated": "You brace to counter...",
   "message.sporeadd.berserker.counter.repelled": "Attack turned back!",
   "message.sporeadd.berserker.counter.failed": "Counter missed.",
   "message.sporeadd.berserker.claws.activated": "Claws of Brutality unleashed!",
   "message.sporeadd.berserker.claws.cooldown": "Claws of Brutality is still recovering.",
-  "message.sporeadd.berserker.claws.not_ready": "Not enough Brutality (need 200).",
+  "message.sporeadd.berserker.claws.not_ready": "Not enough Brutality (need %s).",
   "message.sporeadd.berserker.claws.stopped": "Claws of Brutality withdrawn.",
   "ability.sporeadds.berserker.compounds": "Compounds",
   "message.sporeadd.berserker.compounds.wrong_class": "Only a Berserker can carry Compounds.",
