@@ -326,6 +326,9 @@ public class ForgeEvents {
         });
 
         syncSporeIdentifier(player);
+
+        // The client builds a brand new player on respawn: hand it the ability toggles the server kept.
+        ServerToData.syncTo(player);
     }
 
     @SubscribeEvent
@@ -347,6 +350,9 @@ public class ForgeEvents {
             });
 
             syncSporeIdentifier(player);
+
+            // Changing dimension also rebuilds the client-side player: re-send the ability toggles.
+            ServerToData.syncTo(player);
         }
     }
 
@@ -438,11 +444,16 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        event.getEntity().getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> data.setSwitch("000000000"));
-        NetworkHandle.INSTANCE.send(
-                PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()),
-                new ServerToData("000000000")
-        );
+        // Historic behaviour (default): ability toggles start OFF on every login. With
+        // ability_toggles.persist_on_login the saved toggles are kept. Either way the client is told what the
+        // server really has, so the ability selector can never disagree with the active abilities.
+        if (!SporeAddsConfig.ABILITY_TOGGLES_PERSIST_ON_LOGIN.get()) {
+            event.getEntity().getCapability(PlayerDataProvider.PLAYER_DATA)
+                    .ifPresent(data -> data.setSwitch(com.sporeadds.sporeaddsmod.PlayerData.PlayerData.DEFAULT_SWITCHES));
+        }
+        if (event.getEntity() instanceof ServerPlayer togglePlayer) {
+            ServerToData.syncTo(togglePlayer);
+        }
 
         if (event.getEntity() instanceof ServerPlayer player) {
             player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {

@@ -645,5 +645,14 @@ public class NetworkHandle {
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 
+        INSTANCE.registerMessage(
+                nextId(),
+                RequestSwitchSyncPacket.class,
+                RequestSwitchSyncPacket::encode,
+                RequestSwitchSyncPacket::decode,
+                RequestSwitchSyncPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+        );
+
     }
 }

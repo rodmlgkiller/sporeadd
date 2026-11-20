@@ -29,7 +29,7 @@ public class SporeAbilitySelector extends Screen {
 
     private int AbilityHovered;
     private int AbilityClicked;
-    private String Switches;
+    private String Switches = com.sporeadds.sporeaddsmod.PlayerData.PlayerData.DEFAULT_SWITCHES;
     private int Spore;
     private int Sporelvl;
     private static SporeAbilitySelector instance;
@@ -91,6 +91,9 @@ public class SporeAbilitySelector extends Screen {
         mc.player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> {
             Switches = data.getSwitch();
         });
+        // The local copy can be stale (after dying or changing dimension the client builds a new player): ask the
+        // server for the real toggle state. The answer is applied to the capability and picked up by render().
+        NetworkHandle.INSTANCE.sendToServer(new RequestSwitchSyncPacket());
 
         // Cálculo de posición basado en la resolución real de la ventana
         int screenW = mc.getWindow().getWidth();
@@ -921,6 +924,11 @@ public class SporeAbilitySelector extends Screen {
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(guiGraphics);
+
+        // Always draw the toggles the player really has (the server's reply to RequestSwitchSyncPacket lands in the capability).
+        if (mc.player != null) {
+            mc.player.getCapability(PlayerDataProvider.PLAYER_DATA).ifPresent(data -> Switches = data.getSwitch());
+        }
 
         float currentGuiScale = (float) mc.getWindow().getGuiScale();
 
