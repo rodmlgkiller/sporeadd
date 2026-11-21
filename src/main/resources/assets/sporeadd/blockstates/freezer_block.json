@@ -1,6 +1,7 @@
 {
   "variants": {
     "main=true,cube_index=0":  { "model": "sporeadd:block/freezer_0" },
+    "main=false,cube_index=0": { "model": "sporeadd:block/freezer_0" },
     "main=false,cube_index=1": { "model": "sporeadd:block/freezer_1" },
     "main=false,cube_index=2": { "model": "sporeadd:block/freezer_2" },
     "main=false,cube_index=3": { "model": "sporeadd:block/freezer_3" },
