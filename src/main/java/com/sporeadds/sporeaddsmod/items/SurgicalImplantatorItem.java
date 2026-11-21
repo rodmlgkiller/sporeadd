@@ -179,7 +179,7 @@ public class SurgicalImplantatorItem extends Item {
             if (targetPlayer != null) {
                 return Component.literal("Implants: " + targetPlayer.getName().getString());
             }
-            return Component.translatable("item.sporeadds.surgical_implantator");
+            return Component.translatable("item.sporeadd.surgical_implantator");
         }
 
         @Override
