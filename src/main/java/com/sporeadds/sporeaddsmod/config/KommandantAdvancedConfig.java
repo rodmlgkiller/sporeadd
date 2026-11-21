@@ -28,7 +28,9 @@ public final class KommandantAdvancedConfig {
         /** Thrown on the ground (the original behaviour). */
         DROP,
         /** Moved to the inventory; only dropped when the inventory is full. */
-        INVENTORY
+        INVENTORY,
+        /** Like INVENTORY, and put back on by itself when the power's Armor HP runs out. */
+        REMEMBER
     }
 
     // ------------------------------------------------------------------ power 8: horde
@@ -664,7 +666,9 @@ public final class KommandantAdvancedConfig {
         ARMOR_PREVIOUS_MODE = builder
                 .comment("What happens to the armor the player was already wearing when the pieces are put on:",
                         "DROP = thrown on the ground (default); INVENTORY = moved to the inventory (dropped only if it is",
-                        "full). Also used when the Gluttonous helmet is restored.")
+                        "full); REMEMBER = moved to the inventory like INVENTORY and put back on by itself when the Armor HP",
+                        "runs out (a piece only goes back if its slot is empty by then, and only to the player it came from).",
+                        "The Gluttonous helmet restore treats REMEMBER like INVENTORY.")
                 .defineEnum("previous_armor_mode", PreviousArmorMode.DROP);
 
         ARMOR_KNOCKBACK_RESISTANCE = builder
