@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.List;
 
@@ -45,10 +46,15 @@ public class SporeConfigScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, this.height / 2 - 78, 0xFFFFFF);
-        graphics.drawCenteredString(this.font,
+        // The notice wraps on narrow windows instead of being cut at both edges.
+        List<FormattedCharSequence> notice = this.font.split(
                 Component.literal("Gameplay settings are applied by the world's host or server (sporeadds-config.toml)."),
-                this.width / 2, this.height / 2 - 62, 0xAAAAAA);
+                Math.min(this.width - 20, 380));
+        int noticeTop = this.height / 2 - 46 - notice.size() * (this.font.lineHeight + 1);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, noticeTop - 16, 0xFFFFFF);
+        for (int i = 0; i < notice.size(); i++) {
+            graphics.drawCenteredString(this.font, notice.get(i), this.width / 2, noticeTop + i * (this.font.lineHeight + 1), 0xAAAAAA);
+        }
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 

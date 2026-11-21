@@ -122,6 +122,11 @@ final class ConfigSectionScreen extends Screen {
         this.minecraft.setScreen(child);
     }
 
+    /** 400 while the window is wide enough, narrower on small windows / big GUI scales (the list stays on screen). */
+    private int rowWidth() {
+        return Math.max(220, Math.min(ROW_WIDTH, this.width - 60));
+    }
+
     // ------------------------------------------------------------------------------------------------------------
 
     private final class ConfigList extends ContainerObjectSelectionList<Row> {
@@ -136,12 +141,12 @@ final class ConfigSectionScreen extends Screen {
 
         @Override
         public int getRowWidth() {
-            return ROW_WIDTH;
+            return rowWidth();
         }
 
         @Override
         protected int getScrollbarPosition() {
-            return ConfigSectionScreen.this.width / 2 + ROW_WIDTH / 2 + 12;
+            return ConfigSectionScreen.this.width / 2 + rowWidth() / 2 + 12;
         }
     }
 
@@ -167,12 +172,13 @@ final class ConfigSectionScreen extends Screen {
         public void render(GuiGraphics graphics, int index, int top, int left, int width, int height,
                            int mouseX, int mouseY, boolean hovered, float partialTick) {
             String text = label.getString();
-            if (font.width(text) > LABEL_WIDTH) {
-                text = font.plainSubstrByWidth(text, LABEL_WIDTH - font.width("...")) + "...";
+            int labelWidth = Math.min(LABEL_WIDTH, width - CONTROL_WIDTH - RESET_WIDTH - 2 * GAP);
+            if (font.width(text) > labelWidth) {
+                text = font.plainSubstrByWidth(text, labelWidth - font.width("...")) + "...";
             }
             graphics.drawString(font, text, left, top + (height - font.lineHeight) / 2, 0xFFFFFF);
 
-            int x = left + LABEL_WIDTH + GAP;
+            int x = left + labelWidth + GAP;
             for (AbstractWidget widget : widgets) {
                 widget.setX(x);
                 widget.setY(top);

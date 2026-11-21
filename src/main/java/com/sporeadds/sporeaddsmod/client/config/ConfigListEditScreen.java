@@ -149,6 +149,11 @@ final class ConfigListEditScreen extends Screen {
         this.minecraft.setScreen(parent);
     }
 
+    /** 440 while the window is wide enough, narrower on small windows / big GUI scales (rows and X buttons stay on screen). */
+    private int rowWidth() {
+        return Math.max(220, Math.min(ROW_WIDTH, this.width - 60));
+    }
+
     // ------------------------------------------------------------------------------------------------------------
 
     private final class EntryList extends ContainerObjectSelectionList<EntryRow> {
@@ -167,12 +172,12 @@ final class ConfigListEditScreen extends Screen {
 
         @Override
         public int getRowWidth() {
-            return ROW_WIDTH;
+            return rowWidth();
         }
 
         @Override
         protected int getScrollbarPosition() {
-            return ConfigListEditScreen.this.width / 2 + ROW_WIDTH / 2 + 12;
+            return ConfigListEditScreen.this.width / 2 + rowWidth() / 2 + 12;
         }
     }
 
@@ -184,7 +189,7 @@ final class ConfigListEditScreen extends Screen {
         private boolean stale;
 
         EntryRow(int index) {
-            this.box = new EditBox(font, 0, 0, ROW_WIDTH - REMOVE_WIDTH - GAP, 20, Component.literal("Entry " + (index + 1)));
+            this.box = new EditBox(font, 0, 0, rowWidth() - REMOVE_WIDTH - GAP, 20, Component.literal("Entry " + (index + 1)));
             box.setMaxLength(1024);
             box.setValue(items.get(index));
             box.setTextColor(isValid(items.get(index)) ? 0xE0E0E0 : 0xFF5555);
