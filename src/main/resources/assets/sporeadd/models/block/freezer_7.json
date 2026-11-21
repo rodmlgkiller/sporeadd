@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
+    "particle": "#north",
     "north": "sporeadd:block/freezerf4",
     "south": "sporeadd:block/freezers2",
     "east":  "sporeadd:block/freezers1",
