@@ -330,6 +330,7 @@ public class ForgeEvents {
 
         // The client builds a brand new player on respawn: hand it the ability toggles the server kept.
         ServerToData.syncTo(player);
+        com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
     }
 
     @SubscribeEvent
@@ -354,6 +355,7 @@ public class ForgeEvents {
 
             // Changing dimension also rebuilds the client-side player: re-send the ability toggles.
             ServerToData.syncTo(player);
+            com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
         }
     }
 
@@ -372,15 +374,14 @@ public class ForgeEvents {
             if (!player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).isPresent()) {
                 event.addCapability(new ResourceLocation("sporeadd", "spore_identifier"), new SporeIdentifierProvider());
             }
+            // No event.addListener(provider::invalidate) for these two on purpose: Forge invalidates a player's
+            // capabilities whenever the entity is removed (changing dimension, death), and an invalidated
+            // LazyOptional never comes back, so the implants and compounds would stop working for good.
             if (!player.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).isPresent()) {
-                PlayerImplantsCapability provider = new PlayerImplantsCapability();
-                event.addCapability(new ResourceLocation("sporeadd", "player_implants"), provider);
-                event.addListener(provider::invalidate);
+                event.addCapability(new ResourceLocation("sporeadd", "player_implants"), new PlayerImplantsCapability());
             }
             if (!player.getCapability(CompoundsCapability.PLAYER_COMPOUNDS).isPresent()) {
-                CompoundsCapability provider = new CompoundsCapability();
-                event.addCapability(new ResourceLocation("sporeadd", "player_compounds"), provider);
-                event.addListener(provider::invalidate);
+                event.addCapability(new ResourceLocation("sporeadd", "player_compounds"), new CompoundsCapability());
             }
             if (!player.getCapability(ScientistResearchProvider.SCIENTIST_RESEARCH).isPresent()) {
                 event.addCapability(new ResourceLocation("sporeadd", "scientist_research"), new ScientistResearchProvider());
@@ -471,6 +472,7 @@ public class ForgeEvents {
             });
 
             syncSporeIdentifier(player);
+            com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
 
             if (SporeAddsConfig.TRAINING_BOOK_GIVE_ON_FIRST_JOIN.get()) {
                 player.getCapability(SporeIdentifierProvider.SPORE_IDENTIFIER).ifPresent(data -> {
