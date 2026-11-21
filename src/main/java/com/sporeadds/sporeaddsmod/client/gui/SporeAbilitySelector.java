@@ -344,7 +344,7 @@ public class SporeAbilitySelector extends Screen {
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                        tooltip.add(Component.translatable("tooltip.sporeadd.power2.active_desc"));
+                        tooltip.add(Component.translatable("tooltip.sporeadd.power2.active_desc", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER2_EXECUTE)));
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power2.outcomes_header"));
@@ -482,7 +482,7 @@ public class SporeAbilitySelector extends Screen {
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_effect"));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power4.active_desc"));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power4.active_desc", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER4_CONSUME)));
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power4.entities_header"));
@@ -514,14 +514,14 @@ public class SporeAbilitySelector extends Screen {
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.active_desc"));
 
                     tooltip.add(Component.literal(""));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_header"));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_header", com.sporeadds.sporeaddsmod.client.SkillClickKeys.label(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER5_HARVEST)));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line1"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line2"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line3"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line4"));
 
                     tooltip.add(Component.literal(""));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_header"));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_header", com.sporeadds.sporeaddsmod.client.SkillClickKeys.label(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER5_FEED)));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_line1"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_line2"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_cost"));
@@ -541,7 +541,7 @@ public class SporeAbilitySelector extends Screen {
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power6.active_desc1"));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power6.active_desc1", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER6_EVOLVE)));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power6.active_desc2"));
 
                     tooltip.add(Component.literal(""));
@@ -594,7 +594,7 @@ public class SporeAbilitySelector extends Screen {
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power7.active_desc1"));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power7.active_desc1", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER7_MOUNT)));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power7.active_desc2"));
 
                     tooltip.add(Component.literal(""));

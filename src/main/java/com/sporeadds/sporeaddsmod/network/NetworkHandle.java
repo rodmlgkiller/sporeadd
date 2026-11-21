@@ -656,6 +656,24 @@ public class NetworkHandle {
 
         INSTANCE.registerMessage(
                 nextId(),
+                SkillBindingsPacket.class,
+                SkillBindingsPacket::encode,
+                SkillBindingsPacket::decode,
+                SkillBindingsPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+        );
+
+        INSTANCE.registerMessage(
+                nextId(),
+                SkillClickPacket.class,
+                SkillClickPacket::encode,
+                SkillClickPacket::decode,
+                SkillClickPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
+        );
+
+        INSTANCE.registerMessage(
+                nextId(),
                 OpenBiomassWheelPacket.class,
                 OpenBiomassWheelPacket::encode,
                 OpenBiomassWheelPacket::decode,
