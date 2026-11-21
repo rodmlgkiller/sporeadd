@@ -1148,11 +1148,6 @@
   "message.sporeadd.self_defibrillate.activated": "Te preparas y agarras el desfibrilador...",
   "message.sporeadd.self_defibrillate.success": "La descarga funcionó. Has vuelto.",
   "message.sporeadd.self_defibrillate.failure": "La descarga falló. Tu corazón se detiene.",
-  "message.sporeadd.self_defibrillate.debug.not_medic": "[DEBUG] No es medic",
-  "message.sporeadd.self_defibrillate.debug.not_alive": "[DEBUG] No está vivo",
-  "message.sporeadd.self_defibrillate.debug.health_above_threshold": "[DEBUG] Vida por encima del umbral",
-  "message.sporeadd.self_defibrillate.debug.blocked_active_attempts": "[DEBUG] BLOQUEADO por ACTIVE_ATTEMPTS",
-  "message.sporeadd.self_defibrillate.debug.blocked_cooldown": "[DEBUG] BLOQUEADO por cooldown, ticks restantes: %s",
 
   "tooltip.sporeadd.class_required": "Requiere la clase: %s",
   "tooltip.sporeadd.class_required.any": "Utilizable por cualquier clase",
