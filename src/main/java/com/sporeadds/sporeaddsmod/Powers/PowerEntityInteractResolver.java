@@ -42,6 +42,16 @@ public class PowerEntityInteractResolver {
 
     );
 
+    private static SkillClick skillOf(InteractPower power) {
+        return switch (power) {
+            case POWER2 -> SkillClick.POWER2_EXECUTE;
+            case POWER4 -> SkillClick.POWER4_CONSUME;
+            case POWER5 -> SkillClick.POWER5_FEED;
+            case POWER6 -> SkillClick.POWER6_EVOLVE;
+            case POWER7 -> SkillClick.POWER7_MOUNT;
+        };
+    }
+
     @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.HIGHEST)
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
@@ -53,6 +63,9 @@ public class PowerEntityInteractResolver {
         if (target == null) return;
 
         for (InteractPower power : PRIORITY_ORDER) {
+            // A skill rebound to its own key (Controls > SporeAdds) is not triggered by the Use click.
+            if (!SkillBindings.useClickTriggers(player, skillOf(power))) continue;
+
             boolean consumed = switch (power) {
                 case POWER2 -> Poder2.tryExecute(player, target);
                 case POWER4 -> Poder4.tryHarvestEntity(player, target);

@@ -102,6 +102,8 @@ public class NetworkHandle {
         reg(r, CausticSprayModePacket.class, CausticSprayModePacket::encode, CausticSprayModePacket::decode, CausticSprayModePacket::handle, Dir.TO_CLIENT);
         reg(r, FireCausticSprayShotPacket.class, FireCausticSprayShotPacket::encode, FireCausticSprayShotPacket::decode, FireCausticSprayShotPacket::handle, Dir.TO_SERVER);
         reg(r, RequestSwitchSyncPacket.class, RequestSwitchSyncPacket::encode, RequestSwitchSyncPacket::decode, RequestSwitchSyncPacket::handle, Dir.TO_SERVER);
+        reg(r, SkillBindingsPacket.class, SkillBindingsPacket::encode, SkillBindingsPacket::decode, SkillBindingsPacket::handle, Dir.TO_SERVER);
+        reg(r, SkillClickPacket.class, SkillClickPacket::encode, SkillClickPacket::decode, SkillClickPacket::handle, Dir.TO_SERVER);
         reg(r, OpenBiomassWheelPacket.class, OpenBiomassWheelPacket::encode, OpenBiomassWheelPacket::decode, OpenBiomassWheelPacket::handle, Dir.TO_CLIENT);
         reg(r, BiomassCoreMoldPacket.class, BiomassCoreMoldPacket::encode, BiomassCoreMoldPacket::decode, BiomassCoreMoldPacket::handle, Dir.TO_SERVER);
     }

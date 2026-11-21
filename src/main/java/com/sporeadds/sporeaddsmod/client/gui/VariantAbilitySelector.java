@@ -42,7 +42,7 @@ public class VariantAbilitySelector {
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                        tooltip.add(Component.translatable("tooltip.sporeadd.power6_caustic.active_desc1"));
+                        tooltip.add(Component.translatable("tooltip.sporeadd.power6_caustic.active_desc1", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER6_EVOLVE)));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power6_caustic.active_desc2"));
                         tooltip.add(Component.literal(""));
 
@@ -341,7 +341,7 @@ public class VariantAbilitySelector {
 
                 tooltip.add(Component.literal(""));
                 tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                tooltip.add(Component.translatable("tooltip.sporeadd.power4.active_desc"));
+                tooltip.add(Component.translatable("tooltip.sporeadd.power4.active_desc", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER4_CONSUME)));
 
                 tooltip.add(Component.literal(""));
                 tooltip.add(Component.translatable("tooltip.sporeadd.power4.entities_header"));
@@ -368,7 +368,7 @@ public class VariantAbilitySelector {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power6_gluttonous.title").withStyle(ChatFormatting.GOLD));
                 tooltip.add(Component.literal(""));
                 tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                tooltip.add(Component.translatable("tooltip.sporeadd.power6_gluttonous.active_desc1"));
+                tooltip.add(Component.translatable("tooltip.sporeadd.power6_gluttonous.active_desc1", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER6_EVOLVE)));
                 tooltip.add(Component.translatable("tooltip.sporeadd.power6_gluttonous.active_desc2"));
 
                 tooltip.add(Component.literal(""));

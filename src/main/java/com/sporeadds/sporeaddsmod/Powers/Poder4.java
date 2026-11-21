@@ -36,9 +36,19 @@ public class Poder4 {
         Player player = event.getEntity();
         if (player.level().isClientSide()) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
-        if (!gluttonousPowerHelper.isPower4Enabled(player)) return;
+        if (!SkillBindings.useClickTriggers(player, SkillClick.POWER4_CONSUME)) return;
 
-        if (!(event.getTarget() instanceof MeatAbomination meatAbomination)) return;
+        if (tryDevourMeatAbomination(player, event.getTarget())) {
+            event.setCanceled(true);
+        }
+    }
+
+    /** Power 4 on a Meat Abomination: eat a bite of it. Called by the interaction event and by SkillClickDispatcher; true when used. */
+    public static boolean tryDevourMeatAbomination(Player player, net.minecraft.world.entity.Entity target) {
+        if (player.level().isClientSide()) return false;
+        if (!gluttonousPowerHelper.isPower4Enabled(player)) return false;
+
+        if (!(target instanceof MeatAbomination meatAbomination)) return false;
 
         meatAbomination.setBiomass(meatAbomination.getBiomass() - 1.0F);
 
@@ -107,11 +117,12 @@ public class Poder4 {
                 0.9F
         );
 
-        event.setCanceled(true);
+        return true;
     }
 
     @SubscribeEvent
     public static void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (!SkillBindings.useClickTriggers(event.getEntity(), SkillClick.POWER4_CONSUME)) return;
         if (gluttonousBlockHarvestLogic.tryHarvestBlock(event.getEntity(), event.getPos())) {
             event.setCanceled(true);
         }
