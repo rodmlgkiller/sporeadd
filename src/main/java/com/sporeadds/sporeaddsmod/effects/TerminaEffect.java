@@ -186,8 +186,8 @@ public class TerminaEffect extends MobEffect {
 
         if (event.getSource().is(MYCELIUM_OVERTAKE)) {
 
-            // Asegúrate de que tu modid sea correcto ("sporeadd" o "sporeadds")
-            MobEffect termina = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadds", "termina"));
+            // Registered as sporeadd:termina (the lookup used to say "sporeadds", never found it and this handler did nothing)
+            MobEffect termina = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "termina"));
             if (termina == null) return;
 
             MobEffectInstance currentEffect = entity.getEffect(termina);
