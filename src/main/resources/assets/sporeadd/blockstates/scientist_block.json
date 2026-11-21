@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "sporeadd:block/scientistblock" },
+    "facing=south": { "model": "sporeadd:block/scientistblock" },
+    "facing=west":  { "model": "sporeadd:block/scientistblock" },
+    "facing=east":  { "model": "sporeadd:block/scientistblock" }
+  }
+}
