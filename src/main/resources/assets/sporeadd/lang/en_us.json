@@ -1149,11 +1149,6 @@
   "message.sporeadd.self_defibrillate.activated": "You brace yourself and grab the defibrillator...",
   "message.sporeadd.self_defibrillate.success": "The shock worked. You're back.",
   "message.sporeadd.self_defibrillate.failure": "The shock failed. Your heart gives out.",
-  "message.sporeadd.self_defibrillate.debug.not_medic": "[DEBUG] Not a medic",
-  "message.sporeadd.self_defibrillate.debug.not_alive": "[DEBUG] Not alive",
-  "message.sporeadd.self_defibrillate.debug.health_above_threshold": "[DEBUG] Health is above the threshold",
-  "message.sporeadd.self_defibrillate.debug.blocked_active_attempts": "[DEBUG] BLOCKED by ACTIVE_ATTEMPTS",
-  "message.sporeadd.self_defibrillate.debug.blocked_cooldown": "[DEBUG] BLOCKED by cooldown, ticks left: %s",
 
   "tooltip.sporeadd.class_required": "Requires class: %s",
   "tooltip.sporeadd.class_required.any": "Usable by any class",
