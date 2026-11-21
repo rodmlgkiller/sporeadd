@@ -191,8 +191,8 @@ public class TerminaEffect extends MobEffect implements com.sporeadds.sporeaddsm
 
         if (event.getSource().is(MYCELIUM_OVERTAKE)) {
 
-            // Asegúrate de que tu modid sea correcto ("sporeadd" o "sporeadds")
-            Holder<MobEffect> termina = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadds", "termina")).orElse(null);
+            // Registered as sporeadd:termina (the lookup used to say "sporeadds", never found it and this handler did nothing)
+            Holder<MobEffect> termina = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "termina")).orElse(null);
             if (termina == null) return;
 
             MobEffectInstance currentEffect = entity.getEffect(termina);
