@@ -413,6 +413,7 @@
   "message.sporeadd.power1.evolution_stage_completed": "§4Etapa de evolución completada: %s",
   "message.sporeadd.power1.evolution_fully_completed": "§4...Completado",
   "message.sporeadd.power1.cocoon_completed": "§4Capullo completado",
+  "message.sporeadd.power1.variant_change_penalty": "Cambiar de variante te ha costado %1$s nivel(es). Ahora eres de nivel %2$s.",
 
   "message.sporeadd.power2.player.success_1": "...",
   "message.sporeadd.power2.player.success_2": "Por fin...",
@@ -545,6 +546,13 @@
   "command.sporeadd.mound.spawn.unnamed": "Montículo %s seleccionado como preferido.",
   "command.sporeadd.mound.remove.named": "Montículo %s eliminado: %s.",
   "command.sporeadd.mound.remove.unnamed": "Montículo %s eliminado.",
+  "command.sporeadd.test.state.on": "activada",
+  "command.sporeadd.test.state.off": "desactivada",
+  "command.sporeadd.test.toggle.success": "Habilidad %1$s de %2$s ahora está en: %3$s",
+  "command.sporeadd.test.toggle.target": "Tu habilidad %1$s ha sido %2$s remotamente.",
+  "command.sporeadd.test.execute.success": "Habilidad %1$s ejecutada sobre %2$s",
+  "command.sporeadd.test.execute.target": "Un administrador ha ejecutado remotamente tu habilidad %s.",
+  "command.sporeadd.test.execute.not_configured": "La habilidad %s no está configurada.",
 
   "message.sporeadd.spawn_verva.entity_not_found_config": "§cError: Entidad no encontrada en la configuración del servidor.",
   "message.sporeadd.spawn_verva.not_enough_biomass": "§c¡No hay suficiente biomasa!",
@@ -1097,6 +1105,7 @@
   "power.sporeadd.field_research": "Investigación de campo",
 
   "gui.sporeadds.field_research.kill_count": "Bajas: %s",
+  "gui.sporeadds.field_research.title": "Investigación de campo",
 
   "gui.sporeadds.field_research.kommandant_player": "Kommandant",
 
@@ -1139,6 +1148,11 @@
   "message.sporeadd.self_defibrillate.activated": "Te preparas y agarras el desfibrilador...",
   "message.sporeadd.self_defibrillate.success": "La descarga funcionó. Has vuelto.",
   "message.sporeadd.self_defibrillate.failure": "La descarga falló. Tu corazón se detiene.",
+  "message.sporeadd.self_defibrillate.debug.not_medic": "[DEBUG] No es medic",
+  "message.sporeadd.self_defibrillate.debug.not_alive": "[DEBUG] No está vivo",
+  "message.sporeadd.self_defibrillate.debug.health_above_threshold": "[DEBUG] Vida por encima del umbral",
+  "message.sporeadd.self_defibrillate.debug.blocked_active_attempts": "[DEBUG] BLOQUEADO por ACTIVE_ATTEMPTS",
+  "message.sporeadd.self_defibrillate.debug.blocked_cooldown": "[DEBUG] BLOQUEADO por cooldown, ticks restantes: %s",
 
   "tooltip.sporeadd.class_required": "Requiere la clase: %s",
   "tooltip.sporeadd.class_required.any": "Utilizable por cualquier clase",

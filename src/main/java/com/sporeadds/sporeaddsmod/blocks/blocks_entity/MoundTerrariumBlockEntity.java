@@ -258,7 +258,7 @@ public class MoundTerrariumBlockEntity extends BlockEntity implements MenuProvid
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.sporeadds.mound_terrarium");
+        return Component.translatable("block.sporeadd.mound_terrarium");
     }
 
     @Nullable
