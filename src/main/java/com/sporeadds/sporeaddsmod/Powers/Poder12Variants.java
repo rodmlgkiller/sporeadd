@@ -157,7 +157,8 @@ public class Poder12Variants {
             return;
         }
 
-        if (KommandantAdvancedConfig.ARMOR_PREVIOUS_MODE.get() == KommandantAdvancedConfig.PreviousArmorMode.INVENTORY) {
+        KommandantAdvancedConfig.PreviousArmorMode mode = KommandantAdvancedConfig.ARMOR_PREVIOUS_MODE.get();
+        if (mode == KommandantAdvancedConfig.PreviousArmorMode.INVENTORY || mode == KommandantAdvancedConfig.PreviousArmorMode.REMEMBER) {
             // Armor does not stack: it needs a free slot. A creative player's full inventory would otherwise swallow it.
             ItemStack toStore = stack.copy();
             boolean stored = player.getInventory().getFreeSlot() >= 0 && player.getInventory().add(toStore);
@@ -166,6 +167,95 @@ public class Poder12Variants {
             }
         } else {
             player.drop(stack, false);
+        }
+    }
+
+    /** Item data written on a piece the power took off in REMEMBER mode: which slot it came from and who wore it. */
+    private static final String REMEMBERED_TAG = "SporeAddsRememberedArmor";
+
+    /**
+     * Takes one worn piece off for the power. DROP throws it and INVENTORY moves it (see {@link #storeOrDrop}); REMEMBER moves
+     * it to the inventory and marks it so {@link #restoreRememberedArmor} can put it back on when the power's armor is gone.
+     * With no free slot the piece is thrown on the ground without the mark (there is nothing to remember).
+     */
+    public static void storeOrRemember(ServerPlayer player, ItemStack stack, EquipmentSlot slot) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        if (KommandantAdvancedConfig.ARMOR_PREVIOUS_MODE.get() != KommandantAdvancedConfig.PreviousArmorMode.REMEMBER) {
+            storeOrDrop(player, stack);
+            return;
+        }
+        ItemStack marked = stack.copy();
+        CompoundTag mark = new CompoundTag();
+        mark.putString("slot", slot.getName());
+        mark.putUUID("owner", player.getUUID());
+        writeMark(marked, mark);
+        boolean stored = player.getInventory().getFreeSlot() >= 0 && player.getInventory().add(marked);
+        if (!stored || !marked.isEmpty()) {
+            clearMark(marked);
+            player.drop(marked, false);
+        }
+    }
+
+    /**
+     * Puts back on the pieces {@link #storeOrRemember} set aside for this player. A piece only goes back if its armor slot is
+     * empty by now; either way the mark is removed so it never triggers again.
+     */
+    public static void restoreRememberedArmor(ServerPlayer player) {
+        var items = player.getInventory().items;
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack piece = items.get(i);
+            if (piece.isEmpty()) {
+                continue;
+            }
+            CompoundTag mark = readMark(piece);
+            if (mark == null || !mark.hasUUID("owner") || !player.getUUID().equals(mark.getUUID("owner"))) {
+                continue;
+            }
+            EquipmentSlot slot;
+            try {
+                slot = EquipmentSlot.byName(mark.getString("slot"));
+            } catch (IllegalArgumentException ex) {
+                clearMark(piece);
+                continue;
+            }
+            clearMark(piece);
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR && player.getItemBySlot(slot).isEmpty()) {
+                player.setItemSlot(slot, piece.copy());
+                items.set(i, ItemStack.EMPTY);
+            }
+        }
+    }
+
+    private static CompoundTag readMark(ItemStack stack) {
+        net.minecraft.world.item.component.CustomData data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        if (data == null) {
+            return null;
+        }
+        CompoundTag nbt = data.copyTag();
+        return nbt.contains(REMEMBERED_TAG, 10) ? nbt.getCompound(REMEMBERED_TAG) : null;
+    }
+
+    private static void writeMark(ItemStack stack, CompoundTag mark) {
+        net.minecraft.world.item.component.CustomData data = stack.getOrDefault(
+                net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+        CompoundTag nbt = data.copyTag();
+        nbt.put(REMEMBERED_TAG, mark);
+        stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(nbt));
+    }
+
+    private static void clearMark(ItemStack stack) {
+        net.minecraft.world.item.component.CustomData data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        if (data == null) {
+            return;
+        }
+        CompoundTag nbt = data.copyTag();
+        nbt.remove(REMEMBERED_TAG);
+        if (nbt.isEmpty()) {
+            stack.remove(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        } else {
+            stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(nbt));
         }
     }
 

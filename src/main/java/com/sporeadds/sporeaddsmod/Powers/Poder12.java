@@ -113,25 +113,25 @@ public class Poder12 {
     private static void dropArmorSlots(ServerPlayer player) {
         ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
         if (!helmet.isEmpty()) {
-            Poder12Variants.storeOrDrop(player, helmet);
+            Poder12Variants.storeOrRemember(player, helmet, EquipmentSlot.HEAD);
             player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
         }
 
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
         if (!chest.isEmpty()) {
-            Poder12Variants.storeOrDrop(player, chest);
+            Poder12Variants.storeOrRemember(player, chest, EquipmentSlot.CHEST);
             player.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
         }
 
         ItemStack legs = player.getItemBySlot(EquipmentSlot.LEGS);
         if (!legs.isEmpty()) {
-            Poder12Variants.storeOrDrop(player, legs);
+            Poder12Variants.storeOrRemember(player, legs, EquipmentSlot.LEGS);
             player.setItemSlot(EquipmentSlot.LEGS, ItemStack.EMPTY);
         }
 
         ItemStack boots = player.getItemBySlot(EquipmentSlot.FEET);
         if (!boots.isEmpty()) {
-            Poder12Variants.storeOrDrop(player, boots);
+            Poder12Variants.storeOrRemember(player, boots, EquipmentSlot.FEET);
             player.setItemSlot(EquipmentSlot.FEET, ItemStack.EMPTY);
         }
     }
@@ -148,6 +148,10 @@ public class Poder12 {
             if (!stack.isEmpty() && (wipeAll || Poder12Variants.isPowerArmorPiece(stack))) {
                 player.setItemSlot(slot, ItemStack.EMPTY);
             }
+        }
+        if (wipeAll) {
+            // previous_armor_mode = REMEMBER: the pieces set aside when the power was used go back on now.
+            Poder12Variants.restoreRememberedArmor(player);
         }
     }
 
