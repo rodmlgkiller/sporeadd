@@ -12,13 +12,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
-@Mixin(value = HangingPlant.class, remap = false)
+@Mixin(HangingPlant.class)
 public class HangingPlantMixin {
     @Inject(
-            method = "m_7892_(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V",
+            method = "entityInside(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V",
             at = @At("HEAD"),
-            cancellable = true,
-            remap = false
+            cancellable = true
     )
     private void ignoreSporeTeam(BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (entity instanceof Player player &&

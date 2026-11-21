@@ -10,16 +10,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * FleshBomb.onHitBlock (m_8060_) spawns a creature when getCarrier() is true, but onHitEntity (m_5790_)
+ * FleshBomb.onHitBlock (SRG m_8060_) spawns a creature when getCarrier() is true, but onHitEntity (SRG m_5790_)
  * never checks getCarrier() at all - so a carrier bomb that lands on a living target (as ours always do,
  * since SpawnVervaPacket homes them onto one via setTarget/aimForTarget) explodes without ever spawning
  * its creature. Mirrors onHitBlock's carrier check here too.
  */
-@Mixin(value = FleshBomb.class, remap = false)
+@Mixin(FleshBomb.class)
 public abstract class FleshBombCarrierMixin {
 
     @Inject(
-            method = "m_5790_",
+            method = "onHitEntity(Lnet/minecraft/world/phys/EntityHitResult;)V",
             at = @At("TAIL")
     )
     private void sporeadds$summonCarrierOnEntityHit(EntityHitResult result, CallbackInfo ci) {

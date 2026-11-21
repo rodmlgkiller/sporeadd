@@ -25,7 +25,7 @@ import java.util.UUID;
 @Mixin(UtilityEntity.class)
 public abstract class OrganoidWeakPointLootMixin {
 
-    @Inject(method = "m_7472_", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "dropCustomDeathLoot(Lnet/minecraft/world/damagesource/DamageSource;IZ)V", at = @At("HEAD"), cancellable = true)
     private void sporeadd$injectDoubleLoot(DamageSource source, int val, boolean bool, CallbackInfo ci) {
         UtilityEntity self = (UtilityEntity)(Object)this;
         List<? extends String> original = self.getDropList();

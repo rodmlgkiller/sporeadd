@@ -68,6 +68,19 @@ sourceSets.main.resources {
     srcDir 'src/generated/resources'
 }
 
+// ForgeGradle can only DEOBFUSCATE jars that come from a repository with a group:name:version coordinate; fg.deobf(files(...)) is not
+// supported (it prints "Cannot deobfuscate dependency ... using obfuscated version" and the jar keeps its production SRG names, which
+// breaks every mixin of that jar in the dev environment). The jars in libs/ are therefore declared through the flatDir repository below
+// (group "blank"). flatDir needs <name>-<version>.jar and Spore is distributed as spore_1.20.1_2.2.0j.jar, so a copy with a hyphen is
+// kept in build/devlibs (nothing is renamed in libs/).
+def devLibs = layout.buildDirectory.dir('devlibs').get().asFile
+def sporeJar = file('libs/spore_1.20.1_2.2.0j.jar')
+def sporeDevJar = new File(devLibs, 'spore-1.20.1_2.2.0j.jar')
+if (sporeJar.exists() && (!sporeDevJar.exists() || sporeDevJar.length() != sporeJar.length())) {
+    devLibs.mkdirs()
+    java.nio.file.Files.copy(sporeJar.toPath(), sporeDevJar.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+}
+
 repositories {
     maven {
         name = "MinecraftForge"
@@ -92,7 +105,7 @@ repositories {
     // }
     mavenCentral()
     flatDir {
-        dirs 'libs'
+        dirs 'libs', devLibs
     }
 }
 
@@ -107,9 +120,12 @@ ext {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation fg.deobf(files('libs/spore_1.20.1_2.2.0j.jar'))
-    implementation fg.deobf(files('libs/Pehkui-3.8.2+1.20.1-forge.jar'))
-    implementation fg.deobf(files('libs/origins-forge-1.20.1-1.10.0.9-all.jar'))
+    implementation fg.deobf('blank:spore:1.20.1_2.2.0j')
+    implementation fg.deobf('blank:Pehkui:3.8.2+1.20.1-forge')
+    // Origins is optional for SporeAdds, so it is compile-only: the dev client/server do not load it (at runtime it needs the Caelus mod).
+    // To run it in dev too, change this to `implementation` and add top.theillusivec4.caelus:caelus-forge:3.2.0+1.20.1
+    // (maven.theillusivec4.top) as `runtimeOnly fg.deobf(...)`.
+    compileOnly fg.deobf('blank:origins-forge-1.20.1:1.10.0.9-all')
 
     implementation 'org.spongepowered:mixin:0.8.5'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

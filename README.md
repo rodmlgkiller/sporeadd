@@ -70,6 +70,11 @@ Requires **JDK 17**.
 
 To run a development client: `./gradlew runClient`.
 
+Notes for the development environment:
+- The jars in `libs/` are declared through the `flatDir` repository so that ForgeGradle deobfuscates them (without that, Pehkui's and Spore's mixins cannot find their targets in a dev runtime that uses official names). Spore's file name has no hyphen before the version, so `build.gradle` keeps a copy named `spore-1.20.1_2.2.0j.jar` in `build/devlibs`; nothing in `libs/` is renamed.
+- Origins is compile-only in `runClient`: at runtime it needs the Caelus mod, which is not a dependency of this project. To test with Origins, add Caelus (`top.theillusivec4.caelus:caelus-forge:3.2.0+1.20.1`, from `https://maven.theillusivec4.top/`) as `runtimeOnly` and make Origins `implementation`.
+- The mixins that target Spore classes use official (Mojang) method names. The Mixin annotation processor writes the production SRG names into `sporeadds.refmap.json`, so do not add `remap = false` to them.
+
 ## License
 
 All Rights Reserved. See [LICENSE.txt](LICENSE.txt).
