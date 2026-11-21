@@ -276,6 +276,7 @@ public class ForgeEvents {
 
         // The client builds a brand new player on respawn: hand it the ability toggles the server kept.
         ServerToData.syncTo(player);
+        com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
     }
 
     @SubscribeEvent
@@ -300,6 +301,7 @@ public class ForgeEvents {
 
             // Changing dimension also rebuilds the client-side player: re-send the ability toggles.
             ServerToData.syncTo(player);
+            com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
         }
     }
 
@@ -385,6 +387,7 @@ public class ForgeEvents {
             });
 
             syncSporeIdentifier(player);
+            com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
 
             if (SporeAddsConfig.TRAINING_BOOK_GIVE_ON_FIRST_JOIN.get()) {
                 SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
