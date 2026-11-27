@@ -21,8 +21,7 @@ public class Poder12ActivatePacket {
     public static void handle(Poder12ActivatePacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();
-            // Silent here: PowerUseHandler (sent together with this packet) already told the player why it is locked.
-            if (sender != null && com.sporeadds.sporeaddsmod.Powers.PowerUnlocks.isUnlocked(sender, 12)) {
+            if (sender != null) {
                 Poder12.activate(sender);
             }
         });

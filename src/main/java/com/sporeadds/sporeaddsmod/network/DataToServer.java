@@ -1,14 +1,13 @@
 package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
-import com.sporeadds.sporeaddsmod.Powers.PowerUnlocks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import com.sporeadds.sporeaddsmod.network.NetworkEvent;
+import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
-/** Client -> server: the ability toggle string after the player flipped a toggle. */
 public class DataToServer{
     private final String data;
 
@@ -24,51 +23,16 @@ public class DataToServer{
         return new DataToServer(buf.readUtf());
     }
 
-    /** The toggle string is exactly nine '0'/'1' characters; anything else is a broken or hostile client. */
-    private static boolean isValid(String value) {
-        if (value == null || value.length() != 9) {
-            return false;
-        }
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (c != '0' && c != '1') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * A toggle (abilities 2, 4, 5, 6 and 7) of an ability whose unlock level the player has not reached
-     * (kommandant_abilities.unlock_levels) is switched off: the client only offers unlocked abilities.
-     */
-    private static String withoutLockedToggles(ServerPlayer player, String requested) {
-        char[] chars = requested.toCharArray();
-        for (int power : new int[]{2, 4, 5, 6, 7}) {
-            if (power < chars.length && chars[power] == '1' && !PowerUnlocks.isUnlocked(player, power)) {
-                chars[power] = '0';
-            }
-        }
-        return new String(chars);
-    }
-
     public static void handle(DataToServer msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player == null) {
-                return;
-            }
-            if (!isValid(msg.data)) {
-                // Put the client back in line with the server instead of trusting a malformed string.
-                ServerToData.syncTo(player);
-                return;
-            }
             PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(cap -> {
-                cap.setSwitch(withoutLockedToggles(player, msg.data));
-                // Echo with the server -> client packet (this class is only the client -> server direction).
-                ServerToData.syncTo(player);
+                cap.setSwitch(msg.data);
+                NetworkHandle.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player),
+                        new DataToServer(cap.getSwitch()));
             });
         });
         ctx.get().setPacketHandled(true);
     }
 }
+

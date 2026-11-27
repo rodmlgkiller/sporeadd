@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.effects;
 
-import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,11 +18,10 @@ public class EnchainedDamageHandler {
             if (attacker.hasEffect(effects.ENCHAINED)) {
                 float damage = event.getNewDamage();
 
-                // Config berserker.chains.enchained: por defecto -15% a jugadores, -65% al resto.
                 if (attacker instanceof Player) {
-                    damage *= BerserkerConfig.enchainedPlayerDamageMultiplier();
+                    damage *= 0.85F;
                 } else {
-                    damage *= BerserkerConfig.enchainedNonPlayerDamageMultiplier();
+                    damage *= 0.35F;
                 }
 
                 event.setNewDamage(damage);

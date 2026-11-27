@@ -3,7 +3,6 @@ package com.sporeadds.sporeaddsmod.Powers.berserker;
 import net.minecraft.resources.ResourceLocation;
 
 import com.sporeadds.sporeaddsmod.capabilities.CompoundsCapability;
-import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncCompoundsPacket;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,9 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerPlayer;
 import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,51 +32,17 @@ public final class CompoundEffects {
     private CompoundEffects() {
     }
 
-    /**
-     * Cuenta las syringes por tipo en el inventario de Compounds del jugador, respetando los limites de la
-     * config (berserker.blood_samples.max_total y max_count de cada tipo).
-     */
+    /** Cuenta las syringes por tipo en el inventario de Compounds del jugador. */
     public static EnumMap<CompoundType, Integer> counts(ServerPlayer player) {
-        List<ItemStack> stacks = new ArrayList<>();
+        EnumMap<CompoundType, Integer> map = new EnumMap<>(CompoundType.class);
         CompoundsCapability.PLAYER_COMPOUNDS.get(player).ifPresent(store -> {
             for (int i = 0; i < store.size(); i++) {
-                stacks.add(store.getStack(i));
+                CompoundType type = CompoundType.fromItem(store.getStack(i).getItem());
+                if (type != null) {
+                    map.merge(type, 1, Integer::sum);
+                }
             }
         });
-        return countLimited(stacks);
-    }
-
-    /**
-     * Para cada ranura, true si su syringe cuenta; false si esta vacia o supera los limites de la config. Se
-     * recorre en orden de ranura: como mucho max_total syringes en total y max_count de cada tipo.
-     */
-    public static boolean[] activeSlots(List<ItemStack> stacks) {
-        boolean[] active = new boolean[stacks.size()];
-        EnumMap<CompoundType, Integer> perKind = new EnumMap<>(CompoundType.class);
-        int total = 0;
-        int maxTotal = BerserkerConfig.sampleMaxTotal();
-        for (int i = 0; i < stacks.size(); i++) {
-            ItemStack stack = stacks.get(i);
-            if (stack == null || stack.isEmpty()) continue;
-            CompoundType type = CompoundType.fromItem(stack.getItem());
-            if (type == null) continue;
-            int have = perKind.getOrDefault(type, 0);
-            if (total >= maxTotal || have >= type.maxCount()) continue;
-            perKind.put(type, have + 1);
-            total++;
-            active[i] = true;
-        }
-        return active;
-    }
-
-    /** Syringes por tipo que realmente cuentan (ver {@link #activeSlots}). Lo usan el servidor y la pantalla. */
-    public static EnumMap<CompoundType, Integer> countLimited(List<ItemStack> stacks) {
-        boolean[] active = activeSlots(stacks);
-        EnumMap<CompoundType, Integer> map = new EnumMap<>(CompoundType.class);
-        for (int i = 0; i < active.length; i++) {
-            if (!active[i]) continue;
-            map.merge(CompoundType.fromItem(stacks.get(i).getItem()), 1, Integer::sum);
-        }
         return map;
     }
 
@@ -91,13 +54,13 @@ public final class CompoundEffects {
         int charred = counts.getOrDefault(CompoundType.CHARRED, 0);
 
         setModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_UUID, "sporeadd_claws_skeletal_speed",
-                BerserkerConfig.SKELETAL_SPEED_BONUS.get() * skeletal, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, skeletal > 0);
+                0.075D * skeletal, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, skeletal > 0);
         setModifier(player, Attributes.KNOCKBACK_RESISTANCE, KB_RES_UUID, "sporeadd_claws_skeletal_kbres",
-                BerserkerConfig.SKELETAL_KNOCKBACK_RESISTANCE.get() * skeletal, AttributeModifier.Operation.ADD_VALUE, skeletal > 0);
+                0.25D * skeletal, AttributeModifier.Operation.ADD_VALUE, skeletal > 0);
 
         net.minecraft.core.Holder<Attribute> swim = net.neoforged.neoforge.common.NeoForgeMod.SWIM_SPEED;
         setModifier(player, swim, SWIM_UUID, "sporeadd_claws_drowned_swim",
-                BerserkerConfig.DROWNED_SWIM_BONUS.get() * drowned, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, drowned > 0);
+                0.10D * drowned, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, drowned > 0);
 
         if (drowned > 0) {
             player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING,
@@ -145,32 +108,28 @@ public final class CompoundEffects {
 
     // ------------------------------------------------------------------ efectos por golpe
 
-    /** Daño recibido: reinforced reduce un 7.5% por stack (min 0). Valor por defecto; ver la config. */
+    /** Daño recibido: reinforced reduce un 7.5% por stack (min 0). */
     public static float incomingDamageMultiplier(EnumMap<CompoundType, Integer> counts) {
         int reinforced = counts.getOrDefault(CompoundType.REINFORCED, 0);
         if (reinforced <= 0) return 1.0F;
-        float perSample = BerserkerConfig.REINFORCED_DAMAGE_REDUCTION.get().floatValue();
-        return Math.max(0.0F, 1.0F - perSample * reinforced);
+        return Math.max(0.0F, 1.0F - 0.075F * reinforced);
     }
 
-    /** Empuje extra del ataque: calcified +35% por stack. Valor por defecto; ver la config. */
+    /** Empuje extra del ataque: calcified +35% por stack. */
     public static float outgoingKnockbackMultiplier(EnumMap<CompoundType, Integer> counts) {
         int calcified = counts.getOrDefault(CompoundType.CALCIFIED, 0);
         if (calcified <= 0) return 1.0F;
-        return 1.0F + BerserkerConfig.CALCIFIED_KNOCKBACK_BONUS.get().floatValue() * calcified;
+        return 1.0F + 0.35F * calcified;
     }
 
-    /** Daño desarmado extra por bezerk: +2 por stack. Valor por defecto; ver la config. */
+    /** Daño desarmado extra por bezerk: +2 por stack. */
     public static float bonusUnarmedDamage(EnumMap<CompoundType, Integer> counts) {
-        return BerserkerConfig.BEZERK_UNARMED_DAMAGE.get().floatValue() * counts.getOrDefault(CompoundType.BEZERK, 0);
+        return 2.0F * counts.getOrDefault(CompoundType.BEZERK, 0);
     }
 
-    /**
-     * Drenaje extra de la barra por bezerk en cada paso de decaimiento: 0.5 por stack por defecto (paso de
-     * 10 ticks = 0.5 s -> 1 por segundo por stack). Valor por defecto; ver la config.
-     */
+    /** Drenaje extra de la barra por bezerk: 1 por segundo por stack -> 0.5 por tick de 0.5s. */
     public static float bonusDrainPerHalfSecond(EnumMap<CompoundType, Integer> counts) {
-        return BerserkerConfig.BEZERK_EXTRA_DRAIN.get().floatValue() * counts.getOrDefault(CompoundType.BEZERK, 0);
+        return 0.5F * counts.getOrDefault(CompoundType.BEZERK, 0);
     }
 
     /** Riders aplicados cuando el berserker con el modo activo daña a una entidad. */
@@ -178,27 +137,22 @@ public final class CompoundEffects {
                                    EnumMap<CompoundType, Integer> counts) {
         int vampiric = counts.getOrDefault(CompoundType.VAMPIRIC, 0);
         if (vampiric > 0) {
-            float heal = BerserkerConfig.VAMPIRIC_HEAL_PER_HIT.get().floatValue() * vampiric;
-            if (heal > 0.0F) {
-                attacker.heal(heal);
-            }
+            attacker.heal(vampiric);
         }
         int charred = counts.getOrDefault(CompoundType.CHARRED, 0);
         if (charred > 0 && !target.fireImmune()) {
-            // Cada golpe SUMA 1 s de fuego por stack al fuego actual de la entidad (por defecto 20 ticks por stack).
+            // Cada golpe SUMA 1 s de fuego por stack al fuego actual de la entidad.
             int currentTicks = Math.max(0, target.getRemainingFireTicks());
-            target.setRemainingFireTicks(currentTicks + charred * BerserkerConfig.CHARRED_FIRE_TICKS.get());
+            target.setRemainingFireTicks(currentTicks + charred * 20);
         }
         int toxic = counts.getOrDefault(CompoundType.TOXIC, 0);
-        int poisonTicks = toxic * BerserkerConfig.TOXIC_POISON_TICKS.get();
-        if (toxic > 0 && poisonTicks > 0) {
-            // Amplificador y duración escalan con el nº de syringes (10 s por stack por defecto).
-            target.addEffect(new MobEffectInstance(MobEffects.POISON, poisonTicks, toxic - 1));
+        if (toxic > 0) {
+            // Amplificador y duración escalan con el nº de syringes (10 s por stack).
+            target.addEffect(new MobEffectInstance(MobEffects.POISON, 200 * toxic, toxic - 1));
         }
         int rotten = counts.getOrDefault(CompoundType.ROTTEN, 0);
-        int witherTicks = rotten * BerserkerConfig.ROTTEN_WITHER_TICKS.get();
-        if (rotten > 0 && witherTicks > 0) {
-            target.addEffect(new MobEffectInstance(MobEffects.WITHER, witherTicks, rotten - 1));
+        if (rotten > 0) {
+            target.addEffect(new MobEffectInstance(MobEffects.WITHER, 200 * rotten, rotten - 1));
         }
     }
 

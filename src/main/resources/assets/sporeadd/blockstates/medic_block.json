@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "sporeadd:block/medicblock" },
-    "facing=south": { "model": "sporeadd:block/medicblock" },
-    "facing=west":  { "model": "sporeadd:block/medicblock" },
-    "facing=east":  { "model": "sporeadd:block/medicblock" }
-  }
-}

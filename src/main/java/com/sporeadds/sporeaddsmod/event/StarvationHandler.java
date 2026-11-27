@@ -13,7 +13,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.server.level.ServerPlayer;
@@ -74,16 +73,15 @@ public class StarvationHandler {
         long lastTick = player.getPersistentData().getLong("SporeAddsStarvationTick");
         long currentTick = player.level().getGameTime();
 
-        if (currentTick - lastTick < KommandantPowersConfig.STARVATION_INTERVAL_TICKS.get()) return; // 5 segundos por defecto
+        if (currentTick - lastTick < 100) return; // 5 segundos
         player.getPersistentData().putLong("SporeAddsStarvationTick", currentTick);
 
         PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             if (spore.getSpore() > 0) {
-                // subSpore never goes below 0 (a drain above the biomass left must not leave a negative bar).
-                spore.subSpore(KommandantPowersConfig.STARVATION_BIOMASS_DRAIN.get());
+                spore.addSpore(-1);
             } else {
                 player.getPersistentData().putBoolean("AllowCustomStarveDamage", true);
-                player.hurt(player.damageSources().starve(), KommandantPowersConfig.STARVATION_DAMAGE.get().floatValue());
+                player.hurt(player.damageSources().starve(), 3.0F);
                 player.getPersistentData().putBoolean("AllowCustomStarveDamage", false);
             }
         });

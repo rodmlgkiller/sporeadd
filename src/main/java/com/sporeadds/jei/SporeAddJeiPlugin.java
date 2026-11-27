@@ -141,8 +141,8 @@ public class SporeAddJeiPlugin implements IModPlugin {
             recipes.add(new MoundTerrariumJeiRecipe(
                     inputs,
                     outputs,
-                    Component.translatable("jei.sporeadd.mound_terrarium.reaver"),
-                    Component.translatable("jei.sporeadd.mound_terrarium.reaver.desc")
+                    Component.translatable("jei.sporeadds.mound_terrarium.reaver"),
+                    Component.translatable("jei.sporeadds.mound_terrarium.reaver.desc")
             ));
         }
 
@@ -175,8 +175,8 @@ public class SporeAddJeiPlugin implements IModPlugin {
             recipes.add(new MoundTerrariumJeiRecipe(
                     inputs,
                     shearOutputs,
-                    Component.translatable("jei.sporeadd.mound_terrarium.shears"),
-                    Component.translatable("jei.sporeadd.mound_terrarium.shears.desc")
+                    Component.translatable("jei.sporeadds.mound_terrarium.shears"),
+                    Component.translatable("jei.sporeadds.mound_terrarium.shears.desc")
             ));
         }
 
@@ -192,8 +192,8 @@ public class SporeAddJeiPlugin implements IModPlugin {
             recipes.add(new MoundTerrariumJeiRecipe(
                     inputs,
                     outputs,
-                    Component.translatable("jei.sporeadd.mound_terrarium.bottle"),
-                    Component.translatable("jei.sporeadd.mound_terrarium.bottle.desc")
+                    Component.translatable("jei.sporeadds.mound_terrarium.bottle"),
+                    Component.translatable("jei.sporeadds.mound_terrarium.bottle.desc")
             ));
         }
 

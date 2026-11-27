@@ -1,7 +1,6 @@
 package com.sporeadds.sporeaddsmod.items;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.entity.projectile.ThrowableBandagesEntity;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -34,7 +33,7 @@ import java.util.UUID;
 
 public class ThrowableBandagesItem extends Item {
 
-    // Self heal hold time and regeneration: see MedicConfig (medic.bandages.*).
+    private static final int SELF_HEAL_USE_TICKS = 20;
     private static final Map<UUID, Boolean> APPLIED_THIS_USE = new HashMap<>();
 
     public ThrowableBandagesItem(Properties properties) {
@@ -135,18 +134,14 @@ public class ThrowableBandagesItem extends Item {
             return;
         }
 
-        if (useTicks >= MedicConfig.bandagesSelfHealUseTicks()) {
+        if (useTicks >= SELF_HEAL_USE_TICKS) {
             boolean alreadyApplied = APPLIED_THIS_USE.getOrDefault(player.getUUID(), false);
 
             if (!alreadyApplied) {
                 APPLIED_THIS_USE.put(player.getUUID(), true);
 
                 if (!level.isClientSide) {
-                    player.addEffect(new MobEffectInstance(
-                            MobEffects.REGENERATION,
-                            MedicConfig.bandagesSelfHealRegenerationTicks(),
-                            MedicConfig.bandagesSelfHealRegenerationAmplifier()
-                    ));
+                    player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 4));
                     playBandageEffect(level, player);
                     stack.shrink(1);
                 }

@@ -35,18 +35,24 @@ public final class SelfDefibrillateAbility {
 
     public static void tryStart(ServerPlayer player) {
         if (!isMedic(player)) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("[DEBUG] No es medic"));
             return;
         }
         if (!player.isAlive()) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("[DEBUG] No está vivo"));
             return;
         }
         if (player.getHealth() > player.getMaxHealth() * HEALTH_THRESHOLD_PERCENT) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("[DEBUG] Vida por encima del umbral"));
             return;
         }
         if (ACTIVE_ATTEMPTS.contains(player.getUUID())) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("[DEBUG] BLOQUEADO por ACTIVE_ATTEMPTS"));
             return;
         }
         if (isOnCooldown(player)) {
+            long remaining = COOLDOWN_EXPIRY_TICK.getOrDefault(player.getUUID(), 0L) - player.level().getGameTime();
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("[DEBUG] BLOQUEADO por cooldown, ticks restantes: " + remaining));
             return;
         }
 

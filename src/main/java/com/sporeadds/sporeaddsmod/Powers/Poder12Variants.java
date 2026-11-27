@@ -10,8 +10,6 @@ import com.Harbinger.Spore.core.Sitems;
 import com.Harbinger.Spore.Sitems.BaseWeapons.SporeArmorData;
 import com.Harbinger.Spore.Sitems.BaseWeapons.SporeArmorMutations;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -47,23 +45,11 @@ public class Poder12Variants {
     public static final DustParticleOptions DUST_ROJO_IMPACTO =
             new DustParticleOptions(new Vector3f(Vec3.fromRGB24(0x8B0000).toVector3f()), 2.0F);
 
-    // The Armor HP numbers are configurable (power_12_biomass_armor in the config). They are read when used,
-    // never at class load, because the config is not loaded yet at that point.
-    public static int gluttonousFaminedArmorCap() {
-        return KommandantAdvancedConfig.GLUTTONOUS_FAMINED_CAP.get();
-    }
-
-    public static int gluttonousHelmBreakThreshold() {
-        return KommandantAdvancedConfig.GLUTTONOUS_HELM_BREAK_HP.get();
-    }
-
-    public static long gluttonousHelmRestoreDelayTicks() {
-        return KommandantAdvancedConfig.GLUTTONOUS_HELM_RESTORE_TICKS.get();
-    }
-
-    public static float gluttonousBrokenHelmDamageMultiplier() {
-        return KommandantAdvancedConfig.GLUTTONOUS_BROKEN_HELM_MULTIPLIER.get().floatValue();
-    }
+    public static final int ABYSSAL_ARMOR_HP = 220;
+    public static final int gluttonous_FAMINED_ARMOR_CAP = 150;
+    public static final int gluttonous_HELM_BREAK_THRESHOLD = 150;
+    public static final long gluttonous_HELM_RESTORE_DELAY_TICKS = 100L;
+    public static final float gluttonous_BROKEN_HELM_DAMAGE_MULTIPLIER = 1.2F;
 
     public static final int gluttonous_HELM_BURST_DURATION_TICKS = 60;
     public static final double gluttonous_HELM_BURST_RADIUS = 12.0D;
@@ -108,16 +94,12 @@ public class Poder12Variants {
         return famined != null && player.hasEffect(famined);
     }
 
-    /**
-     * Armor HP pool of a player: 250 by default, 220 Abyssal, 500 Gluttonous, 180 Caustic (all configurable in
-     * power_12_biomass_armor.hp). Also used by the armor HUD and the boss bar.
-     */
     public static int getMaxArmor(Player player) {
         if (isAbyssal(player)) {
-            return Math.max(1, KommandantAdvancedConfig.ARMOR_MAX_HP_ABYSSAL.get());
+            return ABYSSAL_ARMOR_HP;
         }
 
-        AtomicInteger maxArmor = new AtomicInteger(KommandantAdvancedConfig.ARMOR_MAX_HP.get());
+        AtomicInteger maxArmor = new AtomicInteger(250);
 
         SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(identifier -> {
             String subclass = identifier.getSubclass();
@@ -125,9 +107,9 @@ public class Poder12Variants {
                 String normalized = subclass.trim();
 
                 if (normalized.equalsIgnoreCase("gluttonous")) {
-                    maxArmor.set(KommandantAdvancedConfig.ARMOR_MAX_HP_GLUTTONOUS.get());
+                    maxArmor.addAndGet(250);
                 } else if (normalized.equalsIgnoreCase("caustic")) {
-                    maxArmor.set(KommandantAdvancedConfig.ARMOR_MAX_HP_CAUSTIC.get());
+                    maxArmor.addAndGet(-70);
                 }
             }
         });
@@ -138,149 +120,9 @@ public class Poder12Variants {
     public static int getEffectiveArmorCap(Player player) {
         int maxArmor = getMaxArmor(player);
         if (isgluttonous(player) && hasFamined(player)) {
-            return Math.min(maxArmor, gluttonousFaminedArmorCap());
+            return Math.min(maxArmor, gluttonous_FAMINED_ARMOR_CAP);
         }
         return maxArmor;
-    }
-
-    /** true when the power puts the four armor pieces on the player (config equipment.equip_armor_pieces). */
-    public static boolean equipsArmorPieces() {
-        return KommandantAdvancedConfig.ARMOR_EQUIP_PIECES.get();
-    }
-
-    /**
-     * Gives an item the player was wearing back to them, honouring config equipment.previous_armor_mode: thrown on
-     * the ground (default) or moved to the inventory (dropped only if the inventory is full).
-     */
-    public static void storeOrDrop(ServerPlayer player, ItemStack stack) {
-        if (stack.isEmpty()) {
-            return;
-        }
-
-        KommandantAdvancedConfig.PreviousArmorMode mode = KommandantAdvancedConfig.ARMOR_PREVIOUS_MODE.get();
-        if (mode == KommandantAdvancedConfig.PreviousArmorMode.INVENTORY || mode == KommandantAdvancedConfig.PreviousArmorMode.REMEMBER) {
-            // Armor does not stack: it needs a free slot. A creative player's full inventory would otherwise swallow it.
-            ItemStack toStore = stack.copy();
-            boolean stored = player.getInventory().getFreeSlot() >= 0 && player.getInventory().add(toStore);
-            if (!stored || !toStore.isEmpty()) {
-                player.drop(toStore, false);
-            }
-        } else {
-            player.drop(stack, false);
-        }
-    }
-
-    /** Item data written on a piece the power took off in REMEMBER mode: which slot it came from and who wore it. */
-    private static final String REMEMBERED_TAG = "SporeAddsRememberedArmor";
-
-    /**
-     * Takes one worn piece off for the power. DROP throws it and INVENTORY moves it (see {@link #storeOrDrop}); REMEMBER moves
-     * it to the inventory and marks it so {@link #restoreRememberedArmor} can put it back on when the power's armor is gone.
-     * With no free slot the piece is thrown on the ground without the mark (there is nothing to remember).
-     */
-    public static void storeOrRemember(ServerPlayer player, ItemStack stack, EquipmentSlot slot) {
-        if (stack.isEmpty()) {
-            return;
-        }
-        if (KommandantAdvancedConfig.ARMOR_PREVIOUS_MODE.get() != KommandantAdvancedConfig.PreviousArmorMode.REMEMBER) {
-            storeOrDrop(player, stack);
-            return;
-        }
-        ItemStack marked = stack.copy();
-        CompoundTag mark = new CompoundTag();
-        mark.putString("slot", slot.getName());
-        mark.putUUID("owner", player.getUUID());
-        writeMark(marked, mark);
-        boolean stored = player.getInventory().getFreeSlot() >= 0 && player.getInventory().add(marked);
-        if (!stored || !marked.isEmpty()) {
-            clearMark(marked);
-            player.drop(marked, false);
-        }
-    }
-
-    /**
-     * Puts back on the pieces {@link #storeOrRemember} set aside for this player. A piece only goes back if its armor slot is
-     * empty by now; either way the mark is removed so it never triggers again.
-     */
-    public static void restoreRememberedArmor(ServerPlayer player) {
-        var items = player.getInventory().items;
-        for (int i = 0; i < items.size(); i++) {
-            ItemStack piece = items.get(i);
-            if (piece.isEmpty()) {
-                continue;
-            }
-            CompoundTag mark = readMark(piece);
-            if (mark == null || !mark.hasUUID("owner") || !player.getUUID().equals(mark.getUUID("owner"))) {
-                continue;
-            }
-            EquipmentSlot slot;
-            try {
-                slot = EquipmentSlot.byName(mark.getString("slot"));
-            } catch (IllegalArgumentException ex) {
-                clearMark(piece);
-                continue;
-            }
-            clearMark(piece);
-            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR && player.getItemBySlot(slot).isEmpty()) {
-                player.setItemSlot(slot, piece.copy());
-                items.set(i, ItemStack.EMPTY);
-            }
-        }
-    }
-
-    private static CompoundTag readMark(ItemStack stack) {
-        net.minecraft.world.item.component.CustomData data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
-        if (data == null) {
-            return null;
-        }
-        CompoundTag nbt = data.copyTag();
-        return nbt.contains(REMEMBERED_TAG, 10) ? nbt.getCompound(REMEMBERED_TAG) : null;
-    }
-
-    private static void writeMark(ItemStack stack, CompoundTag mark) {
-        net.minecraft.world.item.component.CustomData data = stack.getOrDefault(
-                net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
-        CompoundTag nbt = data.copyTag();
-        nbt.put(REMEMBERED_TAG, mark);
-        stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(nbt));
-    }
-
-    private static void clearMark(ItemStack stack) {
-        net.minecraft.world.item.component.CustomData data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
-        if (data == null) {
-            return;
-        }
-        CompoundTag nbt = data.copyTag();
-        nbt.remove(REMEMBERED_TAG);
-        if (nbt.isEmpty()) {
-            stack.remove(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
-        } else {
-            stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(nbt));
-        }
-    }
-
-    /** true for the four Spore armor pieces this power puts on the player. */
-    public static boolean isPowerArmorPiece(ItemStack stack) {
-        return stack.is(Sitems.INF_UP_HELMET.get())
-                || stack.is(Sitems.INF_UP_CHESTPLATE.get())
-                || stack.is(Sitems.INF_UP_PANTS.get())
-                || stack.is(Sitems.INF_UP_BOOTS.get());
-    }
-
-    /**
-     * The vanilla armor + toughness reduction (same formula as CombatRules.getDamageAfterAbsorb). Used only when
-     * config damage.apply_vanilla_armor_reduction is on. Damage types that ignore armor are not reduced.
-     */
-    public static float applyVanillaArmor(Player player, net.minecraft.world.damagesource.DamageSource source, float damage) {
-        if (source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR)) {
-            return damage;
-        }
-
-        float armor = (float) player.getArmorValue();
-        float toughness = (float) player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS);
-        float f = 2.0F + toughness / 4.0F;
-        float f1 = net.minecraft.util.Mth.clamp(armor - damage / f, armor * 0.2F, 20.0F);
-        return damage * (1.0F - f1 / 25.0F);
     }
 
     public static boolean isgluttonousHelmetBroken(Player player, Map<UUID, Boolean> brokenMap) {
@@ -316,24 +158,55 @@ public class Poder12Variants {
                 + player.level().getBrightness(net.minecraft.world.level.LightLayer.SKY, pos);
 
         if (player.isInWaterOrRain() && lightLevel <= 5) {
-            // Resistance II for 2 s by default (no particles, no HUD icon); the list is configurable.
-            KommandantAdvancedConfig.applyQuiet(player, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.ARMOR_ABYSSAL_EFFECTS), false);
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.DAMAGE_RESISTANCE,
+                    40,
+                    1,
+                    false,
+                    false,
+                    false
+            ));
         }
     }
 
     public static void applygluttonousPassives(ServerPlayer player, int currentHp) {
         if (!isgluttonousHelmetBurstActive(player)) {
-            KommandantAdvancedConfig.applyQuiet(player, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.GLUTTONOUS_SLOW_EFFECTS), true);
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.MOVEMENT_SLOWDOWN,
+                    40,
+                    1,
+                    false,
+                    false,
+                    true
+            ));
         }
 
-        int lowHp = KommandantAdvancedConfig.GLUTTONOUS_LOW_HP.get();
-        int midHp = KommandantAdvancedConfig.GLUTTONOUS_MID_HP.get();
-
-        if (currentHp >= lowHp && currentHp < midHp) {
-            ConfigEffects.apply(player, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.GLUTTONOUS_MID_EFFECTS));
-        } else if (currentHp < lowHp) {
-            ConfigEffects.apply(player, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.GLUTTONOUS_LOW_EFFECTS));
-            KommandantAdvancedConfig.applyQuiet(player, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.GLUTTONOUS_LOW_EFFECTS_NO_PARTICLES), true);
+        if (currentHp >= 200 && currentHp < 300) {
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.HUNGER,
+                    25,
+                    15,
+                    false,
+                    true,
+                    true
+            ));
+        } else if (currentHp < 200) {
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.HUNGER,
+                    25,
+                    60,
+                    false,
+                    true,
+                    true
+            ));
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.WEAKNESS,
+                    40,
+                    1,
+                    false,
+                    false,
+                    true
+            ));
         }
     }
 
@@ -341,14 +214,14 @@ public class Poder12Variants {
         if (hasStarvation) return 0;
 
         if (isgluttonous(player)) {
-            if (currentHp >= KommandantAdvancedConfig.GLUTTONOUS_MID_HP.get()) return KommandantAdvancedConfig.GLUTTONOUS_REGEN_HIGH.get();
-            if (currentHp >= KommandantAdvancedConfig.GLUTTONOUS_LOW_HP.get()) return KommandantAdvancedConfig.GLUTTONOUS_REGEN_MID.get();
-            return KommandantAdvancedConfig.GLUTTONOUS_REGEN_LOW.get();
+            if (currentHp >= 300) return 1;
+            if (currentHp >= 200) return 3;
+            return 10;
         }
 
-        int healAmount = KommandantAdvancedConfig.ARMOR_REGEN_PER_SECOND.get();
+        int healAmount = 5;
         if (isAbyssal(player) && !player.isInWaterOrRain()) {
-            healAmount = Math.max(1, (int) Math.floor(healAmount * KommandantAdvancedConfig.ARMOR_ABYSSAL_DRY_MULTIPLIER.get()));
+            healAmount = Math.max(1, (int) Math.floor(healAmount * 0.25D));
         }
         return healAmount;
     }
@@ -356,7 +229,7 @@ public class Poder12Variants {
     public static void dropCurrentHelmet(ServerPlayer player) {
         ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
         if (!helmet.isEmpty()) {
-            storeOrDrop(player, helmet);
+            player.drop(helmet, false);
             player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
         }
     }
@@ -366,13 +239,10 @@ public class Poder12Variants {
                                                Map<UUID, Long> restoreTimers) {
         boolean abyssal = isAbyssal(player);
 
-        // With equip_armor_pieces off the helmet is never put on (and the player's own helmet is never touched).
-        if (equipsArmorPieces()) {
-            dropCurrentHelmet(player);
-            player.setItemSlot(EquipmentSlot.HEAD, createArmorPiece(player.level().registryAccess(), Sitems.INF_UP_HELMET.get(), abyssal));
-            player.inventoryMenu.broadcastChanges();
-            player.getInventory().setChanged();
-        }
+        dropCurrentHelmet(player);
+        player.setItemSlot(EquipmentSlot.HEAD, createArmorPiece(player.level().registryAccess(), Sitems.INF_UP_HELMET.get(), abyssal));
+        player.inventoryMenu.broadcastChanges();
+        player.getInventory().setChanged();
 
         setgluttonousHelmetBroken(player, brokenMap, false);
         restoreTimers.remove(player.getUUID());
@@ -589,8 +459,7 @@ public class Poder12Variants {
                                              boolean triggerBurst) {
         if (isgluttonousHelmetBroken(player, brokenMap)) return;
 
-        // With equip_armor_pieces off the helmet is not part of the power, so the player's own one is left alone.
-        ItemStack equippedHelmet = equipsArmorPieces() ? player.getItemBySlot(EquipmentSlot.HEAD).copy() : ItemStack.EMPTY;
+        ItemStack equippedHelmet = player.getItemBySlot(EquipmentSlot.HEAD).copy();
 
         if (!equippedHelmet.isEmpty()) {
             player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);

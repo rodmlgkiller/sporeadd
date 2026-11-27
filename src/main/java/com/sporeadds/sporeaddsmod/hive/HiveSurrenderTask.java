@@ -10,14 +10,11 @@ import com.Harbinger.Spore.Sentities.Organoids.Proto;
 import com.Harbinger.Spore.Sentities.Organoids.Verwa;
 import com.sporeadds.sporeaddsmod.Powers.Levelstats;
 import com.sporeadds.sporeaddsmod.Powers.Poder1;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncVervaTravelPacket;
-import com.sporeadds.sporeaddsmod.util.ClassStartingGear;
 import com.sporeadds.sporeaddsmod.util.OriginSyncUtil;
-import com.sporeadds.sporeaddsmod.util.SporeClassUtil;
 import com.sporeadds.sporeaddsmod.util.SporeIdentifierUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -63,12 +60,12 @@ public final class HiveSurrenderTask {
     private static final String NO_DESPAWN_TAG = "SporeAdds_NoHardFloorDespawn";
     private static final ResourceLocation VERWA_ID = ResourceLocation.fromNamespaceAndPath("spore", "verva");
 
-    // Search radius for the proto, the structure used without a proto, the far distances and the cocoon duration are
-    // kommandant_abilities.class_gain.induction_teleport / surrender_cocoon (defaults 512, spore:mass_grave, 850-1300, 15 s).
+    private static final double PROTO_SEARCH_RADIUS = 512.0D;
     /** Distancia máxima del cocoon al centro del proto. */
     private static final double DROP_MAX = 10.0D;
-    /** Separación mínima libre entre el cocoon y el cuerpo del proto. */
+    /** Separación mínima libre entre el cuerpo del proto y el cocoon. */
     private static final double DROP_CLEARANCE = 3.0D;
+    private static final int COCOON_TICKS = 15 * 20;
 
     /** Duración de la animación de emerger / enterrarse de la verwa (igual que VervaTransportTask). */
     private static final int EMERGE_TICKS = 40;
@@ -96,17 +93,6 @@ public final class HiveSurrenderTask {
     public static void start(ServerPlayer player) {
         for (Data d : ACTIVE) {
             if (d.player == player) return;
-        }
-
-        // class_gain.induction_teleport: with the teleport off for this kind of induction nobody carries the player
-        // anywhere; the induction completes right where they stand (the same path as when no Verwa can be created).
-        boolean voluntary = HiveDownedManager.voluntarySubclassOf(player.getUUID()) != null;
-        boolean teleport = voluntary
-                ? KommandantPowersConfig.INDUCTION_TELEPORT.get()
-                : KommandantPowersConfig.SURRENDER_TELEPORT.get();
-        if (!teleport) {
-            finishSurrender(player);
-            return;
         }
 
         Data data = new Data(player);
@@ -249,9 +235,7 @@ public final class HiveSurrenderTask {
 
     private static Vec3 computeTarget(ServerLevel level, ServerPlayer player) {
         Vec3 origin = player.position();
-        Proto proto = KommandantPowersConfig.TELEPORT_TARGET.get() == KommandantPowersConfig.TeleportTarget.STRUCTURE_ONLY
-                ? null
-                : ProtoProximity.nearestProto(level, origin, KommandantPowersConfig.TELEPORT_PROTO_SEARCH_RADIUS.get());
+        Proto proto = ProtoProximity.nearestProto(level, origin, PROTO_SEARCH_RADIUS);
 
         if (proto == null) {
             Vec3 deathPos = HiveDownedManager.downPosOf(player.getUUID());
@@ -295,16 +279,12 @@ public final class HiveSurrenderTask {
                 return null;
             }
 
-            // class_gain.induction_teleport.fallback_structure (default spore:mass_grave); empty = no structure step.
-            ResourceLocation structureId = ResourceLocation.tryParse(KommandantPowersConfig.TELEPORT_STRUCTURE.get().trim());
-            if (structureId == null) return null;
-
             net.minecraft.core.Registry<net.minecraft.world.level.levelgen.structure.Structure> registry =
                     level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE);
 
             var holderOpt = registry.getHolder(net.minecraft.resources.ResourceKey.create(
                     net.minecraft.core.registries.Registries.STRUCTURE,
-                    structureId
+                    ResourceLocation.fromNamespaceAndPath("spore", "mass_grave")
             ));
             if (holderOpt.isEmpty()) return null;
 
@@ -375,11 +355,9 @@ public final class HiveSurrenderTask {
 
     private static Vec3 farPositionFrom(ServerLevel level, Vec3 deathPos) {
         // Cada intento puede forzar worldgen de un chunk lejano; se mantiene bajo el nº de intentos.
-        double farMin = KommandantPowersConfig.TELEPORT_FAR_MIN.get();
-        double farMax = Math.max(farMin, KommandantPowersConfig.TELEPORT_FAR_MAX.get());
         for (int attempt = 0; attempt < 6; attempt++) {
             double angle = level.random.nextDouble() * Math.PI * 2.0D;
-            double dist = farMin + level.random.nextDouble() * (farMax - farMin);   // 850..1300 por defecto
+            double dist = 850.0D + level.random.nextDouble() * 450.0D;   // 850..1300
             int tx = Mth.floor(deathPos.x + Math.cos(angle) * dist);
             int tz = Mth.floor(deathPos.z + Math.sin(angle) * dist);
 
@@ -440,10 +418,6 @@ public final class HiveSurrenderTask {
         // En una inducción voluntaria (/class kommandant caustic, etc.) se conserva la subclase elegida.
         String keepSubclass = HiveDownedManager.voluntarySubclassOf(player.getUUID());
 
-        // A voluntary induction (Training Book / /class ... animated) already made the player a Kommandant, and the class
-        // change already gave the Kommandant starting gear: only a real surrender (not yet Kommandant) gives it here.
-        boolean wasKommandant = SporeClassUtil.hasClass(player, "kommandant");
-
         SporeIdentifierUtil.setIdentifierAndSync(player, "kommandant");
         SporeIdentifierUtil.setSubclassAndSync(player,
                 (keepSubclass != null && !keepSubclass.isEmpty()) ? keepSubclass : "none");
@@ -468,12 +442,7 @@ public final class HiveSurrenderTask {
         Levelstats.forceReapplyStats(player);
         OriginSyncUtil.applyForIdentifier(player, "kommandant");
 
-        // Configurable starting gear of the Kommandant (starting_gear.kommandant; none by default).
-        if (!wasKommandant) {
-            ClassStartingGear.giveKit(player, "kommandant");
-        }
-
-        Poder1.startPlainCocoon(player, KommandantPowersConfig.SURRENDER_COCOON_SECONDS.get() * 20);
+        Poder1.startPlainCocoon(player, COCOON_TICKS);
 
         HiveDownedManager.onSurrenderCocoonStarted(player);
     }

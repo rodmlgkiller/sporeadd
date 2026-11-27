@@ -1,7 +1,6 @@
 package com.sporeadds.sporeaddsmod.entity.projectile;
 
 import com.sporeadds.sporeaddsmod.ModItems;
-import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -50,7 +49,7 @@ public class ThrowableBandagesEntity extends ThrowableItemProjectile {
         }
 
         if (result.getEntity() instanceof LivingEntity target) {
-            target.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, MedicConfig.bandagesThrownHealAmplifier()));
+            target.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 0));
 
             serverLevel.sendParticles(
                     ParticleTypes.HEART,
@@ -73,15 +72,13 @@ public class ThrowableBandagesEntity extends ThrowableItemProjectile {
                         1.0F
                 );
 
-                int orbCount = MedicConfig.bandagesXpOrbCount();
-                int orbValue = MedicConfig.bandagesXpOrbValue();
-                for (int i = 0; i < orbCount; i++) {
+                for (int i = 0; i < 3; i++) {
                     ExperienceOrb orb = new ExperienceOrb(
                             serverLevel,
                             owner.getX() + (serverLevel.random.nextDouble() - 0.5D) * 0.4D,
                             owner.getY() + 0.5D,
                             owner.getZ() + (serverLevel.random.nextDouble() - 0.5D) * 0.4D,
-                            orbValue
+                            11
                     );
                     serverLevel.addFreshEntity(orb);
                 }

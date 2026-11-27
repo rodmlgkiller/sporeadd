@@ -2,7 +2,6 @@ package com.sporeadds.mixin;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.UtilityEntity;
 import com.sporeadds.sporeaddsmod.combat.WeakPointKillTracker;
-import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import com.sporeadds.sporeaddsmod.research.PrestigeManager;
 import com.sporeadds.sporeaddsmod.research.TrackedEntities;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -70,10 +69,8 @@ public abstract class OrganoidWeakPointLootMixin {
             return entry;
         }
         try {
-            // scientist.prestige.loot_multiplier (default 2.0 = double loot)
-            double multiplier = ScientistConfig.prestigeLootMultiplier();
-            int min = (int) Math.round(Integer.parseUnsignedInt(parts[2]) * multiplier);
-            int max = (int) Math.round(Integer.parseUnsignedInt(parts[3]) * multiplier);
+            int min = Integer.parseUnsignedInt(parts[2]) * 2;
+            int max = Integer.parseUnsignedInt(parts[3]) * 2;
             return parts[0] + "|" + parts[1] + "|" + min + "|" + max;
         } catch (NumberFormatException e) {
             return entry;

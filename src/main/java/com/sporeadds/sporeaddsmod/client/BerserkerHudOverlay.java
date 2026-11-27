@@ -3,7 +3,6 @@ package com.sporeadds.sporeaddsmod.client;
 import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -12,9 +11,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Barra lateral de "Brutality" (Claws of Brutality). Se muestra a los jugadores berserker
@@ -59,13 +55,10 @@ public final class BerserkerHudOverlay {
 
         float value = ClawCounterClientState.getValue();
         boolean active = ClawCounterClientState.isActive();
-        // Escala y umbral: los valores configurados en el servidor (berserker.claws.max_points / activation_threshold).
-        float maxPoints = ClawCounterClientState.getMax();
-        float frac = Math.max(0.0F, Math.min(1.0F, value / maxPoints));
+        float frac = Math.max(0.0F, Math.min(1.0F, value / ClawCounterClientState.MAX));
         int filled = Math.round(BAR_H * frac);
 
-        int fillColor = active ? FILL_ACTIVE
-                : (value >= ClawCounterClientState.getActivationThreshold() ? FILL_READY : FILL_BUILDING);
+        int fillColor = active ? FILL_ACTIVE : (value >= ClawCounterClientState.MAX ? FILL_READY : FILL_BUILDING);
 
         graphics.fill(x0 - 1, y0 - 1, x1 + 1, y1 + 1, BORDER);
         graphics.fill(x0, y0, x1, y1, BACK);
@@ -73,18 +66,12 @@ public final class BerserkerHudOverlay {
             graphics.fill(x0, y1 - filled, x1, y1, fillColor);
         }
 
-        // Syringes equipadas: sólo el icono, de abajo a arriba, junto a la barra. Las que superan los limites de la
-        // config (berserker.blood_samples) no hacen efecto y no se dibujan.
+        // Syringes equipadas: sólo el icono, de abajo a arriba, junto a la barra.
         int iconX = x1 + 3;
         int drawn = 0;
-        List<ItemStack> equipped = new ArrayList<>();
         for (int i = 0; i < CompoundsClientState.SIZE; i++) {
-            equipped.add(CompoundsClientState.get(i));
-        }
-        boolean[] counted = CompoundEffects.activeSlots(equipped);
-        for (int i = 0; i < CompoundsClientState.SIZE; i++) {
-            ItemStack s = equipped.get(i);
-            if (s.isEmpty() || !counted[i]) continue;
+            ItemStack s = CompoundsClientState.get(i);
+            if (s.isEmpty()) continue;
             int iy = y1 - 16 - drawn * 18;
             graphics.renderItem(s, iconX, iy);
             drawn++;
@@ -96,7 +83,7 @@ public final class BerserkerHudOverlay {
 
         Component label = active
                 ? Component.translatable("ability.sporeadds.berserker.claws")
-                : Component.translatable("ability.sporeadds.berserker.claw_counter", (int) value, (int) maxPoints);
+                : Component.translatable("ability.sporeadds.berserker.claw_counter", (int) value);
         graphics.drawString(mc.font, label, textX, y1 - mc.font.lineHeight + 1, fillColor, true);
     }
 }

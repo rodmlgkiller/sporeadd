@@ -7,8 +7,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.ExtraExtraction;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.ChatFormatting;
@@ -36,7 +34,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
@@ -56,9 +53,9 @@ public class Poder2 {
                         PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                             int level = levelCap.getLevel();
 
-                            if (level >= 0 && KommandantPowersConfig.isUnlocked(level, 2)) {
-                                int durationSeconds = KommandantPowersConfig.myceliumSeconds(level);
-                                int amplifier = KommandantPowersConfig.myceliumAmplifier(level);
+                            if (level >= 0) {
+                                int durationSeconds = Math.max(level * 5, 5);
+                                int amplifier = level / 3;
 
                                 LivingEntity target = event.getEntity();
 
@@ -90,7 +87,6 @@ public class Poder2 {
         });
 
         if (!enabled.get()) return false;
-        if (!PowerUnlocks.isUnlocked(player, 2)) return false;
 
         // No se puede arrancar una Mente peligrosa a otro Kommandant.
         if (target instanceof Player targetPlayer
@@ -103,7 +99,7 @@ public class Poder2 {
         }
 
         float currentHealth = target.getHealth();
-        if (!KommandantPowersConfig.isBelowExtractionThreshold(target)) {
+        if (currentHealth >= 5.0f) {
             int hpRounded = (int) Math.ceil(currentHealth);
             player.sendSystemMessage(
                     Component.translatable("message.sporeadd.power2.too_much_health", hpRounded)
@@ -114,13 +110,10 @@ public class Poder2 {
 
         target.removeAllEffects();
 
-        // Entries of power_2_extraction.extra_extractions take over from the built-in outcomes for their entity type.
-        Optional<ExtraExtraction> extra = KommandantPowersConfig.findExtraExtraction(BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()));
-
         int roll = player.getRandom().nextInt(100) + 1;
-        boolean isEnderman = extra.isEmpty() && target.getType() == EntityType.ENDERMAN;
-        boolean isWither = extra.isEmpty() && target.getType() == EntityType.WITHER_SKELETON;
-        boolean endermanSuccess = isEnderman && roll <= KommandantPowersConfig.CHANCE_ENDERMAN.get();
+        boolean isEnderman = target.getType() == EntityType.ENDERMAN;
+        boolean isWither = target.getType() == EntityType.WITHER_SKELETON;
+        boolean endermanSuccess = isEnderman && roll <= 20;
         boolean endermanFail = isEnderman && !endermanSuccess;
 
         if (!endermanFail) {
@@ -212,25 +205,8 @@ public class Poder2 {
             }
         }
 
-        if (extra.isPresent()) {
-            ExtraExtraction entry = extra.get();
-            if (roll <= entry.chancePercent()) {
-                ItemStack reward = entry.item().stack();
-                spawnStack(serverLevel, target, reward);
-                player.sendSystemMessage(
-                        Component.translatableWithFallback("message.sporeadd.power2.extra.success",
-                                        "You tore %s out of it.", reward.getHoverName())
-                                .withStyle(ChatFormatting.DARK_RED)
-                );
-            } else {
-                player.sendSystemMessage(
-                        Component.translatableWithFallback("message.sporeadd.power2.extra.fail",
-                                        "The extraction yielded nothing.")
-                                .withStyle(ChatFormatting.DARK_RED)
-                );
-            }
-        } else if (target instanceof Player) {
-            if (roll <= KommandantPowersConfig.CHANCE_PLAYER.get()) {
+        if (target instanceof Player) {
+            if (roll <= 95) {
                 spawnItem(serverLevel, target, "sporeadd", "dangerous_mind");
                 String[] successKeys = {
                         "message.sporeadd.power2.player.success_1",
@@ -251,7 +227,7 @@ public class Poder2 {
             boolean isPlayerGenerated = target.getPersistentData().getBoolean("is_player_generated");
 
             if (isPlayerGenerated) {
-                if (roll <= KommandantPowersConfig.CHANCE_INFECTED_PLAYER_GENERATED.get()) {
+                if (roll <= 65) {
                     spawnItem(serverLevel, target, "sporeadd", "dangerous_mind");
                     String[] successKeys = {
                             "message.sporeadd.power2.inf_player.gen.success_1",
@@ -272,9 +248,7 @@ public class Poder2 {
                     );
                 }
             } else {
-                int requiredRoll = serverPlayer.getServer() != null && serverPlayer.getServer().isDedicatedServer()
-                        ? KommandantPowersConfig.CHANCE_INFECTED_PLAYER_NATURAL_DEDICATED.get()
-                        : KommandantPowersConfig.CHANCE_INFECTED_PLAYER_NATURAL_SINGLEPLAYER.get();
+                int requiredRoll = serverPlayer.getServer() != null && serverPlayer.getServer().isDedicatedServer() ? 1 : 10;
 
                 if (roll <= requiredRoll) {
                     spawnItem(serverLevel, target, "sporeadd", "dangerous_mind");
@@ -298,9 +272,7 @@ public class Poder2 {
                 }
             }
         } else if (target.getType() == EntityType.VILLAGER || target.getType() == EntityType.ZOMBIE_VILLAGER) {
-            int chance = target.getType() == EntityType.VILLAGER
-                    ? KommandantPowersConfig.CHANCE_VILLAGER.get()
-                    : KommandantPowersConfig.CHANCE_ZOMBIE_VILLAGER.get();
+            int chance = target.getType() == EntityType.VILLAGER ? 75 : 50;
             if (roll <= chance) {
                 spawnItem(serverLevel, target, "sporeadd", "individualist_mind");
                 player.sendSystemMessage(
@@ -318,18 +290,14 @@ public class Poder2 {
                 );
             }
         } else if (isWither) {
-            if (roll <= KommandantPowersConfig.CHANCE_WITHER_SKELETON.get()) {
+            if (roll <= 75) {
                 spawnItem(serverLevel, target, "sporeadd", "intact_wither_marrow");
                 player.sendSystemMessage(
                         Component.translatable("message.sporeadd.power2.wither.success")
                                 .withStyle(ChatFormatting.DARK_RED)
                 );
             } else {
-                if (KommandantPowersConfig.WITHER_FAILURE_TICKS.get() > 0) {
-                    player.addEffect(new MobEffectInstance(net.minecraft.world.effect.MobEffects.WITHER,
-                            KommandantPowersConfig.WITHER_FAILURE_TICKS.get(),
-                            KommandantPowersConfig.WITHER_FAILURE_AMPLIFIER.get()));
-                }
+                player.addEffect(new MobEffectInstance(net.minecraft.world.effect.MobEffects.WITHER, 200, 1));
                 String[] failKeys = {
                         "message.sporeadd.power2.wither.fail_1",
                         "message.sporeadd.power2.wither.fail_2",
@@ -341,7 +309,7 @@ public class Poder2 {
                 );
             }
         } else if (target.getType() == EntityType.WITCH) {
-            if (roll <= KommandantPowersConfig.CHANCE_WITCH.get()) {
+            if (roll <= 85) {
                 spawnItem(serverLevel, target, "sporeadd", "chemist_mind");
                 player.sendSystemMessage(
                         Component.translatable("message.sporeadd.power2.witch.success")
@@ -374,13 +342,11 @@ public class Poder2 {
             }
         } else if (target.getType() == EntityType.ZOMBIE || target.getType() == EntityType.DROWNED || target.getType() == EntityType.HUSK) {
             PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
-                int undeadCost = KommandantPowersConfig.UNDEAD_BIOMASS_COST.get();
-                if (spore.getSpore() >= undeadCost) {
-                    spore.setSpore(spore.getSpore() - undeadCost);
+                if (spore.getSpore() >= 1) {
+                    spore.setSpore(spore.getSpore() - 1);
                     PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
                         int levelphase = levelCap.getLevel();
-                        int probability = KommandantPowersConfig.CHANCE_UNDEAD_BASE.get()
-                                + (levelphase * KommandantPowersConfig.CHANCE_UNDEAD_PER_LEVEL.get());
+                        int probability = 20 + (levelphase * 5);
                         int zRoll = player.getRandom().nextInt(100) + 1;
 
                         if (zRoll <= probability) {
@@ -426,12 +392,6 @@ public class Poder2 {
         if (item != null && item != net.minecraft.world.item.Items.AIR) {
             ItemEntity itemEntity = new ItemEntity(level, target.getX(), target.getY(), target.getZ(), new ItemStack(item));
             level.addFreshEntity(itemEntity);
-        }
-    }
-
-    private static void spawnStack(ServerLevel level, LivingEntity target, ItemStack stack) {
-        if (!stack.isEmpty()) {
-            level.addFreshEntity(new ItemEntity(level, target.getX(), target.getY(), target.getZ(), stack));
         }
     }
 }

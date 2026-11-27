@@ -23,7 +23,7 @@ import java.util.UUID;
 
 public class FaminedEffect extends MobEffect {
 
-    // The Armor HP cap while Famined (150 by default) is configurable: power_12_biomass_armor.gluttonous.famined_cap
+    private static final int gluttonous_ARMOR_CAP = 150;
     private static final int RESISTANCE_DURATION_TICKS = 400;
 
     private static final Set<UUID> APPLIED_THIS_INSTANCE = new HashSet<>();
@@ -61,11 +61,10 @@ public class FaminedEffect extends MobEffect {
         if (!APPLIED_THIS_INSTANCE.contains(playerId)) {
             PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
                 int armorHp = data.getArmorHp();
-                int armorCap = com.sporeadds.sporeaddsmod.Powers.Poder12Variants.gluttonousFaminedArmorCap();
 
-                if (armorHp > armorCap) {
-                    int drainedAmount = armorHp - armorCap;
-                    data.setArmorHpAndSync(armorCap, player);
+                if (armorHp > gluttonous_ARMOR_CAP) {
+                    int drainedAmount = armorHp - gluttonous_ARMOR_CAP;
+                    data.setArmorHpAndSync(gluttonous_ARMOR_CAP, player);
 
                     int resistanceAmplifier = Math.max(0, (drainedAmount / 100) - 1);
                     resistanceAmplifier = Math.min(2, resistanceAmplifier);

@@ -52,8 +52,7 @@ public abstract class VigilMixin {
 
                 final boolean[] isLevel7 = {false};
                 PlayerLevelProvider.PLAYER_LVL.get(onlinePlayer).ifPresent(levelCap -> {
-                    // Default 7; configurable: kommandant_abilities_advanced.power_11_vigil.sighting_alert_min_level
-                    if (levelCap.getLevel() >= com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.VIGIL_ALERT_MIN_LEVEL.get()) {
+                    if (levelCap.getLevel() >= 7) {
                         isLevel7[0] = true;
                     }
                 });

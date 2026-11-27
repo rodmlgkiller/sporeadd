@@ -31,28 +31,6 @@ An in-game **Training Book** describes every class in detail, and most systems a
 
 **Origins:** the Origins integration of the 1.20.1 version needs the Forge port of Origins, which does not exist for NeoForge 1.21.1. On this branch the integration is a no-op stub (`OriginApiBridge`) and the class/origin sync stays disabled until an Origins build for 1.21.1 is available.
 
-## Configuration
-
-Almost every number and rule of the mod can be changed without recompiling, so server owners can tune the difficulty.
-
-- **In game:** *Mods → SporeAdds → Config* (NeoForge's configuration screen). Browse the gameplay (*Common*) and HUD (*Client*) settings section by section and hover a value to see what it does, its unit, range and default.
-- **By file:** `config/sporeadds-config.toml` (gameplay) and `config/sporeadds-client.toml` (HUD). They are created on first launch, every option is documented inside the file, and options added by an update appear in an existing file automatically.
-- **On servers:** gameplay options are read by the server (or by the host of a single-player / LAN world). On a dedicated server edit the server's own `config/sporeadds-config.toml`; the in-game screen only edits the local game's file. A few displayed numbers (tooltips, HUD) read the local copy, so keep client and server files equal.
-- **Defaults reproduce the original balance**: nothing changes until you edit a value.
-- Lists use short formats: items `modid:item;count`, potion effects `modid:effect;durationTicks;amplifier`, attribute modifiers `modid:attribute;amount;ADD|MULT_BASE|MULT_TOTAL`.
-
-| Section | What you can tune |
-|---------|-------------------|
-| `ghost` | backstab and disguise multipliers, disguise stacks, decoys, Bucket of Remains, execution threshold (HP or percent), Critical Wound, cooldowns and durations |
-| `medic` | injector (optional self-injection), bandages, defibrillation, the Self Defibrillate minigame (time, icons, size, movement, damage reduction, health threshold), triage |
-| `scientist` | research data and pickup radius, Field Research layout and cooldown, Expose Weakness, weak points, prestige loot and requirements, Nano Injector |
-| `berserker` | blood samples (limits and stats per kind), Reinforced Combat Chains, Counter, Claws |
-| `kommandant_abilities` | abilities 1-7 (cocoon, extraction, mounds, Devour, manipulation, forced mutation, Second Authority), unlock level of every ability, biomass bar per level, maximum evolution level, class gain rules, ESP highlights |
-| `kommandant_abilities_advanced` | abilities 8-13 (horde, infectious burst, Proto tracking, Vigil, biomass armor, nuke) and their biomass costs |
-| `locators`, `implant_stats`, `starting_gear` | locator costs and cooldowns, implant abilities and extra attribute modifiers, the starting kit of each class |
-| `biomass_core`, `ability_toggles` | the optional Biomass Core action wheel and keeping ability toggles across logins (both off by default) |
-| older sections | evolution costs, Verwa lists, punishment and devotion events, Training Book, item restrictions, ... |
-
 ## Building
 
 Requires **JDK 21**.

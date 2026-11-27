@@ -2,13 +2,13 @@ package com.sporeadds.sporeaddsmod.abilities;
 
 import net.neoforged.fml.common.EventBusSubscriber;
 
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import com.sporeadds.sporeaddsmod.entity.DecoyEntity;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.fml.common.Mod;
 
@@ -20,9 +20,10 @@ import java.util.UUID;
 
 public class DecoyAbility {
 
-    /** Old default only (50 s). The live value is configurable: see {@code GhostConfig.decoyCooldownTicks()}. */
-    @Deprecated
     public static final int COOLDOWN_TICKS = 20 * 50;
+    private static final int POISON_DURATION_TICKS = 20 * 30;
+    private static final int POISON_AMPLIFIER = 2;
+    private static final int MAX_ACTIVE_DECOYS = 20;
 
     private static final Map<UUID, Long> COOLDOWN_UNTIL_TICK = new HashMap<>();
     private static final Map<UUID, DecoyEntity> ACTIVE_DECOYS = new HashMap<>();
@@ -42,13 +43,9 @@ public class DecoyAbility {
     }
 
     private static void enforceDecoyCap() {
-        int maxActiveDecoys = GhostConfig.decoyMaxActive();
-        while (DECOY_SPAWN_ORDER.size() >= maxActiveDecoys) {
+        while (DECOY_SPAWN_ORDER.size() >= MAX_ACTIVE_DECOYS) {
             DecoyEntity oldest = DECOY_SPAWN_ORDER.pollFirst();
-            if (oldest == null) {
-                break;
-            }
-            if (oldest.isAlive()) {
+            if (oldest != null && oldest.isAlive()) {
                 oldest.discard();
             }
         }
@@ -90,12 +87,11 @@ public class DecoyAbility {
         ACTIVE_DECOYS.put(uuid, decoy);
         DECOY_SPAWN_ORDER.addLast(decoy);
 
-        int cooldownTicks = GhostConfig.decoyCooldownTicks();
-        long cooldownUntil = player.level().getGameTime() + cooldownTicks;
+        long cooldownUntil = player.level().getGameTime() + COOLDOWN_TICKS;
         COOLDOWN_UNTIL_TICK.put(uuid, cooldownUntil);
 
         com.sporeadds.sporeaddsmod.network.NetworkHandle.INSTANCE.sendTo(
-                new com.sporeadds.sporeaddsmod.network.SyncDecoyCooldownPacket(cooldownTicks),
+                new com.sporeadds.sporeaddsmod.network.SyncDecoyCooldownPacket(COOLDOWN_TICKS),
                 player.connection.getConnection(),
                 com.sporeadds.sporeaddsmod.network.NetworkDirection.PLAY_TO_CLIENT
         );
@@ -110,7 +106,15 @@ public class DecoyAbility {
         boolean isMelee = directEntity == attackerEntity;
 
         if (isMelee && attackerEntity instanceof ServerPlayer attacker) {
-            ConfigEffects.apply(attacker, ConfigEffects.parseAll(GhostConfig.DECOY_ATTACKER_EFFECTS.get()));
+            MobEffectInstance poison = new MobEffectInstance(
+                    MobEffects.POISON,
+                    POISON_DURATION_TICKS,
+                    POISON_AMPLIFIER,
+                    false,
+                    true,
+                    true
+            );
+            attacker.addEffect(poison);
         }
 
         decoy.discard();

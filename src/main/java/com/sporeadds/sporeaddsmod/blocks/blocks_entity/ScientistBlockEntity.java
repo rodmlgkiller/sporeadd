@@ -3,7 +3,6 @@ package com.sporeadds.sporeaddsmod.blocks.blocks_entity;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import com.sporeadds.sporeaddsmod.client.screen.ScientistMenu;
-import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import com.sporeadds.sporeaddsmod.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -57,7 +56,7 @@ public class ScientistBlockEntity extends BlockEntity implements MenuProvider {
     // Variables para la biomasa
     private int storedBiomass = 0;
     private int processingProgress = 0;
-    // Ticks per biomass: see ScientistConfig (scientist.research_unit.ticks_per_biomass, default 100).
+    private static final int MAX_PROGRESS = 100;
 
     protected final ContainerData data;
 
@@ -132,15 +131,12 @@ public class ScientistBlockEntity extends BlockEntity implements MenuProvider {
 
         // Procesar biomasa del slot azul
         ItemStack biomasStack = itemHandler.getStackInSlot(0);
-        int ticksPerBiomass = ScientistConfig.researchUnitTicksPerBiomass();
-        // (progress is always reset to 0 when it reaches the max, so the old "progress < max" check was redundant and
-        // would block the unit if the config were lowered below the saved progress)
-        if (!biomasStack.isEmpty() && storedBiomass <=149) {
+        if (!biomasStack.isEmpty() && processingProgress < MAX_PROGRESS && storedBiomass <=149) {
             processingProgress++;
             setChanged();
 
             // Cuando termine el procesamiento
-            if (processingProgress >= ticksPerBiomass) {
+            if (processingProgress >= MAX_PROGRESS) {
                 storedBiomass += 1;
                 biomasStack.shrink(1);
                 processingProgress = 0;

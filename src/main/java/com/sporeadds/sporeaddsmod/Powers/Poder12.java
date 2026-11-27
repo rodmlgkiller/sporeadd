@@ -16,7 +16,6 @@ import com.Harbinger.Spore.core.Sitems;
 import com.Harbinger.Spore.Sentities.Utility.ScentEntity;
 import com.Harbinger.Spore.Sitems.PCI;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -52,7 +51,9 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = "sporeadd", bus = EventBusSubscriber.Bus.GAME)
 public class Poder12 {
-    // Biomass cost, PCI numbers, Armor HP and damage rules are configurable (power_12_biomass_armor in the config).
+    private static final int SPORE_COST = 30;
+    private static final int PCI_DAMAGE_PER_CHARGE = 6;
+    private static final int PCI_FREEZE_TICKS = 600;
 
     private static final ResourceLocation ARMOR_HP_KBRES_UUID = ResourceLocation.fromNamespaceAndPath("sporeadd", "poder12_armor_hp_kbres_uuid");
     private static final Map<UUID, Integer> PREVIOUS_ARMOR_HP = new HashMap<>();
@@ -106,52 +107,29 @@ public class Poder12 {
         }
     }
 
-    /**
-     * Takes off the armor the player is wearing before the power puts its own pieces on. The old pieces are thrown on
-     * the ground (default) or moved to the inventory, see equipment.previous_armor_mode in the config.
-     */
     private static void dropArmorSlots(ServerPlayer player) {
         ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
         if (!helmet.isEmpty()) {
-            Poder12Variants.storeOrRemember(player, helmet, EquipmentSlot.HEAD);
+            player.drop(helmet, false);
             player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
         }
 
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
         if (!chest.isEmpty()) {
-            Poder12Variants.storeOrRemember(player, chest, EquipmentSlot.CHEST);
+            player.drop(chest, false);
             player.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
         }
 
         ItemStack legs = player.getItemBySlot(EquipmentSlot.LEGS);
         if (!legs.isEmpty()) {
-            Poder12Variants.storeOrRemember(player, legs, EquipmentSlot.LEGS);
+            player.drop(legs, false);
             player.setItemSlot(EquipmentSlot.LEGS, ItemStack.EMPTY);
         }
 
         ItemStack boots = player.getItemBySlot(EquipmentSlot.FEET);
         if (!boots.isEmpty()) {
-            Poder12Variants.storeOrRemember(player, boots, EquipmentSlot.FEET);
+            player.drop(boots, false);
             player.setItemSlot(EquipmentSlot.FEET, ItemStack.EMPTY);
-        }
-    }
-
-    /**
-     * Removes the power's armor when the Armor HP runs out. With equip_armor_pieces on, whatever is in the four armor
-     * slots is wiped (the original behaviour); with it off only leftover Spore power pieces are removed so the
-     * player's own armor is never deleted.
-     */
-    private static void clearPowerArmorSlots(ServerPlayer player) {
-        boolean wipeAll = Poder12Variants.equipsArmorPieces();
-        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
-            ItemStack stack = player.getItemBySlot(slot);
-            if (!stack.isEmpty() && (wipeAll || Poder12Variants.isPowerArmorPiece(stack))) {
-                player.setItemSlot(slot, ItemStack.EMPTY);
-            }
-        }
-        if (wipeAll) {
-            // previous_armor_mode = REMEMBER: the pieces set aside when the power was used go back on now.
-            Poder12Variants.restoreRememberedArmor(player);
         }
     }
 
@@ -175,18 +153,15 @@ public class Poder12 {
     public static void activate(ServerPlayer player) {
         PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> {
             int currentSpore = spore.getSpore();
-            int sporeCost = KommandantAdvancedConfig.ARMOR_BIOMASS_COST.get();
-            if (currentSpore < sporeCost) {
+            if (currentSpore < SPORE_COST) {
                 player.sendSystemMessage(Component.literal("§4Not enough biomass"));
                 return;
             }
 
-            spore.subSpore(sporeCost);
+            spore.subSpore(SPORE_COST);
 
             PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
-                // equip_armor_pieces off = the power never touches the player's own armor.
-                boolean equipPieces = Poder12Variants.equipsArmorPieces();
-                if (equipPieces && data.getArmorHp() == 0) {
+                if (data.getArmorHp() == 0) {
                     dropArmorSlots(player);
                 }
 
@@ -198,23 +173,20 @@ public class Poder12 {
                 var attr = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
                 if (attr != null) {
                     attr.removeModifier(ARMOR_HP_KBRES_UUID);
-                    double knockbackResistance = KommandantAdvancedConfig.ARMOR_KNOCKBACK_RESISTANCE.get();
-                    if (data.getArmorHp() > 0 && knockbackResistance > 0.0D) {
+                    if (data.getArmorHp() > 0) {
                         attr.addPermanentModifier(
                                 new AttributeModifier(
                                         ARMOR_HP_KBRES_UUID,
-                                        knockbackResistance,
+                                        1.0D,
                                         AttributeModifier.Operation.ADD_VALUE
                                 )
                         );
                     }
                 }
 
-                if (equipPieces) {
-                    equipPowerArmor(player);
-                }
+                equipPowerArmor(player);
 
-                if (Poder12Variants.isgluttonous(player) && maxArmor <= Poder12Variants.gluttonousHelmBreakThreshold()) {
+                if (Poder12Variants.isgluttonous(player) && maxArmor <= Poder12Variants.gluttonous_HELM_BREAK_THRESHOLD) {
                     Poder12Variants.breakgluttonousHelmet(player, gluttonous_HELM_BROKEN, gluttonous_HELM_RESTORE_TIMERS, true);
                 } else {
                     Poder12Variants.setgluttonousHelmetBroken(player, gluttonous_HELM_BROKEN, false);
@@ -296,18 +268,16 @@ public class Poder12 {
                         && !attacker.getCooldowns().isOnCooldown(pci)) {
 
                     int charge = pci.getCharge(weapon);
-                    int pciDamagePerCharge = KommandantAdvancedConfig.ARMOR_PCI_DAMAGE_PER_CHARGE.get();
-                    int maxAllowedArmorDamage = Math.max(1,
-                            (int) Math.floor(Poder12Variants.getMaxArmor(player) * KommandantAdvancedConfig.ARMOR_PCI_MAX_FRACTION.get()));
+                    int maxAllowedArmorDamage = Math.max(1, Poder12Variants.getMaxArmor(player) / 10);
 
-                    int chargesToUse = (int) Math.floor((float) maxAllowedArmorDamage / pciDamagePerCharge);
+                    int chargesToUse = (int) Math.floor((float) maxAllowedArmorDamage / PCI_DAMAGE_PER_CHARGE);
                     if (chargesToUse <= 0) {
                         chargesToUse = 1;
                     }
 
                     chargesToUse = Math.min(chargesToUse, charge);
 
-                    int armorDamage = chargesToUse * pciDamagePerCharge;
+                    int armorDamage = chargesToUse * PCI_DAMAGE_PER_CHARGE;
                     armorDamage = Math.min(armorDamage, maxAllowedArmorDamage);
                     armorDamage = Math.min(armorDamage, armorHp);
 
@@ -316,9 +286,8 @@ public class Poder12 {
                         data.setArmorHpAndSync(newArmorHp, player);
 
                         pci.setCharge(weapon, charge - chargesToUse);
-                        player.setTicksFrozen(KommandantAdvancedConfig.ARMOR_PCI_FREEZE_TICKS.get());
-                        attacker.getCooldowns().addCooldown(pci, Math.max(KommandantAdvancedConfig.ARMOR_PCI_MIN_COOLDOWN.get(),
-                                chargesToUse * KommandantAdvancedConfig.ARMOR_PCI_COOLDOWN_PER_CHARGE.get()));
+                        player.setTicksFrozen(PCI_FREEZE_TICKS);
+                        attacker.getCooldowns().addCooldown(pci, Math.max(20, chargesToUse * 10));
                         pci.playSound(attacker);
 
                         event.setAmount(0.0F);
@@ -336,35 +305,23 @@ public class Poder12 {
             float dmg = event.getAmount();
 
             if (player.hasEffect(effects.EXQUISITE_CUISINE)) {
-                dmg *= KommandantAdvancedConfig.ARMOR_CUISINE_MULTIPLIER.get().floatValue();
+                dmg *= 0.8F;
             }
 
             if (Poder12Variants.isgluttonous(player)
                     && Poder12Variants.isgluttonousHelmetBroken(player, gluttonous_HELM_BROKEN)) {
-                dmg *= Poder12Variants.gluttonousBrokenHelmDamageMultiplier();
+                dmg *= Poder12Variants.gluttonous_BROKEN_HELM_DAMAGE_MULTIPLIER;
             }
 
-            // Optional (off by default): the hit is first reduced by the player's own armor points and toughness.
-            if (KommandantAdvancedConfig.ARMOR_VANILLA_REDUCTION.get()) {
-                dmg = Poder12Variants.applyVanillaArmor(player, event.getSource(), dmg);
-            }
-
-            float resistancePerLevel = KommandantAdvancedConfig.ARMOR_RESISTANCE_PER_LEVEL.get().floatValue();
             MobEffectInstance resistanceEffect = player.getEffect(MobEffects.DAMAGE_RESISTANCE);
             if (resistanceEffect != null) {
-                float reductionPercentage = Math.min((resistanceEffect.getAmplifier() + 1) * resistancePerLevel, 1.0F);
+                float reductionPercentage = Math.min((resistanceEffect.getAmplifier() + 1) * 0.20F, 1.0F);
                 dmg = dmg * (1.0F - reductionPercentage);
             }
 
-            // Optional extra reduction on every hit (0 by default = none).
-            float extraReduction = KommandantAdvancedConfig.ARMOR_DAMAGE_REDUCTION.get().floatValue();
-            if (extraReduction > 0.0F) {
-                dmg = dmg * (1.0F - extraReduction);
-            }
+            int dmgInt = Math.max(1, Math.round(dmg));
 
-            int dmgInt = Math.max(KommandantAdvancedConfig.ARMOR_MIN_DAMAGE.get(), Math.round(dmg));
-
-            if (resistanceEffect != null && (resistanceEffect.getAmplifier() + 1) * resistancePerLevel >= 1.0F) {
+            if (resistanceEffect != null && (resistanceEffect.getAmplifier() + 1) * 0.20F >= 1.0F) {
                 dmgInt = 0;
             }
 
@@ -407,12 +364,10 @@ public class Poder12 {
                 if (dmgInt > 20
                         && Poder12Variants.isgluttonous(player)
                         && !event.getSource().equals(player.level().damageSources().fall())) {
-                    boolean isPhase3 = newArmorHp < KommandantAdvancedConfig.GLUTTONOUS_LOW_HP.get();
+                    boolean isPhase3 = newArmorHp < 200;
                     long currentTime = serverLevel.getGameTime();
                     long lastTrigger = SCENT_COOLDOWNS.getOrDefault(player.getUUID(), 0L);
-                    long cooldownTicks = isPhase3
-                            ? KommandantAdvancedConfig.GLUTTONOUS_SCENT_COOLDOWN_LOW.get()
-                            : KommandantAdvancedConfig.GLUTTONOUS_SCENT_COOLDOWN.get();
+                    long cooldownTicks = isPhase3 ? 125L : 225L;
 
                     if (currentTime - lastTrigger >= cooldownTicks) {
                         SCENT_COOLDOWNS.put(player.getUUID(), currentTime);
@@ -467,7 +422,10 @@ public class Poder12 {
                     serverLevel.sendParticles(Poder12Variants.DUST_ROJO, serverPlayer.getX() + rx, serverPlayer.getY() + 0.3 + ry, serverPlayer.getZ() + rz, 1, 0, 0, 0, 0);
                 }
 
-                clearPowerArmorSlots(serverPlayer);
+                serverPlayer.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+                serverPlayer.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
+                serverPlayer.setItemSlot(EquipmentSlot.LEGS, ItemStack.EMPTY);
+                serverPlayer.setItemSlot(EquipmentSlot.FEET, ItemStack.EMPTY);
 
                 serverPlayer.inventoryMenu.broadcastChanges();
                 serverPlayer.getInventory().setChanged();
@@ -511,7 +469,7 @@ public class Poder12 {
                 if (isgluttonous) {
                     Poder12Variants.tickgluttonousHelmetBurst(serverPlayer);
 
-                    boolean atCritical = currentHp <= Poder12Variants.gluttonousHelmBreakThreshold();
+                    boolean atCritical = currentHp <= Poder12Variants.gluttonous_HELM_BREAK_THRESHOLD;
                     boolean triggered = gluttonous_CRITICAL_TRIGGERED.getOrDefault(playerId, false);
 
                     if (atCritical && !triggered) {
@@ -524,8 +482,7 @@ public class Poder12 {
 
                         if (canTriggerPower13) {
                             PlayerLevelProvider.PLAYER_LVL.get(serverPlayer).ifPresent(levelData -> {
-                                // Needs the nuke unlocked (configurable unlock level of ability 13, default 9).
-                                if (com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(levelData.getLevel(), 13)) {
+                                if (levelData.getLevel() >= 9) {
                                     Poder13Variants.activategluttonous((ServerLevel) serverPlayer.level(), serverPlayer);
                                 }
                             });
@@ -534,11 +491,11 @@ public class Poder12 {
                         gluttonous_CRITICAL_TRIGGERED.remove(playerId);
                     }
 
-                    if (currentHp >= Poder12Variants.gluttonousHelmBreakThreshold() + 1) {
+                    if (currentHp >= Poder12Variants.gluttonous_HELM_BREAK_THRESHOLD + 1) {
                         if (Poder12Variants.isgluttonousHelmetBroken(serverPlayer, gluttonous_HELM_BROKEN)) {
                             gluttonous_HELM_RESTORE_TIMERS.putIfAbsent(
                                     playerId,
-                                    serverPlayer.level().getGameTime() + Poder12Variants.gluttonousHelmRestoreDelayTicks()
+                                    serverPlayer.level().getGameTime() + Poder12Variants.gluttonous_HELM_RESTORE_DELAY_TICKS
                             );
 
                             Long restoreAt = gluttonous_HELM_RESTORE_TIMERS.get(playerId);
@@ -565,7 +522,7 @@ public class Poder12 {
 
                     MobEffectInstance regenEffect = serverPlayer.getEffect(MobEffects.REGENERATION);
                     if (regenEffect != null) {
-                        healAmount += (regenEffect.getAmplifier() + 1) * KommandantAdvancedConfig.ARMOR_REGEN_EFFECT_BONUS.get();
+                        healAmount += (regenEffect.getAmplifier() + 1) * 2;
                     }
 
                     if (healAmount > 0) {

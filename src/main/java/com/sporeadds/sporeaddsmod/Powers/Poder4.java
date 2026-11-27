@@ -6,7 +6,6 @@ import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousBlockHarvestLogic;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousHarvestLogic;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousPowerHelper;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.entity.MeatAbomination;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -36,24 +35,13 @@ public class Poder4 {
         Player player = event.getEntity();
         if (player.level().isClientSide()) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
-        if (!SkillBindings.useClickTriggers(player, SkillClick.POWER4_CONSUME)) return;
+        if (!gluttonousPowerHelper.isPower4Enabled(player)) return;
 
-        if (tryDevourMeatAbomination(player, event.getTarget())) {
-            event.setCanceled(true);
-        }
-    }
-
-    /** Power 4 on a Meat Abomination: eat a bite of it. Called by the interaction event and by SkillClickDispatcher; true when used. */
-    public static boolean tryDevourMeatAbomination(Player player, net.minecraft.world.entity.Entity target) {
-        if (player.level().isClientSide()) return false;
-        if (!gluttonousPowerHelper.isPower4Enabled(player)) return false;
-
-        if (!(target instanceof MeatAbomination meatAbomination)) return false;
+        if (!(event.getTarget() instanceof MeatAbomination meatAbomination)) return;
 
         meatAbomination.setBiomass(meatAbomination.getBiomass() - 1.0F);
 
-        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore ->
-                spore.addSpore(KommandantPowersConfig.DEVOUR_MEAT_ABOMINATION_BIOMASS.get()));
+        PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(spore -> spore.addSpore(1));
 
         int saturationTicks = 8;
         player.addEffect(new MobEffectInstance(MobEffects.SATURATION, saturationTicks, 0));
@@ -117,12 +105,11 @@ public class Poder4 {
                 0.9F
         );
 
-        return true;
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
     public static void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (!SkillBindings.useClickTriggers(event.getEntity(), SkillClick.POWER4_CONSUME)) return;
         if (gluttonousBlockHarvestLogic.tryHarvestBlock(event.getEntity(), event.getPos())) {
             event.setCanceled(true);
         }

@@ -12,9 +12,7 @@ import com.sporeadds.sporeaddsmod.network.PacketDistributor;
 
 public class PlayerData {
 
-    public static final String DEFAULT_SWITCHES = "000000000";
-
-    private String Switches = DEFAULT_SWITCHES;
+    private String Switches = "000000000";
     private int armorHp = 0;
     private int eyeBaseType = 1;
     private int eyeGlowType = 1;
@@ -27,22 +25,7 @@ public class PlayerData {
     }
 
     public void setSwitch(String value) {
-        this.Switches = normalizeSwitches(value);
-    }
-
-    /**
-     * The toggle string is always nine '0'/'1' characters (one per ability slot). Pad, trim and clean anything else
-     * (an old save without the key, a broken packet) so the many {@code charAt()} readers can never go out of bounds.
-     */
-    public static String normalizeSwitches(String value) {
-        if (value == null) {
-            return DEFAULT_SWITCHES;
-        }
-        StringBuilder sb = new StringBuilder(DEFAULT_SWITCHES.length());
-        for (int i = 0; i < DEFAULT_SWITCHES.length(); i++) {
-            sb.append(i < value.length() && value.charAt(i) == '1' ? '1' : '0');
-        }
-        return sb.toString();
+        this.Switches = value;
     }
 
     public int getArmorHp() {
@@ -57,7 +40,7 @@ public class PlayerData {
         armorHp = Math.max(0, value);
         if (player != null && !player.level().isClientSide) {
             NetworkHandlerArmorHp.getChannel().sendTo(
-                    new ArmorHpSyncPacket(armorHp, com.sporeadds.sporeaddsmod.Powers.Poder12Variants.getMaxArmor(player)),
+                    new ArmorHpSyncPacket(armorHp),
                     player.connection.getConnection(),
                     NetworkDirection.PLAY_TO_CLIENT
             );
@@ -174,7 +157,7 @@ public class PlayerData {
     }
 
     public void loadNBTData(CompoundTag nbt) {
-        Switches = normalizeSwitches(nbt.getString("switches"));
+        Switches = nbt.getString("switches");
         armorHp = Math.max(0, nbt.getInt("armorhp"));
         eyeBaseType = nbt.contains("eyeBaseType") ? Math.max(1, Math.min(4, nbt.getInt("eyeBaseType"))) : 1;
         eyeGlowType = nbt.contains("eyeGlowType") ? Math.max(1, Math.min(4, nbt.getInt("eyeGlowType"))) : 1;

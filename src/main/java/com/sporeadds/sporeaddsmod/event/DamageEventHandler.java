@@ -2,8 +2,9 @@ package com.sporeadds.sporeaddsmod.event;
 
 import net.neoforged.fml.common.EventBusSubscriber;
 
-import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
+import com.sporeadds.sporeaddsmod.effects.AmbushedEffect;
+import com.sporeadds.sporeaddsmod.effects.CriticalWoundEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,22 +19,15 @@ public class DamageEventHandler {
         LivingEntity attacker = event.getSource().getEntity() instanceof LivingEntity le ? le : null;
 
         if (target.hasEffect(effects.AMBUSHED)) {
-            event.setNewDamage(event.getNewDamage() * GhostConfig.ambushedIncomingDamageMultiplier());
+            event.setNewDamage(event.getNewDamage() * AmbushedEffect.INCOMING_DAMAGE_MULTIPLIER);
         }
 
         if (attacker != null && attacker.hasEffect(effects.AMBUSHED)) {
-            event.setNewDamage(event.getNewDamage() * GhostConfig.ambushedOutgoingDamageMultiplier());
+            event.setNewDamage(event.getNewDamage() * AmbushedEffect.OUTGOING_DAMAGE_MULTIPLIER);
         }
 
         if (attacker != null && attacker.hasEffect(effects.CRITICAL_WOUND)) {
-            event.setNewDamage(event.getNewDamage() * GhostConfig.criticalWoundOutgoingDamageMultiplier());
-        }
-
-        if (target.hasEffect(effects.CRITICAL_WOUND)) {
-            float woundedIncoming = GhostConfig.criticalWoundIncomingDamageMultiplier();
-            if (woundedIncoming != 1.0F) {
-                event.setNewDamage(event.getNewDamage() * woundedIncoming);
-            }
+            event.setNewDamage(event.getNewDamage() * CriticalWoundEffect.OUTGOING_DAMAGE_MULTIPLIER);
         }
     }
 }

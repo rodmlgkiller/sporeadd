@@ -85,8 +85,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void onLivingHurt(LivingIncomingDamageEvent event) {
         if (event.getEntity().hasEffect(effects.VULNERABLE)) {
-            // scientist.nano_injector.vulnerable_damage_multiplier (default 1.25)
-            event.setAmount(event.getAmount() * com.sporeadds.sporeaddsmod.config.ScientistConfig.vulnerableDamageMultiplier());
+            event.setAmount(event.getAmount() * 1.25f);
         }
     }
 
@@ -273,10 +272,6 @@ public class ForgeEvents {
         });
 
         syncSporeIdentifier(player);
-
-        // The client builds a brand new player on respawn: hand it the ability toggles the server kept.
-        ServerToData.syncTo(player);
-        com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
     }
 
     @SubscribeEvent
@@ -298,10 +293,6 @@ public class ForgeEvents {
             });
 
             syncSporeIdentifier(player);
-
-            // Changing dimension also rebuilds the client-side player: re-send the ability toggles.
-            ServerToData.syncTo(player);
-            com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
         }
     }
 
@@ -361,16 +352,11 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        // Historic behaviour (default): ability toggles start OFF on every login. With
-        // ability_toggles.persist_on_login the saved toggles are kept. Either way the client is told what the
-        // server really has, so the ability selector can never disagree with the active abilities.
-        if (!SporeAddsConfig.ABILITY_TOGGLES_PERSIST_ON_LOGIN.get()) {
-            PlayerDataProvider.PLAYER_DATA.get(event.getEntity())
-                    .ifPresent(data -> data.setSwitch(com.sporeadds.sporeaddsmod.PlayerData.PlayerData.DEFAULT_SWITCHES));
-        }
-        if (event.getEntity() instanceof ServerPlayer togglePlayer) {
-            ServerToData.syncTo(togglePlayer);
-        }
+        PlayerDataProvider.PLAYER_DATA.get(event.getEntity()).ifPresent(data -> data.setSwitch("000000000"));
+        NetworkHandle.INSTANCE.send(
+                PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()),
+                new ServerToData("000000000")
+        );
 
         if (event.getEntity() instanceof ServerPlayer player) {
             PlayerDataProvider.PLAYER_DATA.get(player).ifPresent(data -> {
@@ -387,7 +373,6 @@ public class ForgeEvents {
             });
 
             syncSporeIdentifier(player);
-            com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects.syncToClient(player);
 
             if (SporeAddsConfig.TRAINING_BOOK_GIVE_ON_FIRST_JOIN.get()) {
                 SporeIdentifierProvider.SPORE_IDENTIFIER.get(player).ifPresent(data -> {
@@ -474,18 +459,11 @@ public class ForgeEvents {
 
                 if (player.getPersistentData().getBoolean("SporeCocoonInterrupted")) {
                     player.sendSystemMessage(Component.translatable("message.sporeadd.power1.cocoon_interrupted"));
-                    if (com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_TICKS.get() > 0) {
-                        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
-                                com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_TICKS.get(),
-                                com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_SLOWNESS_AMPLIFIER.get()));
-                    }
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 20, 1));
 
                     PlayerLevelProvider.PLAYER_LVL.get(player).ifPresent(levelCap -> {
-                        if (levelCap.getLevel() >= com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.maxEvolutionLevel()
-                                && com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_TICKS.get() > 0) {
-                            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
-                                    com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_TICKS.get(),
-                                    com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.COCOON_INTERRUPTED_WEAKNESS_AMPLIFIER.get()));
+                        if (levelCap.getLevel() >= 9) {
+                            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 20, 2));
                         }
                     });
 

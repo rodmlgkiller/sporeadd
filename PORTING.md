@@ -58,14 +58,3 @@ classes), `tools/evcheck.pl` and `tools/subscribers.pl` (event subscriber sanity
 Class selection and abilities, Training Book, Kommandant armor/HP and the caustic/abyssal/gluttonous powers, Medic injector and
 defibrillation, Scientist scalpel/research GUI, implants GUI, Compounds GUI, block entities (medic/scientist/cryo/terrarium,
 hopper interaction), JEI recipes, key bindings and HUD overlays, sync after death/respawn/dimension change, and multiplayer.
-
-## Config expansion (kept in sync with 1.20.1)
-
-The 1.20.1 changes that moved gameplay numbers into the config (per-class options, locator/implant/starting-gear options, the optional Biomass Core action wheel and the ability-toggle sync fix) were forward-ported file by file. What differs on this branch:
-
-* `config/ConfigItems` and `config/ConfigEffects` read registries through `BuiltInRegistries`; effects are `Holder<MobEffect>`. Implant attribute modifiers are keyed by `ResourceLocation` (`sporeadd:implant/<type>/<n>`), attributes are holders, and the operation names are `ADD_VALUE` / `ADD_MULTIPLIED_BASE` / `ADD_MULTIPLIED_TOTAL` (the config also accepts the 1.20.1 names `ADD` / `MULT_BASE` / `MULT_TOTAL`).
-* Every `defineListAllowEmpty` call passes a *new element supplier* (`() -> ""`, or `() -> 0` for the two numeric lists). NeoForge's config screen only shows the "+" button of a list that has one. New lists must do the same.
-* *Mods -> SporeAdds -> Config* is NeoForge's own `ConfigurationScreen`, subclassed in `client/config/SporeConfigSectionScreen` to print readable option names (the mod has no per-option translations and NeoForge would otherwise show raw keys). Tooltips come from the comments in the config classes.
-* The Reinforced Combat Chains' maximum durability is read at use time through `IItemExtension#getMaxDamage` (registration still declares 25 so the item is damageable).
-* The Postmortem effect applies its attribute modifiers in `addAttributeModifiers` / `createModifiers` because the registration-time lambda would read the config before it is loaded.
-* `NetworkHandle.PROTOCOL_VERSION` is `"2"`: six packet formats changed (spore bar max, Armor HP max, claw counter, self-defibrillate screen, weak points, scientist research). Old clients are refused by new servers instead of failing to decode packets.

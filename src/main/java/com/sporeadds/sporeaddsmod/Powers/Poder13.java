@@ -7,8 +7,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import com.Harbinger.Spore.Sentities.FoliageSpread;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -76,7 +74,7 @@ public class Poder13 {
 
         PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(sporeData -> {
             int currentSpore = sporeData.getSpore();
-            int cost = KommandantAdvancedConfig.NUKE_BIOMASS_COST.get();
+            int cost = 20;
 
             if (currentSpore < cost) {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.not_enough_biomass").withStyle(ChatFormatting.DARK_RED));
@@ -97,19 +95,15 @@ public class Poder13 {
                 return;
             }
 
-            BlockPos spawnPos = player.blockPosition().above(KommandantAdvancedConfig.NUKE_SPAWN_HEIGHT.get());
+            BlockPos spawnPos = player.blockPosition().above(50);
             var nukeEntityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.fromNamespaceAndPath("spore", "tumoroid_nuke"));
             if (nukeEntityType == null) return;
 
             Entity nukeEntity = nukeEntityType.create(level);
             if (nukeEntity == null) return;
 
-            // The detonation is driven by DelayedDetonation (below); the entity's own timer is only a safety net that
-            // must outlast it, otherwise Spore's own nuke blast would fire first (300 ticks = the original value).
-            int detonationDelay = KommandantAdvancedConfig.NUKE_DETONATION_DELAY_TICKS.get();
-
             CompoundTag tag = new CompoundTag();
-            tag.putInt("timer", Math.max(300, detonationDelay + 100));
+            tag.putInt("timer", 300);
             tag.putByte("overclocked", (byte) 1);
             nukeEntity.load(tag);
             nukeEntity.moveTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, 0f, 0f);
@@ -134,10 +128,24 @@ public class Poder13 {
                         7.0F, 1.0F
                 );
 
-                // Resistance (to survive the blast) and Anticipation by default; the list is configurable.
-                ConfigEffects.apply(player, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.NUKE_PLAYER_EFFECTS));
+                var resistance = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("minecraft", "resistance")).orElse(null);
+                if (resistance != null) {
+                    player.addEffect(new net.minecraft.world.effect.MobEffectInstance(resistance, 300, 224, false, true));
+                }
 
-                new DelayedDetonation(level, nukeEntity, player, detonationDelay, hasCaustic);
+                var anticipation = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "anticipation")).orElse(null);
+                if (anticipation != null) {
+                    player.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                            anticipation,
+                            200,
+                            0,
+                            false,
+                            true,
+                            true
+                    ));
+                }
+
+                new DelayedDetonation(level, nukeEntity, player, 200, hasCaustic);
             }
         });
     }
@@ -178,12 +186,9 @@ public class Poder13 {
         private int ticksElapsed = 0;
         private int totalTicks = 0;
         private int spreadCycles = 0;
-        // Configurable (power_13_nuke.cloud); read when the cloud is created, i.e. at runtime.
-        private final int MAX_CYCLES = KommandantAdvancedConfig.NUKE_CLOUD_SPREAD_CYCLES.get();
-        private final int TICKS_BETWEEN_SPREADS = KommandantAdvancedConfig.NUKE_CLOUD_SPREAD_INTERVAL_TICKS.get();
-        private final int MAX_LIFETIME = KommandantAdvancedConfig.NUKE_CLOUD_LIFETIME_TICKS.get();
-        private final float START_RADIUS = KommandantAdvancedConfig.NUKE_CLOUD_START_RADIUS.get().floatValue();
-        private final float SHRINK_BLOCKS = KommandantAdvancedConfig.NUKE_CLOUD_SHRINK.get().floatValue();
+        private final int MAX_CYCLES = 4;
+        private final int TICKS_BETWEEN_SPREADS = 200;
+        private final int MAX_LIFETIME = 1200;
 
         public NukeFalloutSpreader(ServerLevel level, BlockPos center, double x, double y, double z, boolean isCaustic) {
             this.level = level;
@@ -200,7 +205,7 @@ public class Poder13 {
             ticksElapsed++;
             totalTicks++;
 
-            float currentRadius = START_RADIUS - ((float) totalTicks / MAX_LIFETIME) * SHRINK_BLOCKS;
+            float currentRadius = 60.0F - ((float) totalTicks / MAX_LIFETIME) * 12.0F;
 
             if (ticksElapsed >= TICKS_BETWEEN_SPREADS) {
                 ticksElapsed = 0;
@@ -212,7 +217,7 @@ public class Poder13 {
 
                         if (acidBlock != null && acidBlock != net.minecraft.world.level.block.Blocks.AIR) {
                             int r = (int) currentRadius;
-                            int attempts = (int) (Math.PI * r * r * KommandantAdvancedConfig.NUKE_CLOUD_ACID_DENSITY.get());
+                            int attempts = (int) (Math.PI * r * r * 0.10);
 
                             for (int i = 0; i < attempts; i++) {
                                 int dx = RANDOM.nextInt(r * 2 + 1) - r;
@@ -252,10 +257,8 @@ public class Poder13 {
                     level.sendParticles(particleOpt, px, py, pz, 1, 0, 0, 0, 0);
                 }
 
-                AABB cloudArea = new AABB(x, y, z, x, y, z).inflate(currentRadius, KommandantAdvancedConfig.NUKE_CLOUD_HEIGHT.get(), currentRadius);
+                AABB cloudArea = new AABB(x, y, z, x, y, z).inflate(currentRadius, 10.0, currentRadius);
                 List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, cloudArea, LivingEntity::isAlive);
-                int cloudEffectTicks = KommandantAdvancedConfig.NUKE_CLOUD_EFFECT_TICKS.get();
-                List<ConfigEffects.Entry> cloudExtraEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.NUKE_CLOUD_EXTRA_EFFECTS);
 
                 var exposed = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "exposed")).orElse(null);
                 var dissolution = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.fromNamespaceAndPath("sporeadd", "dissolution")).orElse(null);
@@ -272,14 +275,13 @@ public class Poder13 {
                         double dz = target.getZ() - z;
                         if (dx * dx + dz * dz <= currentRadius * currentRadius) {
                             if (isCaustic) {
-                                if (dissolution != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(dissolution, cloudEffectTicks, 3));
-                                if (mycelium != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(mycelium, cloudEffectTicks, myceliumLevel));
-                                if (corrosion != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(corrosion, cloudEffectTicks, myceliumLevel));
+                                if (dissolution != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(dissolution, 1000, 3));
+                                if (mycelium != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(mycelium, 1000, myceliumLevel));
+                                if (corrosion != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(corrosion, 1000, myceliumLevel));
                             } else {
-                                if (exposed != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(exposed, cloudEffectTicks, exposedLevel));
-                                if (mycelium != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(mycelium, cloudEffectTicks, myceliumLevel));
+                                if (exposed != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(exposed, 1000, exposedLevel));
+                                if (mycelium != null) target.addEffect(new net.minecraft.world.effect.MobEffectInstance(mycelium, 1000, myceliumLevel));
                             }
-                            ConfigEffects.apply(target, cloudExtraEffects);
                         }
                     }
                 }
@@ -315,16 +317,14 @@ public class Poder13 {
         level.explode(
                 nukeEntity,
                 ex, ey, ez,
-                KommandantAdvancedConfig.NUKE_EXPLOSION_RADIUS.get().floatValue(),
-                KommandantAdvancedConfig.NUKE_EXPLOSION_FIRE.get(),
-                KommandantAdvancedConfig.NUKE_EXPLOSION_BREAKS_BLOCKS.get()
-                        ? Level.ExplosionInteraction.TNT
-                        : Level.ExplosionInteraction.NONE
+                24f,
+                true,
+                Level.ExplosionInteraction.TNT
         );
 
         player.sendSystemMessage(Component.translatable("message.sporeadd.power13.nuke_detonated").withStyle(ChatFormatting.DARK_RED));
 
-        double damageRadius = KommandantAdvancedConfig.NUKE_DAMAGE_RADIUS.get();
+        double damageRadius = 100.0;
         AABB effectArea = new AABB(ex, ey, ez, ex, ey, ez).inflate(damageRadius);
         List<LivingEntity> affected = level.getEntitiesOfClass(LivingEntity.class, effectArea, LivingEntity::isAlive);
 
@@ -344,27 +344,20 @@ public class Poder13 {
         int terminaLevel = SporeAddsConfig.NUKE_TERMINA_LEVEL.get();
         int myceliumLevel = SporeAddsConfig.NUKE_MYCELIUM_LEVEL.get();
 
-        // power_13_nuke.blast: effect duration, damage, knockback and extra effects (defaults = the old hard-coded values)
-        int blastEffectTicks = KommandantAdvancedConfig.NUKE_BLAST_EFFECT_TICKS.get();
-        float blastDamage = KommandantAdvancedConfig.NUKE_DAMAGE.get().floatValue();
-        double knockbackHorizontal = KommandantAdvancedConfig.NUKE_KNOCKBACK_HORIZONTAL.get();
-        double knockbackVertical = KommandantAdvancedConfig.NUKE_KNOCKBACK_VERTICAL.get();
-        List<ConfigEffects.Entry> blastExtraEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.NUKE_BLAST_EXTRA_EFFECTS);
-
         for (LivingEntity entity : affected) {
             Team team = entity.getTeam();
             if (team == null || !team.getName().equals("spore")) {
 
                 if (mycelium != null) {
-                    entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(mycelium, blastEffectTicks, myceliumLevel, false, true));
+                    entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(mycelium, 6000, myceliumLevel, false, true));
                 }
 
                 if (isCaustic) {
                     if (dissolution != null) {
-                        entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(dissolution, blastEffectTicks, 1, false, true));
+                        entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(dissolution, 6000, 1, false, true));
                     }
                     if (corrosion != null) {
-                        entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(corrosion, blastEffectTicks, myceliumLevel, false, true));
+                        entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(corrosion, 6000, myceliumLevel, false, true));
                     }
                 } else {
                     if (termina != null) {
@@ -373,15 +366,13 @@ public class Poder13 {
                     }
                 }
 
-                ConfigEffects.apply(entity, blastExtraEffects);
-
-                entity.hurt(level.damageSources().explosion(null), blastDamage);
+                entity.hurt(level.damageSources().explosion(null), 350.0F);
 
                 double dx = entity.getX() - ex;
                 double dy = entity.getY() - ey;
                 double dz = entity.getZ() - ez;
                 double dist = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.1;
-                entity.push(dx / dist * knockbackHorizontal, dy / dist * knockbackVertical, dz / dist * knockbackHorizontal);
+                entity.push(dx / dist * 4, dy / dist * 2, dz / dist * 4);
             }
         }
 

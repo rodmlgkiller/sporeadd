@@ -6,7 +6,6 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
 
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.effects.SporeTeamCombatTracker;
 import com.sporeadds.sporeaddsmod.effects.effects;
@@ -34,14 +33,10 @@ import net.neoforged.fml.common.Mod;
 @EventBusSubscriber(modid = "sporeadd")
 public final class CallOfTheHiveHandler {
 
+    public static final double PROXIMITY_RADIUS = 300.0D;
     private static final int PROXIMITY_CHECK_INTERVAL = 20;
 
     private CallOfTheHiveHandler() {
-    }
-
-    /** Radius in blocks around a Proto where the effect applies and persists (kommandant_abilities.class_gain.proto_call_radius, default 300). */
-    public static double proximityRadius() {
-        return KommandantPowersConfig.PROTO_CALL_RADIUS.get();
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
@@ -64,7 +59,7 @@ public final class CallOfTheHiveHandler {
 
         // El escaneo de protos es lo más caro: solo tras pasar la tirada.
         if (!SporeAddsConfig.CALL_OF_THE_HIVE_APPLIES_WITHOUT_PROTO.get()
-                && !ProtoProximity.isProtoWithin(victim.level(), victim.position(), proximityRadius())) {
+                && !ProtoProximity.isProtoWithin(victim.level(), victim.position(), PROXIMITY_RADIUS)) {
             return;
         }
 
@@ -83,7 +78,7 @@ public final class CallOfTheHiveHandler {
         if (HiveDownedManager.isDowned(player.getUUID())) return;
 
         if (!SporeAddsConfig.CALL_OF_THE_HIVE_PERSISTS_WITHOUT_PROTO.get()
-                && !ProtoProximity.isProtoWithin(player.level(), player.position(), proximityRadius())) {
+                && !ProtoProximity.isProtoWithin(player.level(), player.position(), PROXIMITY_RADIUS)) {
             player.removeEffect(effects.CALL_OF_THE_HIVE);
             return;
         }

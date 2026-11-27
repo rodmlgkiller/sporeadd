@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class NetworkHandle {
 
-    private static final String PROTOCOL_VERSION = "2";
+    private static final String PROTOCOL_VERSION = "1";
 
     public static final PacketChannel INSTANCE = new PacketChannel();
 
@@ -101,11 +101,6 @@ public class NetworkHandle {
         reg(r, CausticShotScalePacket.class, CausticShotScalePacket::encode, CausticShotScalePacket::decode, CausticShotScalePacket::handle, Dir.TO_CLIENT);
         reg(r, CausticSprayModePacket.class, CausticSprayModePacket::encode, CausticSprayModePacket::decode, CausticSprayModePacket::handle, Dir.TO_CLIENT);
         reg(r, FireCausticSprayShotPacket.class, FireCausticSprayShotPacket::encode, FireCausticSprayShotPacket::decode, FireCausticSprayShotPacket::handle, Dir.TO_SERVER);
-        reg(r, RequestSwitchSyncPacket.class, RequestSwitchSyncPacket::encode, RequestSwitchSyncPacket::decode, RequestSwitchSyncPacket::handle, Dir.TO_SERVER);
-        reg(r, SkillBindingsPacket.class, SkillBindingsPacket::encode, SkillBindingsPacket::decode, SkillBindingsPacket::handle, Dir.TO_SERVER);
-        reg(r, SkillClickPacket.class, SkillClickPacket::encode, SkillClickPacket::decode, SkillClickPacket::handle, Dir.TO_SERVER);
-        reg(r, OpenBiomassWheelPacket.class, OpenBiomassWheelPacket::encode, OpenBiomassWheelPacket::decode, OpenBiomassWheelPacket::handle, Dir.TO_CLIENT);
-        reg(r, BiomassCoreMoldPacket.class, BiomassCoreMoldPacket::encode, BiomassCoreMoldPacket::decode, BiomassCoreMoldPacket::handle, Dir.TO_SERVER);
     }
 
     private static String idFor(Class<?> cls) {

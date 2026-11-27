@@ -35,8 +35,8 @@ public class VigilRadarPacket {
     public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            // Se muestra durante 300 ticks (15 segundos) por defecto; configurable (power_11_vigil.report_display_ticks)
-            ClientRadarHUD.setReport(lines, com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.VIGIL_REPORT_TICKS.get());
+            // Se muestra durante 300 ticks (15 segundos)
+            ClientRadarHUD.setReport(lines, 300);
         });
         context.setPacketHandled(true);
     }

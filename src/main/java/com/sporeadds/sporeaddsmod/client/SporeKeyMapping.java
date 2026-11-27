@@ -2,10 +2,7 @@ package com.sporeadds.sporeaddsmod.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import com.sporeadds.sporeaddsmod.Powers.SkillClick;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.settings.KeyConflictContext;
-import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 public class SporeKeyMapping {
@@ -36,23 +33,6 @@ public class SporeKeyMapping {
 
     public static final KeyMapping CAUSTIC_SHOT = new KeyMapping("key.sporeadd.caustic_shot", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, CATEGORY_SPOREADD);
 
-    /**
-     * The click that activates each click skill (Contaminate and Extract, Devour, Biomass Manipulation, Forced Mutation, Second
-     * Authority). The defaults are the clicks they have always used: the right mouse button, and Shift + right mouse button
-     * for harvesting. See SkillClick / SkillClickKeys.
-     */
-    private static KeyMapping skillClick(SkillClick skill, KeyModifier modifier) {
-        return new KeyMapping(skill.keyTranslation(), KeyConflictContext.IN_GAME, modifier,
-                InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), CATEGORY_SPOREADD);
-    }
-
-    public static final KeyMapping POWER2_CLICK = skillClick(SkillClick.POWER2_EXECUTE, KeyModifier.NONE);
-    public static final KeyMapping POWER4_CLICK = skillClick(SkillClick.POWER4_CONSUME, KeyModifier.NONE);
-    public static final KeyMapping POWER5_FEED_CLICK = skillClick(SkillClick.POWER5_FEED, KeyModifier.NONE);
-    public static final KeyMapping POWER5_HARVEST_CLICK = skillClick(SkillClick.POWER5_HARVEST, KeyModifier.SHIFT);
-    public static final KeyMapping POWER6_CLICK = skillClick(SkillClick.POWER6_EVOLVE, KeyModifier.NONE);
-    public static final KeyMapping POWER7_CLICK = skillClick(SkillClick.POWER7_MOUNT, KeyModifier.NONE);
-
     static {
         net.neoforged.neoforge.client.settings.KeyModifier.NONE.toString();
     }
@@ -77,11 +57,5 @@ public class SporeKeyMapping {
         event.register(ABILITY_1);
         event.register(ABILITY_2);
         event.register(CAUSTIC_SHOT);
-        event.register(POWER2_CLICK);
-        event.register(POWER4_CLICK);
-        event.register(POWER5_FEED_CLICK);
-        event.register(POWER5_HARVEST_CLICK);
-        event.register(POWER6_CLICK);
-        event.register(POWER7_CLICK);
     }
 }

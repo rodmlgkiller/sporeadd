@@ -33,7 +33,7 @@ public final class WeakPointRenderHandler {
             return;
         }
 
-        Map<Integer, WeakPointClientState.Marker> allWeakPoints = WeakPointClientState.getAll();
+        Map<Integer, Vec3> allWeakPoints = WeakPointClientState.getAll();
         if (allWeakPoints.isEmpty()) {
             return;
         }
@@ -49,7 +49,7 @@ public final class WeakPointRenderHandler {
 
         com.mojang.blaze3d.vertex.Tesselator tesselator = com.mojang.blaze3d.vertex.Tesselator.getInstance();
 
-        for (Map.Entry<Integer, WeakPointClientState.Marker> entry : allWeakPoints.entrySet()) {
+        for (Map.Entry<Integer, Vec3> entry : allWeakPoints.entrySet()) {
             int entityId = entry.getKey();
             Entity entity = mc.level.getEntity(entityId);
             if (entity == null) {
@@ -64,35 +64,30 @@ public final class WeakPointRenderHandler {
                 continue;
             }
 
-            WeakPointClientState.Marker marker = entry.getValue();
-
-            // The tier (sprite) and the size come from the server with each sync.
-            var texture = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getTierTexture(marker.tier());
+            var texture = com.sporeadds.sporeaddsmod.combat.WeakPointManager.getTexture(entityId);
             com.mojang.blaze3d.systems.RenderSystem.setShaderTexture(0, texture);
 
-            float half = (MARKER_SIZE / 2.0F) * (marker.radius() / com.sporeadds.sporeaddsmod.network.SyncWeakPointPacket.DEFAULT_RADIUS);
+            Vec3 offset = entry.getValue();
+            Vec3 worldPos = entity.getPosition(event.getPartialTick().getGameTimeDeltaPartialTick(false)).add(offset);
 
-            for (Vec3 offset : marker.offsets()) {
-                Vec3 worldPos = entity.getPosition(event.getPartialTick().getGameTimeDeltaPartialTick(false)).add(offset);
+            poseStack.pushPose();
+            poseStack.translate(worldPos.x - camPos.x, worldPos.y - camPos.y, worldPos.z - camPos.z);
+            poseStack.mulPose(mc.getEntityRenderDispatcher().camera.rotation());
 
-                poseStack.pushPose();
-                poseStack.translate(worldPos.x - camPos.x, worldPos.y - camPos.y, worldPos.z - camPos.z);
-                poseStack.mulPose(mc.getEntityRenderDispatcher().camera.rotation());
+            float half = MARKER_SIZE / 2.0F;
+            var matrix = poseStack.last().pose();
 
-                var matrix = poseStack.last().pose();
+            com.mojang.blaze3d.vertex.BufferBuilder bufferBuilder = tesselator.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
+                    com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX_COLOR);
 
-                com.mojang.blaze3d.vertex.BufferBuilder bufferBuilder = tesselator.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
-                        com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX_COLOR);
+            bufferBuilder.addVertex(matrix, -half, -half, 0).setColor(255, 255, 255, 255).setUv(0, 1);
+            bufferBuilder.addVertex(matrix, half, -half, 0).setColor(255, 255, 255, 255).setUv(1, 1);
+            bufferBuilder.addVertex(matrix, half, half, 0).setColor(255, 255, 255, 255).setUv(1, 0);
+            bufferBuilder.addVertex(matrix, -half, half, 0).setColor(255, 255, 255, 255).setUv(0, 0);
 
-                bufferBuilder.addVertex(matrix, -half, -half, 0).setColor(255, 255, 255, 255).setUv(0, 1);
-                bufferBuilder.addVertex(matrix, half, -half, 0).setColor(255, 255, 255, 255).setUv(1, 1);
-                bufferBuilder.addVertex(matrix, half, half, 0).setColor(255, 255, 255, 255).setUv(1, 0);
-                bufferBuilder.addVertex(matrix, -half, half, 0).setColor(255, 255, 255, 255).setUv(0, 0);
+            com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
 
-                com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
-
-                poseStack.popPose();
-            }
+            poseStack.popPose();
         }
 
         com.mojang.blaze3d.systems.RenderSystem.enableDepthTest();

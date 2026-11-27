@@ -135,9 +135,6 @@ public class SporeAddsConfig {
     public static final ModConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_LETHAL;
     public static final ModConfigSpec.BooleanValue PUNISHMENT_THIRD_STRIKE_NO_RESPAWN;
 
-    public static final ModConfigSpec.BooleanValue ABILITY_TOGGLES_PERSIST_ON_LOGIN;
-    public static final ModConfigSpec.BooleanValue BIOMASS_CORE_ACTION_WHEEL;
-
     public static final ModConfigSpec.BooleanValue DEVOTION_EVENT_ENABLED;
     public static final ModConfigSpec.DoubleValue DEVOTION_REWARD_RADIUS;
     public static final ModConfigSpec.IntValue DEVOTION_DURATION_TICKS;
@@ -199,7 +196,7 @@ public class SporeAddsConfig {
                         "18;14;1.39;1.05;2.56;0.25;BASE",
                         "19;16;1.44;1.06;2.78;0.30;BASE",
                         "20;20;1.50;1.07;3.00;0.35;BASE"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
 
         builder.comment(
                 "(changing the scale stats over/under 1.00 and 1.50 will cause visual bugs while using the tentacle skill)"
@@ -217,7 +214,7 @@ public class SporeAddsConfig {
                         "19;14;1.39;0.75;2.01;0.40;BASE",
                         "20;16;1.44;0.74;2.16;0.45;BASE",
                         "22;20;1.50;0.70;2.30;0.50;BASE"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
 
         KOMMANDANT_LEVEL_STATS_CAUSTIC = builder
                 .defineListAllowEmpty(List.of("caustic_table"), () -> List.of(
@@ -231,7 +228,7 @@ public class SporeAddsConfig {
                         "15;9;1.35;1.05;2.01;0.30;BASE",
                         "15;10;1.40;1.06;2.16;0.35;BASE",
                         "16;12;1.45;1.07;2.30;0.40;BASE"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
 
         KOMMANDANT_LEVEL_STATS_GLUTTONOUS = builder
                 .defineListAllowEmpty(List.of("GLUTTONOUS_table"), () -> List.of(
@@ -245,7 +242,7 @@ public class SporeAddsConfig {
                         "30;19;1.67;0.78;2.72;0.79;BASE",
                         "35;24;1.79;0.76;2.90;0.92;BASE",
                         "40;28;2.00;0.73;3.20;1.12;BASE"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
 
         builder.pop();
 
@@ -342,7 +339,7 @@ public class SporeAddsConfig {
                 "spore:reaper;15",
                 "spore:specter;15",
                 "spore:vanguard;20"
-        ), () -> "", obj -> obj instanceof String);
+        ), obj -> obj instanceof String);
 
         builder.pop();
 
@@ -420,7 +417,7 @@ public class SporeAddsConfig {
                         "spore:reaper;22",
                         "spore:specter;23",
                         "spore:vanguard;32"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
         builder.pop();
 
         builder.push("mound_settings");
@@ -440,7 +437,7 @@ public class SporeAddsConfig {
                         "spore:usurper;17",
                         "spore:braurei;15",
                         "spore:delusioner;14"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
         builder.pop();
 
         builder.push("bomb_summoning_menu");
@@ -466,7 +463,7 @@ public class SporeAddsConfig {
                         "spore:flesh_bomb;V2Carr Flame;17;1;20.0;7;true;2.25",
                         "spore:flesh_bomb;V2Carr Bile;17;2;20.0;7;true;2.25",
                         "spore:flesh_bomb;V2Carr Acid;16;3;20.0;8;true;2.25"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
         builder.pop();
 
         builder.push("nuclear_powers");
@@ -541,11 +538,11 @@ public class SporeAddsConfig {
 
         EXTRA_NEUTRAL_MOBS = builder
                 .comment("List of mob IDs that will be neutral towards Spore Team players.")
-                .defineListAllowEmpty(List.of("extra_neutral_mobs"), ArrayList::new, () -> "", obj -> obj instanceof String);
+                .defineListAllowEmpty(List.of("extra_neutral_mobs"), ArrayList::new, obj -> obj instanceof String);
 
         EXTRA_HOSTILE_MOBS = builder
                 .comment("List of mob IDs that will be hostile towards Spore Team players.")
-                .defineListAllowEmpty(List.of("extra_hostile_mobs"), ArrayList::new, () -> "", obj -> obj instanceof String);
+                .defineListAllowEmpty(List.of("extra_hostile_mobs"), ArrayList::new, obj -> obj instanceof String);
 
         builder.pop();
 
@@ -561,7 +558,7 @@ public class SporeAddsConfig {
         builder.push("call_of_the_hive");
 
         CALL_OF_THE_HIVE_CHANCE = builder
-                .comment("Chance (0.0 - 1.0) that a player hit by a spore-team entity, while within the Proto call radius (kommandant_abilities.class_gain.proto_call_radius, default 300 blocks)",
+                .comment("Chance (0.0 - 1.0) that a player hit by a spore-team entity, while within 300 blocks",
                         "of a spore:proto, gains the 'Call of the Hive' effect, when a player dies with this effect they will face a choice to become infected or die.")
                 .defineInRange("call_of_the_hive_chance", 0.05D, 0.0D, 1.0D);
 
@@ -726,7 +723,7 @@ public class SporeAddsConfig {
                 .comment("List of item IDs that the Kommandant is allowed to eat.")
                 .defineListAllowEmpty(List.of("kommandant_edible_items"), () -> List.of(
                         "spore:biomass"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
 
         builder.pop();
 
@@ -775,7 +772,6 @@ public class SporeAddsConfig {
                 .defineListAllowEmpty(
                         List.of("esp_entities"),
                         () -> List.of("minecraft:player"),
-                        () -> "",
                         obj -> obj instanceof String
                 );
 
@@ -794,7 +790,7 @@ public class SporeAddsConfig {
                 .comment("List of class identifiers that can be learned through the Training Book.")
                 .defineListAllowEmpty(List.of("enabled_classes"), () -> List.of(
                         "kommandant", "ghost", "medic", "scientist", "berserker"
-                ), () -> "", obj -> obj instanceof String);
+                ), obj -> obj instanceof String);
 
         TRAINING_BOOK_MAX_USES = builder
                 .comment("Number of times a single Training Book item can be used to change class.",
@@ -831,37 +827,6 @@ public class SporeAddsConfig {
         TRAINING_BOOK_SLOTS_BERSERKER = builder.defineInRange("berserker", 1, -1, 100000);
 
         builder.pop();
-
-        builder.push("ability_toggles");
-
-        ABILITY_TOGGLES_PERSIST_ON_LOGIN = builder
-                .comment("If true, the ON/OFF toggles of the ability selector are kept when a player logs out and back in.",
-                        "If false (default, the historic behaviour) every toggle starts OFF at login.",
-                        "Dying, respawning and changing dimension always keep the toggles, and the ability selector",
-                        "always shows the state the server really has.")
-                .define("persist_on_login", false);
-
-        builder.pop();
-
-        builder.push("biomass_core");
-
-        BIOMASS_CORE_ACTION_WHEEL = builder
-                .comment("If true, using the Biomass Core opens an action wheel to choose which weapon to create.",
-                        "If false (default) the Biomass Core behaves as it always did.")
-                .define("action_wheel_enabled", false);
-
-        builder.pop();
-
-        // Per-domain settings live in their own classes (one per class / system) to keep this file manageable.
-        GhostConfig.define(builder);
-        MedicConfig.define(builder);
-        ScientistConfig.define(builder);
-        BerserkerConfig.define(builder);
-        KommandantPowersConfig.define(builder);
-        KommandantAdvancedConfig.define(builder);
-        LocatorConfig.define(builder);
-        ImplantConfig.define(builder);
-        StartingGearConfig.define(builder);
 
         SPEC = builder.build();
     }

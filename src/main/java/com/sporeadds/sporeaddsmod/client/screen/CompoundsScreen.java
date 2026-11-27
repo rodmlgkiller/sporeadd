@@ -2,16 +2,14 @@ package com.sporeadds.sporeaddsmod.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.sporeadds.sporeaddsmod.Powers.berserker.CompoundEffects;
+import com.sporeadds.sporeaddsmod.Powers.berserker.ClawsAbility;
 import com.sporeadds.sporeaddsmod.Powers.berserker.CompoundType;
-import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -71,55 +69,46 @@ public class CompoundsScreen extends AbstractContainerScreen<CompoundsMenu> {
     }
 
     private void renderSummaryScreen(GuiGraphics guiGraphics, int boxX, int boxY) {
-        // Solo cuentan las syringes dentro de los limites de la config (berserker.blood_samples), igual que en el servidor.
-        List<ItemStack> placed = new ArrayList<>();
+        EnumMap<CompoundType, Integer> c = new EnumMap<>(CompoundType.class);
         for (int i = 0; i < CompoundsMenu.SLOT_COUNT; i++) {
-            placed.add(menu.slots.get(i).getItem());
+            CompoundType t = CompoundType.fromItem(menu.slots.get(i).getItem().getItem());
+            if (t != null) c.merge(t, 1, Integer::sum);
         }
-        EnumMap<CompoundType, Integer> c = CompoundEffects.countLimited(placed);
 
-        // Cifras de la config (por defecto: -7.5% dmg, +7.5% speed, +25% KB, +10% swim, +1 HP, 1s fire, +35% KB,
-        // +2 dmg, 0.5 drain/step, Poison/Wither 10s por syringe).
         List<String> benefits = new ArrayList<>();
         int reinforced = c.getOrDefault(CompoundType.REINFORCED, 0);
-        if (reinforced > 0) benefits.add(pct(-100.0 * BerserkerConfig.REINFORCED_DAMAGE_REDUCTION.get() * reinforced) + " dmg taken");
+        if (reinforced > 0) benefits.add(pct(-7.5 * reinforced) + " dmg taken");
         int skeletal = c.getOrDefault(CompoundType.SKELETAL, 0);
         if (skeletal > 0) {
-            benefits.add(pct(100.0 * BerserkerConfig.SKELETAL_SPEED_BONUS.get() * skeletal) + " speed");
-            benefits.add(pct(100.0 * BerserkerConfig.SKELETAL_KNOCKBACK_RESISTANCE.get() * skeletal) + " KB resist");
+            benefits.add(pct(7.5 * skeletal) + " speed");
+            benefits.add(pct(25.0 * skeletal) + " KB resist");
         }
         int drowned = c.getOrDefault(CompoundType.DROWNED, 0);
         if (drowned > 0) {
             benefits.add("Water Breathing");
-            benefits.add(pct(100.0 * BerserkerConfig.DROWNED_SWIM_BONUS.get() * drowned) + " swim");
+            benefits.add(pct(10.0 * drowned) + " swim");
         }
         int vampiric = c.getOrDefault(CompoundType.VAMPIRIC, 0);
-        if (vampiric > 0) benefits.add("+" + trim((float) (BerserkerConfig.VAMPIRIC_HEAL_PER_HIT.get() * vampiric)) + " HP/hit");
+        if (vampiric > 0) benefits.add("+" + vampiric + " HP/hit");
         int charred = c.getOrDefault(CompoundType.CHARRED, 0);
         if (charred > 0) {
             benefits.add("Fire Resistance");
-            benefits.add("+" + trim((float) (charred * BerserkerConfig.CHARRED_FIRE_TICKS.get() / 20.0D)) + "s fire/hit");
+            benefits.add("+" + charred + "s fire/hit");
         }
         int calcified = c.getOrDefault(CompoundType.CALCIFIED, 0);
-        if (calcified > 0) benefits.add(pct(100.0 * BerserkerConfig.CALCIFIED_KNOCKBACK_BONUS.get() * calcified) + " knockback");
+        if (calcified > 0) benefits.add(pct(35.0 * calcified) + " knockback");
         int bezerk = c.getOrDefault(CompoundType.BEZERK, 0);
-        float bezerkDamage = BerserkerConfig.BEZERK_UNARMED_DAMAGE.get().floatValue() * bezerk;
-        if (bezerk > 0) benefits.add("+" + trim(bezerkDamage) + " unarmed dmg");
+        if (bezerk > 0) benefits.add("+" + (2 * bezerk) + " unarmed dmg");
         int toxic = c.getOrDefault(CompoundType.TOXIC, 0);
-        if (toxic > 0) benefits.add("Poison " + roman(toxic) + " " + trim((float) (toxic * BerserkerConfig.TOXIC_POISON_TICKS.get() / 20.0D)) + "s");
+        if (toxic > 0) benefits.add("Poison " + roman(toxic) + " " + (10 * toxic) + "s");
         int rotten = c.getOrDefault(CompoundType.ROTTEN, 0);
-        if (rotten > 0) benefits.add("Wither " + roman(rotten) + " " + trim((float) (rotten * BerserkerConfig.ROTTEN_WITHER_TICKS.get() / 20.0D)) + "s");
+        if (rotten > 0) benefits.add("Wither " + roman(rotten) + " " + (10 * rotten) + "s");
 
-        float baseHit = BerserkerConfig.clawsBaseDamage() + bezerkDamage;
-
-        // Drenaje por segundo = (drenaje base + extra por bezerk) por paso de decaimiento, 20 ticks por segundo.
-        double drainPerStep = BerserkerConfig.clawsActiveDrainPerStep()
-                + BerserkerConfig.BEZERK_EXTRA_DRAIN.get().floatValue() * bezerk;
-        float drainPerSecond = (float) (drainPerStep * 20.0D / BerserkerConfig.clawsDecayStepTicks());
+        float baseHit = ClawsAbility.BARE_HAND_DAMAGE + 2.0F * bezerk;
 
         String greenText = (benefits.isEmpty() ? "No compounds equipped" : String.join("  ", benefits))
                 + "  |  Base hit: " + trim(baseHit);
-        String redText = "Brutality drain: " + trim(drainPerSecond) + "/s";
+        String redText = "Brutality drain: " + (2 + bezerk) + "/s";
 
         int maxScaledWidth = Math.round(SCREEN_W / TEXT_SCALE);
         List<FormattedCharSequence> greenLines =

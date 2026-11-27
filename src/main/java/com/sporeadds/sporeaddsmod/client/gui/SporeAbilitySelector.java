@@ -6,8 +6,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundItem;
 import com.sporeadds.sporeaddsmod.items.MutagenicCompoundVariant;
@@ -33,11 +31,9 @@ public class SporeAbilitySelector extends Screen {
 
     private int AbilityHovered;
     private int AbilityClicked;
-    private String Switches = com.sporeadds.sporeaddsmod.PlayerData.PlayerData.DEFAULT_SWITCHES;
+    private String Switches;
     private int Spore;
     private int Sporelvl;
-    /** unlocked[n] = ability n (1-13) is available at the player's level (kommandant_abilities.unlock_levels). */
-    private final boolean[] unlocked = new boolean[14];
     private static SporeAbilitySelector instance;
     private List<AbilityButtonArea> abilities = new ArrayList<>();
 
@@ -93,17 +89,10 @@ public class SporeAbilitySelector extends Screen {
         assert mc.player != null;
         PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(lvl -> {
             Sporelvl = lvl.getLevel() + 4;
-            // Which abilities are available is configurable (default: ability N unlocks at evolution level N - 4).
-            for (int n = 1; n <= 13; n++) {
-                unlocked[n] = KommandantPowersConfig.isUnlocked(lvl.getLevel(), n);
-            }
         });
         PlayerDataProvider.PLAYER_DATA.get(mc.player).ifPresent(data -> {
             Switches = data.getSwitch();
         });
-        // The local copy can be stale (after dying or changing dimension the client builds a new player): ask the
-        // server for the real toggle state. The answer is applied to the capability and picked up by render().
-        NetworkHandle.INSTANCE.sendToServer(new RequestSwitchSyncPacket());
 
         // Cálculo de posición basado en la resolución real de la ventana
         int screenW = mc.getWindow().getWidth();
@@ -119,14 +108,14 @@ public class SporeAbilitySelector extends Screen {
         this.clearWidgets();
         abilities.clear();
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < Sporelvl; i++) {
             int col = i % 4;
             int row = i / 4;
             int buttonX = x + 17 * 2 + (col * (buttonWidth + spacing));
             int buttonY = y + 35 * 2 + (row * (buttonHeight + spacing));
             int abilityNumber = i + 1;
 
-            if (unlocked[abilityNumber]) {
+            if (i < 12) {
                 abilities.add(new AbilityButtonArea(buttonX, buttonY, buttonWidth, buttonHeight, abilityNumber, () -> {
                     setAbilityClicked(abilityNumber);
                     sendAbilityPacket(abilityNumber);
@@ -147,7 +136,7 @@ public class SporeAbilitySelector extends Screen {
             }
         }
 
-        if (unlocked[13]) {
+        if (Sporelvl == 13) {
             abilities.add(new AbilityButtonArea(x + 77 * 2, y + 159 * 2, 40 * 2, 39 * 2, 13, () -> {
                 setAbilityClicked(13);
                 sendAbilityPacket(13);
@@ -220,7 +209,7 @@ public class SporeAbilitySelector extends Screen {
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
 
-                        if (curLevel >= KommandantPowersConfig.maxEvolutionLevel()) {
+                        if (curLevel >= 9) {
                             tooltip.add(Component.translatable("tooltip.sporeadd.power1.maxed_title"));
                             tooltip.add(Component.translatable("tooltip.sporeadd.power1.maxed_desc"));
 
@@ -228,8 +217,8 @@ public class SporeAbilitySelector extends Screen {
                             tooltip.add(Component.translatable("tooltip.sporeadd.generic.details_header"));
 
                             boolean maxLevelNoVariant = !hasValidCompound[0];
-                            int cocoonHp = (int) KommandantPowersConfig.cocoonHp(curLevel, maxLevelNoVariant);
-                            int cocoonSeconds = KommandantPowersConfig.cocoonSeconds(curLevel, maxLevelNoVariant);
+                            int cocoonHp = maxLevelNoVariant ? 300 : (int) ((curLevel + 1) * 100.0);
+                            int cocoonSeconds = maxLevelNoVariant ? 30 : 30 + (30 * (curLevel / 3));
 
                             tooltip.add(Component.translatable("tooltip.sporeadd.power1.cocoon_hp", cocoonHp));
                             tooltip.add(Component.translatable("tooltip.sporeadd.power1.cocoon_time", cocoonSeconds));
@@ -312,8 +301,8 @@ public class SporeAbilitySelector extends Screen {
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.details_header"));
 
-                        int cocoonHp = (int) KommandantPowersConfig.cocoonHp(curLevel, false);
-                        int cocoonSeconds = KommandantPowersConfig.cocoonSeconds(curLevel, false);
+                        int cocoonHp = (int) ((curLevel + 1) * 100.0);
+                        int cocoonSeconds = 30 + (30 * (curLevel / 3));
 
                         tooltip.add(Component.translatable("tooltip.sporeadd.power1.cocoon_hp", cocoonHp));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power1.cocoon_time", cocoonSeconds));
@@ -339,14 +328,14 @@ public class SporeAbilitySelector extends Screen {
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.passive_effect"));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power2.passive_desc"));
 
-                        int dur = KommandantPowersConfig.myceliumSeconds(level);
-                        int amp = KommandantPowersConfig.myceliumAmplifier(level);
+                        int dur = Math.max(level * 5, 5);
+                        int amp = level / 3;
                         String romanNum = (amp == 0) ? "I" : (amp == 1) ? "II" : (amp == 2) ? "III" : "IV";
                         tooltip.add(Component.translatable("tooltip.sporeadd.power2.passive_stats", dur, romanNum));
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                        tooltip.add(Component.translatable("tooltip.sporeadd.power2.active_desc", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER2_EXECUTE)));
+                        tooltip.add(Component.translatable("tooltip.sporeadd.power2.active_desc"));
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power2.outcomes_header"));
@@ -376,7 +365,7 @@ public class SporeAbilitySelector extends Screen {
 
                 if (mc.player != null) {
                     PlayerSporeProvider.PLAYER_CAP.get(mc.player).ifPresent(spore -> {
-                        int cost = KommandantPowersConfig.biomassCost(3);
+                        int cost = 15;
                         String biomassColor = (Spore >= cost) ? "§a" : "§c";
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
 
@@ -484,7 +473,7 @@ public class SporeAbilitySelector extends Screen {
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_effect"));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power4.active_desc", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER4_CONSUME)));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power4.active_desc"));
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power4.entities_header"));
@@ -516,14 +505,14 @@ public class SporeAbilitySelector extends Screen {
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.active_desc"));
 
                     tooltip.add(Component.literal(""));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_header", com.sporeadds.sporeaddsmod.client.SkillClickKeys.label(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER5_HARVEST)));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_header"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line1"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line2"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line3"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.harvest_line4"));
 
                     tooltip.add(Component.literal(""));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_header", com.sporeadds.sporeaddsmod.client.SkillClickKeys.label(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER5_FEED)));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_header"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_line1"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_line2"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power5.feeding_cost"));
@@ -543,7 +532,7 @@ public class SporeAbilitySelector extends Screen {
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power6.active_desc1", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER6_EVOLVE)));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power6.active_desc1"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power6.active_desc2"));
 
                     tooltip.add(Component.literal(""));
@@ -556,10 +545,10 @@ public class SporeAbilitySelector extends Screen {
                         int rawLevel = levelCap.getLevel();
                         int sporeLevel = Math.max(rawLevel, 0);
 
-                        int effectDuration = KommandantPowersConfig.mutationBuffSeconds(sporeLevel);
-                        int effectPower = KommandantPowersConfig.mutationStrengthPower(sporeLevel);
+                        int effectDuration = 20 + sporeLevel * 3;
+                        int effectPower = Math.min(5, (int) Math.floor(sporeLevel / 2.0));
                         int amplifier = Math.max(effectPower - 1, 0);
-                        int extraHealth = (int) Math.round(KommandantPowersConfig.mutationExtraHp(rawLevel));
+                        int extraHealth = 10 * rawLevel;
 
                         String strengthRoman = (amplifier == 0) ? "I"
                                 : (amplifier == 1) ? "II"
@@ -596,7 +585,7 @@ public class SporeAbilitySelector extends Screen {
 
                     tooltip.add(Component.literal(""));
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.active_execution"));
-                    tooltip.add(Component.translatable("tooltip.sporeadd.power7.active_desc1", com.sporeadds.sporeaddsmod.client.SkillClickKeys.verb(com.sporeadds.sporeaddsmod.Powers.SkillClick.POWER7_MOUNT)));
+                    tooltip.add(Component.translatable("tooltip.sporeadd.power7.active_desc1"));
                     tooltip.add(Component.translatable("tooltip.sporeadd.power7.active_desc2"));
 
                     tooltip.add(Component.literal(""));
@@ -619,13 +608,13 @@ public class SporeAbilitySelector extends Screen {
                 if (mc.player != null) {
                     PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
-                        int cost = KommandantAdvancedConfig.biomassCost(8);
+                        int cost = 15;
                         String biomassColor = (Spore >= cost) ? "§a" : "§c";
 
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
                         tooltip.add(Component.literal(""));
 
-                        if (!KommandantPowersConfig.isUnlocked(curLevel, 8)) {
+                        if (curLevel < 4) {
                             tooltip.add(Component.translatable("tooltip.sporeadd.power8.req_level"));
                             return;
                         }
@@ -650,7 +639,19 @@ public class SporeAbilitySelector extends Screen {
                         tooltip.add(Component.translatable("tooltip.sporeadd.power8.active_desc2"));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power8.active_desc3"));
 
-                        int hordeBiomass = KommandantAdvancedConfig.hordeBudgetForLevel(curLevel);
+                        int hordeBiomass;
+                        switch (curLevel) {
+                            case 4 -> hordeBiomass = 7;
+                            case 5 -> hordeBiomass = 10;
+                            case 6 -> hordeBiomass = 12;
+                            case 7 -> hordeBiomass = 15;
+                            case 8 -> hordeBiomass = 18;
+                            case 9 -> hordeBiomass = 22;
+                            default -> {
+                                if (curLevel > 9) hordeBiomass = 25;
+                                else hordeBiomass = 7;
+                            }
+                        }
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power8.horde_header", curLevel));
@@ -675,7 +676,7 @@ public class SporeAbilitySelector extends Screen {
                 if (mc.player != null) {
                     PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
-                        int cost = KommandantAdvancedConfig.biomassCost(9);
+                        int cost = 5;
                         String biomassColor = (Spore >= cost) ? "§a" : "§c";
 
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
@@ -685,7 +686,7 @@ public class SporeAbilitySelector extends Screen {
                         tooltip.add(Component.translatable("tooltip.sporeadd.power9.active_desc1"));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power9.active_desc2"));
 
-                        int durationSeconds = KommandantAdvancedConfig.burstDurationSeconds(curLevel);
+                        int durationSeconds = 30 + Math.max(curLevel, 0) * 5;
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power9.effects_header"));
@@ -707,7 +708,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power10.title"));
 
                 if (mc.player != null) {
-                    int cost = KommandantAdvancedConfig.biomassCost(10);
+                    int cost = 25;
                     String biomassColor = (Spore >= cost) ? "§a" : "§c";
 
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
@@ -744,8 +745,8 @@ public class SporeAbilitySelector extends Screen {
                 if (mc.player != null) {
                     PlayerLevelProvider.PLAYER_LVL.get(mc.player).ifPresent(levelCap -> {
                         int curLevel = levelCap.getLevel();
-                        int reqLevel = KommandantPowersConfig.unlockLevel(11);
-                        int cost = KommandantAdvancedConfig.biomassCost(11);
+                        int reqLevel = 7;
+                        int cost = 20;
                         String biomassColor = (Spore >= cost) ? "§a" : "§c";
 
                         tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
@@ -768,7 +769,7 @@ public class SporeAbilitySelector extends Screen {
                                 }
                             }
                         }
-                        int hp = KommandantAdvancedConfig.vigilHealth(protoCount);
+                        int hp = 120 + (protoCount * 50);
 
                         tooltip.add(Component.literal(""));
                         tooltip.add(Component.translatable("tooltip.sporeadd.power11.vigil_header"));
@@ -796,7 +797,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power12.title"));
 
                 if (mc.player != null) {
-                    int cost = KommandantAdvancedConfig.biomassCost(12);
+                    int cost = 30;
                     String biomassColor = (Spore >= cost) ? "§a" : "§c";
 
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
@@ -830,7 +831,7 @@ public class SporeAbilitySelector extends Screen {
                 tooltip.add(Component.translatable("tooltip.sporeadd.power13.title"));
 
                 if (mc.player != null) {
-                    int cost = KommandantAdvancedConfig.biomassCost(13);
+                    int cost = 20;
                     String biomassColor = (Spore >= cost) ? "§a" : "§c";
 
                     tooltip.add(Component.translatable("tooltip.sporeadd.generic.biomass", biomassColor, Spore, cost));
@@ -928,11 +929,6 @@ public class SporeAbilitySelector extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.renderTransparentBackground(guiGraphics);
 
-        // Always draw the toggles the player really has (the server's reply to RequestSwitchSyncPacket lands in the capability).
-        if (mc.player != null) {
-            PlayerDataProvider.PLAYER_DATA.get(mc.player).ifPresent(data -> Switches = data.getSwitch());
-        }
-
         float currentGuiScale = (float) mc.getWindow().getGuiScale();
 
         // --- INICIO ESCALA ---
@@ -999,8 +995,8 @@ public class SporeAbilitySelector extends Screen {
         }
 
         // Switches de habilidades activas
-        for (int i = 0; i <= 7; i++) {
-            if (unlocked[i + 1] && Switches.charAt(i + 1) == '1') {
+        for (int i = 0; i < Sporelvl; i++) {
+            if (i <= 7 && Switches.charAt(i + 1) == '1') {
                 int col = i % 4;
                 int row = i / 4;
                 int XA = x + 17 * 2 + (col * (38 * 2 + 6));
@@ -1026,19 +1022,20 @@ public class SporeAbilitySelector extends Screen {
             guiGraphics.blit(TEXTURE, x + 77 * 2, y + 159 * 2, 0, 217 * 2, 40 * 2, 39 * 2, 256 * 2, 256 * 2);
         }
 
-        // Habilidades bloqueadas (cada una según su nivel de desbloqueo configurado)
-        for (int n = 1; n <= 12; n++) {
-            if (!unlocked[n]) {
-                int col = (n - 1) % 4;
-                int row = (n - 1) / 4;
-                int XL = x + 17 * 2 + (col * (38 * 2 + 6));
-                int YL = y + 35 * 2 + (row * (38 * 2 + 6));
+        // Habilidades bloqueadas
+        int locked = Math.max(0, 12 - Sporelvl);
+        for (int i = 0; i < 9; i++) {
+            if (i < locked) {
+                int col = i % 4;
+                int row = i / 4;
+                int XL = x + 140 * 2 - (col * (38 * 2 + 6));
+                int YL = y + 117 * 2 - (row * (38 * 2 + 6));
                 guiGraphics.blit(TEXTURE, XL, YL, 218 * 2, 218 * 2, 38 * 2, 38 * 2, 256 * 2, 256 * 2);
             }
         }
 
         // Botón 13 bloqueado
-        if (!unlocked[13]) {
+        if (Sporelvl != 13) {
             guiGraphics.blit(TEXTURE, x + 77 * 2, y + 159 * 2, 82 * 2, 217 * 2, 40 * 2, 39 * 2, 256 * 2, 256 * 2);
         }
 

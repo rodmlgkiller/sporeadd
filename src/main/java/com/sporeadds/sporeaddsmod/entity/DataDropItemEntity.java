@@ -4,7 +4,6 @@ import com.sporeadds.sporeaddsmod.util.ItemNbt;
 
 import com.sporeadds.sporeaddsmod.PlayerData.ScientistResearchProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -15,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class DataDropItemEntity extends ItemEntity {
 
-    // Lifetime and magnet pickup radius: see ScientistConfig (scientist.research_data.*).
+    private static final int MAX_LIFETIME_TICKS = 20 * 20;
     private static final String SOURCE_ENTITY_TAG = "SourceEntityId";
 
     private int ticksAlive = 0;
@@ -82,44 +81,8 @@ public class DataDropItemEntity extends ItemEntity {
 
         ticksAlive++;
 
-        if (this.level().isClientSide) {
-            return;
-        }
-
-        if (ticksAlive >= ScientistConfig.dataLifetimeTicks()) {
+        if (!this.level().isClientSide && ticksAlive >= MAX_LIFETIME_TICKS) {
             this.discard();
-            return;
-        }
-
-        collectNearbyScientists();
-    }
-
-    /**
-     * Magnet pickup (scientist.research_data.pickup_radius, 0 = off): a Scientist within the radius collects this Data
-     * without having to touch it.
-     */
-    private void collectNearbyScientists() {
-        double radius = ScientistConfig.dataPickupRadius();
-        if (radius <= 0.0D || this.isRemoved()) {
-            return;
-        }
-
-        double radiusSqr = radius * radius;
-
-        for (Player player : this.level().players()) {
-            if (player.isSpectator() || !player.isAlive() || !isScientist(player)) {
-                continue;
-            }
-
-            if (player.distanceToSqr(this) > radiusSqr) {
-                continue;
-            }
-
-            this.playerTouch(player);
-
-            if (this.isRemoved()) {
-                return;
-            }
         }
     }
 }

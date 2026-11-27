@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
-import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import net.minecraft.resources.ResourceLocation;
@@ -35,11 +34,6 @@ public enum CompoundType {
 
     public String tooltipKey() {
         return "tooltip.sporeadd.compound." + name().toLowerCase(java.util.Locale.ROOT);
-    }
-
-    /** Max syringes of this kind that may be placed / count at once (config berserker.blood_samples.&lt;kind&gt;.max_count). */
-    public int maxCount() {
-        return BerserkerConfig.sampleLimit(name().toLowerCase(java.util.Locale.ROOT));
     }
 
     public static CompoundType fromItem(Item item) {

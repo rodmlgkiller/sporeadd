@@ -3,7 +3,6 @@ package com.sporeadds.sporeaddsmod.items;
 import net.minecraft.resources.ResourceLocation;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.research.TrackedEntities;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -75,7 +74,7 @@ public class ScalpelItem extends Item {
     }
 
     private static void spawnData(Level level, LivingEntity target, int amount, String sourceEntityId) {
-        if (level.isClientSide || amount <= 0) {
+        if (level.isClientSide) {
             return;
         }
 
@@ -108,15 +107,10 @@ public class ScalpelItem extends Item {
             return true;
         }
 
-        // Data per hit / per kill: see ScientistConfig (scientist.research_data.data_per_hit / data_per_kill).
-        int dataPerHit = ScientistConfig.dataPerHit();
-
         if (isInfectedEntity(target)) {
             String entityId = BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()).toString();
-            if (dataPerHit > 0) {
-                spawnData(target.level(), target, dataPerHit, entityId);
-                playDataSound(target.level(), target);
-            }
+            spawnData(target.level(), target, 1, entityId);
+            playDataSound(target.level(), target);
             return true;
         }
 
@@ -125,8 +119,8 @@ public class ScalpelItem extends Item {
                     .map(data -> "kommandant".equalsIgnoreCase(data.getIdentifier()))
                     .orElse(false);
 
-            if (targetIsKommandant && dataPerHit > 0) {
-                spawnData(target.level(), target, dataPerHit, TrackedEntities.KOMMANDANT_PLAYER_ID);
+            if (targetIsKommandant) {
+                spawnData(target.level(), target, 1, TrackedEntities.KOMMANDANT_PLAYER_ID);
                 playDataSound(target.level(), target);
             }
         }
@@ -163,7 +157,7 @@ public class ScalpelItem extends Item {
         }
 
         String entityId = BuiltInRegistries.ENTITY_TYPE.getKey(victim.getType()).toString();
-        spawnData(victim.level(), victim, ScientistConfig.dataPerKill(), entityId);
+        spawnData(victim.level(), victim, 10, entityId);
     }
 
     public static void onScientistKillPlayer(ServerPlayer killer, ServerPlayer victim, ItemStack weapon) {
@@ -183,7 +177,7 @@ public class ScalpelItem extends Item {
             return;
         }
 
-        spawnData(victim.level(), victim, ScientistConfig.dataPerKill(), TrackedEntities.KOMMANDANT_PLAYER_ID);
+        spawnData(victim.level(), victim, 10, TrackedEntities.KOMMANDANT_PLAYER_ID);
     }
 
     @Override

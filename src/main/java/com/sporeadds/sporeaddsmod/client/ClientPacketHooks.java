@@ -29,14 +29,10 @@ public final class ClientPacketHooks {
     private ClientPacketHooks() {
     }
 
-    public static void syncSpore(int spore, int max) {
+    public static void syncSpore(int spore) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(cap -> {
-                // The maximum first: setSpore clamps to it.
-                cap.setMaxSpore(max);
-                cap.setSpore(spore);
-            });
+            PlayerSporeProvider.PLAYER_CAP.get(player).ifPresent(cap -> cap.setSpore(spore));
         }
     }
 
@@ -58,9 +54,6 @@ public final class ClientPacketHooks {
     }
 
     public static void serverToData(String value) {
-        if (Minecraft.getInstance().player == null) {
-            return;
-        }
         PlayerDataProvider.PLAYER_DATA.get(Minecraft.getInstance().player).ifPresent(cap -> cap.setSwitch(value));
     }
 
@@ -100,18 +93,10 @@ public final class ClientPacketHooks {
     }
 
     public static void scientistResearch(Map<String, Integer> kills, Map<String, Integer> data) {
-        scientistResearch(kills, data, com.sporeadds.sporeaddsmod.config.ScientistConfig.ResearchRules.current());
-    }
-
-    /** Field Research book data plus the server's prestige / weak point rules and cooldown (see ScientistConfig.ResearchRules). */
-    public static void scientistResearch(Map<String, Integer> kills, Map<String, Integer> data,
-                                         com.sporeadds.sporeaddsmod.config.ScientistConfig.ResearchRules rules) {
         playFirstKillSoundsIfApplicable(kills);
 
         FieldResearchClientData.setKills(kills);
         FieldResearchClientData.setDataAmounts(data);
-        FieldResearchClientData.setRules(rules);
-        FieldResearchCooldownClientState.setCooldown(rules.fieldResearchCooldownTicks);
         FieldResearchClientData.openBookWhenReady();
     }
 

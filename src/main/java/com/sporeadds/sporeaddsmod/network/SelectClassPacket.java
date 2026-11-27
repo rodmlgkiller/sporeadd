@@ -2,8 +2,6 @@ package com.sporeadds.sporeaddsmod.network;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.ConfigItems;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.data.ClassPopulationData;
 import com.sporeadds.sporeaddsmod.items.TrainingBookItem;
@@ -16,7 +14,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import com.sporeadds.sporeaddsmod.network.NetworkEvent;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class SelectClassPacket {
@@ -97,26 +94,6 @@ public class SelectClassPacket {
             }
         }
 
-        // class_gain.training_book_requirements: optional extra price of becoming a Kommandant (default: none).
-        boolean kommandantRequested = "kommandant".equalsIgnoreCase(requestedIdentifier);
-        List<ConfigItems.Entry> extraCost = kommandantRequested
-                ? ConfigItems.parseAll(KommandantPowersConfig.BOOK_REQUIRED_ITEMS.get())
-                : List.of();
-        int extraXpLevels = kommandantRequested ? KommandantPowersConfig.BOOK_REQUIRED_XP_LEVELS.get() : 0;
-
-        if (!extraCost.isEmpty() && !ConfigItems.has(player, extraCost)) {
-            player.sendSystemMessage(Component.translatableWithFallback(
-                    "message.sporeadd.training_book.error.missing_items",
-                    "You do not carry what the hive demands of a new Kommandant.").withStyle(ChatFormatting.RED));
-            return;
-        }
-        if (extraXpLevels > 0 && player.experienceLevel < extraXpLevels) {
-            player.sendSystemMessage(Component.translatableWithFallback(
-                    "message.sporeadd.training_book.error.missing_xp",
-                    "You need %s experience levels to become a Kommandant.", extraXpLevels).withStyle(ChatFormatting.RED));
-            return;
-        }
-
         if (!TrainingBookItem.consumeUse(stack)) {
             fail(player, "message.sporeadd.training_book.error.no_uses");
             return;
@@ -127,14 +104,6 @@ public class SelectClassPacket {
             TrainingBookItem.setUsesRemaining(stack, TrainingBookItem.getUsesRemaining(stack) + 1);
             fail(player, "message.sporeadd.training_book.error.invalid_identifier");
             return;
-        }
-
-        // The class change went through: now the price is paid.
-        if (!extraCost.isEmpty()) {
-            ConfigItems.take(player, extraCost);
-        }
-        if (extraXpLevels > 0) {
-            player.giveExperienceLevels(-extraXpLevels);
         }
 
         SyncClassCountsPacket.broadcast(player.server);
