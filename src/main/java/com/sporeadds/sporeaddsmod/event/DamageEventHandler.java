@@ -1,7 +1,8 @@
 package com.sporeadds.sporeaddsmod.event;
 
-import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
+import com.sporeadds.sporeaddsmod.effects.AmbushedEffect;
+import com.sporeadds.sporeaddsmod.effects.CriticalWoundEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,22 +17,15 @@ public class DamageEventHandler {
         LivingEntity attacker = event.getSource().getEntity() instanceof LivingEntity le ? le : null;
 
         if (target.hasEffect(effects.AMBUSHED.get())) {
-            event.setAmount(event.getAmount() * GhostConfig.ambushedIncomingDamageMultiplier());
+            event.setAmount(event.getAmount() * AmbushedEffect.INCOMING_DAMAGE_MULTIPLIER);
         }
 
         if (attacker != null && attacker.hasEffect(effects.AMBUSHED.get())) {
-            event.setAmount(event.getAmount() * GhostConfig.ambushedOutgoingDamageMultiplier());
+            event.setAmount(event.getAmount() * AmbushedEffect.OUTGOING_DAMAGE_MULTIPLIER);
         }
 
         if (attacker != null && attacker.hasEffect(effects.CRITICAL_WOUND.get())) {
-            event.setAmount(event.getAmount() * GhostConfig.criticalWoundOutgoingDamageMultiplier());
-        }
-
-        if (target.hasEffect(effects.CRITICAL_WOUND.get())) {
-            float woundedIncoming = GhostConfig.criticalWoundIncomingDamageMultiplier();
-            if (woundedIncoming != 1.0F) {
-                event.setAmount(event.getAmount() * woundedIncoming);
-            }
+            event.setAmount(event.getAmount() * CriticalWoundEffect.OUTGOING_DAMAGE_MULTIPLIER);
         }
     }
 }

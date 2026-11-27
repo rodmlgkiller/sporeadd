@@ -30,7 +30,7 @@ public abstract class VigilMixin {
     @Shadow(remap = false)
     private Vigil vigil;
 
-    @Inject(method = "tick()V", at = @At("TAIL"))
+    @Inject(method = "m_8037_()V", at = @At("TAIL"), remap = false)
     private void onWatchTargetGoatStart(CallbackInfo ci) {
         try {
             if (this.vigil == null || this.vigil.level().isClientSide) return;
@@ -52,8 +52,7 @@ public abstract class VigilMixin {
 
                 final boolean[] isLevel7 = {false};
                 onlinePlayer.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
-                    // Default 7; configurable: kommandant_abilities_advanced.power_11_vigil.sighting_alert_min_level
-                    if (levelCap.getLevel() >= com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.VIGIL_ALERT_MIN_LEVEL.get()) {
+                    if (levelCap.getLevel() >= 7) {
                         isLevel7[0] = true;
                     }
                 });

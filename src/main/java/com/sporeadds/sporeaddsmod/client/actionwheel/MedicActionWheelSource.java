@@ -1,7 +1,6 @@
 package com.sporeadds.sporeaddsmod.client.actionwheel;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.RequestDelayedDefibrillationPacket;
 import com.sporeadds.sporeaddsmod.network.RequestSelfDefibrillateStartPacket;
@@ -21,6 +20,8 @@ public final class MedicActionWheelSource {
     private static final ResourceLocation SELF_DEFIBRILLATE_ICON =
             new ResourceLocation("sporeadd", "textures/mob_effect/defibrilator2.png");
 
+    private static final float SELF_DEFIBRILLATE_HEALTH_THRESHOLD = 0.30F;
+
     private MedicActionWheelSource() {
     }
 
@@ -31,8 +32,7 @@ public final class MedicActionWheelSource {
     }
 
     private static boolean canUseSelfDefibrillate(Player player) {
-        // Client side: this client's own copy of medic.self_defibrillate.health_threshold (the server checks it again).
-        return player.isAlive() && player.getHealth() <= player.getMaxHealth() * MedicConfig.selfDefibrillateHealthThreshold();
+        return player.isAlive() && player.getHealth() <= player.getMaxHealth() * SELF_DEFIBRILLATE_HEALTH_THRESHOLD;
     }
 
     public static List<ActionWheelOption> getOptionsIfApplicable(Player player) {

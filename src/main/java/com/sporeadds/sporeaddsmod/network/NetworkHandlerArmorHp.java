@@ -6,7 +6,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandlerArmorHp {
 
-    private static final String PROTOCOL_VERSION = "1.1";
+    private static final String PROTOCOL_VERSION = "1.0";
     private static SimpleChannel CHANNEL; // <-- NO más static final
 
     private static int packetId = 0;

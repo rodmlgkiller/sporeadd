@@ -2,7 +2,6 @@ package com.sporeadds.sporeaddsmod.client.screen;
 
 import com.sporeadds.sporeaddsmod.ModItems;
 import com.sporeadds.sporeaddsmod.capabilities.PlayerImplantsCapability;
-import com.sporeadds.sporeaddsmod.event.ImplantAttributeSync;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncImplantPacket;
 import net.minecraft.nbt.CompoundTag;
@@ -113,11 +112,6 @@ public class ImplantMenu extends AbstractContainerMenu {
         implantInventory.saveToPlayer();
 
         targetPlayer.getCapability(PlayerImplantsCapability.PLAYER_IMPLANTS).ifPresent(implants -> {
-            // Atributos configurables de los implantes: aplicar / quitar enseguida (el tick lo repite cada segundo).
-            if (targetPlayer instanceof ServerPlayer syncTarget) {
-                ImplantAttributeSync.sync(syncTarget, implants);
-            }
-
             CompoundTag data = implants.serializeNBT();
 
             if (!this.player.equals(this.targetPlayer)) {

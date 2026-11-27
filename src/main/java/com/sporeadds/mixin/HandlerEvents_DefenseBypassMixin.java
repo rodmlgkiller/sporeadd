@@ -16,8 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = HandlerEvents.class, remap = false)
 public class HandlerEvents_DefenseBypassMixin {
 
-    // PCI damage per charge, freeze time and cooldown are shared with Poder12 and configurable
-    // (kommandant_abilities_advanced.power_12_biomass_armor.pci in the config; defaults 6 / 600 / 20 + 10 per charge).
+    private static final int PCI_DAMAGE_PER_CHARGE = 6; // 3 * 2
 
     @Inject(
             method = "DefenseBypass(Lnet/minecraftforge/event/entity/living/LivingDamageEvent;)V",
@@ -54,24 +53,21 @@ public class HandlerEvents_DefenseBypassMixin {
         float maxHealth = target.getMaxHealth();
         float maxAllowedDamage = maxHealth / 8.0F; // basado en vida máxima actual
 
-        int damagePerCharge = com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.ARMOR_PCI_DAMAGE_PER_CHARGE.get();
-        int chargesToUse = (int) Math.floor(maxAllowedDamage / damagePerCharge);
+        int chargesToUse = (int) Math.floor(maxAllowedDamage / PCI_DAMAGE_PER_CHARGE);
         if (chargesToUse <= 0 && maxHealth > 0.0F) {
             chargesToUse = 1;
         }
 
         chargesToUse = Math.min(chargesToUse, charge);
 
-        float finalDamage = chargesToUse * damagePerCharge;
+        float finalDamage = chargesToUse * PCI_DAMAGE_PER_CHARGE;
         finalDamage = Math.min(finalDamage, maxAllowedDamage);
 
         event.setAmount(finalDamage);
         pci.setCharge(weapon, charge - chargesToUse);
 
-        target.setTicksFrozen(com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.ARMOR_PCI_FREEZE_TICKS.get());
-        attacker.getCooldowns().addCooldown(pci, Math.max(
-                com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.ARMOR_PCI_MIN_COOLDOWN.get(),
-                chargesToUse * com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.ARMOR_PCI_COOLDOWN_PER_CHARGE.get()));
+        target.setTicksFrozen(600);
+        attacker.getCooldowns().addCooldown(pci, Math.max(20, chargesToUse * 10));
         pci.playSound(attacker);
 
         ci.cancel();

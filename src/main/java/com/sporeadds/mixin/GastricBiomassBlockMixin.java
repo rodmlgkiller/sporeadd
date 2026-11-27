@@ -10,13 +10,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GastricBiomassBlock.class)
+@Mixin(value = GastricBiomassBlock.class, remap = false)
 public class GastricBiomassBlockMixin {
 
     @Inject(
-            method = "attack(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;)V",
+            method = "m_6256_",
             at = @At("HEAD"),
-            cancellable = true
+            cancellable = true,
+            remap = false
     )
     private void sporeadds$protectTeamSporeFromBileEffects(BlockState state, Level level, BlockPos pos, Player player, CallbackInfo ci) {
         if (player.getTeam() != null && "spore".equals(player.getTeam().getName())) {

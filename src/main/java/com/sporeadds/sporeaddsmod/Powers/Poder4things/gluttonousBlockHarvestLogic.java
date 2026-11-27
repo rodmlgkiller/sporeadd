@@ -2,7 +2,6 @@ package com.sporeadds.sporeaddsmod.Powers.Poder4things;
 
 import com.sporeadds.sporeaddsmod.Powers.bile.gluttonousAbilityHandler;
 import com.sporeadds.sporeaddsmod.Powers.Poder4things.gluttonousPowerHelper;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -15,8 +14,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public final class gluttonousBlockHarvestLogic {
 
-    // Which blocks count as "remains" or "bulbs" and the biomass each gives: kommandant_abilities.power_4_devour
-    // (remains_blocks / bulb_blocks, remains_biomass / bulb_biomass / bulb_biomass_chance).
+    private static final ResourceLocation REMAINS_ID = new ResourceLocation("spore", "remains");
+    private static final ResourceLocation WALL_REMAINS_ID = new ResourceLocation("spore", "wall_remains");
+    private static final ResourceLocation BIOMASS_BULB_ID = new ResourceLocation("spore", "biomass_bulb");
+    private static final ResourceLocation DROWNED_LUMP_ID = new ResourceLocation("spore", "drowned_lump");
 
     private gluttonousBlockHarvestLogic() {
     }
@@ -29,8 +30,8 @@ public final class gluttonousBlockHarvestLogic {
         ResourceLocation blockId = ForgeRegistries.BLOCKS.getKey(clickedBlock);
         if (blockId == null) return false;
 
-        boolean isRemains = KommandantPowersConfig.isRemainsBlock(blockId);
-        boolean isBulb = KommandantPowersConfig.isBulbBlock(blockId);
+        boolean isRemains = blockId.equals(REMAINS_ID) || blockId.equals(WALL_REMAINS_ID);
+        boolean isBulb = blockId.equals(BIOMASS_BULB_ID) || blockId.equals(DROWNED_LUMP_ID);
 
         if (!isRemains && !isBulb) return false;
 
@@ -38,7 +39,7 @@ public final class gluttonousBlockHarvestLogic {
             boolean gluttonousSubclass = gluttonousPowerHelper.isSubclassgluttonous(player);
 
             if (isRemains) {
-                spore.addSpore(KommandantPowersConfig.DEVOUR_REMAINS_BIOMASS.get());
+                spore.addSpore(3);
 
                 if (player instanceof ServerPlayer serverPlayer) {
                     int gluttonousReward = player.getRandom().nextIntBetweenInclusive(1, 2);
@@ -62,10 +63,7 @@ public final class gluttonousBlockHarvestLogic {
 
                 player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 5, 0, false, true));
             } else {
-                int bulbChance = KommandantPowersConfig.DEVOUR_BULB_CHANCE.get();
-                if (bulbChance >= 100 || player.getRandom().nextInt(100) < bulbChance) {
-                    spore.addSpore(KommandantPowersConfig.DEVOUR_BULB_BIOMASS.get());
-                }
+                spore.addSpore(1);
 
                 if (player instanceof ServerPlayer serverPlayer) {
                     int gluttonousReward = player.getRandom().nextIntBetweenInclusive(1, 2);

@@ -8,15 +8,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(Organoid.class)
+@Mixin(value = Organoid.class, remap = false)
 public class OrganoidEffectCheckMixin {
 
     @Redirect(
-            method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
+            method = "m_147207_(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/effect/MobEffect;getCategory()Lnet/minecraft/world/effect/MobEffectCategory;"
-            )
+                    target = "Lnet/minecraft/world/effect/MobEffect;m_19483_()Lnet/minecraft/world/effect/MobEffectCategory;"
+            ),
+            remap = false
     )
     private MobEffectCategory sporeadds$ignoreHarmfulForSpecificEffects(MobEffect effect) {
         if (effect == effects.ENCHAINED.get()

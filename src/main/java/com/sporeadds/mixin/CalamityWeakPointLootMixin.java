@@ -2,7 +2,6 @@ package com.sporeadds.mixin;
 
 import com.Harbinger.Spore.Sentities.BaseEntities.Calamity;
 import com.sporeadds.sporeaddsmod.combat.WeakPointKillTracker;
-import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import com.sporeadds.sporeaddsmod.research.PrestigeManager;
 import com.sporeadds.sporeaddsmod.research.TrackedEntities;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,10 +27,8 @@ public abstract class CalamityWeakPointLootMixin {
         List<ItemStack> original = cir.getReturnValue();
         if (original == null || original.isEmpty()) return;
 
-        // scientist.prestige.loot_multiplier (default 2.0 = double loot)
-        double multiplier = ScientistConfig.prestigeLootMultiplier();
         for (ItemStack stack : original) {
-            stack.setCount((int) Math.round(stack.getCount() * multiplier));
+            stack.setCount(stack.getCount() * 2);
         }
 
         WeakPointKillTracker.clear(self.getId());

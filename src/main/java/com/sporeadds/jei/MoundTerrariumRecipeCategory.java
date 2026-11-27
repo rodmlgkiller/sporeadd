@@ -34,7 +34,7 @@ public class MoundTerrariumRecipeCategory implements IRecipeCategory<MoundTerrar
 
     @Override
     public Component getTitle() {
-        return Component.translatable("jei.sporeadd.mound_terrarium");
+        return Component.translatable("jei.sporeadds.mound_terrarium");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MoundTerrariumRecipeCategory implements IRecipeCategory<MoundTerrar
         }
 
         boolean isScentRecipe = recipe.getTitle().getString().equals(
-                Component.translatable("jei.sporeadd.mound_terrarium.bottle").getString()
+                Component.translatable("jei.sporeadds.mound_terrarium.bottle").getString()
         );
 
         for (int i = 0; i < recipe.getOutputs().size(); i++) {

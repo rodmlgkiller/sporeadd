@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.effects;
 
-import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -28,10 +27,14 @@ import java.util.UUID;
 public final class DelayedDefibrillationEffectHandler {
 
     private static final int REVIVE_HEAL_DURATION_TICKS = 8;
+    private static final double LIGHTNING_RADIUS = 4.0D;
+    private static final float LIGHTNING_EXTRA_DAMAGE = 40.0F;
+    private static final float KNOCKBACK_HORIZONTAL = 1.4F;
+    private static final float KNOCKBACK_VERTICAL = 0.6F;
+    private static final int POSTMORTEM_DURATION_TICKS = 20 * 150;
     private static final int MIN_INTERVAL_TICKS = 5;
     private static final int MAX_INTERVAL_TICKS = 40;
-    // Shockwave radius / damage / knockback, revive heal level, Postmortem duration and the self-defibrillate
-    // failure damage are configurable: see MedicConfig (medic.defibrillate.*, medic.self_defibrillate.failure_damage).
+    private static final float SELF_DEFIBRILLATE_KILL_DAMAGE = 1000.0F;
 
     private static final Map<UUID, Long> NEXT_PARTICLE_TICK = new HashMap<>();
     private static final Map<UUID, Long> NEXT_SOUND_TICK = new HashMap<>();
@@ -202,22 +205,19 @@ public final class DelayedDefibrillationEffectHandler {
 
         spawnLightningImpactParticles(level, entity);
 
-        final double shockwaveRadius = MedicConfig.defibrillateShockwaveRadius();
-        final float shockwaveDamage = MedicConfig.defibrillateShockwaveDamage();
-
-        AABB radiusBox = entity.getBoundingBox().inflate(shockwaveRadius);
+        AABB radiusBox = entity.getBoundingBox().inflate(LIGHTNING_RADIUS);
         List<Entity> nearby = level.getEntities(entity, radiusBox);
 
         for (Entity target : nearby) {
             if (target == entity) continue;
 
             double distSq = target.distanceToSqr(entity);
-            if (distSq > shockwaveRadius * shockwaveRadius) continue;
+            if (distSq > LIGHTNING_RADIUS * LIGHTNING_RADIUS) continue;
 
             if (target instanceof LivingEntity livingTarget) {
                 livingTarget.hurt(
                         entity.damageSources().lightningBolt(),
-                        shockwaveDamage
+                        LIGHTNING_EXTRA_DAMAGE
                 );
 
                 applyKnockbackFrom(entity, livingTarget);
@@ -232,13 +232,10 @@ public final class DelayedDefibrillationEffectHandler {
         double normX = horizontalDist > 0.0001D ? direction.x / horizontalDist : 0.0D;
         double normZ = horizontalDist > 0.0001D ? direction.z / horizontalDist : 0.0D;
 
-        float knockbackHorizontal = MedicConfig.defibrillateKnockbackHorizontal();
-        float knockbackVertical = MedicConfig.defibrillateKnockbackVertical();
-
         target.setDeltaMovement(
-                normX * knockbackHorizontal,
-                knockbackVertical,
-                normZ * knockbackHorizontal
+                normX * KNOCKBACK_HORIZONTAL,
+                KNOCKBACK_VERTICAL,
+                normZ * KNOCKBACK_HORIZONTAL
         );
 
         target.hasImpulse = true;
@@ -257,7 +254,7 @@ public final class DelayedDefibrillationEffectHandler {
         entity.addEffect(new MobEffectInstance(
                 MobEffects.HEAL,
                 REVIVE_HEAL_DURATION_TICKS,
-                MedicConfig.defibrillateReviveHealAmplifier(),
+                4,
                 false,
                 true,
                 true
@@ -275,14 +272,14 @@ public final class DelayedDefibrillationEffectHandler {
 
         entity.hurt(
                 entity.damageSources().lightningBolt(),
-                MedicConfig.selfDefibrillateFailureDamage()
+                SELF_DEFIBRILLATE_KILL_DAMAGE
         );
     }
 
     private static void applyPostmortem(LivingEntity entity) {
         entity.addEffect(new MobEffectInstance(
                 effects.POSTMORTEM.get(),
-                MedicConfig.postmortemDurationTicks(),
+                POSTMORTEM_DURATION_TICKS,
                 0,
                 false,
                 true,

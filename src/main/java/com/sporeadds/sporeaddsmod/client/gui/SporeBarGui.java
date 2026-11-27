@@ -2,7 +2,6 @@ package com.sporeadds.sporeaddsmod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sporeadds.sporeaddsmod.config.SporeAddsClientConfig;
-import com.sporeadds.sporeaddsmod.spore.PlayerSpore;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import com.sporeadds.sporeaddsmod.util.SporeClassUtil;
 import net.minecraft.client.Minecraft;
@@ -36,21 +35,12 @@ public class SporeBarGui {
         mc.player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
 
-            // The texture has one frame per biomass point of the default 50-point bar. With another maximum
-            // (kommandant_abilities.biomass_bar, sent by the server) the frame is the same fraction of the 50 frames.
-            int maxPhase = spore.getMaxSpore();
-            int frame = currentPhase;
-            if (maxPhase != PlayerSpore.DEFAULT_MAX_SPORE) {
-                frame = Math.max(0, Math.min(PlayerSpore.DEFAULT_MAX_SPORE,
-                        (int) Math.round(currentPhase * (double) PlayerSpore.DEFAULT_MAX_SPORE / Math.max(1, maxPhase))));
-            }
-
             RenderSystem.enableBlend();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, SPORE_BAR_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
 
-            guiGraphics.blit(SPORE_BAR_TEXTURE, x, y, 0, 29 * frame, 202, 29, 2048, 2048);
+            guiGraphics.blit(SPORE_BAR_TEXTURE, x, y, 0, 29 * currentPhase, 202, 29, 2048, 2048);
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.disableBlend();

@@ -15,8 +15,6 @@ import org.joml.Vector3f;
 
 // Importamos tu clase ModItems para poder acceder a MUTATION_ESSENCE
 import com.sporeadds.sporeaddsmod.ModItems;
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 
 public class ExposedEffect extends MobEffect {
 
@@ -31,16 +29,9 @@ public class ExposedEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
 
-        // Configurable (power_9_infectious_burst.exposed_execution): the execution can be switched off entirely.
-        if (!KommandantAdvancedConfig.EXECUTION_ENABLED.get()) {
-            return;
-        }
-
         // El umbral base es 25%. Cada nivel adicional (amplifier) aumenta este umbral un 5% (0.05f).
         // Amplifier 0 (Exposed I) = 25% | Amplifier 1 (Exposed II) = 30% | Amplifier 4 (Exposed V) = 45%
-        // (base and step are the defaults of the config values base_threshold / threshold_per_amplifier)
-        float killThreshold = KommandantAdvancedConfig.EXECUTION_BASE_THRESHOLD.get().floatValue()
-                + (amplifier * KommandantAdvancedConfig.EXECUTION_THRESHOLD_PER_AMPLIFIER.get().floatValue());
+        float killThreshold = 0.25f + (amplifier * 0.05f);
 
         // Evitamos que el umbral sea mayor al 100% de la vida en caso de niveles absurdos por comandos
         killThreshold = Math.min(killThreshold, 1.0f);
@@ -54,8 +45,12 @@ public class ExposedEffect extends MobEffect {
                     // Marca que ya se disparó
                     entity.getPersistentData().putBoolean(TRIGGERED_TAG, true);
 
-                    // Paso 1: Aplica el efecto de mycelium siempre (la lista de efectos es configurable)
-                    ConfigEffects.apply(entity, KommandantAdvancedConfig.effects(KommandantAdvancedConfig.EXECUTION_EFFECTS));
+                    MobEffect myceliumEffect = ForgeRegistries.MOB_EFFECTS.getValue(MYCELIUM_EFFECT_ID);
+
+                    // Paso 1: Aplica el efecto de mycelium siempre
+                    if (myceliumEffect != null) {
+                        entity.addEffect(new MobEffectInstance(myceliumEffect, 600, 0, false, true));
+                    }
 
                     // Paso 2: Genera efectos visuales y de audio sin comprobaciones
                     SoundEvent sound = SoundEvent.createVariableRangeEvent(SOUND_REAGENT_ID);
@@ -84,7 +79,7 @@ public class ExposedEffect extends MobEffect {
 
                     // PASO 3: 5% de probabilidad de dropear mutation_essence
                     // Utilizamos el generador de números aleatorios de la entidad (nextFloat da un número de 0.0 a 1.0)
-                    if (entity.getRandom().nextFloat() < KommandantAdvancedConfig.EXECUTION_ESSENCE_CHANCE.get().floatValue()) {
+                    if (entity.getRandom().nextFloat() < 0.05f) {
                         entity.spawnAtLocation(ModItems.MUTATION_ESSENCE.get());
                     }
 

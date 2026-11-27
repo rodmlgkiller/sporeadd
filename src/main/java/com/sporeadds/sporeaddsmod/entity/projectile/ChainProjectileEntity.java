@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.entity.projectile;
 
-import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.entity.ModEntities;
 import com.sporeadds.sporeaddsmod.items.ReinforcedCombatChainsItem;
@@ -42,8 +41,8 @@ public class ChainProjectileEntity extends ThrowableProjectile {
     private static final EntityDataAccessor<Integer> TARGET_ID =
             SynchedEntityData.defineId(ChainProjectileEntity.class, EntityDataSerializers.INT);
 
-    // Distancia a la que empieza el tiron (15 bloques) y a la que se rompe la cadena (80): ver BerserkerConfig
-    // (berserker.chains.link_distance / max_link_distance). Se leen al usarlas.
+    private static final double MAX_CHAIN_DISTANCE = 80.0D;
+    private static final double PULL_START_DISTANCE = 15.0D;
 
     private static final int SOFT_APPROACH_TICKS = 14;
     private static final double SOFT_APPROACH_EXTRA_DISTANCE = 2.5D;
@@ -108,7 +107,7 @@ public class ChainProjectileEntity extends ThrowableProjectile {
         DamageSources damageSources = this.damageSources();
         DamageSource chainDamage = damageSources.thrown(this, owner != null ? owner : this);
 
-        target.hurt(chainDamage, BerserkerConfig.chainsHitDamage());
+        target.hurt(chainDamage, 3.0F);
 
         this.level().playSound(
                 null,
@@ -181,7 +180,7 @@ public class ChainProjectileEntity extends ThrowableProjectile {
         if (!this.entityData.get(ATTACHED)) {
             super.tick();
 
-            if (!this.level().isClientSide && this.tickCount > BerserkerConfig.chainsFlightTicks()) {
+            if (this.tickCount > 100 && !this.level().isClientSide) {
                 this.discard();
             }
             return;
@@ -217,13 +216,12 @@ public class ChainProjectileEntity extends ThrowableProjectile {
         }
 
         double dist = owner.distanceTo(target);
-        if (dist > BerserkerConfig.chainsMaxLinkDistance()) {
+        if (dist > MAX_CHAIN_DISTANCE) {
             this.triggerMassiveBreak(ownerPlayer, target, false);
             return;
         }
 
-        double pullStartDistance = BerserkerConfig.chainsLinkDistance();
-        double allowedDistance = pullStartDistance;
+        double allowedDistance = PULL_START_DISTANCE;
         if (this.attachTicks < SOFT_APPROACH_TICKS) {
             float phase = 1.0F - (float) this.attachTicks / SOFT_APPROACH_TICKS;
             allowedDistance += SOFT_APPROACH_EXTRA_DISTANCE * phase;
@@ -231,12 +229,11 @@ public class ChainProjectileEntity extends ThrowableProjectile {
 
         this.cancelSeparatingMotionIfNeeded(owner, target, allowedDistance);
 
-        if (dist > pullStartDistance) {
+        if (dist > PULL_START_DISTANCE) {
             this.applyChainPull(owner, target, dist, allowedDistance);
         }
 
-        // Desgaste cada wear_interval_ticks (por defecto 21: el codigo original contaba 0..20 -> cada 21 ticks).
-        if (this.tickCounter++ >= BerserkerConfig.chainsWearIntervalTicks() - 1) {
+        if (this.tickCounter++ >= 20) {
             this.tickCounter = 0;
             this.handleDurabilityTick(ownerPlayer, target, offhandStack);
         }
@@ -280,7 +277,7 @@ public class ChainProjectileEntity extends ThrowableProjectile {
     }
 
     private void applyChainPull(Entity owner, Entity target, double dist, double allowedDistance) {
-        double stretch = dist - BerserkerConfig.chainsLinkDistance();
+        double stretch = dist - PULL_START_DISTANCE;
 
         float ownerPower = getEntityPower(owner);
         float targetPower = getEntityPower(target);
@@ -363,11 +360,7 @@ public class ChainProjectileEntity extends ThrowableProjectile {
             }
         }
 
-        // Desgaste por paso: wear_per_interval (por defecto 1) por cada cadena enganchada al mismo objetivo.
-        int wear = chainsAttached * BerserkerConfig.chainsWearPerInterval();
-        if (wear > 0) {
-            chainStack.hurtAndBreak(wear, ownerPlayer, player -> this.triggerMassiveBreak(ownerPlayer, target, false));
-        }
+        chainStack.hurtAndBreak(chainsAttached, ownerPlayer, player -> this.triggerMassiveBreak(ownerPlayer, target, false));
 
         if (this.isAlive()) {
             float damageRatio = (float) chainStack.getDamageValue() / (float) chainStack.getMaxDamage();

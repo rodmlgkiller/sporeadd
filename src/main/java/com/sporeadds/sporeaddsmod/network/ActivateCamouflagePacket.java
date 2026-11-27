@@ -12,8 +12,6 @@ import java.util.function.Supplier;
 
 public class ActivateCamouflagePacket {
 
-    /** Old default only (20 s). The live value is configurable: see {@code GhostConfig.disguiseCooldownTicks()}. */
-    @Deprecated
     public static final int CAMOUFLAGE_COOLDOWN_TICKS = 400; // 20 segundos
 
     private final int entityId;

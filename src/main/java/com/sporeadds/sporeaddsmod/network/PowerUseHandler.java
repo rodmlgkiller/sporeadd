@@ -26,13 +26,6 @@ public class PowerUseHandler {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
             if (player != null) {
-                // The unlock levels (kommandant_abilities.unlock_levels) are enforced here for EVERY ability, so a client whose
-                // config differs from the server's cannot use an ability the server has not unlocked yet. This packet is the
-                // player's own request: admin tools that call a power directly (/sporeaddstest) are not affected.
-                if (msg.id >= 1 && msg.id <= 13
-                        && !com.sporeadds.sporeaddsmod.Powers.PowerUnlocks.checkOrWarn(player, msg.id)) {
-                    return;
-                }
                 PowerBase power = PowerRegistry.getPower(msg.id);
                 if (power != null) {
                     power.use(player);

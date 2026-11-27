@@ -2,8 +2,6 @@ package com.sporeadds.sporeaddsmod.Powers;
 
 import com.Harbinger.Spore.SBlockEntities.CDUBlockEntity;
 import com.sporeadds.sporeaddsmod.blocks.blocks_entity.FreezerBlockEntity;
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.VigilRadarPacket;
@@ -62,10 +60,16 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class Poder11 extends PowerBase {
-    // The level needed to use this ability is the configurable unlock level (default 7): KommandantPowersConfig.isUnlocked.
+    private static final int PHASE_COST = 20;
+    private static final int REQUIRED_LEVEL_USE = 7;
     private static final int REQUIRED_LEVEL_VARIANT1 = 7;
 
-    // Cost, scan radius/interval/growth and jam time are configurable (power_11_vigil in the config).
+    private static final int INITIAL_SCAN_RADIUS = 15;
+    private static final int SCAN_INTERVAL = 200;
+    private static final int SCAN_GROWTH = 15;
+    private static final int MAX_SCAN_RADIUS = 150;
+
+    private static final int JAM_TIME_TICKS = 500;
 
     private static final ResourceLocation FREEZER_BLOCK_ID = new ResourceLocation("sporeadd", "freezer_block");
     private static final ResourceLocation CDU_BLOCK_ID = new ResourceLocation("spore", "cdu");
@@ -103,8 +107,7 @@ public class Poder11 extends PowerBase {
     public void use(ServerPlayer player) {
         player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
-            int phaseCost = KommandantAdvancedConfig.VIGIL_BIOMASS_COST.get();
-            if (currentPhase < phaseCost) {
+            if (currentPhase < PHASE_COST) {
                 player.displayClientMessage(
                         Component.translatable("message.sporeadd.power11.no_biomass")
                                 .withStyle(ChatFormatting.DARK_RED),
@@ -114,13 +117,13 @@ public class Poder11 extends PowerBase {
             }
 
             player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl -> {
-                if (!com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(lvl.getLevel(), 11)) return;
-                spore.setSpore(currentPhase - phaseCost);
+                if (lvl.getLevel() < REQUIRED_LEVEL_USE) return;
+                spore.setSpore(currentPhase - PHASE_COST);
 
                 ServerLevel level = player.serverLevel();
                 int protoCount = getProtoCountAcrossDimensions(player);
 
-                double alcance = KommandantAdvancedConfig.VIGIL_PLACEMENT_RANGE.get();
+                double alcance = 150.0D;
                 Vec3 startVec = player.getEyePosition();
                 Vec3 lookVec = player.getLookAngle();
                 Vec3 endVec = startVec.add(lookVec.x * alcance, lookVec.y * alcance, lookVec.z * alcance);
@@ -169,34 +172,30 @@ public class Poder11 extends PowerBase {
                     vigil.setDeltaMovement(Vec3.ZERO);
 
                     if (vigil.getAttribute(Attributes.MAX_HEALTH) != null) {
-                        vigil.getAttribute(Attributes.MAX_HEALTH).setBaseValue(KommandantAdvancedConfig.VIGIL_HEALTH.get());
+                        vigil.getAttribute(Attributes.MAX_HEALTH).setBaseValue(120.0D);
                     }
                     if (vigil.getAttribute(Attributes.ARMOR) != null) {
-                        vigil.getAttribute(Attributes.ARMOR).setBaseValue(KommandantAdvancedConfig.VIGIL_ARMOR.get());
+                        vigil.getAttribute(Attributes.ARMOR).setBaseValue(10.0D);
                     }
                     vigil.setHealth(vigil.getMaxHealth());
 
-                    int regenAmplifier = KommandantAdvancedConfig.VIGIL_REGEN_AMPLIFIER.get();
-                    if (regenAmplifier >= 0) {
-                        vigil.addEffect(new MobEffectInstance(
-                                MobEffects.REGENERATION,
-                                Integer.MAX_VALUE,
-                                regenAmplifier,
-                                false,
-                                false,
-                                false
-                        ));
-                    }
+                    vigil.addEffect(new MobEffectInstance(
+                            MobEffects.REGENERATION,
+                            Integer.MAX_VALUE,
+                            1,
+                            false,
+                            false,
+                            false
+                    ));
 
-                    double bonusHealth = protoCount * KommandantAdvancedConfig.VIGIL_HEALTH_PER_PROTO.get();
+                    double bonusHealth = protoCount * 50.0;
                     double baseHealth = vigil.getMaxHealth();
                     if (vigil.getAttribute(Attributes.MAX_HEALTH) != null) {
                         vigil.getAttribute(Attributes.MAX_HEALTH).setBaseValue(baseHealth + bonusHealth);
                     }
                     vigil.setHealth((float) (baseHealth + bonusHealth));
 
-                    float finalScale = KommandantAdvancedConfig.VIGIL_SCALE_BASE.get().floatValue()
-                            + (KommandantAdvancedConfig.VIGIL_SCALE_PER_PROTO.get().floatValue() * protoCount);
+                    float finalScale = 1.2F + (0.2F * protoCount);
                     ScaleData scaleData = ScaleTypes.BASE.getScaleData(vigil);
                     scaleData.setScale(finalScale);
                     scaleData.setTargetScale(finalScale);
@@ -207,7 +206,7 @@ public class Poder11 extends PowerBase {
                     CompoundTag persistentData = vigil.getPersistentData();
                     persistentData.putBoolean("SporeAdds_IsRadarVigil", true);
                     persistentData.putInt("SporeAdds_ScanTimer", 0);
-                    persistentData.putInt("SporeAdds_ScanRadius", KommandantAdvancedConfig.VIGIL_SCAN_INITIAL_RADIUS.get());
+                    persistentData.putInt("SporeAdds_ScanRadius", INITIAL_SCAN_RADIUS);
                     persistentData.putInt("SporeAdds_ParticleWave", -1);
                     persistentData.putBoolean("SporeAdds_NoHardFloorDespawn", true);
                     persistentData.putString("SporeAdds_SpawnSource", "Poder11Vigil");
@@ -259,20 +258,9 @@ public class Poder11 extends PowerBase {
         CompoundTag persistentData = entity.getPersistentData();
         if (!persistentData.getBoolean("SporeAdds_IsRadarVigil")) return;
 
-        // Optional lifetime (power_11_vigil.lifetime_ticks): 0 = the Vigil never expires (the original behaviour).
-        int lifetime = KommandantAdvancedConfig.VIGIL_LIFETIME_TICKS.get();
-        if (lifetime > 0) {
-            int age = persistentData.getInt("SporeAdds_RadarAge") + 1;
-            persistentData.putInt("SporeAdds_RadarAge", age);
-            if (age >= lifetime) {
-                entity.discard();
-                return;
-            }
-        }
-
         int timer = persistentData.getInt("SporeAdds_ScanTimer") + 1;
 
-        if (timer >= KommandantAdvancedConfig.VIGIL_SCAN_INTERVAL_TICKS.get()) {
+        if (timer >= SCAN_INTERVAL) {
             timer = 0;
             ServerLevel level = (ServerLevel) entity.level();
             int currentRadius = persistentData.getInt("SporeAdds_ScanRadius");
@@ -284,10 +272,7 @@ public class Poder11 extends PowerBase {
 
             runKommandantScan(entity, level, currentRadius);
 
-            // Marker (with particles) and Glowing (without) by default; both lists are configurable.
-            List<ConfigEffects.Entry> scanEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.VIGIL_SCAN_EFFECTS);
-            List<ConfigEffects.Entry> scanEffectsQuiet = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.VIGIL_SCAN_EFFECTS_NO_PARTICLES);
-            double effectChance = KommandantAdvancedConfig.VIGIL_SCAN_EFFECT_CHANCE.get();
+            MobEffect markerEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "marker"));
             AABB scanBox = entity.getBoundingBox().inflate(currentRadius);
 
             List<LivingEntity> targets = level.getEntitiesOfClass(
@@ -299,16 +284,14 @@ public class Poder11 extends PowerBase {
                     if (target instanceof ServerPlayer playerTarget && SporeClassUtil.hasClass(playerTarget, "kommandant")) {
                         continue;
                     }
-                    if (effectChance < 1.0D && level.getRandom().nextDouble() >= effectChance) {
-                        continue;
+                    if (markerEffect != null) {
+                        target.addEffect(new MobEffectInstance(markerEffect, 300, 1, false, true, true));
                     }
-                    ConfigEffects.apply(target, scanEffects);
-                    KommandantAdvancedConfig.applyQuiet(target, scanEffectsQuiet, true);
+                    target.addEffect(new MobEffectInstance(MobEffects.GLOWING, 300, 1, false, false, true));
                 }
             }
 
-            int nextRadius = Math.min(currentRadius + KommandantAdvancedConfig.VIGIL_SCAN_GROWTH.get(),
-                    KommandantAdvancedConfig.VIGIL_SCAN_MAX_RADIUS.get());
+            int nextRadius = Math.min(currentRadius + SCAN_GROWTH, MAX_SCAN_RADIUS);
             persistentData.putInt("SporeAdds_ScanRadius", nextRadius);
             persistentData.putInt("SporeAdds_ParticleWave", 0);
         }
@@ -356,7 +339,7 @@ public class Poder11 extends PowerBase {
 
         int ticks = data.getInt(JAMMER_TIMER_TAG) + 1;
 
-        if (ticks >= KommandantAdvancedConfig.VIGIL_JAM_INTERVAL_TICKS.get()) {
+        if (ticks >= JAM_TIME_TICKS) {
             ServerLevel level = (ServerLevel) entity.level();
             jamMachine(level, machinePos);
             ticks = 0;
@@ -445,13 +428,11 @@ public class Poder11 extends PowerBase {
 
         scanForCryoUnitsFast(level, center, scanRadius, freezerPos, freezerStatus, freezerJamming, cduPos, cduStatus, cduJamming);
 
-        float jamChance = KommandantAdvancedConfig.VIGIL_JAM_CHANCE.get().floatValue();
-
         for (int i = 0; i < freezerPos.size(); i++) {
             BlockPos pos = freezerPos.get(i);
             boolean jamming = freezerJamming.get(i);
 
-            if (!jamming && level.getRandom().nextFloat() <= jamChance) {
+            if (!jamming && level.getRandom().nextFloat() <= 0.30f) {
                 trySpawnJammingMound(level, pos, true);
                 freezerJamming.set(i, true);
             }
@@ -461,7 +442,7 @@ public class Poder11 extends PowerBase {
             BlockPos pos = cduPos.get(i);
             boolean jamming = cduJamming.get(i);
 
-            if (!jamming && level.getRandom().nextFloat() <= jamChance) {
+            if (!jamming && level.getRandom().nextFloat() <= 0.30f) {
                 trySpawnJammingMound(level, pos, false);
                 cduJamming.set(i, true);
             }
@@ -672,14 +653,13 @@ public class Poder11 extends PowerBase {
         mound.setCustomName(Component.translatable("entity.sporeadd.jamming_mound"));
         mound.setCustomNameVisible(false);
 
-        double moundHealth = KommandantAdvancedConfig.VIGIL_MOUND_HEALTH.get();
         if (mound.getAttribute(Attributes.MAX_HEALTH) != null) {
-            mound.getAttribute(Attributes.MAX_HEALTH).setBaseValue(moundHealth);
+            mound.getAttribute(Attributes.MAX_HEALTH).setBaseValue(10.0D);
         }
         if (mound.getAttribute(Attributes.ARMOR) != null) {
-            mound.getAttribute(Attributes.ARMOR).setBaseValue(KommandantAdvancedConfig.VIGIL_MOUND_ARMOR.get());
+            mound.getAttribute(Attributes.ARMOR).setBaseValue(30.0D);
         }
-        mound.setHealth(Math.min(mound.getMaxHealth(), (float) moundHealth));
+        mound.setHealth(Math.min(mound.getMaxHealth(), 10.0F));
 
         CompoundTag data = mound.getPersistentData();
         data.putInt(JAMMER_TIMER_TAG, 0);
@@ -704,7 +684,7 @@ public class Poder11 extends PowerBase {
 
         if (event.getSource().is(DamageTypes.FREEZE)) {
             float originalDamage = event.getAmount();
-            float reducedDamage = originalDamage * KommandantAdvancedConfig.VIGIL_FREEZE_MULTIPLIER.get().floatValue();
+            float reducedDamage = originalDamage * 0.30f;
             event.setAmount(reducedDamage);
 
             if (entity.getTicksFrozen() > 100) {

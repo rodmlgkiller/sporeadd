@@ -15,11 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Acid.class)
 public abstract class SporeAcidMixin {
 
-    // Nombre oficial (entityInside = SRG m_7892_): el refmap del mod lo traduce a SRG en el juego "de verdad".
+    // Si tu entorno usa SRG mappings, cambia "entityInside" por "m_7892_"
     @Inject(
-            method = "entityInside(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)V",
+            method = "m_7892_", // Nombre SRG
             at = @At("HEAD"),
-            cancellable = true
+            cancellable = true,
+            remap = false
     )
     private void ignoreSporeTeamInside(BlockState blockState, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
 

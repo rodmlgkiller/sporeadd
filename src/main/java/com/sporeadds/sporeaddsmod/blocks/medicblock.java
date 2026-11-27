@@ -48,9 +48,16 @@ public class medicblock extends BaseEntityBlock {
         return RenderShape.INVISIBLE;
     }
 
-    // No IClientBlockExtensions#addDestroyEffects override on purpose: ParticleEngine#destroy calls that hook
-    // first, so calling destroy() from inside it recursed forever (StackOverflowError when breaking the block).
-    // The default (vanilla) break particles already use the model's "particle" texture.
+    @Override
+    public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientBlockExtensions> consumer) {
+        consumer.accept(new net.minecraftforge.client.extensions.common.IClientBlockExtensions() {
+            @Override
+            public boolean addDestroyEffects(BlockState state, Level level, BlockPos pos, net.minecraft.client.particle.ParticleEngine manager) {
+                manager.destroy(pos, state);
+                return true;
+            }
+        });
+    }
 
     @Override
     public void onRemove(BlockState pstate, Level plevel, BlockPos ppos, BlockState pnewstate, boolean pismoving) {

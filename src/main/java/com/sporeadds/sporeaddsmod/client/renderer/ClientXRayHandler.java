@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -32,8 +31,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +44,9 @@ public class ClientXRayHandler {
     private static final Map<BlockPos, float[]> KNOWN_BLOCKS = new HashMap<>();
     private static final Map<Integer, PlayerOutlineData> KNOWN_PLAYERS = new HashMap<>();
     private static int tickCounter = 0;
-    // Scan radius (36), highlight limit, water range (64) and every colour below come from
-    // kommandant_abilities.highlights (read from this client's own config file).
+    private static final int SCAN_RADIUS = 36;
+    private static final double PLAYER_WATER_OUTLINE_RANGE = 64.0D;
+    private static final double PLAYER_WATER_OUTLINE_RANGE_SQR = PLAYER_WATER_OUTLINE_RANGE * PLAYER_WATER_OUTLINE_RANGE;
 
     private static VertexBuffer vertexBuffer;
     private static boolean requestedRefresh = true;
@@ -62,6 +60,14 @@ public class ClientXRayHandler {
 
     private static final ResourceLocation MARKER_EFFECT_ID = new ResourceLocation("spore", "marker");
     private static final ResourceLocation UNEASY_EFFECT_ID = new ResourceLocation("spore", "uneasy");
+
+    private static final float[] ORANGE = new float[]{1.0F, 0.5F, 0.0F, 1.0F};
+    private static final float[] RED = new float[]{1.0F, 0.0F, 0.0F, 1.0F};
+    private static final float[] YELLOW = new float[]{1.0F, 1.0F, 0.0F, 1.0F};
+    private static final float[] PURPLE = new float[]{0.6F, 0.0F, 1.0F, 1.0F};
+    private static final float[] GREEN = new float[]{0.0F, 1.0F, 0.0F, 1.0F};
+    private static final float[] LIGHT_RED = new float[]{1.0F, 0.45F, 0.45F, 1.0F};
+    private static final float[] CYAN = new float[]{0.0F, 1.0F, 1.0F, 1.0F};
 
     private record XRayAccess(boolean power4, boolean power5, boolean kommandant) {}
 
@@ -105,24 +111,18 @@ public class ClientXRayHandler {
         XRayAccess access = getXRayAccess(player);
         Map<ResourceLocation, float[]> targets = new HashMap<>();
 
-        float[] orange = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_BLOCK_REMAINS, 0xFF8000);
-        float[] red = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_BLOCK_HIVE_SPAWN, 0xFF0000);
-        float[] yellow = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_BLOCK_BIOMASS_LUMP, 0xFFFF00);
-        float[] purple = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_BLOCK_OVERGROWN_SPAWNER, 0x9900FF);
-        float[] green = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_BLOCK_BIOMASS_BULB, 0x00FF00);
-
         if (access.power5()) {
-            targets.put(REMAINS_ID, orange);
-            targets.put(WALL_REMAINS_ID, orange);
-            targets.put(HIVE_SPAWN_ID, red);
-            targets.put(BIOMASS_LUMP_ID, yellow);
-            targets.put(OVERGROWN_SPAWNER_ID, purple);
+            targets.put(REMAINS_ID, ORANGE);
+            targets.put(WALL_REMAINS_ID, ORANGE);
+            targets.put(HIVE_SPAWN_ID, RED);
+            targets.put(BIOMASS_LUMP_ID, YELLOW);
+            targets.put(OVERGROWN_SPAWNER_ID, PURPLE);
         }
 
         if (access.power4()) {
-            targets.put(REMAINS_ID, orange);
-            targets.put(WALL_REMAINS_ID, orange);
-            targets.put(BIOMASS_BULB_ID, green);
+            targets.put(REMAINS_ID, ORANGE);
+            targets.put(WALL_REMAINS_ID, ORANGE);
+            targets.put(BIOMASS_BULB_ID, GREEN);
         }
 
         return targets;
@@ -176,11 +176,9 @@ public class ClientXRayHandler {
             return;
         }
 
-        int scanRadius = KommandantPowersConfig.ESP_BLOCK_RANGE.get();
-
-        for (int x = -scanRadius; x <= scanRadius; x++) {
-            for (int y = -scanRadius; y <= scanRadius; y++) {
-                for (int z = -scanRadius; z <= scanRadius; z++) {
+        for (int x = -SCAN_RADIUS; x <= SCAN_RADIUS; x++) {
+            for (int y = -SCAN_RADIUS; y <= SCAN_RADIUS; y++) {
+                for (int z = -SCAN_RADIUS; z <= SCAN_RADIUS; z++) {
                     BlockPos pos = center.offset(x, y, z);
 
                     if (player.level().isOutsideBuildHeight(pos) || !player.level().isLoaded(pos)) {
@@ -200,17 +198,6 @@ public class ClientXRayHandler {
             }
         }
 
-        // highlights.block_limit: keep only the nearest blocks when there are too many (0 = no limit).
-        int limit = KommandantPowersConfig.ESP_BLOCK_LIMIT.get();
-        if (limit > 0 && KNOWN_BLOCKS.size() > limit) {
-            List<Map.Entry<BlockPos, float[]>> entries = new ArrayList<>(KNOWN_BLOCKS.entrySet());
-            entries.sort(Comparator.comparingDouble(entry -> entry.getKey().distSqr(center)));
-            KNOWN_BLOCKS.clear();
-            for (int i = 0; i < limit; i++) {
-                KNOWN_BLOCKS.put(entries.get(i).getKey(), entries.get(i).getValue());
-            }
-        }
-
         requestedRefresh = true;
     }
 
@@ -225,12 +212,6 @@ public class ClientXRayHandler {
         MobEffect uneasyEffect = ForgeRegistries.MOB_EFFECTS.getValue(UNEASY_EFFECT_ID);
         Vec3 viewerPos = viewer.position();
 
-        double waterRange = KommandantPowersConfig.ESP_WATER_RANGE.get();
-        double waterRangeSqr = waterRange * waterRange;
-        float[] cyan = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_PLAYER_WATER, 0x00FFFF);
-        float[] lightRed = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_PLAYER_MARKER, 0xFF7373);
-        float[] purple = KommandantPowersConfig.colorFloats(KommandantPowersConfig.ESP_COLOR_PLAYER_UNEASY, 0x9900FF);
-
         for (Player target : viewer.level().players()) {
             if (target == viewer) {
                 continue;
@@ -238,19 +219,19 @@ public class ClientXRayHandler {
 
             float[] color = null;
 
-            if (target.isInWater() && target.distanceToSqr(viewer) <= waterRangeSqr) {
-                color = cyan;
+            if (target.isInWater() && target.distanceToSqr(viewer) <= PLAYER_WATER_OUTLINE_RANGE_SQR) {
+                color = CYAN;
             }
 
             if (markerEffect != null) {
                 MobEffectInstance markerInstance = target.getEffect(markerEffect);
                 if (markerInstance != null) {
-                    color = lightRed;
+                    color = LIGHT_RED;
                 }
             }
 
             if (uneasyEffect != null && target.hasEffect(uneasyEffect)) {
-                color = purple;
+                color = PURPLE;
             }
 
             if (color != null) {

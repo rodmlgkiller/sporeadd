@@ -25,11 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VervaRequestCommand {
 
-    // The biomass cost (default 5) and the level needed (the unlock level of ability 8, default 4) are configurable:
-    // KommandantAdvancedConfig.TRANSPORT_BIOMASS_COST and KommandantPowersConfig.isUnlocked(level, 8).
-    private static int sporeCost() {
-        return com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig.TRANSPORT_BIOMASS_COST.get();
-    }
+    private static final int SPORE_COST = 5;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("vervarequest")
@@ -44,7 +40,7 @@ public class VervaRequestCommand {
 
                             AtomicBoolean hasLevel = new AtomicBoolean(false);
                             player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvlCap -> {
-                                if (com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(lvlCap.getLevel(), 8)) {
+                                if (lvlCap.getLevel() >= 4) {
                                     hasLevel.set(true);
                                 }
                             });
@@ -102,8 +98,8 @@ public class VervaRequestCommand {
                                     return;
                                 }
 
-                                if (spore.getSpore() < sporeCost()) {
-                                    source.sendFailure(Component.translatable("command.sporeadd.vervarequest.need_biomass", sporeCost()));
+                                if (spore.getSpore() < SPORE_COST) {
+                                    source.sendFailure(Component.translatable("command.sporeadd.vervarequest.need_biomass", SPORE_COST));
                                     return;
                                 }
 
@@ -129,7 +125,7 @@ public class VervaRequestCommand {
                                     }
                                 }
 
-                                spore.setSpore(spore.getSpore() - sporeCost());
+                                spore.setSpore(spore.getSpore() - SPORE_COST);
 
                                 player.sendSystemMessage(Component.translatable("command.sporeadd.vervarequest.incoming"));
 
@@ -151,7 +147,7 @@ public class VervaRequestCommand {
 
             AtomicBoolean hasLevel = new AtomicBoolean(false);
             player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvlCap -> {
-                if (com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(lvlCap.getLevel(), 8)) {
+                if (lvlCap.getLevel() >= 4) {
                     hasLevel.set(true);
                 }
             });

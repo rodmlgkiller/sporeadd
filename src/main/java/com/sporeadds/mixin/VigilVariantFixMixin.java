@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Arregla un bug de la dependencia Spore: {@code Vigil.finalizeSpawn} (SRG m_6518_) SIEMPRE
+ * Arregla un bug de la dependencia Spore: {@code Vigil.finalizeSpawn} (m_6518_) SIEMPRE
  * re-sortea la variante del Vigil al azar entre las 4 ({@code DEFAULT, STALKER, TROLL, RINGER}),
  * ignorando la que ya tuviera la entidad o su NBT. Resultado: ~25% de los Vigils invocados por
  * huevo de spawn / {@code /summon} sin NBT / spawn natural / herramientas de copia acaban siendo
@@ -25,13 +25,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * ya aplicada) y, si era una variante intencionada (!= 0 = DEFAULT), la restauramos después de
  * que Spore la haya pisado.
  */
-@Mixin(Vigil.class)
+@Mixin(value = Vigil.class, remap = false)
 public abstract class VigilVariantFixMixin {
 
     @Unique
     private int sporeadds$intendedVariant;
 
-    @Inject(method = "finalizeSpawn(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/world/DifficultyInstance;Lnet/minecraft/world/entity/MobSpawnType;Lnet/minecraft/world/entity/SpawnGroupData;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/entity/SpawnGroupData;", at = @At("HEAD"))
+    @Inject(method = "m_6518_", at = @At("HEAD"), remap = false)
     private void sporeadds$captureVariant(ServerLevelAccessor level, DifficultyInstance difficulty,
                                           MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag spawnNbt,
                                           CallbackInfoReturnable<SpawnGroupData> cir) {
@@ -41,7 +41,7 @@ public abstract class VigilVariantFixMixin {
                 : self.getTypeVariant();
     }
 
-    @Inject(method = "finalizeSpawn(Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/world/DifficultyInstance;Lnet/minecraft/world/entity/MobSpawnType;Lnet/minecraft/world/entity/SpawnGroupData;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/entity/SpawnGroupData;", at = @At("RETURN"))
+    @Inject(method = "m_6518_", at = @At("RETURN"), remap = false)
     private void sporeadds$restoreVariant(ServerLevelAccessor level, DifficultyInstance difficulty,
                                           MobSpawnType spawnType, SpawnGroupData groupData, CompoundTag spawnNbt,
                                           CallbackInfoReturnable<SpawnGroupData> cir) {

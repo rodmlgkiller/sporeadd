@@ -125,7 +125,7 @@ public final class HiveDownedManager {
         if (player.getEffect(effects.CALL_OF_THE_HIVE.get()) == null) return false;
         if (SporeAddsConfig.CALL_OF_THE_HIVE_PERSISTS_WITHOUT_PROTO.get()) return true;
         return ProtoProximity.isProtoWithin(
-                player.level(), player.position(), CallOfTheHiveHandler.proximityRadius());
+                player.level(), player.position(), CallOfTheHiveHandler.PROXIMITY_RADIUS);
     }
 
     /** true si a este jugador no se le debe poder targetear (downed, o ventana de gracia posterior). */

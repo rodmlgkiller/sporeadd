@@ -6,8 +6,6 @@ import com.Harbinger.Spore.Sentities.Organoids.Proto;
 import com.Harbinger.Spore.Sentities.Organoids.Verwa;
 import com.Harbinger.Spore.Sentities.Variants.NaiadVariants;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevel;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
@@ -48,7 +46,8 @@ import java.util.Random;
 
 public class Poder8 extends PowerBase {
 
-    // The level needed to use this ability is the configurable unlock level (default 4): KommandantPowersConfig.isUnlocked.
+    private static final int MIN_LEVEL = 4;
+    private static final int PHASE_COST = 15;
     private static final String ANTIFARM_TAG = "antifarm";
     private static final Random random = new Random();
 
@@ -69,7 +68,7 @@ public class Poder8 extends PowerBase {
                         if (lvl == null) return;
 
                         int playerLevel = lvl.getLevel();
-                        if (!com.sporeadds.sporeaddsmod.config.KommandantPowersConfig.isUnlocked(playerLevel, 8)) return;
+                        if (playerLevel < MIN_LEVEL) return;
 
                         if (isAbyssal) {
                             executeAbyssalLogic(player, serverLevel, spore, currentPhase, playerLevel);
@@ -83,13 +82,12 @@ public class Poder8 extends PowerBase {
     }
 
     private void executeAbyssalLogic(ServerPlayer player, ServerLevel level, PlayerSpore spore, int currentPhase, int playerLevel) {
-        int phaseCost = KommandantAdvancedConfig.HORDE_BIOMASS_COST.get();
-        if (currentPhase < phaseCost) return;
+        if (currentPhase < PHASE_COST) return;
 
         BlockPos spawnPos = findAbyssalSpawnPos(player, level);
         if (spawnPos == null) return;
 
-        spore.setSpore(currentPhase - phaseCost);
+        spore.setSpore(currentPhase - PHASE_COST);
         spawnSonicBoomHeadParticles(level, player);
 
         level.playSound(
@@ -106,11 +104,10 @@ public class Poder8 extends PowerBase {
         EntityType<?> naiadType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("spore", "naiad"));
         if (naiadType == null) return;
 
-        List<ConfigEffects.Entry> naiadEffects = KommandantAdvancedConfig.effects(KommandantAdvancedConfig.ABYSSAL_NAIAD_EFFECTS);
+        MobEffect marker = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore", "marker"));
 
         int protoCount = getProtoCountAcrossDimensions(player);
-        int totalNaiads = KommandantAdvancedConfig.ABYSSAL_NAIAD_BASE.get()
-                + (protoCount * KommandantAdvancedConfig.ABYSSAL_NAIAD_PER_PROTO.get());
+        int totalNaiads = 2 + (protoCount * 2);
 
         for (int i = 0; i < totalNaiads; i++) {
             Entity entity = naiadType.create(level);
@@ -118,7 +115,7 @@ public class Poder8 extends PowerBase {
                 naiad.moveTo(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D, 0, 0);
                 naiad.setVariant(NaiadVariants.TRITON.getId());
                 ScaleData scaleData = ScaleTypes.BASE.getScaleData(naiad);
-                scaleData.setScale(KommandantAdvancedConfig.ABYSSAL_NAIAD_SCALE.get().floatValue());
+                scaleData.setScale(1.3F);
 
                 AttributeInstance healthAttr = naiad.getAttribute(Attributes.MAX_HEALTH);
                 if (healthAttr != null) {
@@ -126,8 +123,11 @@ public class Poder8 extends PowerBase {
                     naiad.setHealth(naiad.getMaxHealth());
                 }
 
-                // Quiet effects (no potion particles), HUD icon shown: same flags the hard-coded effects used.
-                KommandantAdvancedConfig.applyQuiet(naiad, naiadEffects, true);
+                naiad.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 600, 2, false, false, true));
+
+                if (marker != null) {
+                    naiad.addEffect(new MobEffectInstance(marker, 2000, 5, false, false, true));
+                }
 
                 level.addFreshEntity(naiad);
             }
@@ -205,19 +205,31 @@ public class Poder8 extends PowerBase {
         return true;
     }
 
-    /** Max health of an Abyssal Horde naiad (config power_8_horde.abyssal.naiad_health_by_level, indexed by level). */
     private double getAbyssalNaiadHealth(int level) {
-        return KommandantAdvancedConfig.abyssalNaiadHealth(level);
+        switch (level) {
+            case 0: return 20.0;
+            case 1: return 25.0;
+            case 2: return 30.0;
+            case 3: return 40.0;
+            case 4: return 50.0;
+            case 5: return 65.0;
+            case 6: return 80.0;
+            case 7: return 100.0;
+            case 8: return 120.0;
+            case 9: return 150.0;
+            default:
+                if (level > 9) return 200.0;
+                return 20.0;
+        }
     }
 
     private void executeNormalLogic(ServerPlayer player, ServerLevel level, PlayerSpore spore, int currentPhase, int playerLevel) {
-        int phaseCost = KommandantAdvancedConfig.HORDE_BIOMASS_COST.get();
-        if (currentPhase < phaseCost) {
+        if (currentPhase < PHASE_COST) {
             player.sendSystemMessage(Component.translatable("message.sporeadd.power1.not_enough_biomass"));
             return;
         }
 
-        spore.setSpore(currentPhase - phaseCost);
+        spore.setSpore(currentPhase - PHASE_COST);
 
         level.playSound(
                 null,
@@ -250,14 +262,10 @@ public class Poder8 extends PowerBase {
     }
 
     private static void spawnVerwasWithBudget(Player player, Level level, int playerLevel, int protoCount) {
-        // All of these numbers are configurable (power_8_horde); the defaults are the values that used to be hard-coded.
-        int baseVerwas = KommandantAdvancedConfig.HORDE_BASE_VERWAS.get();
-        int maxVerwas = KommandantAdvancedConfig.HORDE_MAX_VERWAS.get();
-        int verwasPerProto = KommandantAdvancedConfig.HORDE_VERWAS_PER_PROTO.get();
-        int budgetPerProto = KommandantAdvancedConfig.HORDE_BUDGET_PER_PROTO.get();
-        int budgetPerProtoMaxed = KommandantAdvancedConfig.HORDE_BUDGET_PER_PROTO_MAXED.get();
+        int baseVerwas = 6;
+        int maxVerwas = 10;
 
-        int totalVerwas = baseVerwas + (protoCount * verwasPerProto);
+        int totalVerwas = baseVerwas + protoCount;
         if (totalVerwas > maxVerwas) {
             totalVerwas = maxVerwas;
         }
@@ -265,10 +273,10 @@ public class Poder8 extends PowerBase {
         int hordeBiomass = getHordeBiomass(playerLevel);
 
         for (int i = 1; i <= protoCount; i++) {
-            if (baseVerwas + (i * verwasPerProto) <= maxVerwas) {
-                hordeBiomass += budgetPerProto;
+            if (baseVerwas + i <= maxVerwas) {
+                hordeBiomass += 7;
             } else {
-                hordeBiomass += budgetPerProtoMaxed;
+                hordeBiomass += 5;
             }
         }
 
@@ -276,22 +284,15 @@ public class Poder8 extends PowerBase {
             totalVerwas = hordeBiomass + 1;
         }
 
-        // A misconfigured horde (no Verwas at all) simply does nothing instead of crashing on random.nextInt(0).
-        if (totalVerwas <= 0) {
-            return;
-        }
-
         int[] vervaCosts = new int[totalVerwas];
         int[] vervaCaps = new int[totalVerwas];
 
-        int capMin = KommandantAdvancedConfig.HORDE_VERWA_CAP_MIN.get();
-        int capMax = Math.max(capMin, KommandantAdvancedConfig.HORDE_VERWA_CAP_MAX.get());
         for (int i = 0; i < totalVerwas; i++) {
-            vervaCaps[i] = capMin + random.nextInt(capMax - capMin + 1);
+            vervaCaps[i] = 5 + random.nextInt(5);
         }
 
         int vanguardIndex = random.nextInt(totalVerwas);
-        vervaCaps[vanguardIndex] = KommandantAdvancedConfig.HORDE_VANGUARD_CAP.get();
+        vervaCaps[vanguardIndex] = 10;
 
         int remainingPoints = hordeBiomass;
 
@@ -339,9 +340,8 @@ public class Poder8 extends PowerBase {
 
             String selectedMob = pool.get(random.nextInt(pool.size()));
 
-            double spawnRadius = KommandantAdvancedConfig.HORDE_SPAWN_RADIUS.get();
-            double offsetX = (random.nextDouble() * (spawnRadius * 2.0D)) - spawnRadius;
-            double offsetZ = (random.nextDouble() * (spawnRadius * 2.0D)) - spawnRadius;
+            double offsetX = (random.nextDouble() * 30) - 15;
+            double offsetZ = (random.nextDouble() * 30) - 15;
             double spawnX = player.getX() + offsetX;
             double spawnZ = player.getZ() + offsetZ;
             double spawnY = getValidSpawnY(level, spawnX, player.getY(), spawnZ);
@@ -400,8 +400,17 @@ public class Poder8 extends PowerBase {
         return playerY;
     }
 
-    /** Biomass budget of the horde for a level (config power_8_horde.level_budgets, indexed by level). */
     private static int getHordeBiomass(int playerLevel) {
-        return KommandantAdvancedConfig.hordeBudgetForLevel(playerLevel);
+        switch (playerLevel) {
+            case 4: return 11;
+            case 5: return 15;
+            case 6: return 18;
+            case 7: return 22;
+            case 8: return 26;
+            case 9: return 30;
+            default:
+                if (playerLevel > 9) return 35;
+                return 7;
+        }
     }
 }

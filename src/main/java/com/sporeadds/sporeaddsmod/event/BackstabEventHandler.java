@@ -2,9 +2,6 @@ package com.sporeadds.sporeaddsmod.event;
 
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.abilities.GhostDisguiseStacks;
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.particles.GoreParticleData;
 import com.sporeadds.sporeaddsmod.particles.SporeaddParticleTypes;
@@ -19,7 +16,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -32,10 +28,20 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = "sporeadd")
 public final class BackstabEventHandler {
 
-    // The damage multipliers, distance, angle, execution rule, critical wound and XP numbers are configurable: see GhostConfig (ghost.* in the config).
+    private static final double BACKSTAB_MULTIPLIER = 2.0D;
+    private static final double BACKSTAB_ANGLE_THRESHOLD = 0.5D;
+    private static final double BACKSTAB_MAX_DISTANCE = 7.0D;
+    private static final double CAMOUFLAGE_BONUS_MULTIPLIER = 1.5D;
     private static final int GORE_PARTICLE_COUNT = 7;
+    private static final int CRITICAL_WOUND_DURATION_TICKS = 20 * 30;
     private static final int REPEAT_COUNT = 3;
     private static final int REPEAT_TICK_INTERVAL = 1;
+
+    private static final float EXECUTION_HEALTH_THRESHOLD = 20.0F;
+
+    private static final int BASE_EXECUTION_XP = 8;
+    private static final int BUSH_HIT_XP = 20;
+    private static final int BUSH_EXECUTION_XP = 12;
 
     private static final Random RANDOM = new Random();
 
@@ -72,7 +78,7 @@ public final class BackstabEventHandler {
             return;
         }
 
-        if (attacker.distanceTo(target) > GhostConfig.backstabMaxDistance()) {
+        if (attacker.distanceTo(target) > BACKSTAB_MAX_DISTANCE) {
             return;
         }
 
@@ -84,9 +90,9 @@ public final class BackstabEventHandler {
                 .map(data -> data.isCamouflaged())
                 .orElse(false);
 
-        double totalMultiplier = GhostConfig.backstabDamageMultiplier();
+        double totalMultiplier = BACKSTAB_MULTIPLIER;
         if (bushAbilityActive) {
-            totalMultiplier *= GhostConfig.disguiseBackstabBonusMultiplier();
+            totalMultiplier *= CAMOUFLAGE_BONUS_MULTIPLIER;
         }
 
         float newAmount = event.getAmount() * (float) totalMultiplier;
@@ -99,20 +105,16 @@ public final class BackstabEventHandler {
         spawnGoreParticles(serverLevel, target);
         playBackstabSound(serverLevel, target);
 
-        if (bushAbilityActive || !GhostConfig.CRITICAL_WOUND_ONLY_WHEN_DISGUISED.get()) {
+        if (bushAbilityActive) {
             target.addEffect(new MobEffectInstance(
                     effects.CRITICAL_WOUND.get(),
-                    GhostConfig.criticalWoundDurationTicks(),
+                    CRITICAL_WOUND_DURATION_TICKS,
                     0,
                     false,
                     true,
                     true
             ));
 
-            ConfigEffects.apply(target, ConfigEffects.parseAll(GhostConfig.CRITICAL_WOUND_EXTRA_EFFECTS.get()));
-        }
-
-        if (bushAbilityActive) {
             for (int repeat = 1; repeat <= REPEAT_COUNT - 1; repeat++) {
                 int delay = repeat * REPEAT_TICK_INTERVAL;
                 DelayedTaskScheduler.schedule(delay, () -> {
@@ -129,14 +131,13 @@ public final class BackstabEventHandler {
                 .orElse(false);
 
         boolean willExecute = !targetHasActiveArmor
-                && (GhostConfig.EXECUTION_CAN_EXECUTE_PLAYERS.get() || !(target instanceof Player))
-                && (target.getHealth() - newAmount) < GhostConfig.executionThreshold(target);
+                && (target.getHealth() - newAmount) < EXECUTION_HEALTH_THRESHOLD;
 
         int xpAmount;
         if (bushAbilityActive) {
-            xpAmount = willExecute ? GhostConfig.BACKSTAB_XP_DISGUISED_EXECUTION.get() : GhostConfig.BACKSTAB_XP_DISGUISED_HIT.get();
+            xpAmount = willExecute ? BUSH_EXECUTION_XP : BUSH_HIT_XP;
         } else {
-            xpAmount = willExecute ? GhostConfig.BACKSTAB_XP_EXECUTION.get() : 0;
+            xpAmount = willExecute ? BASE_EXECUTION_XP : 0;
         }
 
         Vec3 xpPos = target.position();
@@ -145,11 +146,6 @@ public final class BackstabEventHandler {
             DelayedTaskScheduler.schedule(1, () -> {
                 if (target.isAlive()) {
                     target.hurt(target.damageSources().genericKill(), Float.MAX_VALUE);
-
-                    // The execution has no attacker, so it is not seen by the kill trigger of the disguise stacks.
-                    if (!target.isAlive()) {
-                        GhostDisguiseStacks.consume(attacker, GhostConfig.StackConsume.KILL);
-                    }
                 }
             });
         }
@@ -157,8 +153,6 @@ public final class BackstabEventHandler {
         if (xpAmount > 0) {
             ExperienceOrb.award(serverLevel, xpPos, xpAmount);
         }
-
-        GhostDisguiseStacks.consume(attacker, GhostConfig.StackConsume.BACKSTAB);
     }
 
     private static boolean isBackstab(ServerPlayer attacker, LivingEntity target) {
@@ -169,9 +163,7 @@ public final class BackstabEventHandler {
         double facingSameDirection = attackerLook.dot(targetLook);
         double attackerBehindTarget = attackerToTarget.dot(targetLook);
 
-        double angleThreshold = GhostConfig.backstabAngleThreshold();
-
-        return facingSameDirection > angleThreshold && attackerBehindTarget > angleThreshold;
+        return facingSameDirection > BACKSTAB_ANGLE_THRESHOLD && attackerBehindTarget > BACKSTAB_ANGLE_THRESHOLD;
     }
 
     private static void spawnGoreParticles(ServerLevel level, LivingEntity target) {

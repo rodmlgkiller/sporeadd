@@ -26,7 +26,7 @@ import java.util.List;
 @Mixin(OrganiteBlock.class)
 public class OrganiteBlockMixin {
 
-    @Inject(method = "tick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V", at = @At("TAIL"))
+    @Inject(method = "m_213897_", at = @At("TAIL"), remap = false)
     private void sporeadds$applyMarkerToBlacklisted(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, CallbackInfo ci) {
 
         if (!SporeAddsConfig.ORGANITE_MARKER_FOR_BLACKLIST.get()) {

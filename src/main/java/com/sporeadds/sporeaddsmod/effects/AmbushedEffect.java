@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.effects;
 
-import com.sporeadds.sporeaddsmod.config.GhostConfig;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,8 +12,9 @@ import java.util.UUID;
 public class AmbushedEffect extends MobEffect {
 
     private static final UUID SPEED_MODIFIER_ID = UUID.fromString("8f3c1a2e-4b6d-4e21-9a2f-1c7d5e9b3f10");
-
-    // The speed / damage numbers are configurable (ghost.ambushed in the config); the damage multipliers are applied in DamageEventHandler.
+    public static final double MOVEMENT_SPEED_REDUCTION = -0.60D;
+    public static final float OUTGOING_DAMAGE_MULTIPLIER = 0.50F;
+    public static final float INCOMING_DAMAGE_MULTIPLIER = 2.0F;
 
     public AmbushedEffect() {
         super(MobEffectCategory.HARMFUL, 0x4A2E1A);
@@ -27,7 +27,7 @@ public class AmbushedEffect extends MobEffect {
             speedAttribute.addTransientModifier(new AttributeModifier(
                     SPEED_MODIFIER_ID,
                     "Ambushed speed penalty",
-                    GhostConfig.ambushedMovementSpeedModifier(),
+                    MOVEMENT_SPEED_REDUCTION,
                     AttributeModifier.Operation.MULTIPLY_TOTAL
             ));
         }

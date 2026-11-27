@@ -3,8 +3,6 @@ package com.sporeadds.sporeaddsmod.Powers;
 import com.Harbinger.Spore.Sentities.FoliageSpread;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.ConfigEffects;
-import com.sporeadds.sporeaddsmod.config.KommandantAdvancedConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.core.BlockPos;
@@ -28,11 +26,8 @@ import java.util.List;
 
 public class Poder9 extends PowerBase {
 
-    /** Biomass cost of every variant of this ability (configurable, read when the ability is used). */
-    protected static int phaseCost() {
-        return KommandantAdvancedConfig.BURST_BIOMASS_COST.get();
-    }
-
+    protected static final int PHASE_COST = 5;
+    private static final double EFFECT_RADIUS_NORMAL = 17.0;
     private static final FoliageSpread FOLIAGE_SPREAD = new FoliageSpread() {};
 
     // -------------------------------------------------------------------------
@@ -74,7 +69,7 @@ public class Poder9 extends PowerBase {
 
         player.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
             int currentPhase = spore.getSpore();
-            if (currentPhase < phaseCost()) {
+            if (currentPhase < PHASE_COST) {
                 player.sendSystemMessage(Component.translatable("message.sporeadd.power1.not_enough_biomass"));
                 return;
             }
@@ -95,13 +90,13 @@ public class Poder9 extends PowerBase {
             }
 
             if (caustic) {
-                spore.addSpore(-phaseCost());
+                spore.addSpore(-PHASE_COST);
                 Poder9Variants.activateCausticSprayMode(player, serverLevel);
                 return;
             }
 
             // Flujo estándar (Kommandant sin subclase)
-            spore.addSpore(-phaseCost());
+            spore.addSpore(-PHASE_COST);
             player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(lvl ->
                     executeStandardLogic(player, serverLevel, lvl.getLevel())
             );
@@ -113,8 +108,7 @@ public class Poder9 extends PowerBase {
     // =========================================================================
 
     private void executeStandardLogic(ServerPlayer player, ServerLevel level, int playerLevel) {
-        int durationTicks = KommandantAdvancedConfig.burstDurationSeconds(playerLevel) * 20;
-        final double effectRadius = KommandantAdvancedConfig.BURST_RADIUS.get();
+        int durationTicks = (30 + Math.max(playerLevel, 0) * 5) * 20;
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "limb_slash")),
@@ -124,33 +118,29 @@ public class Poder9 extends PowerBase {
                 player.getX(), player.getY(), player.getZ(), 5000, 5, 5, 5, 0);
 
         AABB effectArea = new AABB(
-                player.getX() - effectRadius, player.getY() - effectRadius, player.getZ() - effectRadius,
-                player.getX() + effectRadius, player.getY() + effectRadius, player.getZ() + effectRadius
+                player.getX() - EFFECT_RADIUS_NORMAL, player.getY() - EFFECT_RADIUS_NORMAL, player.getZ() - EFFECT_RADIUS_NORMAL,
+                player.getX() + EFFECT_RADIUS_NORMAL, player.getY() + EFFECT_RADIUS_NORMAL, player.getZ() + EFFECT_RADIUS_NORMAL
         );
         List<LivingEntity> entitiesInArea = level.getEntitiesOfClass(LivingEntity.class, effectArea);
 
-        // Effects come from the config (a duration of 0 there = the level-scaled durationTicks).
-        List<ConfigEffects.Entry> effectsForAll = KommandantAdvancedConfig.effectsScaled(KommandantAdvancedConfig.BURST_EFFECTS_ALL, durationTicks);
-        List<ConfigEffects.Entry> effectsForEnemies = KommandantAdvancedConfig.effectsScaled(KommandantAdvancedConfig.BURST_EFFECTS_ENEMIES, durationTicks);
+        MobEffect myceliumEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spore",    "mycelium_ef"));
+        MobEffect exposedEffect  = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("sporeadd", "exposed"));
 
         for (LivingEntity target : entitiesInArea) {
             if (target == player) continue;
-            ConfigEffects.apply(target, effectsForAll);
+            if (myceliumEffect != null) target.addEffect(new MobEffectInstance(myceliumEffect, durationTicks, 2, false, true));
             if (target.getTeam() == null || !"spore".equalsIgnoreCase(target.getTeam().getName())) {
-                ConfigEffects.apply(target, effectsForEnemies);
+                if (exposedEffect != null) target.addEffect(new MobEffectInstance(exposedEffect, durationTicks, 1, false, true));
             }
         }
 
-        int spreadPasses = KommandantAdvancedConfig.BURST_SPREAD_PASSES.get();
-        double spreadRadius = KommandantAdvancedConfig.BURST_SPREAD_RADIUS.get();
-        for (int i = 0; i < spreadPasses; i++) FOLIAGE_SPREAD.SpreadInfection(level, spreadRadius, player.blockPosition());
+        for (int i = 0; i < 20; i++) FOLIAGE_SPREAD.SpreadInfection(level, 15.0, player.blockPosition());
 
         Block biomassBulb = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "biomass_bulb"));
         Block fangLump    = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("spore", "fang_lump"));
 
-        if (KommandantAdvancedConfig.BURST_CONVERT_BULBS.get()
-                && biomassBulb != null && fangLump != null && biomassBulb != net.minecraft.world.level.block.Blocks.AIR) {
-            int radius = (int) effectRadius;
+        if (biomassBulb != null && fangLump != null && biomassBulb != net.minecraft.world.level.block.Blocks.AIR) {
+            int radius = (int) EFFECT_RADIUS_NORMAL;
             BlockPos centerPos = player.blockPosition();
             for (BlockPos pos : BlockPos.betweenClosed(centerPos.offset(-radius, -radius, -radius), centerPos.offset(radius, radius, radius))) {
                 if (pos.distSqr(centerPos) <= radius * radius && level.getBlockState(pos).is(biomassBulb)) {

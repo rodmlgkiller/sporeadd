@@ -10,7 +10,6 @@ import com.Harbinger.Spore.Sentities.EvolvedInfected.Scamper;
 import com.sporeadds.sporeaddsmod.PlayerData.PlayerDataProvider;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
 import net.minecraft.ChatFormatting;
@@ -43,19 +42,41 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Poder6 {
 
-    /** Debounce between two uses in ms (kommandant_abilities.power_6_forced_mutation.use_cooldown_ms, default 200). */
-    static long cooldownMs() {
-        return KommandantPowersConfig.MUTATION_COOLDOWN_MS.get();
-    }
-
+    static final long COOLDOWN_MS = 200;
     static final java.util.Map<UUID, Long> cooldowns = new ConcurrentHashMap<>();
 
     static final String TAG_FORCED_EVO = "forced_evolution";
-    /** How many times the entity was force-mutated (the old flag {@link #TAG_FORCED_EVO} counts as one). */
-    static final String TAG_FORCED_EVO_COUNT = "forced_evolution_count";
     static final int INFINITE_EFFECT_DURATION = Integer.MAX_VALUE;
 
-    // The lists of evolvable / hyper-evolvable mobs are power_6_forced_mutation.evolvable_mobs / hyper_evolvable_mobs.
+    private static final Set<String> EVOLVABLE_MOBS = Set.of(
+            "spore:inf_human",
+            "spore:inf_husk",
+            "spore:inf_drowned",
+            "spore:inf_villager",
+            "spore:inf_diseased_villager",
+            "spore:inf_wanderer",
+            "spore:inf_witch",
+            "spore:inf_pillager",
+            "spore:inf_player",
+            "spore:inf_hazmat",
+            "spore:knight",
+            "spore:braiomil",
+            "spore:leaper",
+            "spore:stalker",
+            "spore:brute",
+            "spore:inf_vindicator",
+            "spore:inf_evoker"
+    );
+
+    private static final Set<String> HYPER_EVOLVABLE_MOBS = Set.of(
+            "spore:knight",
+            "spore:braiomil",
+            "spore:leaper",
+            "spore:stalker",
+            "spore:brute",
+            "spore:inf_vindicator",
+            "spore:inf_evoker"
+    );
 
     public static boolean tryForceEvolve(Player player, Entity target) {
         if (!(player instanceof ServerPlayer serverPlayer)) return false;
@@ -68,17 +89,8 @@ public class Poder6 {
         });
 
         if (!enabled.get()) return false;
-        if (!PowerUnlocks.isUnlocked(player, 6)) return false;
 
         return activateResolved(serverPlayer, target);
-    }
-
-    static int forcedMutationCount(CompoundTag tag) {
-        int count = tag.getInt(TAG_FORCED_EVO_COUNT);
-        if (count <= 0 && tag.getBoolean(TAG_FORCED_EVO)) {
-            count = 1;
-        }
-        return count;
     }
 
     public static boolean activateResolved(ServerPlayer player, Entity target) {
@@ -92,7 +104,7 @@ public class Poder6 {
         long now = System.currentTimeMillis();
         UUID playerUUID = player.getUUID();
         long lastUse = cooldowns.getOrDefault(playerUUID, 0L);
-        if (now - lastUse < cooldownMs()) {
+        if (now - lastUse < COOLDOWN_MS) {
             return false;
         }
 
@@ -120,7 +132,7 @@ public class Poder6 {
         AtomicBoolean consumed = new AtomicBoolean(false);
 
         CompoundTag persistentData = target.getPersistentData();
-        if (forcedMutationCount(persistentData) >= KommandantPowersConfig.MUTATION_MAX_PER_ENTITY.get()) {
+        if (persistentData.getBoolean(TAG_FORCED_EVO)) {
             cooldowns.put(playerUUID, now);
             player.sendSystemMessage(
                     Component.translatable("message.sporeadd.power6.already_evolved")
@@ -133,8 +145,8 @@ public class Poder6 {
             player.getCapability(PlayerLevelProvider.PLAYER_LVL).ifPresent(levelCap -> {
                 int rawLevel = levelCap.getLevel();
                 int sporeLevel = Math.max(rawLevel, 0);
-                int effectDuration = KommandantPowersConfig.mutationBuffSeconds(sporeLevel);
-                int effectPower = KommandantPowersConfig.mutationStrengthPower(sporeLevel);
+                int effectDuration = 20 + sporeLevel * 3;
+                int effectPower = Math.min(5, (int) Math.floor(sporeLevel / 2.0));
                 boolean caustic = isCaustic(player);
 
                 if (target instanceof Infected infected) {
@@ -149,7 +161,7 @@ public class Poder6 {
                         biomassCost = applyKillDiscount(baseCost, kills);
                     } else {
                         int kills = getEntityKillsForDiscount(infected);
-                        biomassCost = applyKillDiscount(KommandantPowersConfig.MUTATION_COST_MAX.get(), kills);
+                        biomassCost = applyKillDiscount(5, kills);
                     }
 
                     if (spore.getSpore() < biomassCost) {
@@ -189,7 +201,7 @@ public class Poder6 {
 
                 if (target instanceof UtilityEntity utilityTarget && !(target instanceof Organoid)) {
                     int kills = getEntityKillsForDiscount(utilityTarget);
-                    int biomassCost = applyKillDiscount(KommandantPowersConfig.MUTATION_COST_MAX.get(), kills);
+                    int biomassCost = applyKillDiscount(5, kills);
 
                     if (spore.getSpore() < biomassCost) {
                         player.sendSystemMessage(
@@ -232,8 +244,7 @@ public class Poder6 {
     }
 
     static int applyKillDiscount(int baseCost, int kills) {
-        int discount = Math.max(0, kills) * KommandantPowersConfig.MUTATION_DISCOUNT_PER_KILL.get();
-        return Math.max(KommandantPowersConfig.MUTATION_COST_MIN.get(), baseCost - discount);
+        return Math.max(1, baseCost - Math.max(0, kills));
     }
 
     static boolean isCaustic(ServerPlayer player) {
@@ -262,22 +273,17 @@ public class Poder6 {
         }
 
         ResourceLocation entityId = entity.getType().builtInRegistryHolder().key().location();
-        return KommandantPowersConfig.isEvolvableMob(entityId.toString())
-                || KommandantPowersConfig.isHyperEvolvableMob(entityId.toString());
+        return EVOLVABLE_MOBS.contains(entityId.toString()) || HYPER_EVOLVABLE_MOBS.contains(entityId.toString());
     }
 
     static boolean usesHyperEvolutionKillCost(Entity entity) {
         ResourceLocation entityId = entity.getType().builtInRegistryHolder().key().location();
-        return KommandantPowersConfig.isHyperEvolvableMob(entityId.toString());
+        return HYPER_EVOLVABLE_MOBS.contains(entityId.toString());
     }
 
     static int getBiomassCost(int currentPoints, int maxPointsRequired) {
-        int maxCost = KommandantPowersConfig.MUTATION_COST_MAX.get();
-        if (!KommandantPowersConfig.MUTATION_COST_SCALES_WITH_POINTS.get()) {
-            return maxCost;
-        }
         int pointsNeeded = Math.max(0, maxPointsRequired - currentPoints);
-        return pointsNeeded > 0 ? Math.min(maxCost, pointsNeeded) : maxCost;
+        return pointsNeeded > 0 ? Math.min(5, pointsNeeded) : 5;
     }
 
     static int getMaxPointsRequired(Entity entity) {
@@ -321,7 +327,7 @@ public class Poder6 {
             boolean caustic
     ) {
         int amplifier = Math.max(effectPower - 1, 0);
-        double extraHealth = KommandantPowersConfig.mutationExtraHp(rawLevel);
+        double extraHealth = 17.5 * rawLevel;
         AttributeInstance maxHealthAttr = target.getAttribute(Attributes.MAX_HEALTH);
 
         if (maxHealthAttr != null) {
@@ -331,18 +337,10 @@ public class Poder6 {
             target.setHealth((float) newMax);
         }
 
-        if (KommandantPowersConfig.MUTATION_RESISTANCE.get()) {
-            target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, effectDuration * 20, 0, false, true));
-        }
-        if (KommandantPowersConfig.MUTATION_STRENGTH.get()) {
-            target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, effectDuration * 20, amplifier, false, true));
-        }
-        if (KommandantPowersConfig.MUTATION_SPEED.get()) {
-            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, effectDuration * 20, 0, false, true));
-        }
-        if (KommandantPowersConfig.MUTATION_GLOWING.get()) {
-            target.addEffect(new MobEffectInstance(MobEffects.GLOWING, effectDuration * 20, 0, false, true));
-        }
+        target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, effectDuration * 20, 0, false, true));
+        target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, effectDuration * 20, amplifier, false, true));
+        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, effectDuration * 20, 0, false, true));
+        target.addEffect(new MobEffectInstance(MobEffects.GLOWING, effectDuration * 20, 0, false, true));
 
         if (caustic) {
             MobEffect dissolution = getDissolutionEffect();
@@ -351,9 +349,6 @@ public class Poder6 {
             }
         }
 
-        // The count must be read BEFORE the flag is set: the flag alone counts as one mutation (old saves), so reading it
-        // afterwards would make every first mutation count twice and max_mutations_per_entity 2+ would never be reached.
-        target.getPersistentData().putInt(TAG_FORCED_EVO_COUNT, forcedMutationCount(target.getPersistentData()) + 1);
         target.getPersistentData().putBoolean(TAG_FORCED_EVO, true);
 
         BlockPos pos = target.blockPosition();

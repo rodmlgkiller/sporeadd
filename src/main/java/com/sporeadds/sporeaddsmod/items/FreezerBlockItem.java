@@ -9,9 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import com.sporeadds.sporeaddsmod.blocks.blocks_entity.FreezerBlock;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,32 +37,39 @@ public class FreezerBlockItem extends BlockItem {
         }
     }
 
-    /**
-     * Checks the whole 2x2x2 volume at the position the block will really go (BlockPlaceContext resolves it: the clicked
-     * cell itself when it is replaceable, e.g. tall grass, otherwise the one next to the clicked face) before anything is
-     * placed, so a refused placement never leaves a lone half-built freezer.
-     */
     @Override
-    public InteractionResult place(BlockPlaceContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
-        BlockPos origin = context.getClickedPos();
-        if (!context.canPlace()) {
-            return InteractionResult.FAIL;
+        BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
+        Player player = context.getPlayer();
+
+        // Chequea si el espacio 2x2x2 está libre:
+        boolean canPlace = true;
+        for (int dx = 0; dx <= 1; dx++) {
+            for (int dy = 0; dy <= 1; dy++) {
+                for (int dz = 0; dz <= 1; dz++) {
+                    BlockPos checkPos = pos.offset(dx, dy, dz);
+                    if (!level.getBlockState(checkPos).canBeReplaced()) {
+                        canPlace = false;
+                        break;
+                    }
+                }
+                if (!canPlace) break;
+            }
+            if (!canPlace) break;
         }
 
-        FreezerBlock.PlacementProblem problem = FreezerBlock.placementProblem(level, origin, true);
-        if (problem == FreezerBlock.PlacementProblem.NONE && !level.getFluidState(origin).isEmpty()) {
-            problem = FreezerBlock.PlacementProblem.WATER;
-        }
-        if (problem != FreezerBlock.PlacementProblem.NONE) {
-            Player player = context.getPlayer();
-            if (player != null) {
-                player.displayClientMessage(Component.translatable(problem == FreezerBlock.PlacementProblem.WATER
-                        ? "message.sporeadds.freezer_block.no_water"
-                        : "block.sporeadd.freezer_block.not_enough_space"), true);
+        if (!canPlace) {
+            if (player != null && level.isClientSide) {
+                player.displayClientMessage(
+                        Component.translatable("block.sporeadd.freezer_block.not_enough_space"),
+                        true
+                );
             }
             return InteractionResult.FAIL;
         }
-        return super.place(context);
+
+        // Si hay espacio, llama al código normal de colocación de bloque
+        return super.useOn(context);
     }
 }

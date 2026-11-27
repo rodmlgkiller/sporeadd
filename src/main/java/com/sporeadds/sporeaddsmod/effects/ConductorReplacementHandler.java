@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.effects;
 
-import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +18,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 @Mod.EventBusSubscriber(modid = "sporeadd")
 public final class ConductorReplacementHandler {
 
-    // Conductor durations and resistance level: see MedicConfig (medic.self_defibrillate.conductor.*).
+    private static final int CONDUCTOR_DEFIBRILLATION_DURATION_TICKS = 20 * 60;
+    private static final int CONDUCTOR_RESISTANCE_DURATION_TICKS = 20 * 5;
+    private static final int CONDUCTOR_RESISTANCE_AMPLIFIER = 2;
 
     private ConductorReplacementHandler() {
     }
@@ -83,7 +84,7 @@ public final class ConductorReplacementHandler {
 
         conductor.addEffect(new MobEffectInstance(
                 effects.DELAYED_DEFIBRILLATION.get(),
-                MedicConfig.conductorDefibrillationTicks(),
+                CONDUCTOR_DEFIBRILLATION_DURATION_TICKS,
                 0,
                 false,
                 true,
@@ -92,8 +93,8 @@ public final class ConductorReplacementHandler {
 
         conductor.addEffect(new MobEffectInstance(
                 MobEffects.DAMAGE_RESISTANCE,
-                MedicConfig.conductorResistanceTicks(),
-                MedicConfig.conductorResistanceAmplifier(),
+                CONDUCTOR_RESISTANCE_DURATION_TICKS,
+                CONDUCTOR_RESISTANCE_AMPLIFIER,
                 false,
                 true,
                 true

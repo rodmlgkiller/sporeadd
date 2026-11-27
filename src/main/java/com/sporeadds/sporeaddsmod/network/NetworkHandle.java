@@ -6,7 +6,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandle {
 
-    private static final String PROTOCOL_VERSION = "1.1";
+    private static final String PROTOCOL_VERSION = "1.0";
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation("sporeadd", "main"),
@@ -642,51 +642,6 @@ public class NetworkHandle {
                 FireCausticSprayShotPacket::encode,
                 FireCausticSprayShotPacket::decode,
                 FireCausticSprayShotPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
-        );
-
-        INSTANCE.registerMessage(
-                nextId(),
-                RequestSwitchSyncPacket.class,
-                RequestSwitchSyncPacket::encode,
-                RequestSwitchSyncPacket::decode,
-                RequestSwitchSyncPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
-        );
-
-        INSTANCE.registerMessage(
-                nextId(),
-                SkillBindingsPacket.class,
-                SkillBindingsPacket::encode,
-                SkillBindingsPacket::decode,
-                SkillBindingsPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
-        );
-
-        INSTANCE.registerMessage(
-                nextId(),
-                SkillClickPacket.class,
-                SkillClickPacket::encode,
-                SkillClickPacket::decode,
-                SkillClickPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
-        );
-
-        INSTANCE.registerMessage(
-                nextId(),
-                OpenBiomassWheelPacket.class,
-                OpenBiomassWheelPacket::encode,
-                OpenBiomassWheelPacket::decode,
-                OpenBiomassWheelPacket::handle,
-                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT)
-        );
-
-        INSTANCE.registerMessage(
-                nextId(),
-                BiomassCoreMoldPacket.class,
-                BiomassCoreMoldPacket::encode,
-                BiomassCoreMoldPacket::decode,
-                BiomassCoreMoldPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER)
         );
 

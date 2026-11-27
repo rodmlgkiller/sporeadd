@@ -1,7 +1,5 @@
 package com.sporeadds.sporeaddsmod.items;
 
-import com.sporeadds.sporeaddsmod.config.ConfigItems;
-import com.sporeadds.sporeaddsmod.config.ScientistConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.effects.effects;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -34,7 +32,9 @@ import org.joml.Vector3f;
 import java.util.List;
 
 public class NanoInjectorItem extends Item {
-    // Max charges, range, freeze time, effect duration and reload cost: see ScientistConfig (scientist.nano_injector.*).
+    private static final int MAX_CHARGES = 5;
+    private static final int RANGE = 35;
+    private static final int FREEZE_TICKS = 40 * 20;
 
     public NanoInjectorItem(Properties properties) {
         super(properties.stacksTo(1));
@@ -49,7 +49,7 @@ public class NanoInjectorItem extends Item {
         CompoundTag tag = stack.getOrCreateTag();
         int charges = tag.getInt("nano_charges");
 
-        tooltip.add(Component.literal("Charges: " + charges + " / " + ScientistConfig.nanoInjectorMaxCharges()).withStyle(ChatFormatting.AQUA));
+        tooltip.add(Component.literal("Charges: " + charges + " / " + MAX_CHARGES).withStyle(ChatFormatting.AQUA));
 
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.translatable("tooltip.sporeadds.nano_injector.desc1").withStyle(ChatFormatting.GRAY));
@@ -79,10 +79,6 @@ public class NanoInjectorItem extends Item {
         CompoundTag tag = stack.getOrCreateTag();
         int charges = tag.getInt("nano_charges");
 
-        final int maxCharges = ScientistConfig.nanoInjectorMaxCharges();
-        final double range = ScientistConfig.nanoInjectorRange();
-        final int effectDurationTicks = ScientistConfig.nanoInjectorEffectDurationTicks();
-
         boolean canUse = (sp != null);
         if (canUse && SporeAddsConfig.NANO_INJECTOR_REQUIRES_ORIGIN.get()) {
             canUse = hasScientistOrigin(sp);
@@ -97,11 +93,12 @@ public class NanoInjectorItem extends Item {
                 return InteractionResultHolder.fail(stack);
             }
 
-            if (charges < maxCharges) {
-                if (tryConsumeReloadCost(player)) {
+            if (charges < MAX_CHARGES) {
+                int found = findAndConsumeBiomass(player);
+                if (found > 0) {
                     tag.putInt("nano_charges", charges + 1);
                     player.displayClientMessage(
-                            Component.translatable("message.sporeadds.nano_injector.recharged", charges + 1, maxCharges)
+                            Component.translatable("message.sporeadds.nano_injector.recharged", charges + 1, MAX_CHARGES)
                                     .withStyle(ChatFormatting.AQUA),
                             true
                     );
@@ -138,9 +135,9 @@ public class NanoInjectorItem extends Item {
             return InteractionResultHolder.fail(stack);
         }
 
-        LivingEntity target = findEntityTarget(level, player, range);
+        LivingEntity target = findEntityTarget(level, player, RANGE);
         Vec3 start = getHandStart(player, hand);
-        Vec3 end = (target != null) ? target.getBoundingBox().getCenter() : start.add(player.getLookAngle().scale(range));
+        Vec3 end = (target != null) ? target.getBoundingBox().getCenter() : start.add(player.getLookAngle().scale(RANGE));
 
         if (level instanceof ServerLevel serverLevel) {
             spawnParticleBeam(serverLevel, start, end);
@@ -150,9 +147,9 @@ public class NanoInjectorItem extends Item {
 
         if (target != null) {
             if (target.getTeam() != null && "spore".equalsIgnoreCase(target.getTeam().getName())) {
-                target.addEffect(new MobEffectInstance(MobEffects.GLOWING, effectDurationTicks, 0));
-                target.addEffect(new MobEffectInstance(effects.VULNERABLE.get(), effectDurationTicks, 0));
-                target.setTicksFrozen(Math.max(target.getTicksFrozen(), ScientistConfig.nanoInjectorFreezeTicks()));
+                target.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * 20, 0));
+                target.addEffect(new MobEffectInstance(effects.VULNERABLE.get(), 20 * 20, 0));
+                target.setTicksFrozen(Math.max(target.getTicksFrozen(), FREEZE_TICKS));
 
                 player.displayClientMessage(
                         Component.translatable("message.sporeadds.nano_injector.injected").withStyle(ChatFormatting.GREEN),
@@ -188,25 +185,18 @@ public class NanoInjectorItem extends Item {
         return InteractionResultHolder.success(stack);
     }
 
-    /**
-     * Takes the reload cost (scientist.nano_injector.reload_cost, default 1 packed ice) from the player's inventory.
-     * Returns false, taking nothing, if they cannot pay it.
-     */
-    private boolean tryConsumeReloadCost(Player player) {
-        List<? extends String> raw = ScientistConfig.nanoInjectorReloadCostEntries();
-        List<ConfigItems.Entry> cost = ConfigItems.parseAll(raw);
-
-        // A non-empty list that resolves to nothing (typo, missing mod) must not make reloading free.
-        if (cost.isEmpty() && !raw.isEmpty()) {
-            return false;
+    private int findAndConsumeBiomass(Player player) {
+        int found = 0;
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack invStack = player.getInventory().getItem(i);
+            if (invStack.getItem() == ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", "packed_ice"))) {
+                int canTake = Math.min(invStack.getCount(), 1 - found);
+                invStack.shrink(canTake);
+                found += canTake;
+                if (found >= 1) break;
+            }
         }
-
-        if (!ConfigItems.has(player, cost)) {
-            return false;
-        }
-
-        ConfigItems.take(player, cost);
-        return true;
+        return found >= 1 ? found : 0;
     }
 
     private LivingEntity findEntityTarget(Level level, Player player, double range) {

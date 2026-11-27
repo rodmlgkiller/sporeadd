@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.items;
 
-import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.entity.projectile.ChainProjectileEntity;
 import com.sporeadds.sporeaddsmod.util.ClassTooltipUtil;
@@ -32,18 +31,7 @@ public class ReinforcedCombatChainsItem extends Item {
     private static final String TAG_CHAIN_UUID = "ChainUUID";
 
     public ReinforcedCombatChainsItem(Properties properties) {
-        // 25 = durabilidad registrada (la config todavia no esta cargada aqui). Sirve para que el item sea "danable";
-        // la durabilidad maxima real se lee de la config en getMaxDamage(ItemStack).
-        super(properties.durability(BerserkerConfig.DEFAULT_CHAINS_MAX_DURABILITY));
-    }
-
-    /**
-     * Durabilidad maxima configurable (berserker.chains.durability.max_durability, por defecto 25). Se consulta al
-     * usar el item, nunca al registrarlo; mientras la config no este cargada devuelve el valor registrado.
-     */
-    @Override
-    public int getMaxDamage(ItemStack stack) {
-        return BerserkerConfig.chainsMaxDurability();
+        super(properties.durability(25));
     }
 
     @Override
@@ -99,9 +87,7 @@ public class ReinforcedCombatChainsItem extends Item {
                 return InteractionResultHolder.fail(currentStack);
             }
 
-            // Radio de busqueda de cadenas ya lanzadas: 64 bloques por defecto; crece si se amplia la distancia maxima.
-            double searchRadius = 64.0D * Math.max(1.0D, BerserkerConfig.chainsMaxLinkDistance() / 80.0D);
-            for (Entity e : level.getEntitiesOfClass(ChainProjectileEntity.class, player.getBoundingBox().inflate(searchRadius))) {
+            for (Entity e : level.getEntitiesOfClass(ChainProjectileEntity.class, player.getBoundingBox().inflate(64.0D))) {
                 if (e instanceof ChainProjectileEntity chain && chain.getOwner() == player) {
                     return InteractionResultHolder.fail(currentStack);
                 }
@@ -144,11 +130,10 @@ public class ReinforcedCombatChainsItem extends Item {
             );
 
             ChainProjectileEntity projectile = new ChainProjectileEntity(level, player, chainId);
-            projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
-                    BerserkerConfig.chainsProjectileSpeed(), 1.0F);
+            projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
             level.addFreshEntity(projectile);
 
-            player.getCooldowns().addCooldown(this, BerserkerConfig.chainsThrowCooldownTicks());
+            player.getCooldowns().addCooldown(this, 20);
         }
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());

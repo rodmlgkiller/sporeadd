@@ -25,9 +25,11 @@ public class GrakensenkerMixin {
     }
 
     // 2. NUEVO MIXIN PARA EVITAR EL SONIDO DE MORDIDA Y EL ATAQUE CUERPO A CUERPO
-    // doHurtTarget (SRG m_7327_) con su nombre oficial: el procesador de anotaciones de Mixin escribe el nombre SRG
-    // en sporeadds.refmap.json para el juego "de verdad" y en el entorno de desarrollo se usa tal cual.
-    @Inject(method = "doHurtTarget(Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
+    // En las mappings de Forge 1.20.1, doHurtTarget se mapea como m_7327_ u onHurtTarget.
+    // Lo más seguro es apuntar al nombre "doHurtTarget" con remap = true (o al de Mojang si usas Mojmaps).
+    // 2. NUEVO MIXIN PARA EVITAR EL SONIDO DE MORDIDA Y EL ATAQUE CUERPO A CUERPO
+    // Apuntamos al método ofuscado m_7327_ (que es doHurtTarget) y desactivamos el remap
+    @Inject(method = "m_7327_", at = @At("HEAD"), cancellable = true, remap = false)
     private void sporeadds$preventSporeTeamBiteSound(Entity target, CallbackInfoReturnable<Boolean> cir) {
         // Comprobamos si el que va a recibir el ataque es un jugador
         if (target instanceof Player player) {

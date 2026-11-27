@@ -16,11 +16,11 @@ public class SporeAddsTestCommand {
         dispatcher.register(
                 Commands.literal("sporeaddstest")
                         .requires(source -> source.hasPermission(4))
-                        .then(Commands.argument("ability", IntegerArgumentType.integer(1, 13))
-                                .then(Commands.argument("target", EntityArgument.player())
+                        .then(Commands.argument("valor", IntegerArgumentType.integer(1, 13))
+                                .then(Commands.argument("objetivo", EntityArgument.player())
                                         .executes(context -> {
-                                            int valor = IntegerArgumentType.getInteger(context, "ability");
-                                            ServerPlayer target = EntityArgument.getPlayer(context, "target");
+                                            int valor = IntegerArgumentType.getInteger(context, "valor");
+                                            ServerPlayer target = EntityArgument.getPlayer(context, "objetivo");
                                             return executeAbility(context.getSource(), target, valor);
                                         })
                                 )
@@ -60,13 +60,16 @@ public class SporeAddsTestCommand {
             String newSwitch = new String(chars);
             data.setSwitch(newSwitch);
 
-            Component state = Component.translatable(chars[index] == '1'
-                    ? "command.sporeadd.test.state.on" : "command.sporeadd.test.state.off");
+            source.sendSuccess(() -> Component.literal(
+                    "Habilidad " + valor + " de " + target.getGameProfile().getName() +
+                            " ahora está en: " + (chars[index] == '1' ? "activada" : "desactivada")
+            ), true);
 
-            source.sendSuccess(() -> Component.translatable("command.sporeadd.test.toggle.success",
-                    valor, target.getGameProfile().getName(), state), true);
-
-            target.sendSystemMessage(Component.translatable("command.sporeadd.test.toggle.target", valor, state));
+            target.sendSystemMessage(Component.literal(
+                    "Tu habilidad " + valor + " ha sido " +
+                            (chars[index] == '1' ? "activada" : "desactivada") +
+                            " remotamente."
+            ));
         });
 
         return 1;
@@ -110,15 +113,18 @@ public class SporeAddsTestCommand {
         };
 
         if (executed) {
-            source.sendSuccess(() -> Component.translatable("command.sporeadd.test.execute.success",
-                    valor, target.getGameProfile().getName()), true);
+            source.sendSuccess(() -> Component.literal(
+                    "Habilidad " + valor + " ejecutada sobre " + target.getGameProfile().getName()
+            ), true);
 
-            target.sendSystemMessage(Component.translatable("command.sporeadd.test.execute.target", valor));
+            target.sendSystemMessage(Component.literal(
+                    "Un administrador ha ejecutado remotamente tu habilidad " + valor + "."
+            ));
 
             return 1;
         }
 
-        source.sendFailure(Component.translatable("command.sporeadd.test.execute.not_configured", valor));
+        source.sendFailure(Component.literal("La habilidad " + valor + " no está configurada."));
         return 0;
     }
 

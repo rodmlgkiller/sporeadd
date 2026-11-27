@@ -6,7 +6,6 @@ import com.sporeadds.sporeaddsmod.commands.ClassCommand;
 import com.sporeadds.sporeaddsmod.config.SporeAddsConfig;
 import com.sporeadds.sporeaddsmod.level.PlayerLevelProvider;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
-import com.sporeadds.sporeaddsmod.util.ClassStartingGear;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -50,12 +49,6 @@ public class RespawnEvents {
         }
 
         if (!hasMedicClass(player)) {
-            return;
-        }
-
-        // starting_gear.medic.give_starting_gear / equip_gas_mask: a server that removed the mask from the kit
-        // must not get it back on every respawn.
-        if (!ClassStartingGear.shouldEquipMedicMask()) {
             return;
         }
 

@@ -7,7 +7,6 @@ import com.Harbinger.Spore.Sentities.BaseEntities.UtilityEntity;
 import com.Harbinger.Spore.Sentities.EvolvedInfected.Scamper;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierData;
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.entity.MeatAbomination;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
@@ -70,7 +69,7 @@ public class Poder6Variants {
 
         long now = System.currentTimeMillis();
         long lastUse = Poder6.cooldowns.getOrDefault(player.getUUID(), 0L);
-        if (now - lastUse < Poder6.cooldownMs()) {
+        if (now - lastUse < Poder6.COOLDOWN_MS) {
             return false;
         }
 
@@ -87,11 +86,11 @@ public class Poder6Variants {
         Poder6.cooldowns.put(player.getUUID(), now);
 
         float hp = livingTarget.getHealth();
-        int baseBiomass = KommandantPowersConfig.GLUTTONOUS_MUTATION_BIOMASS_LOW.get();
-        if (hp > KommandantPowersConfig.GLUTTONOUS_MUTATION_HP_HIGH.get().floatValue()) {
-            baseBiomass = KommandantPowersConfig.GLUTTONOUS_MUTATION_BIOMASS_HIGH.get();
-        } else if (hp > KommandantPowersConfig.GLUTTONOUS_MUTATION_HP_MID.get().floatValue()) {
-            baseBiomass = KommandantPowersConfig.GLUTTONOUS_MUTATION_BIOMASS_MID.get();
+        int baseBiomass = 1;
+        if (hp > 40.0F) {
+            baseBiomass = 3;
+        } else if (hp > 20.0F) {
+            baseBiomass = 2;
         }
 
         SoundEvent evolveHurt = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("spore", "evolve_hurt"));

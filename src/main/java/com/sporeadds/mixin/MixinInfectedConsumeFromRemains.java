@@ -20,10 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Comparator;
 import java.util.List;
 
-@Mixin(InfectedConsumeFromRemains.class)
+@Mixin(value = InfectedConsumeFromRemains.class, remap = false)
 public abstract class MixinInfectedConsumeFromRemains {
 
-    @Shadow(remap = false) public Infected infected;
+    @Shadow public Infected infected;
 
     // Interruptor para saber si estamos persiguiendo una abominación
     @Unique
@@ -100,8 +100,8 @@ public abstract class MixinInfectedConsumeFromRemains {
         cir.setReturnValue(true);
     }
 
-    // Inyectamos en el método start() del goal original (SRG m_8056_) para cancelar el sonido falso
-    @Inject(method = "start()V", at = @At("HEAD"), cancellable = true)
+    // Inyectamos en el método start() del goal original (m_8056_) para cancelar el sonido falso
+    @Inject(method = "m_8056_", at = @At("HEAD"), cancellable = true, remap = false)
     private void sporeadds$silenceStartSound(CallbackInfo ci) {
         if (this.sporeadds$isHuntingAbomination) {
             // Cancelamos el start original, evitando que haga el sonido de comer a distancia

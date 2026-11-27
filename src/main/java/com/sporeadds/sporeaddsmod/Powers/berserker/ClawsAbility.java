@@ -1,7 +1,6 @@
 package com.sporeadds.sporeaddsmod.Powers.berserker;
 
 import com.sporeadds.sporeaddsmod.client.BerserkerCooldownClientState;
-import com.sporeadds.sporeaddsmod.config.BerserkerConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.SyncBerserkerCooldownPacket;
 import com.sporeadds.sporeaddsmod.network.SyncClawCounterPacket;
@@ -49,17 +48,18 @@ import java.util.UUID;
  * Un contador de daño ("Brutality") sube con el daño que el berserker inflige a otras entidades
  * (sin contar el sobredaño que la vida no respalda). Tras 20 s sin subir, decae 1 cada 0.5 s.
  * Al llegar a 200 se puede activar: el contador pasa a bajar 1 cada 0.5 s y, mientras dure,
- * el jugador tiene garras en las manos y cada golpe con la MANO DESNUDA hace 12 de daño
+ * el jugador tiene garras en las manos y cada golpe con la MANO DESNUDA hace 8 de daño
  * (con arma, sin bonus). Al llegar el contador a 0 se desactiva y entra en cooldown de 120 s.
- *
- * Todos esos numeros (200, 20 s, 0.5 s, 12, 120 s...) son los valores por defecto de la config
- * (berserker.claws.* en {@code BerserkerConfig}); se leen al usarlos, nunca en inicializadores estaticos.
  */
 @Mod.EventBusSubscriber(modid = "sporeadd")
 public final class ClawsAbility {
 
-    // Maximo del contador, umbral de activacion, paso/espera de decaimiento, cooldown y daño de garra:
-    // ver BerserkerConfig (berserker.claws.*).
+    public static final float ACTIVATION_THRESHOLD = 200.0F;
+    private static final float MAX_COUNTER = 200.0F;
+    private static final int DECAY_INTERVAL_TICKS = 10;        // 0.5 s
+    private static final int IDLE_BEFORE_DECAY_TICKS = 400;    // 20 s
+    private static final int COOLDOWN_TICKS = 2400;            // 120 s
+    public static final float BARE_HAND_DAMAGE = 12.0F;
 
     private static final Map<UUID, Float> COUNTER = new HashMap<>();
     private static final Map<UUID, Long> LAST_GAIN_TICK = new HashMap<>();
@@ -96,9 +96,8 @@ public final class ClawsAbility {
         // restante se descuenta del cooldown (en segundos) y la otra mitad se conserva.
         if (ACTIVE.contains(id)) {
             float remaining = COUNTER.getOrDefault(id, 0.0F);
-            float half = remaining * BerserkerConfig.clawsStopRefundFraction();   // por defecto la mitad
-            int cd = Math.max(0, BerserkerConfig.clawsCooldownTicks()
-                    - Math.round(half * BerserkerConfig.clawsStopRefundTicksPerPoint()));
+            float half = remaining / 2.0F;
+            int cd = Math.max(0, COOLDOWN_TICKS - Math.round(half * 20.0F));
             deactivate(player, cd, remaining - half);
             player.displayClientMessage(
                     Component.translatable("message.sporeadd.berserker.claws.stopped").withStyle(ChatFormatting.GRAY), true);
@@ -111,10 +110,9 @@ public final class ClawsAbility {
                     Component.translatable("message.sporeadd.berserker.claws.cooldown").withStyle(ChatFormatting.GRAY), true);
             return;
         }
-        float threshold = BerserkerConfig.clawsActivationThreshold();
-        if (COUNTER.getOrDefault(id, 0.0F) < threshold) {
+        if (COUNTER.getOrDefault(id, 0.0F) < ACTIVATION_THRESHOLD) {
             player.displayClientMessage(
-                    Component.translatable("message.sporeadd.berserker.claws.not_ready", (int) threshold).withStyle(ChatFormatting.GRAY), true);
+                    Component.translatable("message.sporeadd.berserker.claws.not_ready").withStyle(ChatFormatting.GRAY), true);
             return;
         }
 
@@ -132,7 +130,7 @@ public final class ClawsAbility {
     private static void deactivate(ServerPlayer player, int cooldownTicks, float keepCounter) {
         UUID id = player.getUUID();
         ACTIVE.remove(id);
-        COUNTER.put(id, Mth.clamp(keepCounter, 0.0F, BerserkerConfig.clawsMaxPoints()));
+        COUNTER.put(id, Mth.clamp(keepCounter, 0.0F, MAX_COUNTER));
         LAST_GAIN_TICK.put(id, player.level().getGameTime());
         CompoundEffects.removeBuffs(player);
         clearWeaknessBypass(player);
@@ -182,9 +180,8 @@ public final class ClawsAbility {
         LAST_GAIN_TICK.put(id, player.level().getGameTime());
 
         float current = COUNTER.getOrDefault(id, 0.0F);
-        float maxPoints = BerserkerConfig.clawsMaxPoints();
-        if (current >= maxPoints) return;
-        COUNTER.put(id, Math.min(maxPoints, current + counted));
+        if (current >= MAX_COUNTER) return;
+        COUNTER.put(id, Math.min(MAX_COUNTER, current + counted));
         maybeSyncCounter(player);
     }
 
@@ -209,7 +206,7 @@ public final class ClawsAbility {
         // Daño de garra = daño plano + daño base del jugador - 1, para que Fuerza/Debilidad
         // afecten. Nunca baja de 1 (Debilidad no anula el golpe). Se descuenta el modificador
         // temporal que evita que Minecraft cancele el golpe bajo Debilidad.
-        float clawFlat = BerserkerConfig.clawsBaseDamage() + CompoundEffects.bonusUnarmedDamage(counts);
+        float clawFlat = BARE_HAND_DAMAGE + CompoundEffects.bonusUnarmedDamage(counts);
         double attackAttr = player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         AttributeInstance atkInst = player.getAttribute(Attributes.ATTACK_DAMAGE);
         if (atkInst != null) {
@@ -264,8 +261,7 @@ public final class ClawsAbility {
                 || (event.getResult() == Event.Result.DEFAULT && event.isVanillaCritical());
         if (!crit) return;
         float mult = event.getDamageModifier();
-        float override = BerserkerConfig.clawsCritMultiplier();   // 0 = el multiplicador de crit de vanilla
-        CRIT_PENDING.put(player.getUUID(), override > 0.0F ? override : (mult <= 1.0F ? 1.5F : mult));
+        CRIT_PENDING.put(player.getUUID(), mult <= 1.0F ? 1.5F : mult);
     }
 
     /** calcified: multiplica el empuje del golpe del berserker. */
@@ -379,8 +375,6 @@ public final class ClawsAbility {
 
         if (COUNTER.isEmpty() && ACTIVE.isEmpty() && COOLDOWN_UNTIL.isEmpty()) return;
 
-        final int decayStepTicks = BerserkerConfig.clawsDecayStepTicks();
-
         Set<UUID> tracked = new HashSet<>(COUNTER.keySet());
         tracked.addAll(ACTIVE);
         tracked.addAll(COOLDOWN_UNTIL.keySet());
@@ -401,25 +395,24 @@ public final class ClawsAbility {
             }
 
             long now = player.level().getGameTime();
-            if (now % decayStepTicks != 0) {
+            if (now % DECAY_INTERVAL_TICKS != 0) {
                 continue;
             }
 
             float current = COUNTER.getOrDefault(id, 0.0F);
 
             if (ACTIVE.contains(id)) {
-                float drain = BerserkerConfig.clawsActiveDrainPerStep()
-                        + CompoundEffects.bonusDrainPerHalfSecond(CompoundEffects.counts(player));
+                float drain = 1.0F + CompoundEffects.bonusDrainPerHalfSecond(CompoundEffects.counts(player));
                 current = Math.max(0.0F, current - drain);
                 COUNTER.put(id, current);
                 if (current <= 0.0F) {
-                    deactivate(player, BerserkerConfig.clawsCooldownTicks(), 0.0F);
+                    deactivate(player, COOLDOWN_TICKS, 0.0F);
                     continue;
                 }
             } else {
                 long lastGain = LAST_GAIN_TICK.getOrDefault(id, now);
-                if (current > 0.0F && now - lastGain > BerserkerConfig.clawsIdleTicksBeforeLoss()) {
-                    current = Math.max(0.0F, current - BerserkerConfig.clawsIdleLossPerStep());
+                if (current > 0.0F && now - lastGain > IDLE_BEFORE_DECAY_TICKS) {
+                    current = Math.max(0.0F, current - 1.0F);
                     COUNTER.put(id, current);
                 }
             }
@@ -469,8 +462,7 @@ public final class ClawsAbility {
         LAST_SENT_VALUE.put(id, Mth.floor(value));
         if (active) LAST_SENT_ACTIVE.add(id); else LAST_SENT_ACTIVE.remove(id);
         NetworkHandle.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player),
-                new SyncClawCounterPacket(value, active,
-                        BerserkerConfig.clawsMaxPoints(), BerserkerConfig.clawsActivationThreshold()));
+                new SyncClawCounterPacket(value, active));
     }
 
     private static void maybeSyncCounter(ServerPlayer player) {

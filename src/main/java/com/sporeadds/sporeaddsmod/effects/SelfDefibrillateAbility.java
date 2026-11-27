@@ -1,7 +1,6 @@
 package com.sporeadds.sporeaddsmod.effects;
 
 import com.sporeadds.sporeaddsmod.PlayerData.SporeIdentifierProvider;
-import com.sporeadds.sporeaddsmod.config.MedicConfig;
 import com.sporeadds.sporeaddsmod.network.NetworkHandle;
 import com.sporeadds.sporeaddsmod.network.OpenSelfDefibrillateScreenPacket;
 import com.sporeadds.sporeaddsmod.network.SyncSelfDefibrillateCooldownPacket;
@@ -19,7 +18,10 @@ import java.util.UUID;
 
 public final class SelfDefibrillateAbility {
 
-    // Health threshold, resistance, cooldown and minigame settings: see MedicConfig (medic.self_defibrillate.*).
+    private static final float HEALTH_THRESHOLD_PERCENT = 0.30F;
+    private static final int RESISTANCE_AMPLIFIER = 3;
+    private static final int RESISTANCE_DURATION_TICKS = 20 * 4;
+    private static final int COOLDOWN_TICKS = 20 * 50;
 
     private static final Set<UUID> ACTIVE_ATTEMPTS = new HashSet<>();
     private static final Map<UUID, Long> COOLDOWN_EXPIRY_TICK = new HashMap<>();
@@ -30,7 +32,7 @@ public final class SelfDefibrillateAbility {
     public static void tryStart(ServerPlayer player) {
         if (!isMedic(player)) return;
         if (!player.isAlive()) return;
-        if (player.getHealth() > player.getMaxHealth() * MedicConfig.selfDefibrillateHealthThreshold()) return;
+        if (player.getHealth() > player.getMaxHealth() * HEALTH_THRESHOLD_PERCENT) return;
         if (ACTIVE_ATTEMPTS.contains(player.getUUID())) return;
         if (isOnCooldown(player)) return;
 
@@ -39,27 +41,17 @@ public final class SelfDefibrillateAbility {
 
         startCooldown(player);
 
-        int resistanceAmplifier = MedicConfig.selfDefibrillateResistanceAmplifier();
-        if (resistanceAmplifier >= 0) {
-            player.addEffect(new MobEffectInstance(
-                    MobEffects.DAMAGE_RESISTANCE,
-                    MedicConfig.selfDefibrillateResistanceDurationTicks(),
-                    resistanceAmplifier,
-                    false,
-                    true,
-                    true
-            ));
-        }
+        player.addEffect(new MobEffectInstance(
+                MobEffects.DAMAGE_RESISTANCE,
+                RESISTANCE_DURATION_TICKS,
+                RESISTANCE_AMPLIFIER,
+                false,
+                true,
+                true
+        ));
 
-        // The minigame is drawn on the client but its rules come from the server's config.
         NetworkHandle.INSTANCE.sendTo(
-                new OpenSelfDefibrillateScreenPacket(
-                        MedicConfig.selfDefibrillateTimeLimitTicks(),
-                        MedicConfig.selfDefibrillateIconCount(),
-                        MedicConfig.selfDefibrillateIconSize(),
-                        MedicConfig.selfDefibrillateIconsMove(),
-                        MedicConfig.selfDefibrillateIconSpeed()
-                ),
+                new OpenSelfDefibrillateScreenPacket(),
                 player.connection.connection,
                 NetworkDirection.PLAY_TO_CLIENT
         );
@@ -107,12 +99,11 @@ public final class SelfDefibrillateAbility {
     }
 
     private static void startCooldown(ServerPlayer player) {
-        int cooldownTicks = MedicConfig.selfDefibrillateCooldownTicks();
         long now = player.level().getGameTime();
-        COOLDOWN_EXPIRY_TICK.put(player.getUUID(), now + cooldownTicks);
+        COOLDOWN_EXPIRY_TICK.put(player.getUUID(), now + COOLDOWN_TICKS);
 
         NetworkHandle.INSTANCE.sendTo(
-                new SyncSelfDefibrillateCooldownPacket(cooldownTicks),
+                new SyncSelfDefibrillateCooldownPacket(COOLDOWN_TICKS),
                 player.connection.connection,
                 NetworkDirection.PLAY_TO_CLIENT
         );

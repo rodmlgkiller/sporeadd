@@ -1,6 +1,5 @@
 package com.sporeadds.sporeaddsmod.Powers;
 
-import com.sporeadds.sporeaddsmod.config.KommandantPowersConfig;
 import com.sporeadds.sporeaddsmod.entity.Tentacle;
 import com.sporeadds.sporeaddsmod.entity.projectile.TentacleProjectile;
 import com.sporeadds.sporeaddsmod.spore.PlayerSporeProvider;
@@ -12,15 +11,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = "sporeadd", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class BiomassOnKill {
 
-    // The two numbers below used to be constants (0.2 and 4.0); they are now
-    // kommandant_abilities.biomass_from_kills.low_health_biomass / low_health_threshold.
+    private static final double ALMOST_BIOMASS_PER_LOW_MAX_HEALTH_KILL = 0.2D;
+    private static final float LOW_MAX_HEALTH_THRESHOLD = 4.0F;
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
@@ -63,17 +59,12 @@ public class BiomassOnKill {
         }
 
         float victimMaxHealth = victim.getMaxHealth();
-        Optional<Double> override = KommandantPowersConfig.killBiomassOverride(ForgeRegistries.ENTITY_TYPES.getKey(victim.getType()));
 
         creditedPlayer.getCapability(PlayerSporeProvider.PLAYER_CAP).ifPresent(spore -> {
-            if (override.isPresent()) {
-                spore.addBiomass(override.get());
-            } else if (KommandantPowersConfig.KILL_ONLY_LISTED.get()) {
-                // only_listed_entities: nothing for entities that are not in the override list.
-            } else if (victimMaxHealth < KommandantPowersConfig.KILL_LOW_HEALTH_THRESHOLD.get().floatValue()) {
-                spore.addAlmostBiomass(KommandantPowersConfig.KILL_LOW_HEALTH_BIOMASS.get());
+            if (victimMaxHealth < LOW_MAX_HEALTH_THRESHOLD) {
+                spore.addAlmostBiomass(ALMOST_BIOMASS_PER_LOW_MAX_HEALTH_KILL);
             } else {
-                spore.addSpore(KommandantPowersConfig.KILL_BIOMASS.get());
+                spore.addSpore(1);
             }
         });
     }
